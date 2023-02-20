@@ -5,6 +5,10 @@ from json import loads
 
 # Program to insert arbitrary date fields on the csv file
 
+# Makes a get request for each pokemon on the csv to get 
+# which generation they're from and inserts corresponting
+# date as an extra column
+
 
 URL = 'https://pokeapi.glitch.me/v1/pokemon/'
 GEN_RELEASE_DATES = ['February 27, 1996',
