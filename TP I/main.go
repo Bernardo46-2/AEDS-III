@@ -40,10 +40,9 @@ func removeAfterSpace(str string) string {
 }
 
 func main() {
-    quit := false
     var csvFile CSV
 
-    for !quit {
+    for quit := false; !quit;{
         clearScreen()
         fmt.Printf("1 - Create\n")
         fmt.Printf("2 - Read\n")
