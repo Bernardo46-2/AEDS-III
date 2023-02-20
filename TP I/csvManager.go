@@ -1,13 +1,14 @@
 package main
 
 import (
-    "encoding/csv"
-    "fmt"
-    "os"
-    "unsafe"
+	"encoding/csv"
+	"fmt"
+	"os"
+	"unsafe"
+	// "unsafe"
 )
 
-const FILE string = "csv/pokedex2.csv"
+const FILE string = "csv/pokedex.csv"
 const BIN_FILE string = "bin/pokedex.dat"
 
 type CSV struct {
@@ -33,11 +34,15 @@ func importCSV() CSV {
 }
 
 func (self* CSV) CsvToBin() {
-    row := self.file[0]
-    size := unsafe.Sizeof(row)
+    // size := unsafe.Sizeof(row)
+    var c rune
 
-    // for c := range row {
-        fmt.Println(row)
-        fmt.Println(size)
-    // }
+    fmt.Println(unsafe.Sizeof(c))
+
+    for i := 1; i < len(self.file); i++ {
+        row := self.file[i]
+        pokemon := ParsePokemon(row)
+        
+        fmt.Println(pokemon.ToString())
+    }
 }

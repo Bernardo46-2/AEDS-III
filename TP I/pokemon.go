@@ -3,6 +3,7 @@ package main
 import (
     "time"
     "fmt"
+    "strconv"
 )
 
 type Pokemon struct {
@@ -56,24 +57,24 @@ func (self* Pokemon) ToString() string {
     return str
 }
 
-// pokemons := []Pokemon{}
+func ParsePokemon(line []string) Pokemon{
+    var pokemon Pokemon
+    
+    pokemon.Numero, _ = strconv.Atoi(line[1])
+    pokemon.Nome = line[2]
+    pokemon.NomeJap = RemoveAfterSpace(line[4])
+    geracao, _ := strconv.Atoi(line[5])
+    pokemon.Geracao = geracao
+    pokemon.Lancamento, _ = time.Parse("2006/01/02", GenReleaseDates[geracao])
+    pokemon.Especie = line[9]
+    pokemon.Lendario, _ = strconv.ParseBool(line[7])
+    pokemon.Mitico, _ = strconv.ParseBool(line[8])
+    pokemon.Tipo = line[11] + line[12]
+    pokemon.Atk, _ = strconv.Atoi(line[21])
+    pokemon.Def, _ = strconv.Atoi(line[22])
+    pokemon.Hp, _ = strconv.Atoi(line[20])
+    pokemon.Altura, _ = strconv.ParseFloat(line[13], 64)
+    pokemon.Peso, _ = strconv.ParseFloat(line[14], 64)
 
-// for _, valor := range lines {
-//     var novoPokemon Pokemon
-//     novoPokemon.Numero, _ = strconv.Atoi(valor[1])
-//     novoPokemon.Nome = valor[2]
-//     novoPokemon.NomeJap = removeAfterSpace(valor[4])
-//     geracao, _ := strconv.Atoi(valor[5])
-//     novoPokemon.Geracao = geracao
-//     novoPokemon.Lancamento, _ = time.Parse("2006/01/02", GenReleaseDates[geracao])
-//     novoPokemon.Especie = valor[9]
-//     novoPokemon.Lendario, _ = strconv.ParseBool(valor[7])
-//     novoPokemon.Mitico, _ = strconv.ParseBool(valor[8])
-//     novoPokemon.Tipo = valor[11] + valor[12]
-//     novoPokemon.Atk, _ = strconv.Atoi(valor[21])
-//     novoPokemon.Def, _ = strconv.Atoi(valor[22])
-//     novoPokemon.Hp, _ = strconv.Atoi(valor[20])
-//     novoPokemon.Altura, _ = strconv.ParseFloat(valor[13], 64)
-//     novoPokemon.Peso, _ = strconv.ParseFloat(valor[14], 64)
-//     pokemons = append(pokemons, novoPokemon)
-// }
+    return pokemon
+}

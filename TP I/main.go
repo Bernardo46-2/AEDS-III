@@ -34,7 +34,7 @@ func pause() {
     fmt.Scanf("%s\n", &input)
 }
 
-func removeAfterSpace(str string) string {
+func RemoveAfterSpace(str string) string {
     parts := strings.Split(str, " ")
     return parts[0]
 }
