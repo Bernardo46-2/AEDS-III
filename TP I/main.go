@@ -4,9 +4,9 @@ import (
     "fmt"
     "os"
     "os/exec"
+    "runtime"
     "strconv"
     "strings"
-    "runtime"
 )
 
 func runCmd(name string, arg ...string) {
@@ -17,14 +17,14 @@ func runCmd(name string, arg ...string) {
 
 func clearScreen() {
     switch runtime.GOOS {
-        case "darwin":
-            runCmd("clear")
-        case "linux":
-            runCmd("clear")
-        case "windows":
-            runCmd("cmd", "/c", "cls")
-        default:
-            runCmd("clear")
+    case "darwin":
+        runCmd("clear")
+    case "linux":
+        runCmd("clear")
+    case "windows":
+        runCmd("cmd", "/c", "cls")
+    default:
+        runCmd("clear")
     }
 }
 
@@ -42,7 +42,7 @@ func removeAfterSpace(str string) string {
 func main() {
     quit := false
     var csvFile CSV
-    
+
     for !quit {
         clearScreen()
         fmt.Printf("1 - Create\n")
@@ -60,23 +60,23 @@ func main() {
         }
         if opcao, err := strconv.Atoi(tmp); err == nil {
             switch opcao {
-                case 0:
-                    fmt.Printf("Saindo do programa...\n\n")
-                    quit = true
-                case 1:
-                    fmt.Printf("Create\n")
-                case 2:
-                    fmt.Printf("Read\n")
-                case 3:
-                    fmt.Printf("Update\n")
-                case 4:
-                    fmt.Printf("Delete\n")
-                case 8:
-                    csvFile.CsvToBin()
-                case 9:
-                    csvFile = importCSV()
-                default:
-                    fmt.Println("Opção inválida")
+            case 0:
+                fmt.Printf("Saindo do programa...\n\n")
+                quit = true
+            case 1:
+                fmt.Printf("Create\n")
+            case 2:
+                fmt.Printf("Read\n")
+            case 3:
+                fmt.Printf("Update\n")
+            case 4:
+                fmt.Printf("Delete\n")
+            case 8:
+                csvFile.CsvToBin()
+            case 9:
+                csvFile = importCSV()
+            default:
+                fmt.Println("Opção inválida")
             }
         } else {
             panic(fmt.Errorf("Erro ao ler opção: %v", err))
