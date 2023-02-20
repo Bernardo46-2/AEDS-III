@@ -21,6 +21,18 @@ func pause() {
 	fmt.Scanf("%s\n", &input)
 }
 
+var GenReleaseDates = map[int]string{
+	1: "1996/02/27, ",
+	2: "1999/11/21, ",
+	3: "2002/11/21, ",
+	4: "2006/09/28, ",
+	5: "2010/09/18, ",
+	6: "2013/10/12, ",
+	7: "2016/11/18, ",
+	8: "2019/11/15, ",
+	9: "2022/11/18, ",
+}
+
 type Pokemon struct {
 	Numero     int
 	Nome       string
