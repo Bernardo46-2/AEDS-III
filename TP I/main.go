@@ -67,6 +67,12 @@ func importCSV() {
 		return
 	}
 
+	pokemons := []Pokemon{}
+
+	/* 	for indice, valor := range lines {
+		novoPokemon := Pokemon{Nome: "João", Idade: 30}
+		pokemons = append(pokemons, novoPokemon)
+	} */
 }
 
 func main() {
