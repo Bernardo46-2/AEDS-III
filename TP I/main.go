@@ -67,7 +67,6 @@ func importCSV() {
 		return
 	}
 
-	fmt.Printf("Linha 3, Coluna 4: %s\n", lines[3][4])
 }
 
 func main() {
