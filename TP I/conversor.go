@@ -4,6 +4,10 @@ import (
     "fmt"
 )
 
-func foo() {
+type CsvReader = struct {
+	
+}
+
+func csvToBin() {
     fmt.Println("test")
 }

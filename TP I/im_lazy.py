@@ -25,7 +25,6 @@ GEN_RELEASE_DATES = ['February 27, 1996',
 
 def make_req(pokemon):
     req = get(URL + pokemon).text
-    print(req)
     gen = loads(req)
 
     if isinstance(gen, list):

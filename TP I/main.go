@@ -62,8 +62,8 @@ func importCSV() {
 	// Abrir o arquivo CSV
 	file, err := os.Open(FILE)
 	if err != nil {
-		fmt.Println("Erro ao abrir o arquivo:", err)
-		return
+		msg := fmt.Errorf("Erro ao abrir o arquivo: %v", err)
+		panic(msg)
 	}
 	defer file.Close()
 
@@ -71,8 +71,8 @@ func importCSV() {
 	reader := csv.NewReader(file)
 	lines, err := reader.ReadAll()
 	if err != nil {
-		fmt.Println("Erro ao ler o arquivo:", err)
-		return
+		msg := fmt.Errorf("Erro ao ler o arquivo: %v", err)
+		panic(msg)
 	}
 
 	pokemons := []Pokemon{}
@@ -115,12 +115,15 @@ func importCSV() {
 }
 
 func main() {
-	for {
+	quit := false
+	
+	for !quit {
 		clearScreen()
 		fmt.Printf("1 - Create\n")
 		fmt.Printf("2 - Read\n")
 		fmt.Printf("3 - Update\n")
 		fmt.Printf("4 - Delete\n")
+		fmt.Printf("8 - Convert CSV to Bin\n")
 		fmt.Printf("9 - Import CSV\n")
 		fmt.Printf("0 - Exit\n")
 		fmt.Printf("\n> ")
@@ -131,21 +134,31 @@ func main() {
 		}
 		if opcao, err := strconv.Atoi(tmp); err == nil {
 			switch opcao {
-			case 0:
-				fmt.Printf("Saindo do programa...\n\n")
-				return
-			case 1:
-				fmt.Printf("Create\n")
-			case 2:
-				fmt.Printf("Read\n")
-			case 3:
-				fmt.Printf("Update\n")
-			case 4:
-				fmt.Printf("Delete\n")
-			case 9:
-				importCSV()
-			default:
-				fmt.Println("Opção inválida")
+				case 0:
+					fmt.Printf("Saindo do programa...\n\n")
+					quit = true
+					break
+				case 1:
+					fmt.Printf("Create\n")
+					break
+				case 2:
+					fmt.Printf("Read\n")
+					break
+				case 3:
+					fmt.Printf("Update\n")
+					break
+				case 4:
+					fmt.Printf("Delete\n")
+					break
+				case 8:
+					csvToBin()
+					break
+				case 9:
+					importCSV()
+					break
+				default:
+					fmt.Println("Opção inválida")
+					break
 			}
 		} else {
 			fmt.Println("Erro ao ler opção:", err)
