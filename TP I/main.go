@@ -6,12 +6,26 @@ import (
     "os/exec"
     "strconv"
     "strings"
+    "runtime"
 )
 
-func clearScreen() {
-    cmd := exec.Command("cmd", "/c", "cls")
+func runCmd(name string, arg ...string) {
+    cmd := exec.Command(name, arg...)
     cmd.Stdout = os.Stdout
     cmd.Run()
+}
+
+func clearScreen() {
+    switch runtime.GOOS {
+        case "darwin":
+            runCmd("clear")
+        case "linux":
+            runCmd("clear")
+        case "windows":
+            runCmd("cmd", "/c", "cls")
+        default:
+            runCmd("clear")
+    }
 }
 
 func pause() {
@@ -49,28 +63,20 @@ func main() {
                 case 0:
                     fmt.Printf("Saindo do programa...\n\n")
                     quit = true
-                    break
                 case 1:
                     fmt.Printf("Create\n")
-                    break
                 case 2:
                     fmt.Printf("Read\n")
-                    break
                 case 3:
                     fmt.Printf("Update\n")
-                    break
                 case 4:
                     fmt.Printf("Delete\n")
-                    break
                 case 8:
                     csvFile.CsvToBin()
-                    break
                 case 9:
                     csvFile = importCSV()
-                    break
                 default:
                     fmt.Println("Opção inválida")
-                    break
             }
         } else {
             panic(fmt.Errorf("Erro ao ler opção: %v", err))
