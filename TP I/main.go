@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
 	"os"
 	"os/exec"
@@ -19,31 +20,32 @@ func pause() {
 	fmt.Scanf("%s\n", &input)
 }
 
+func importCSV() {
+	// Abrir o arquivo CSV
+	file, err := os.Open("csv/pokedex.csv")
+	if err != nil {
+		fmt.Println("Erro ao abrir o arquivo:", err)
+		return
+	}
+	defer file.Close()
+
+	// Criar um leitor CSV
+	reader := csv.NewReader(file)
+
+	// Ler as linhas do arquivo
+	records, err := reader.ReadAll()
+	if err != nil {
+		fmt.Println("Erro ao ler o arquivo:", err)
+		return
+	}
+
+	// Imprimir o conteúdo do arquivo
+	for _, record := range records {
+		fmt.Println(record)
+	}
+}
+
 func main() {
-	/*
-	   // Abrir o arquivo CSV
-	   file, err := os.Open("csv/pokedex.csv")
-	   if err != nil {
-	       fmt.Println("Erro ao abrir o arquivo:", err)
-	       return
-	   }
-	   defer file.Close()
-
-	   // Criar um leitor CSV
-	   reader := csv.NewReader(file)
-
-	   // Ler as linhas do arquivo
-	   records, err := reader.ReadAll()
-	   if err != nil {
-	       fmt.Println("Erro ao ler o arquivo:", err)
-	       return
-	   }
-
-	   // Imprimir o conteúdo do arquivo
-	   for _, record := range records {
-	       fmt.Println(record)
-	   }
-	*/
 	for {
 		clearScreen()
 		fmt.Printf("1 - Create\n")
@@ -71,6 +73,8 @@ func main() {
 				fmt.Printf("Update\n")
 			case 4:
 				fmt.Printf("Delete\n")
+			case 9:
+				importCSV()
 			default:
 				fmt.Println("Opção inválida")
 			}
