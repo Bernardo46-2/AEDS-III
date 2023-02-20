@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"time"
 )
 
 func clearScreen() {
@@ -18,6 +19,23 @@ func pause() {
 	var input string
 	fmt.Printf("\nPressione Enter para continuar...\n")
 	fmt.Scanf("%s\n", &input)
+}
+
+type Pokemon struct {
+	Numero     int
+	Nome       string
+	NomeJap    int
+	Geracao    int
+	Lancamento time.Time
+	Especie    string
+	Lendario   bool
+	Mitico     bool
+	Tipo       []string
+	Atk        int
+	Def        int
+	Hp         int
+	Altura     float32
+	Peso       float32
 }
 
 func importCSV() {
