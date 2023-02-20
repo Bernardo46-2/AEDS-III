@@ -23,7 +23,7 @@ func pause() {
 	fmt.Scanf("%s\n", &input)
 }
 
-var GenReleaseDates = map[int]string {
+var GenReleaseDates = map[int]string{
 	1: "1996/02/27, ",
 	2: "1999/11/21, ",
 	3: "2002/11/21, ",
