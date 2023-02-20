@@ -59,20 +59,15 @@ func importCSV() {
 	}
 	defer file.Close()
 
-	// Criar um leitor CSV
+	// Lendo o conteúdo do arquivo CSV
 	reader := csv.NewReader(file)
-
-	// Ler as linhas do arquivo
-	records, err := reader.ReadAll()
+	lines, err := reader.ReadAll()
 	if err != nil {
 		fmt.Println("Erro ao ler o arquivo:", err)
 		return
 	}
 
-	// Imprimir o conteúdo do arquivo
-	for _, record := range records {
-		fmt.Println(record)
-	}
+	fmt.Printf("Linha 3, Coluna 4: %s\n", lines[3][4])
 }
 
 func main() {
