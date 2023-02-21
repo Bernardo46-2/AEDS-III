@@ -8,6 +8,7 @@ import (
 )
 
 const MAX_NAME_LEN = 40
+const DELIMITER = "|"
 
 type Pokemon struct {
     Numero     int32
@@ -18,30 +19,31 @@ type Pokemon struct {
     Especie    string
     Lendario   bool
     Mitico     bool
-    Tipo       string
+    Tipo       []string
     Atk        int32
     Def        int32
     Hp         int32
-    Altura     float64
-    Peso       float64
+    Altura     float32
+    Peso       float32
+    Size       PokemonSize
 }
 
 type PokemonSize struct {
-    Total      uintptr
-    Numero     uintptr
-    Nome       uintptr
-    NomeJap    uintptr
-    Geracao    uintptr
-    Lancamento uintptr
-    Especie    uintptr
-    Lendario   uintptr
-    Mitico     uintptr
-    Tipo       uintptr
-    Atk        uintptr
-    Def        uintptr
-    Hp         uintptr
-    Altura     uintptr
-    Peso       uintptr
+    Total      int32
+    Numero     int32
+    Nome       int32
+    NomeJap    int32
+    Geracao    int32
+    Lancamento int32
+    Especie    int32
+    Lendario   int32
+    Mitico     int32
+    Tipo       []int32
+    Atk        int32
+    Def        int32
+    Hp         int32
+    Altura     int32
+    Peso       int32
 }
 
 var GenReleaseDates = map[int]string {
@@ -83,12 +85,12 @@ func (self* Pokemon) ToString() string {
     return str
 }
 
-func ParsePokemon(line []string) (Pokemon, PokemonSize) {
+func ParsePokemon(line []string) Pokemon {
     var pokemon Pokemon
     var size PokemonSize
     
     pokemon.Numero, _ = Atoi32(line[1])
-    pokemon.Nome = line[2]
+    pokemon.Nome = line[2] + DELIMITER
     pokemon.NomeJap = RemoveAfterSpace(line[4])
     geracao, _ := Atoi32(line[5])
     pokemon.Geracao = geracao
@@ -96,48 +98,63 @@ func ParsePokemon(line []string) (Pokemon, PokemonSize) {
     pokemon.Especie = line[9]
     pokemon.Lendario, _ = strconv.ParseBool(line[7])
     pokemon.Mitico, _ = strconv.ParseBool(line[8])
-    pokemon.Tipo = line[11] + line[12]
+    pokemon.Tipo = append(pokemon.Tipo, line[11])
+    if len(line[12]) > 0 {
+        pokemon.Tipo = append(pokemon.Tipo, line[12])
+    }
     pokemon.Atk, _ = Atoi32(line[21])
     pokemon.Def, _ = Atoi32(line[22])
     pokemon.Hp, _ = Atoi32(line[20])
-    pokemon.Altura, _ = strconv.ParseFloat(line[13], 64)
-    pokemon.Peso, _ = strconv.ParseFloat(line[14], 64)
+    altura, _ := strconv.ParseFloat(line[13], 32)
+    peso, _ := strconv.ParseFloat(line[14], 32)
 
-    size.Numero = unsafe.Sizeof(pokemon.Numero)
+    pokemon.Altura = float32(altura)
+    pokemon.Peso = float32(peso)
+
+    size.Numero = int32(unsafe.Sizeof(pokemon.Numero))
     size.Nome = MAX_NAME_LEN
-    size.NomeJap = (uintptr)(len(pokemon.NomeJap) * 4)
-    size.Geracao = unsafe.Sizeof(pokemon.Geracao)
+    size.NomeJap = int32(len(pokemon.NomeJap) / 3 * 4)
+    size.Geracao = int32(unsafe.Sizeof(pokemon.Geracao))
 
     date_size, err := pokemon.Lancamento.MarshalBinary()
     if err != nil {
         panic("Opora")
     }
     
-    size.Lancamento = unsafe.Sizeof(len(date_size))
-    size.Especie = (uintptr)(len(pokemon.Especie) * 4)
-    size.Lendario = unsafe.Sizeof(pokemon.Lendario)
-    size.Mitico = unsafe.Sizeof(pokemon.Mitico)
-    size.Tipo = (uintptr)(len(pokemon.Tipo) * 4)
-    size.Atk = unsafe.Sizeof(pokemon.Atk)
-    size.Def = unsafe.Sizeof(pokemon.Def)
-    size.Hp = unsafe.Sizeof(pokemon.Hp)
-    size.Altura = unsafe.Sizeof(pokemon.Altura)
-    size.Peso = unsafe.Sizeof(pokemon.Peso)
+    size.Lancamento = int32(len(date_size))
+    size.Especie = int32(len(pokemon.Especie))
+    size.Lendario = int32(unsafe.Sizeof(pokemon.Lendario))
+    size.Mitico = int32(unsafe.Sizeof(pokemon.Mitico))
+    size.Tipo = append(size.Tipo, int32(len(pokemon.Tipo[0])))
+    if len(pokemon.Tipo) > 1 {
+        size.Tipo = append(size.Tipo, int32(len(pokemon.Tipo[1])))
+    }
+    size.Atk = int32(unsafe.Sizeof(pokemon.Atk))
+    size.Def = int32(unsafe.Sizeof(pokemon.Def))
+    size.Hp = int32(unsafe.Sizeof(pokemon.Hp))
+    size.Altura = int32(unsafe.Sizeof(pokemon.Altura))
+    size.Peso = int32(unsafe.Sizeof(pokemon.Peso))
 
-    size.Total = size.Numero + 
-                 size.Nome + 
-                 size.NomeJap + 
-                 size.Geracao + 
-                 size.Lancamento + 
-                 size.Especie + 
-                 size.Lendario + 
-                 size.Mitico + 
-                 size.Tipo + 
-                 size.Atk + 
-                 size.Def + 
-                 size.Hp + 
-                 size.Altura + 
-                 size.Peso
+    size.Total = size.Numero + 4 +
+                 size.Nome + 4 +
+                 size.NomeJap + 4 +
+                 size.Geracao + 4 +
+                 size.Lancamento + 4 +
+                 size.Especie + 4 +
+                 size.Lendario + 4 +
+                 size.Mitico + 4 +
+                 size.Tipo[0] + 4 + 4 +
+                 size.Atk + 4 +
+                 size.Def + 4 +
+                 size.Hp + 4 +
+                 size.Altura + 4 +
+                 size.Peso + 4 + 4
 
-    return pokemon, size
+    if len(size.Tipo) > 1 {
+        size.Total += size.Tipo[1] + 4
+    }
+
+    pokemon.Size = size
+
+    return pokemon
 }

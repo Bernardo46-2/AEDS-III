@@ -2,8 +2,10 @@ package main
 
 import (
 	"encoding/csv"
+    "encoding/binary"
 	"fmt"
 	"os"
+    "math"
 )
 
 const FILE string = "csv/pokedex.csv"
@@ -31,15 +33,22 @@ func importCSV() CSV {
     return CSV { file: lines }
 }
 
-func (self* CSV) getByteArray(pokemon Pokemon, size PokemonSize) ([]byte, []rune, []byte) {
-    var bytes1 []byte
-    var bytes2 []byte
-    runes := []rune(pokemon.NomeJap)
+func intToBytes(n int32) []byte {
+    var buf []byte
+    return binary.LittleEndian.AppendUint32(buf, uint32(n))
+}
 
-    // bytes1 = append(bytes1, []byte(size.Total)...)
-    // bytes1 = append(bytes1, []byte(pokemon.Nome)...)
+func floatToBytes(f float32) []byte {
+    // Create a new byte slice with 4 bytes
+    b := make([]byte, 4)
 
-    return bytes1, runes, bytes2
+    // Use the math package's Float32bits function to get the binary representation of the float32
+    bits := math.Float32bits(f)
+
+    // Convert the 32-bit float to a 4-byte slice
+    binary.LittleEndian.PutUint32(b, bits)
+
+    return b
 }
 
 func (self* CSV) CsvToBin() {
@@ -49,12 +58,72 @@ func (self* CSV) CsvToBin() {
     }
     defer file.Close()
 
+    binary.Write(file, binary.LittleEndian, intToBytes(int32(len(self.file))))
+
     for i := 1; i < len(self.file); i++ {
         row := self.file[i]
-        pokemon, size := ParsePokemon(row)
+        pokemon := ParsePokemon(row)
 
-        b1, _, _ := self.getByteArray(pokemon, size)
+        binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Total))
 
-        file.Write(b1)
+        binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Numero))
+        binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Numero))
+
+        binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Nome))
+        binary.Write(file, binary.LittleEndian, []byte(pokemon.Nome))
+
+        filler := make([]byte, pokemon.Size.Nome - int32(len(pokemon.Nome)))
+        binary.Write(file, binary.LittleEndian, filler)
+
+        runes := []rune(pokemon.NomeJap)
+        japName := make([]byte, len(runes) * 4)
+
+        for i, v := range runes {
+            binary.LittleEndian.PutUint32(japName[i * 4 : (i + 1) * 4], uint32(v))
+        }
+
+        binary.Write(file, binary.LittleEndian, intToBytes(int32(len(runes) * 4)))
+        binary.Write(file, binary.LittleEndian, japName)
+
+        binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Geracao))
+        binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Geracao))
+
+        releaseDate, _ := pokemon.Lancamento.MarshalBinary()
+        
+        binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Lancamento))
+        binary.Write(file, binary.LittleEndian, releaseDate)
+
+        binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Especie))
+        binary.Write(file, binary.LittleEndian, []byte(pokemon.Especie))
+
+        binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Lendario))
+        binary.Write(file, binary.LittleEndian, pokemon.Lendario)
+
+        binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Mitico))
+        binary.Write(file, binary.LittleEndian, pokemon.Mitico)
+
+        binary.Write(file, binary.LittleEndian, intToBytes(int32(len(pokemon.Size.Tipo))))
+        binary.Write(file, binary.LittleEndian, intToBytes(int32(len(pokemon.Tipo[0]))))
+        binary.Write(file, binary.LittleEndian, []byte(pokemon.Tipo[0]))
+
+        if len(pokemon.Tipo) > 1 {
+            binary.Write(file, binary.LittleEndian, intToBytes(int32(len(pokemon.Tipo[1]))))
+            binary.Write(file, binary.LittleEndian, []byte(pokemon.Tipo[1]))
+        }
+        
+        binary.Write(file, binary.LittleEndian, intToBytes(int32(pokemon.Size.Atk)))
+        binary.Write(file, binary.LittleEndian, intToBytes(int32(pokemon.Atk)))
+
+        binary.Write(file, binary.LittleEndian, intToBytes(int32(pokemon.Size.Def)))
+        binary.Write(file, binary.LittleEndian, intToBytes(int32(pokemon.Def)))
+
+        binary.Write(file, binary.LittleEndian, intToBytes(int32(pokemon.Size.Hp)))
+        binary.Write(file, binary.LittleEndian, intToBytes(int32(pokemon.Hp)))
+
+        binary.Write(file, binary.LittleEndian, intToBytes(int32(pokemon.Size.Altura)))
+        binary.Write(file, binary.LittleEndian, floatToBytes(pokemon.Altura))
+
+        binary.Write(file, binary.LittleEndian, intToBytes(int32(pokemon.Size.Peso)))
+        binary.Write(file, binary.LittleEndian, floatToBytes(pokemon.Peso))
     }
 }
