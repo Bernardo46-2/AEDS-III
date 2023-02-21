@@ -10,18 +10,18 @@ import (
 const MAX_NAME_LEN = 40
 
 type Pokemon struct {
-    Numero     int
+    Numero     int32
     Nome       string
     NomeJap    string
-    Geracao    int
+    Geracao    int32
     Lancamento time.Time
     Especie    string
     Lendario   bool
     Mitico     bool
     Tipo       string
-    Atk        int
-    Def        int
-    Hp         int
+    Atk        int32
+    Def        int32
+    Hp         int32
     Altura     float64
     Peso       float64
 }
@@ -56,6 +56,11 @@ var GenReleaseDates = map[int]string {
     9: "2022/11/18",
 }
 
+func Atoi32(s string) (int32, error) {
+    i, err := strconv.Atoi(s)
+    return int32(i), err
+}
+
 func (self* Pokemon) ToString() string {
     str := ""
 
@@ -82,19 +87,19 @@ func ParsePokemon(line []string) (Pokemon, PokemonSize) {
     var pokemon Pokemon
     var size PokemonSize
     
-    pokemon.Numero, _ = strconv.Atoi(line[1])
+    pokemon.Numero, _ = Atoi32(line[1])
     pokemon.Nome = line[2]
     pokemon.NomeJap = RemoveAfterSpace(line[4])
-    geracao, _ := strconv.Atoi(line[5])
+    geracao, _ := Atoi32(line[5])
     pokemon.Geracao = geracao
-    pokemon.Lancamento, _ = time.Parse("2006/01/02", GenReleaseDates[geracao])
+    pokemon.Lancamento, _ = time.Parse("2006/01/02", GenReleaseDates[int(geracao)])
     pokemon.Especie = line[9]
     pokemon.Lendario, _ = strconv.ParseBool(line[7])
     pokemon.Mitico, _ = strconv.ParseBool(line[8])
     pokemon.Tipo = line[11] + line[12]
-    pokemon.Atk, _ = strconv.Atoi(line[21])
-    pokemon.Def, _ = strconv.Atoi(line[22])
-    pokemon.Hp, _ = strconv.Atoi(line[20])
+    pokemon.Atk, _ = Atoi32(line[21])
+    pokemon.Def, _ = Atoi32(line[22])
+    pokemon.Hp, _ = Atoi32(line[20])
     pokemon.Altura, _ = strconv.ParseFloat(line[13], 64)
     pokemon.Peso, _ = strconv.ParseFloat(line[14], 64)
 

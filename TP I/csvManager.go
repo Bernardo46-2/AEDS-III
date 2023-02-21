@@ -36,8 +36,8 @@ func (self* CSV) getByteArray(pokemon Pokemon, size PokemonSize) ([]byte, []rune
     var bytes2 []byte
     runes := []rune(pokemon.NomeJap)
 
-    bytes1 = append(bytes1, byte(size.Total), byte(size.Numero), byte(pokemon.Numero), byte(size.Nome))
-    bytes1 = append(bytes1, []byte(pokemon.Nome)...)
+    // bytes1 = append(bytes1, []byte(size.Total)...)
+    // bytes1 = append(bytes1, []byte(pokemon.Nome)...)
 
     return bytes1, runes, bytes2
 }
