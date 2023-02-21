@@ -4,7 +4,10 @@ import (
     "time"
     "fmt"
     "strconv"
+    "unsafe"
 )
+
+const MAX_NAME_LEN = 40
 
 type Pokemon struct {
     Numero     int
@@ -21,6 +24,24 @@ type Pokemon struct {
     Hp         int
     Altura     float64
     Peso       float64
+}
+
+type PokemonSize struct {
+    Total      uintptr
+    Numero     uintptr
+    Nome       uintptr
+    NomeJap    uintptr
+    Geracao    uintptr
+    Lancamento uintptr
+    Especie    uintptr
+    Lendario   uintptr
+    Mitico     uintptr
+    Tipo       uintptr
+    Atk        uintptr
+    Def        uintptr
+    Hp         uintptr
+    Altura     uintptr
+    Peso       uintptr
 }
 
 var GenReleaseDates = map[int]string {
@@ -57,8 +78,9 @@ func (self* Pokemon) ToString() string {
     return str
 }
 
-func ParsePokemon(line []string) Pokemon{
+func ParsePokemon(line []string) (Pokemon, PokemonSize) {
     var pokemon Pokemon
+    var size PokemonSize
     
     pokemon.Numero, _ = strconv.Atoi(line[1])
     pokemon.Nome = line[2]
@@ -76,5 +98,41 @@ func ParsePokemon(line []string) Pokemon{
     pokemon.Altura, _ = strconv.ParseFloat(line[13], 64)
     pokemon.Peso, _ = strconv.ParseFloat(line[14], 64)
 
-    return pokemon
+    size.Numero = unsafe.Sizeof(pokemon.Numero)
+    size.Nome = MAX_NAME_LEN
+    size.NomeJap = (uintptr)(len(pokemon.NomeJap) * 4)
+    size.Geracao = unsafe.Sizeof(pokemon.Geracao)
+
+    date_size, err := pokemon.Lancamento.MarshalBinary()
+    if err != nil {
+        panic("Opora")
+    }
+    
+    size.Lancamento = unsafe.Sizeof(len(date_size))
+    size.Especie = (uintptr)(len(pokemon.Especie) * 4)
+    size.Lendario = unsafe.Sizeof(pokemon.Lendario)
+    size.Mitico = unsafe.Sizeof(pokemon.Mitico)
+    size.Tipo = (uintptr)(len(pokemon.Tipo) * 4)
+    size.Atk = unsafe.Sizeof(pokemon.Atk)
+    size.Def = unsafe.Sizeof(pokemon.Def)
+    size.Hp = unsafe.Sizeof(pokemon.Hp)
+    size.Altura = unsafe.Sizeof(pokemon.Altura)
+    size.Peso = unsafe.Sizeof(pokemon.Peso)
+
+    size.Total = size.Numero + 
+                 size.Nome + 
+                 size.NomeJap + 
+                 size.Geracao + 
+                 size.Lancamento + 
+                 size.Especie + 
+                 size.Lendario + 
+                 size.Mitico + 
+                 size.Tipo + 
+                 size.Atk + 
+                 size.Def + 
+                 size.Hp + 
+                 size.Altura + 
+                 size.Peso
+
+    return pokemon, size
 }

@@ -4,12 +4,10 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
-	"unsafe"
-	// "unsafe"
 )
 
 const FILE string = "csv/pokedex.csv"
-const BIN_FILE string = "bin/pokedex.dat"
+const BIN_FILE string = "csv/pokedex.dat"
 
 type CSV struct {
     file [][]string
@@ -33,16 +31,30 @@ func importCSV() CSV {
     return CSV { file: lines }
 }
 
-func (self* CSV) CsvToBin() {
-    // size := unsafe.Sizeof(row)
-    var c rune
+func (self* CSV) getByteArray(pokemon Pokemon, size PokemonSize) ([]byte, []rune, []byte) {
+    var bytes1 []byte
+    var bytes2 []byte
+    runes := []rune(pokemon.NomeJap)
 
-    fmt.Println(unsafe.Sizeof(c))
+    bytes1 = append(bytes1, byte(size.Total), byte(size.Numero), byte(pokemon.Numero), byte(size.Nome))
+    bytes1 = append(bytes1, []byte(pokemon.Nome)...)
+
+    return bytes1, runes, bytes2
+}
+
+func (self* CSV) CsvToBin() {
+    file, err := os.OpenFile(BIN_FILE, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
+    if err != nil {
+        panic("Opora")
+    }
+    defer file.Close()
 
     for i := 1; i < len(self.file); i++ {
         row := self.file[i]
-        pokemon := ParsePokemon(row)
-        
-        fmt.Println(pokemon.ToString())
+        pokemon, size := ParsePokemon(row)
+
+        b1, _, _ := self.getByteArray(pokemon, size)
+
+        file.Write(b1)
     }
 }
