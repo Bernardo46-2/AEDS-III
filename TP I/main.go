@@ -78,7 +78,7 @@ func main() {
                 fmt.Println("Opção inválida")
             }
         } else {
-            panic(fmt.Errorf("Erro ao ler opção: %v", err))
+            fmt.Printf("Erro ao ler opção: %v", err)
         }
         pause()
     }
