@@ -49,7 +49,6 @@ func main() {
         fmt.Printf("3 - Update\n")
         fmt.Printf("4 - Delete\n")
         fmt.Printf("8 - Convert CSV to Bin\n")
-        fmt.Printf("9 - Import CSV\n")
         fmt.Printf("0 - Exit\n")
         fmt.Printf("\n> ")
 
@@ -71,9 +70,8 @@ func main() {
             case 4:
                 fmt.Printf("Delete\n")
             case 8:
-                csvFile.CsvToBin()
-            case 9:
                 csvFile = importCSV()
+                csvFile.CsvToBin()
             default:
                 fmt.Println("Opção inválida")
             }
