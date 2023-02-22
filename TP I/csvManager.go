@@ -58,7 +58,6 @@ func (self *CSV) CsvToBin() {
 	}
 	defer file.Close()
 
-	fmt.Printf("len(self.file) = %d", len(self.file))
 	binary.Write(file, binary.LittleEndian, intToBytes(int32(len(self.file))))
 
 	for i := 1; i < len(self.file); i++ {
