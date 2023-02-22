@@ -97,19 +97,92 @@ func (self *Pokemon) ToString() string {
 // Caso ocorra algum erro na leitura do arquivo binário, um erro será retornado.
 func (p *Pokemon) parseBinToPoke(registro []byte) error {
 
-	if err := binary.Read(bytes.NewReader(registro[4:8]), binary.LittleEndian, &p.Numero); err != nil {
-		return err
-	}
+	ptr := 0
+
+	// Numero
+	p.Numero, ptr = bytesToInt32(registro, ptr)
 	fmt.Printf("Id: %d\n", p.Numero)
 
-	nomeBytes := make([]byte, 40)
-	if _, err := io.ReadFull(bytes.NewReader(registro[12:52]), nomeBytes); err != nil {
-		return err
-	}
-	p.Nome = strings.TrimSpace(string(nomeBytes))
+	// Nome
+	p.Nome, ptr = bytesToString(registro, ptr)
 	fmt.Printf("Nome: %s\n", p.Nome)
 
+	// Nome Japones
+	p.NomeJap, ptr = bytesToJapName(registro, 52)
+	fmt.Printf("Nome Japones: %s\n", p.NomeJap)
+
+	// Geracao
+	p.Geracao, ptr = bytesToInt32(registro, ptr)
+	fmt.Printf("Geracao: %d\n", p.Geracao)
+
+	// Lancamento
+	p.Lancamento, ptr = bytesToTime(registro, ptr)
+	fmt.Printf("Lancamento: %s\n", p.Lancamento.Format("02/01/2006"))
+
+	// Especie
+	p.Especie, ptr = bytesToString(registro, ptr)
+	fmt.Printf("Especie: %s\n", p.Especie)
+
+	// Lendario
+	p.Lendario, ptr = bytesToBool(registro, ptr)
+	fmt.Printf("Lendario: %v\n", p.Lendario)
+
+	// Mitico
+	p.Mitico, ptr = bytesToBool(registro, ptr)
+	fmt.Printf("Mitico: %v\n", p.Mitico)
+
+	fmt.Printf("\n")
+
 	return nil
+}
+
+func bytesToVarSize(registro []byte, ptr int) (int, int) {
+	return int(binary.LittleEndian.Uint32(registro[ptr : ptr+4])), ptr + 4
+}
+
+func bytesToInt32(registro []byte, ptr int) (int32, int) {
+	size, ptr := bytesToVarSize(registro, ptr)
+	return int32(binary.LittleEndian.Uint32(registro[ptr : ptr+size])), ptr + size
+}
+
+func bytesToString(registro []byte, ptr int) (string, int) {
+	size, ptr := bytesToVarSize(registro, ptr)
+	nomeBytes := make([]byte, size)
+	io.ReadFull(bytes.NewReader(registro[ptr:ptr+size]), nomeBytes)
+	return strings.TrimSpace(string(nomeBytes)), ptr + size
+}
+
+func bytesToJapName(registro []byte, ptr int) (string, int) {
+	size, ptr := bytesToVarSize(registro, ptr)
+
+	japNameRunes := make([]rune, size/4)
+	for i := 0; i < size/4; i++ {
+		// Converte os 4 bytes em um uint32 correspondente ao rune.
+		runeUint := binary.LittleEndian.Uint32(registro[ptr : ptr+4])
+		// Converte o uint32 em um rune e adiciona à slice de runes.
+		japNameRunes[i] = rune(runeUint)
+		ptr += 4
+	}
+
+	return string(japNameRunes), ptr
+}
+
+func bytesToTime(registro []byte, ptr int) (time.Time, int) {
+	size, ptr := bytesToVarSize(registro, ptr)
+	b := make([]byte, size)
+	io.ReadFull(bytes.NewReader(registro[ptr:ptr+size]), b)
+	var t time.Time
+	t.UnmarshalBinary(b)
+	return t, ptr + size
+}
+
+func bytesToBool(registro []byte, ptr int) (bool, int) {
+	_, ptr = bytesToVarSize(registro, ptr)
+	if registro[ptr] != 0 {
+		return true, ptr + 1
+	} else {
+		return false, ptr + 1
+	}
 }
 
 func ParsePokemon(line []string) Pokemon {
