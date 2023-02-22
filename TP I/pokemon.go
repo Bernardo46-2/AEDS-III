@@ -95,7 +95,6 @@ func (self *Pokemon) ToString() string {
 //
 // A função retorna um objeto do tipo Pokemon preenchido com as informações do
 // registro binário.
-// Caso ocorra algum erro na leitura do arquivo binário, um erro será retornado.
 func (p *Pokemon) parseBinToPoke(registro []byte) error {
 
 	ptr := 0
@@ -117,15 +116,48 @@ func (p *Pokemon) parseBinToPoke(registro []byte) error {
 	return nil
 }
 
+// bytesToVarSize é responsável por extrair um valor de tamanho variável
+// de um registro binário e retornar seu valor e a próxima posição no registro.
+//
+// registro é um slice de bytes representando um registro binário contendo a
+// informação a ser extraída.
+//
+// ptr é um inteiro representando a posição atual do ponteiro de leitura no
+// registro.
+//
+// A função retorna um inteiro representando o valor extraído e um inteiro
+// representando a próxima posição do ponteiro de leitura no registro.
 func bytesToVarSize(registro []byte, ptr int) (int, int) {
 	return int(binary.LittleEndian.Uint32(registro[ptr : ptr+4])), ptr + 4
 }
 
+// bytesToInt32 é responsável por extrair um valor inteiro de 32 bits
+// de um registro binário e retornar seu valor e a próxima posição no registro.
+//
+// registro é um slice de bytes representando um registro binário contendo a
+// informação a ser extraída.
+//
+// ptr é um inteiro representando a posição atual do ponteiro de leitura no
+// registro.
+//
+// A função retorna um inteiro de 32 bits representando o valor extraído e um
+// inteiro representando a próxima posição do ponteiro de leitura no registro.
 func bytesToInt32(registro []byte, ptr int) (int32, int) {
 	size, ptr := bytesToVarSize(registro, ptr)
 	return int32(binary.LittleEndian.Uint32(registro[ptr : ptr+size])), ptr + size
 }
 
+// bytesToString é responsável por extrair uma string de um registro binário
+// e retornar seu valor e a próxima posição no registro.
+//
+// registro é um slice de bytes representando um registro binário contendo a
+// informação a ser extraída.
+//
+// ptr é um inteiro representando a posição atual do ponteiro de leitura no
+// registro.
+//
+// A função retorna uma string representando o valor extraído e um
+// inteiro representando a próxima posição do ponteiro de leitura no registro.
 func bytesToString(registro []byte, ptr int) (string, int) {
 	size, ptr := bytesToVarSize(registro, ptr)
 	nomeBytes := make([]byte, size)
@@ -133,6 +165,18 @@ func bytesToString(registro []byte, ptr int) (string, int) {
 	return strings.TrimSpace(string(nomeBytes)), ptr + size
 }
 
+// bytesToArrayString é responsável por extrair um array de strings com
+// tabulação em ',' de um registro binário e retornar seu valor e a próxima
+// posição no registro.
+//
+// registro é um slice de bytes representando um registro binário contendo a
+// informação a ser extraída.
+//
+// ptr é um inteiro representando a posição atual do ponteiro de leitura no
+// registro.
+//
+// A função retorna um slice de strings representando o valor extraído e um
+// inteiro representando a próxima posição do ponteiro de leitura no registro.
 func bytesToArrayString(registro []byte, ptr int) ([]string, int) {
 	size, ptr := bytesToVarSize(registro, ptr)
 	stringBytes := make([]byte, size)
@@ -141,6 +185,21 @@ func bytesToArrayString(registro []byte, ptr int) ([]string, int) {
 	return strings.Split(s, ","), ptr + size
 }
 
+// bytesToJapName é responsável por converter um slice de bytes
+// que representa um nome em japonês para uma string.
+//
+// A função recebe como argumentos um slice de bytes e um ponteiro para
+// uma posição no slice. A partir do ponteiro, a função lê os bytes
+// necessários para obter o tamanho do nome japonês. Em seguida, a função
+// lê os bytes correspondentes aos runes do nome, converte-os em runes
+// e adiciona à slice de runes japNameRunes. Finalmente, a função retorna
+// a string criada a partir da slice de runes japNameRunes e o ponteiro
+// atualizado.
+//
+// A função retorna uma string e um inteiro representando a posição
+// atual no slice de bytes. Se ocorrer algum erro durante a leitura do
+// arquivo binário, a função retornará uma string vazia e o último
+// valor do ponteiro.
 func bytesToJapName(registro []byte, ptr int) (string, int) {
 	size, ptr := bytesToVarSize(registro, ptr)
 
@@ -156,6 +215,14 @@ func bytesToJapName(registro []byte, ptr int) (string, int) {
 	return string(japNameRunes), ptr
 }
 
+// bytesToTime decodifica um valor de tipo time.Time a partir de um registro de bytes e um ponteiro
+// para a posição do próximo dado no registro.
+//
+// registro: um registro de bytes a ser decodificado.
+// ptr: um inteiro que representa a posição do próximo dado no registro.
+//
+// Retorna um valor do tipo time.Time decodificado e o novo valor de ptr que representa a
+// posição do próximo dado no registro.
 func bytesToTime(registro []byte, ptr int) (time.Time, int) {
 	size, ptr := bytesToVarSize(registro, ptr)
 	b := make([]byte, size)
@@ -165,6 +232,10 @@ func bytesToTime(registro []byte, ptr int) (time.Time, int) {
 	return t, ptr + size
 }
 
+// bytesToBool converte um booleano representado em bytes para um valor bool.
+// Recebe um slice de bytes 'registro' que contém os dados do booleano e um inteiro
+// 'ptr' que aponta para a posição atual no registro. Retorna um valor bool e um
+// inteiro representando o novo ponteiro para o registro após a conversão.
 func bytesToBool(registro []byte, ptr int) (bool, int) {
 	_, ptr = bytesToVarSize(registro, ptr)
 	if registro[ptr] != 0 {
@@ -174,6 +245,19 @@ func bytesToBool(registro []byte, ptr int) (bool, int) {
 	}
 }
 
+// bytesToFloat32 converte um slice de bytes em um valor float32 e retorna o valor
+// convertido e o novo ponteiro.
+//
+// A função espera que o slice de bytes fornecido comece com uma sequência de bytes
+// que representam o tamanho do valor a ser convertido. Em seguida, converte os
+// bytes restantes do slice para um uint32, e usa a função math.Float32frombits
+// para converter o uint32 em um valor float32. O novo ponteiro retornado aponta para
+// o byte seguinte ao final da sequência de bytes que representam o valor float32.
+//
+// registro é o slice de bytes a ser convertido.
+// ptr é o ponteiro inicial do registro onde a conversão deve começar.
+//
+// A função retorna o valor float32 convertido e o novo ponteiro após a conversão.
 func bytesToFloat32(registro []byte, ptr int) (float32, int) {
 	size, ptr := bytesToVarSize(registro, ptr)
 	bits := binary.LittleEndian.Uint32(registro[ptr : ptr+size])
