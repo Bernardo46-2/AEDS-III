@@ -103,12 +103,10 @@ func (self *CSV) CsvToBin() {
 		binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Mitico))
 		binary.Write(file, binary.LittleEndian, pokemon.Mitico)
 
-		binary.Write(file, binary.LittleEndian, intToBytes(int32(len(pokemon.Size.Tipo))))
-		binary.Write(file, binary.LittleEndian, intToBytes(int32(len(pokemon.Tipo[0]))))
-		binary.Write(file, binary.LittleEndian, []byte(pokemon.Tipo[0]))
+		binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Tipo))
+		binary.Write(file, binary.LittleEndian, []byte(pokemon.Tipo[0]+","))
 
 		if len(pokemon.Tipo) > 1 {
-			binary.Write(file, binary.LittleEndian, intToBytes(int32(len(pokemon.Tipo[1]))))
 			binary.Write(file, binary.LittleEndian, []byte(pokemon.Tipo[1]))
 		}
 

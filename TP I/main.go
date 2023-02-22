@@ -73,7 +73,8 @@ func main() {
 		case 1:
 			fmt.Printf("Create\n")
 		case 2:
-			readBinToPoke(lerInt("Digite o Id a pesquisar:\n"))
+			pokemon, _ := readBinToPoke(lerInt("Digite o Id a pesquisar:\n"))
+			fmt.Printf(pokemon.ToString())
 		case 3:
 			fmt.Printf("Update\n")
 		case 4:

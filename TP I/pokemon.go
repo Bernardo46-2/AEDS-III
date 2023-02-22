@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -41,7 +42,7 @@ type PokemonSize struct {
 	Especie    int32
 	Lendario   int32
 	Mitico     int32
-	Tipo       []int32
+	Tipo       int32
 	Atk        int32
 	Def        int32
 	Hp         int32
@@ -98,40 +99,20 @@ func (self *Pokemon) ToString() string {
 func (p *Pokemon) parseBinToPoke(registro []byte) error {
 
 	ptr := 0
-
-	// Numero
 	p.Numero, ptr = bytesToInt32(registro, ptr)
-	fmt.Printf("Id: %d\n", p.Numero)
-
-	// Nome
 	p.Nome, ptr = bytesToString(registro, ptr)
-	fmt.Printf("Nome: %s\n", p.Nome)
-
-	// Nome Japones
-	p.NomeJap, ptr = bytesToJapName(registro, 52)
-	fmt.Printf("Nome Japones: %s\n", p.NomeJap)
-
-	// Geracao
+	p.NomeJap, ptr = bytesToJapName(registro, ptr)
 	p.Geracao, ptr = bytesToInt32(registro, ptr)
-	fmt.Printf("Geracao: %d\n", p.Geracao)
-
-	// Lancamento
 	p.Lancamento, ptr = bytesToTime(registro, ptr)
-	fmt.Printf("Lancamento: %s\n", p.Lancamento.Format("02/01/2006"))
-
-	// Especie
 	p.Especie, ptr = bytesToString(registro, ptr)
-	fmt.Printf("Especie: %s\n", p.Especie)
-
-	// Lendario
 	p.Lendario, ptr = bytesToBool(registro, ptr)
-	fmt.Printf("Lendario: %v\n", p.Lendario)
-
-	// Mitico
 	p.Mitico, ptr = bytesToBool(registro, ptr)
-	fmt.Printf("Mitico: %v\n", p.Mitico)
-
-	fmt.Printf("\n")
+	p.Tipo, ptr = bytesToArrayString(registro, ptr)
+	p.Atk, ptr = bytesToInt32(registro, ptr)
+	p.Def, ptr = bytesToInt32(registro, ptr)
+	p.Hp, ptr = bytesToInt32(registro, ptr)
+	p.Altura, ptr = bytesToFloat32(registro, ptr)
+	p.Peso, ptr = bytesToFloat32(registro, ptr)
 
 	return nil
 }
@@ -150,6 +131,14 @@ func bytesToString(registro []byte, ptr int) (string, int) {
 	nomeBytes := make([]byte, size)
 	io.ReadFull(bytes.NewReader(registro[ptr:ptr+size]), nomeBytes)
 	return strings.TrimSpace(string(nomeBytes)), ptr + size
+}
+
+func bytesToArrayString(registro []byte, ptr int) ([]string, int) {
+	size, ptr := bytesToVarSize(registro, ptr)
+	stringBytes := make([]byte, size)
+	io.ReadFull(bytes.NewReader(registro[ptr:ptr+size]), stringBytes)
+	s := strings.TrimRight(string(stringBytes), ",")
+	return strings.Split(s, ","), ptr + size
 }
 
 func bytesToJapName(registro []byte, ptr int) (string, int) {
@@ -183,6 +172,13 @@ func bytesToBool(registro []byte, ptr int) (bool, int) {
 	} else {
 		return false, ptr + 1
 	}
+}
+
+func bytesToFloat32(registro []byte, ptr int) (float32, int) {
+	size, ptr := bytesToVarSize(registro, ptr)
+	bits := binary.LittleEndian.Uint32(registro[ptr : ptr+size])
+	float := math.Float32frombits(bits)
+	return float, ptr + size
 }
 
 func ParsePokemon(line []string) Pokemon {
@@ -225,9 +221,9 @@ func ParsePokemon(line []string) Pokemon {
 	size.Especie = int32(len(pokemon.Especie))
 	size.Lendario = int32(unsafe.Sizeof(pokemon.Lendario))
 	size.Mitico = int32(unsafe.Sizeof(pokemon.Mitico))
-	size.Tipo = append(size.Tipo, int32(len(pokemon.Tipo[0])))
+	size.Tipo = int32(len(pokemon.Tipo[0]) + 1)
 	if len(pokemon.Tipo) > 1 {
-		size.Tipo = append(size.Tipo, int32(len(pokemon.Tipo[1])))
+		size.Tipo += int32(len(pokemon.Tipo[1]))
 	}
 	size.Atk = int32(unsafe.Sizeof(pokemon.Atk))
 	size.Def = int32(unsafe.Sizeof(pokemon.Def))
@@ -243,16 +239,12 @@ func ParsePokemon(line []string) Pokemon {
 		size.Especie + 4 +
 		size.Lendario + 4 +
 		size.Mitico + 4 +
-		size.Tipo[0] + 4 + 4 +
+		size.Tipo + 4 +
 		size.Atk + 4 +
 		size.Def + 4 +
 		size.Hp + 4 +
 		size.Altura + 4 +
 		size.Peso + 4 + 4
-
-	if len(size.Tipo) > 1 {
-		size.Total += size.Tipo[1] + 4
-	}
 
 	pokemon.Size = size
 
