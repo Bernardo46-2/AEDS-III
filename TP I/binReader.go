@@ -31,6 +31,8 @@ func readBinToPoke(id int) (Pokemon, error) {
 		return Pokemon{}, fmt.Errorf("Erro ao ler número de entradas: %v", err)
 	}
 
+	fmt.Printf("Numero de registros = %d\n", numEntradas)
+
 	// Percorre as entradas do arquivo
 	for i := 0; i < int(numEntradas); i++ {
 		// Lê o tamanho do registro atual
@@ -60,4 +62,37 @@ func readBinToPoke(id int) (Pokemon, error) {
 
 	// Se não encontrou o Pokémon procurado, retorna um erro
 	return Pokemon{}, fmt.Errorf("Pokemon não encontrado")
+}
+
+func incrementNumRegistros() error {
+	// Abrir o arquivo no modo de leitura e escrita
+	file, err := os.OpenFile(BIN_FILE, os.O_RDWR, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	// Ler o valor atual
+	var numRegistros int32
+	err = binary.Read(file, binary.LittleEndian, &numRegistros)
+	if err != nil {
+		return err
+	}
+
+	// Incrementar o valor
+	numRegistros++
+
+	// Voltar para o início do arquivo para escrever o novo valor
+	_, err = file.Seek(0, 0)
+	if err != nil {
+		return err
+	}
+
+	// Escrever o novo valor
+	err = binary.Write(file, binary.LittleEndian, &numRegistros)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

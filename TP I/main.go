@@ -72,6 +72,7 @@ func main() {
 			quit = true
 		case 1:
 			fmt.Printf("Create\n")
+			incrementNumRegistros()
 		case 2:
 			pokemon, _ := readBinToPoke(lerInt("Digite o Id a pesquisar:\n"))
 			fmt.Printf(pokemon.ToString())
