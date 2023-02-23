@@ -51,6 +51,11 @@ func floatToBytes(f float32) []byte {
 	return b
 }
 
+// TODO during ES class...
+func writeBytes(file *os.File, b []byte) {
+
+}
+
 func (self *CSV) CsvToBin() {
 	file, err := os.OpenFile(BIN_FILE, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
 	if err != nil {
@@ -64,6 +69,7 @@ func (self *CSV) CsvToBin() {
 		row := self.file[i]
 		pokemon := ParsePokemon(row)
 
+        binary.Write(file, binary.LittleEndian, intToBytes(1))
 		binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Total))
 
 		binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Numero))
