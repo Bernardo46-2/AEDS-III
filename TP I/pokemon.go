@@ -84,6 +84,95 @@ func (self *Pokemon) ToString() string {
 	return str
 }
 
+func copyBytes(dest []byte, src []byte, offset int) ([]byte, int) {
+    copy(dest[offset:], src)
+    return dest, offset + len(src)
+}
+
+func (self *Pokemon) ToBytes() []byte {
+    pokeBytes := make([]byte, self.Size.Total + 4)
+    var lendario, mitico []byte
+    offset := 0
+    valid := 1
+    
+    if self.Lendario {
+        lendario = []byte{1}
+    } else {
+        lendario = []byte{0}
+    }
+
+    if self.Mitico {
+        mitico = []byte{1}
+    } else {
+        mitico = []byte{0}
+    }
+
+    releaseDate, _ := self.Lancamento.MarshalBinary()
+    filler := make([]byte, self.Size.Nome - int32(len(self.Nome)))
+    runes := []rune(self.NomeJap)
+    japName := make([]byte, len(runes) * 4)
+
+    for i, v := range runes {
+        binary.LittleEndian.PutUint32(japName[i * 4 : (i + 1) * 4], uint32(v))
+    }
+
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(int32(valid)), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Total), offset)
+    
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Numero), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Numero), offset)
+
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Nome), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, []byte(self.Nome), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, filler, offset)
+
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(int32(len(runes) * 4)), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, japName, offset)
+    
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Geracao), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Geracao), offset)
+
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Lancamento), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, releaseDate, offset)
+
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Especie), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, []byte(self.Especie), offset)
+
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Lendario), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, lendario, offset)
+
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Mitico), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, mitico, offset)
+
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Tipo), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, []byte(self.Tipo[0] + ","), offset)
+    
+    if len(self.Tipo) > 1 {
+        pokeBytes, offset = copyBytes(pokeBytes, []byte(self.Tipo[1]), offset)
+    }
+    
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Atk), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Atk), offset)
+
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Def), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Def), offset)
+
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Hp), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Hp), offset)
+
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Altura), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, FloatToBytes(self.Altura), offset)
+
+    pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(self.Size.Peso), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, FloatToBytes(self.Peso), offset)
+
+    // fmt.Println(self.Size.Total)
+    // fmt.Println(FloatToBytes(self.Altura))
+    // fmt.Println(FloatToBytes(self.Peso))
+
+    return pokeBytes
+}
+
 // parseBinToPoke é responsável por interpretar os bytes de um registro binário
 // contendo informações sobre um Pokémon e criar um objeto do tipo Pokemon
 // a partir desses dados.
@@ -91,8 +180,8 @@ func (self *Pokemon) ToString() string {
 // A função retorna um objeto do tipo Pokemon preenchido com as informações do
 // registro binário.
 func (p *Pokemon) parseBinToPoke(registro []byte) error {
-
 	ptr := 0
+    
 	p.Numero, ptr = bytesToInt32(registro, ptr)
 	p.Nome, ptr = bytesToString(registro, ptr)
 	p.NomeJap, ptr = bytesToJapName(registro, ptr)
@@ -323,7 +412,7 @@ func parsePokemon(line []string) Pokemon {
 		size.Def + 4 +
 		size.Hp + 4 +
 		size.Altura + 4 +
-		size.Peso + 4 + 4
+		size.Peso + 4 + 4 + 1
 
 	pokemon.Size = size
 
