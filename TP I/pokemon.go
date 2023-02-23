@@ -62,11 +62,6 @@ var GenReleaseDates = map[int]string{
 	9: "2022/11/18",
 }
 
-func Atoi32(s string) (int32, error) {
-	i, err := strconv.Atoi(s)
-	return int32(i), err
-}
-
 func (self *Pokemon) ToString() string {
 	str := ""
 
@@ -265,7 +260,7 @@ func bytesToFloat32(registro []byte, ptr int) (float32, int) {
 	return float, ptr + size
 }
 
-func ParsePokemon(line []string) Pokemon {
+func parsePokemon(line []string) Pokemon {
 	var pokemon Pokemon
 	var size PokemonSize
 
@@ -333,4 +328,27 @@ func ParsePokemon(line []string) Pokemon {
 	pokemon.Size = size
 
 	return pokemon
+}
+
+func readPokemon() Pokemon {
+	var p Pokemon
+	prompt := ""
+	p.Numero, prompt = lerInt32("Numero da pokedex", prompt)
+	p.Nome, prompt = lerString("Nome", prompt)
+	p.NomeJap, prompt = lerString("Nome Japones", prompt)
+	p.Geracao, prompt = lerInt32("Geraçao", prompt, len(GenReleaseDates))
+	p.Lancamento, _ = time.Parse("2006/01/02", GenReleaseDates[int(p.Geracao)])
+	fmt.Printf("Data da geracao = %s\n", GenReleaseDates[int(p.Geracao)])
+	prompt += "Data da geracao = " + GenReleaseDates[int(p.Geracao)] + "\n"
+	p.Especie, prompt = lerString("Especie", prompt)
+	p.Lendario, prompt = lerBool("É Lendario", prompt)
+	p.Mitico, prompt = lerBool("É Mitico", prompt)
+	p.Tipo, prompt = lerStringSlice("Tipo do pokemon", prompt, 2)
+	p.Atk, prompt = lerInt32("Atk", prompt)
+	p.Def, prompt = lerInt32("Def", prompt)
+	p.Hp, prompt = lerInt32("Hp", prompt)
+	p.Altura, prompt = lerFloat32("Altura", prompt)
+	p.Peso, prompt = lerFloat32("Peso", prompt)
+
+	return p
 }

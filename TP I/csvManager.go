@@ -67,9 +67,9 @@ func (self *CSV) CsvToBin() {
 
 	for i := 1; i < len(self.file); i++ {
 		row := self.file[i]
-		pokemon := ParsePokemon(row)
+		pokemon := parsePokemon(row)
 
-        binary.Write(file, binary.LittleEndian, intToBytes(1))
+		binary.Write(file, binary.LittleEndian, intToBytes(1))
 		binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Total))
 
 		binary.Write(file, binary.LittleEndian, intToBytes(pokemon.Size.Numero))
