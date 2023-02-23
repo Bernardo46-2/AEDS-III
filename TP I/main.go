@@ -68,18 +68,30 @@ func main() {
 	for quit := false; !quit; {
 		switch lerInt(menu) {
 		case 0:
-			fmt.Printf("Saindo do programa...\n\n")
+			fmt.Printf("\nSaindo do programa...\n\n")
 			quit = true
 		case 1:
 			fmt.Printf("Create\n")
 			incrementNumRegistros()
 		case 2:
-			pokemon, _ := readBinToPoke(lerInt("Digite o Id a pesquisar:\n"))
-			fmt.Printf(pokemon.ToString())
+			pokemon, err, _ := readBinToPoke(lerInt("Digite o numero da pokedex a pesquisar:\n"))
+			if err != nil {
+				fmt.Printf("\n%s\n", err)
+			} else {
+				fmt.Printf(pokemon.ToString())
+			}
 		case 3:
 			fmt.Printf("Update\n")
 		case 4:
-			fmt.Printf("Delete\n")
+			pokemon, err, pos := readBinToPoke(lerInt("Digite o numero da pokedex a deletar:\n"))
+			if err != nil {
+				fmt.Printf("Erro ao excluir\n%s\n", err)
+			} else {
+				if err = deletarPokemon(pos); err != nil {
+					fmt.Printf("Erro ao excluir\n%s\n", err)
+				}
+				fmt.Printf("Pokemon %s excluido com exito", pokemon.Nome)
+			}
 		case 8:
 			csvFile = importCSV()
 			csvFile.CsvToBin()
