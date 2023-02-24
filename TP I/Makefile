@@ -1,3 +1,9 @@
+ifeq ($(OS),Windows_NT)
+    PROGRAM = main.exe
+else
+    PROGRAM = ./main
+endif
+
 GO = go
 FILES = $(wildcard *.go)
 
@@ -7,4 +13,5 @@ run: $(FILES)
 
 .PHONY: build
 build: $(FILES)
-	$(GO) build $(FILES)
+	$(GO) build -o main $(FILES)
+	$(PROGRAM)
