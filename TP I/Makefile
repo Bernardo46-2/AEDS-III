@@ -15,3 +15,5 @@ run: $(FILES)
 build: $(FILES)
 	$(GO) build -o main $(FILES)
 	$(PROGRAM)
+
+#Go run main.go pokemon.go japones.go utils.go csvManager.go crud.go binManager.go
