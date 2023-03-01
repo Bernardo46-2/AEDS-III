@@ -118,17 +118,14 @@ func (p *Pokemon) ToBytes() []byte {
 	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(int32(valid)), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Total), offset)
 
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Numero), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Numero), offset)
 
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Nome), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, []byte(p.Nome), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, filler, offset)
 
 	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(int32(len(runes)*4)), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, japName, offset)
 
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Geracao), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Geracao), offset)
 
 	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Lancamento), offset)
@@ -137,10 +134,7 @@ func (p *Pokemon) ToBytes() []byte {
 	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Especie), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, []byte(p.Especie), offset)
 
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Lendario), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, lendario, offset)
-
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Mitico), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, mitico, offset)
 
 	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Tipo), offset)
@@ -150,22 +144,13 @@ func (p *Pokemon) ToBytes() []byte {
 		pokeBytes, offset = copyBytes(pokeBytes, []byte(p.Tipo[1]), offset)
 	}
 
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Atk), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Atk), offset)
-
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Def), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Def), offset)
-
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Hp), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Hp), offset)
-
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Altura), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, FloatToBytes(p.Altura), offset)
-
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Peso), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, FloatToBytes(p.Peso), offset)
 
-	return pokeBytes
+    return pokeBytes
 }
 
 // parseBinToPoke é responsável por interpretar os bytes de um registro binário
@@ -178,7 +163,7 @@ func (p *Pokemon) parseBinToPoke(registro []byte) error {
 	ptr := 0
 
 	p.Numero, ptr = bytesToInt32(registro, ptr)
-	p.Nome, ptr = bytesToString(registro, ptr)
+	p.Nome, ptr = bytesToNome(registro, ptr)
 	p.NomeJap, ptr = bytesToJapName(registro, ptr)
 	p.Geracao, ptr = bytesToInt32(registro, ptr)
 	p.Lancamento, ptr = bytesToTime(registro, ptr)
@@ -223,8 +208,7 @@ func bytesToVarSize(registro []byte, ptr int) (int, int) {
 // A função retorna um inteiro de 32 bits representando o valor extraído e um
 // inteiro representando a próxima posição do ponteiro de leitura no registro.
 func bytesToInt32(registro []byte, ptr int) (int32, int) {
-	size, ptr := bytesToVarSize(registro, ptr)
-	return int32(binary.LittleEndian.Uint32(registro[ptr : ptr+size])), ptr + size
+	return int32(binary.LittleEndian.Uint32(registro[ptr : ptr+4])), ptr + 4
 }
 
 // bytesToString é responsável por extrair uma string de um registro binário
@@ -243,6 +227,12 @@ func bytesToString(registro []byte, ptr int) (string, int) {
 	nomeBytes := make([]byte, size)
 	io.ReadFull(bytes.NewReader(registro[ptr:ptr+size]), nomeBytes)
 	return strings.TrimSpace(string(nomeBytes)), ptr + size
+}
+
+func bytesToNome(registro []byte, ptr int) (string, int) {
+    nome := make([]byte, MAX_NAME_LEN)
+    io.ReadFull(bytes.NewReader(registro[ptr:ptr+MAX_NAME_LEN]), nome)
+    return strings.TrimSpace(string(nome)), ptr + MAX_NAME_LEN
 }
 
 // bytesToArrayString é responsável por extrair um array de strings com
@@ -317,7 +307,6 @@ func bytesToTime(registro []byte, ptr int) (time.Time, int) {
 // 'ptr' que aponta para a posição atual no registro. Retorna um valor bool e um
 // inteiro representando o novo ponteiro para o registro após a conversão.
 func bytesToBool(registro []byte, ptr int) (bool, int) {
-	_, ptr = bytesToVarSize(registro, ptr)
 	if registro[ptr] != 0 {
 		return true, ptr + 1
 	} else {
@@ -339,7 +328,7 @@ func bytesToBool(registro []byte, ptr int) (bool, int) {
 //
 // A função retorna o valor float32 convertido e o novo ponteiro após a conversão.
 func bytesToFloat32(registro []byte, ptr int) (float32, int) {
-	size, ptr := bytesToVarSize(registro, ptr)
+    size := 4
 	bits := binary.LittleEndian.Uint32(registro[ptr : ptr+size])
 	float := math.Float32frombits(bits)
 	return float, ptr + size
@@ -401,19 +390,20 @@ func (p *Pokemon) calculateSize() {
 	p.Size.Peso = int32(unsafe.Sizeof(p.Peso))
 
 	p.Size.Total = p.Size.Numero + 4 +
-		p.Size.Nome + 4 +
+		MAX_NAME_LEN +
 		p.Size.NomeJap + 4 +
-		p.Size.Geracao + 4 +
+		p.Size.Geracao +
 		p.Size.Lancamento + 4 +
 		p.Size.Especie + 4 +
-		p.Size.Lendario + 4 +
-		p.Size.Mitico + 4 +
+		p.Size.Lendario +
+		p.Size.Mitico +
 		p.Size.Tipo + 4 +
-		p.Size.Atk + 4 +
-		p.Size.Def + 4 +
-		p.Size.Hp + 4 +
-		p.Size.Altura + 4 +
-		p.Size.Peso + 4 + 4 + 1
+		p.Size.Atk +
+		p.Size.Def +
+		p.Size.Hp +
+		p.Size.Altura +
+		p.Size.Peso + 4 +
+        1
 }
 
 func readPokemon() Pokemon {
