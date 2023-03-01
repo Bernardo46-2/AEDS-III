@@ -402,8 +402,7 @@ func (p *Pokemon) calculateSize() {
 		p.Size.Def +
 		p.Size.Hp +
 		p.Size.Altura +
-		p.Size.Peso + 4 +
-        1
+		p.Size.Peso + 4 + 1
 }
 
 func readPokemon() Pokemon {
