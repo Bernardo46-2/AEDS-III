@@ -16,7 +16,7 @@ type CSV struct {
 
 // Funcao para importar o arquivo .csv para uma matriz
 // de strings
-func importCSV() CSV {
+func importCSV() *CSV {
     // Abrir o arquivo CSV
     file, err := os.Open(FILE)
     if err != nil {
@@ -31,7 +31,7 @@ func importCSV() CSV {
         panic(fmt.Errorf("Erro ao ler o arquivo: %v", err))
     }
 
-    return CSV{file: lines}
+    return &CSV{file: lines}
 }
 
 // Funcao para facilitar a escrita do arquivo em binario
