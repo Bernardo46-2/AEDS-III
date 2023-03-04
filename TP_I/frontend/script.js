@@ -48,9 +48,9 @@ function postData() {
         peso: 6.9
     };
 
-    const url = "http://localhost:8080/put/";
+    const url = "http://localhost:8080/post/";
     const options = {
-        method: "PUT",
+        method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
