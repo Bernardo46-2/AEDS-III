@@ -54,7 +54,7 @@ function postData() {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(pikachu)
+        body: JSON.stringify(pokemon)
     };
 
     console.log(options.body)
