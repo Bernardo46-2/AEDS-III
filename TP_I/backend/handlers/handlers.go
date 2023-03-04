@@ -28,7 +28,7 @@ func writeSuccess(w http.ResponseWriter, codes ...int) {
 	if len(codes) > 1 {
 		code = codes[1]
 	}
-	json.NewEncoder(w).Encode(models.ErrorResponse(code))
+	json.NewEncoder(w).Encode(models.SuccessResponse(code))
 }
 
 func writeJson(w http.ResponseWriter, v any) {
