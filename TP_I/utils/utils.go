@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"bufio"
@@ -38,33 +38,33 @@ func RemoveAfterSpace(str string) string {
 	return parts[0]
 }
 
-func runCmd(name string, arg ...string) {
+func RunCmd(name string, arg ...string) {
 	cmd := exec.Command(name, arg...)
 	cmd.Stdout = os.Stdout
 	cmd.Run()
 }
 
-func clearScreen() {
+func ClearScreen() {
 	switch runtime.GOOS {
 	case "darwin":
-		runCmd("clear")
+		RunCmd("clear")
 	case "linux":
-		runCmd("clear")
+		RunCmd("clear")
 	case "windows":
-		runCmd("cmd", "/c", "cls")
+		RunCmd("cmd", "/c", "cls")
 	default:
-		runCmd("clear")
+		RunCmd("clear")
 	}
 }
 
-func pause() {
+func Pause() {
 	var input string
 	fmt.Printf("\nPressione Enter para continuar...\n")
 	fmt.Scanf("%s\n", &input)
 }
 
-func lerInt(prompt string) int {
-	clearScreen()
+func LerInt(prompt string) int {
+	ClearScreen()
 	fmt.Printf("%s\n> ", prompt)
 
 	var tmp string
@@ -72,21 +72,21 @@ func lerInt(prompt string) int {
 	var err error
 
 	if _, err = fmt.Scanln(&tmp); err != nil {
-		fmt.Println("\nErro ao ler opção:", err)
-		pause()
-		result = lerInt(prompt)
+		fmt.Println("\nErro ao Ler opção:", err)
+		Pause()
+		result = LerInt(prompt)
 	} else {
 		if result, err = strconv.Atoi(tmp); err != nil {
-			fmt.Println("\nErro ao ler opção:", err)
-			pause()
-			result = lerInt(prompt)
+			fmt.Println("\nErro ao Ler opção:", err)
+			Pause()
+			result = LerInt(prompt)
 		}
 	}
 	return result
 }
 
-func lerInt32(prompt string, backup string, limite ...int) (int32, string) {
-	clearScreen()
+func LerInt32(prompt string, backup string, limite ...int) (int32, string) {
+	ClearScreen()
 	fmt.Printf("%s", backup)
 	fmt.Printf("%s: ", prompt)
 
@@ -95,27 +95,27 @@ func lerInt32(prompt string, backup string, limite ...int) (int32, string) {
 	var err error
 
 	if _, err = fmt.Scanln(&input); err != nil {
-		fmt.Println("\nErro ao ler opção:", err)
-		pause()
-		return lerInt32(prompt, backup, limite...)
+		fmt.Println("\nErro ao Ler opção:", err)
+		Pause()
+		return LerInt32(prompt, backup, limite...)
 	} else {
 		if result, err = strconv.Atoi(input); err != nil {
-			fmt.Println("\nErro ao ler opção:", err)
-			pause()
-			return lerInt32(prompt, backup)
+			fmt.Println("\nErro ao Ler opção:", err)
+			Pause()
+			return LerInt32(prompt, backup)
 		}
 		if len(limite) > 0 && result > limite[0] {
 			fmt.Printf("\nValor fora do range permitido [%d]", limite[0])
-			pause()
-			return lerInt32(prompt, backup, limite[0])
+			Pause()
+			return LerInt32(prompt, backup, limite[0])
 		}
 	}
 
 	return int32(result), backup + prompt + ": " + input + "\n"
 }
 
-func lerFloat32(prompt string, backup string) (float32, string) {
-	clearScreen()
+func LerFloat32(prompt string, backup string) (float32, string) {
+	ClearScreen()
 	fmt.Printf("%s", backup)
 	fmt.Printf("%s: ", prompt)
 
@@ -124,21 +124,21 @@ func lerFloat32(prompt string, backup string) (float32, string) {
 	var err error
 
 	if _, err = fmt.Scanln(&input); err != nil {
-		fmt.Println("\nErro ao ler opção:", err)
-		pause()
-		return lerFloat32(prompt, backup)
+		fmt.Println("\nErro ao Ler opção:", err)
+		Pause()
+		return LerFloat32(prompt, backup)
 	} else {
 		if result, err = strconv.ParseFloat(input, 32); err != nil {
-			fmt.Println("\nErro ao ler opção:", err)
-			pause()
-			return lerFloat32(prompt, backup)
+			fmt.Println("\nErro ao Ler opção:", err)
+			Pause()
+			return LerFloat32(prompt, backup)
 		}
 	}
 
 	return float32(result), backup + prompt + ": " + input + "\n"
 }
 
-func parseBool(str string) (bool, error) {
+func ParseBool(str string) (bool, error) {
 	switch str {
 	case "1", "t", "T", "true", "TRUE", "True", "s", "S", "sim", "Sim", "SIM", "y", "Y", "yes", "Yes", "YES":
 		return true, nil
@@ -148,14 +148,14 @@ func parseBool(str string) (bool, error) {
 	return false, fmt.Errorf("erro de sintaxe")
 }
 
-// lerBool é uma função que lê um valor booleano da entrada do usuário.
+// LerBool é uma função que lê um valor booleano da entrada do usuário.
 // Ela recebe um parâmetro `prompt` como string, que será exibido para o usuário
 // antes da entrada do valor booleano. Também recebe uma string `backup`,
 // que é usada para limpar a tela e restaurar uma mensagem anterior após a entrada.
 // A função retorna o valor booleano lido e uma string contendo a mensagem de prompt e valor lido.
-func lerBool(prompt string, backup string) (bool, string) {
+func LerBool(prompt string, backup string) (bool, string) {
 	// Limpa a tela e exibe a mensagem de backup
-	clearScreen()
+	ClearScreen()
 	fmt.Printf("%s", backup)
 	fmt.Printf("%s: ", prompt)
 
@@ -166,16 +166,16 @@ func lerBool(prompt string, backup string) (bool, string) {
 	// Lê a entrada do usuário
 	if _, err = fmt.Scanln(&input); err != nil {
 		// Em caso de erro, exibe mensagem de erro e espera que o usuário tente novamente
-		fmt.Println("\nErro ao ler opção:", err)
-		pause()
-		return lerBool(prompt, backup)
+		fmt.Println("\nErro ao Ler opção:", err)
+		Pause()
+		return LerBool(prompt, backup)
 	} else {
 		// Converte a entrada para um valor booleano
-		if result, err = parseBool(input); err != nil {
+		if result, err = ParseBool(input); err != nil {
 			// Em caso de erro de conversão, exibe mensagem de erro e espera que o usuário tente novamente
-			fmt.Println("\nErro ao ler opção:", err)
-			pause()
-			return lerBool(prompt, backup)
+			fmt.Println("\nErro ao Ler opção:", err)
+			Pause()
+			return LerBool(prompt, backup)
 		}
 	}
 
@@ -183,8 +183,8 @@ func lerBool(prompt string, backup string) (bool, string) {
 	return result, backup + prompt + ": " + input + "\n"
 }
 
-func lerTime(prompt string, backup string) (time.Time, string) {
-	clearScreen()
+func LerTime(prompt string, backup string) (time.Time, string) {
+	ClearScreen()
 	fmt.Printf("%s", backup)
 	fmt.Printf("%s (dd/mm/aaaa): ", prompt)
 
@@ -193,22 +193,22 @@ func lerTime(prompt string, backup string) (time.Time, string) {
 	var err error
 
 	if _, err = fmt.Scanln(&input); err != nil {
-		fmt.Println("\nErro ao ler opção:", err)
-		pause()
-		return lerTime(prompt, backup)
+		fmt.Println("\nErro ao Ler opção:", err)
+		Pause()
+		return LerTime(prompt, backup)
 	} else {
 		if t, err = time.Parse("02/01/2006", input); err != nil {
-			fmt.Println("\nErro ao ler opção:", err)
-			pause()
-			return lerTime(prompt, backup)
+			fmt.Println("\nErro ao Ler opção:", err)
+			Pause()
+			return LerTime(prompt, backup)
 		}
 	}
 
 	return t, backup + prompt + ": " + input + "\n"
 }
 
-func lerString(prompt string, backup string) (string, string) {
-	clearScreen()
+func LerString(prompt string, backup string) (string, string) {
+	ClearScreen()
 	fmt.Printf("%s", backup)
 	fmt.Printf("%s: ", prompt)
 
@@ -217,29 +217,29 @@ func lerString(prompt string, backup string) (string, string) {
 	var err error
 
 	if input, err = reader.ReadString('\n'); err != nil {
-		fmt.Println("\nErro ao ler opção:", err)
-		pause()
-		return lerString(prompt, backup)
+		fmt.Println("\nErro ao Ler opção:", err)
+		Pause()
+		return LerString(prompt, backup)
 	}
 
 	return strings.TrimSpace(input), backup + prompt + ": " + input
 }
 
-// lerStringSlice lê um slice de strings do usuário, permitindo escolher entre
+// LerStringSlice lê um slice de strings do usuário, permitindo escolher entre
 // guardar até 1 ou 2 strings. Retorna o slice lido e uma mensagem com o que
 // foi lido.
-func lerStringSlice(prompt string, backup string, maxLen int) ([]string, string) {
-	clearScreen()
+func LerStringSlice(prompt string, backup string, maxLen int) ([]string, string) {
+	ClearScreen()
 	fmt.Printf("%s", backup)
 	fmt.Printf("%s", prompt)
 
 	var slice []string
 	var s string
 
-	numTipos, backup := lerInt32("Numero de "+prompt, backup, maxLen)
+	numTipos, backup := LerInt32("Numero de "+prompt, backup, maxLen)
 
 	for i := int32(0); i < numTipos; i++ {
-		s, backup = lerString(prompt+"["+strconv.Itoa(len(slice)+1)+"]", backup)
+		s, backup = LerString(prompt+"["+strconv.Itoa(len(slice)+1)+"]", backup)
 		slice = append(slice, s)
 	}
 

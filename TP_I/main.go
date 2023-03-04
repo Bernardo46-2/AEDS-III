@@ -2,29 +2,33 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/Bernardo46-2/AEDS-III/crud"
+	"github.com/Bernardo46-2/AEDS-III/dataManager"
+	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
 func main() {
 	menu := "1 - Create\n2 - Read\n3 - Update\n4 - Delete\n8 - Convert CSV to Bin\n0 - Exit\n"
 
 	for quit := false; !quit; {
-		switch lerInt(menu) {
+		switch utils.LerInt(menu) {
 		case 0:
 			fmt.Printf("\nSaindo do programa...\n\n")
 			quit = true
 		case 1:
-			create()
+			crud.Create()
 		case 2:
-			read()
+			crud.Read()
 		case 3:
-			update()
+			crud.Update()
 		case 4:
-			delete()
+			crud.Delete()
 		case 8:
-			importCSV().CsvToBin()
+			dataManager.ImportCSV().CsvToBin()
 		default:
 			fmt.Println("Opção inválida")
 		}
-		pause()
+		utils.Pause()
 	}
 }

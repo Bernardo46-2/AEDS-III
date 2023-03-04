@@ -1,14 +1,17 @@
-package main
+package dataManager
 
 import (
 	"encoding/binary"
 	"encoding/csv"
 	"fmt"
 	"os"
+
+	"github.com/Bernardo46-2/AEDS-III/models"
+	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-const FILE string = "csv/pokedex.csv"
-const BIN_FILE string = "csv/pokedex.dat"
+const FILE string = "data/pokedex.csv"
+const BIN_FILE string = "data/pokedex.dat"
 
 type CSV struct {
 	file [][]string
@@ -16,7 +19,7 @@ type CSV struct {
 
 // Funcao para importar o arquivo .csv para uma matriz
 // de strings
-func importCSV() *CSV {
+func ImportCSV() *CSV {
 	// Abrir o arquivo CSV
 	file, err := os.Open(FILE)
 	if err != nil {
@@ -49,11 +52,11 @@ func (csv *CSV) CsvToBin() {
 	}
 	defer file.Close()
 
-	writeBytes(file, IntToBytes(int32(len(csv.file))))
+	writeBytes(file, utils.IntToBytes(int32(len(csv.file))))
 
 	for i := 1; i < len(csv.file); i++ {
 		row := csv.file[i]
-		pokemon := parsePokemon(row)
+		pokemon := models.ParsePokemon(row)
 		bytes := pokemon.ToBytes()
 		writeBytes(file, bytes)
 	}

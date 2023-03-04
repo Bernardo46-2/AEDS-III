@@ -1,23 +1,27 @@
-package main
+package crud
 
 import (
 	"fmt"
+
+	"github.com/Bernardo46-2/AEDS-III/dataManager"
+	"github.com/Bernardo46-2/AEDS-III/models"
+	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-func create() {
-	pokemon := readPokemon()
+func Create() {
+	pokemon := models.ReadPokemon()
 	fmt.Printf("%s", pokemon.ToString())
 	pokeBytes := pokemon.ToBytes()
 
-	if err := AppendPokemon(pokeBytes); err != nil {
+	if err := dataManager.AppendPokemon(pokeBytes); err != nil {
 		fmt.Println("\n", err)
 	} else {
 		fmt.Println("Pokemon inserido com sucesso")
 	}
 }
 
-func read() {
-	pokemon, _, err := readBinToPoke(lerInt("Digite o numero da pokedex a pesquisar:\n"))
+func Read() {
+	pokemon, _, err := dataManager.ReadBinToPoke(utils.LerInt("Digite o numero da pokedex a pesquisar:\n"))
 	if err != nil {
 		fmt.Printf("\n%s\n", err)
 	} else {
@@ -25,8 +29,8 @@ func read() {
 	}
 }
 
-func update() {
-	pokemon, pos, err := readBinToPoke(lerInt("Digite o numero da pokedex a pesquisar:\n"))
+func Update() {
+	pokemon, pos, err := dataManager.ReadBinToPoke(utils.LerInt("Digite o numero da pokedex a pesquisar:\n"))
 
 	if err != nil {
 		if err.Error() == "Pokemon não encontrado" {
@@ -37,14 +41,14 @@ func update() {
 		}
 	}
 
-	pokemon.alterarCampo()
+	pokemon.AlterarCampo()
 	pokeBytes := pokemon.ToBytes()
-	if err := deletarPokemon(pos); err != nil {
+	if err := dataManager.DeletarPokemon(pos); err != nil {
 		fmt.Printf("Erro ao alterar\n%s\n", err)
 		return
 	}
 
-	if err := AppendPokemon(pokeBytes); err != nil {
+	if err := dataManager.AppendPokemon(pokeBytes); err != nil {
 		fmt.Println("\n", err)
 		return
 	}
@@ -53,12 +57,12 @@ func update() {
 
 }
 
-func delete() {
-	pokemon, pos, err := readBinToPoke(lerInt("Digite o numero da pokedex a deletar:\n"))
+func Delete() {
+	pokemon, pos, err := dataManager.ReadBinToPoke(utils.LerInt("Digite o numero da pokedex a deletar:\n"))
 	if err != nil {
 		fmt.Printf("Erro ao excluir\n%s\n", err)
 	} else {
-		if err = deletarPokemon(pos); err != nil {
+		if err = dataManager.DeletarPokemon(pos); err != nil {
 			fmt.Printf("Erro ao excluir\n%s\n", err)
 		}
 		// AlterarNumRegistros(-1)

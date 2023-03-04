@@ -1,10 +1,12 @@
-package main
+package dataManager
 
 import (
 	"encoding/binary"
 	"fmt"
 	"io"
 	"os"
+
+	"github.com/Bernardo46-2/AEDS-III/models"
 )
 
 // readBinToPoke lê um arquivo binário com informações de Pokémons e retorna
@@ -17,11 +19,11 @@ import (
 //
 // A função retorna um Pokémon com as informações encontradas no arquivo binário.
 // Se o número do Pokémon não for encontrado, o número retornado será -1.
-func readBinToPoke(id int) (Pokemon, int64, error) {
+func ReadBinToPoke(id int) (models.Pokemon, int64, error) {
 	// Abre o arquivo binário
 	file, err := os.Open(BIN_FILE)
 	if err != nil {
-		return Pokemon{}, 0, fmt.Errorf("erro ao abrir o arquivo: %v", err)
+		return models.Pokemon{}, 0, fmt.Errorf("erro ao abrir o arquivo: %v", err)
 	}
 	defer file.Close()
 
@@ -29,7 +31,7 @@ func readBinToPoke(id int) (Pokemon, int64, error) {
 	var numEntradas int32
 	if err = binary.Read(file, binary.LittleEndian, &numEntradas); err != nil {
 		pos, _ := file.Seek(0, io.SeekCurrent)
-		return Pokemon{}, pos, fmt.Errorf("erro ao ler número de entradas: %v Linha Corrompida: %d", err, pos)
+		return models.Pokemon{}, pos, fmt.Errorf("erro ao ler número de entradas: %v Linha Corrompida: %d", err, pos)
 	}
 
 	// Percorre as entradas do arquivo
@@ -40,26 +42,26 @@ func readBinToPoke(id int) (Pokemon, int64, error) {
 		// Lê e confere a lapide do arquivo
 		var lapide int32
 		if err = binary.Read(file, binary.LittleEndian, &lapide); err != nil {
-			return Pokemon{}, inicioRegistro, fmt.Errorf("erro ao ler lapide: %v Linha Corrompida: %d", err, inicioRegistro)
+			return models.Pokemon{}, inicioRegistro, fmt.Errorf("erro ao ler lapide: %v Linha Corrompida: %d", err, inicioRegistro)
 		}
 
 		// Lê o tamanho do registro atual
 		var tamReg int32
 		if err = binary.Read(file, binary.LittleEndian, &tamReg); err != nil {
-			return Pokemon{}, inicioRegistro, fmt.Errorf("erro ao ler tamanho do registro: %v Linha Corrompida: %d", err, inicioRegistro)
+			return models.Pokemon{}, inicioRegistro, fmt.Errorf("erro ao ler tamanho do registro: %v Linha Corrompida: %d", err, inicioRegistro)
 		}
 
 		// Lê os bytes correspondentes ao registro atual
 		pokeBytes := make([]byte, tamReg-4)
 		if _, err := io.ReadFull(file, pokeBytes); err != nil {
-			return Pokemon{}, inicioRegistro, fmt.Errorf("erro ao ler registro: %v Linha Corrompida: %d", err, inicioRegistro)
+			return models.Pokemon{}, inicioRegistro, fmt.Errorf("erro ao ler registro: %v Linha Corrompida: %d", err, inicioRegistro)
 		}
 
-		// Converte os bytes para uma struct Pokemon se nao houver lapide
-		var pokemonAtual Pokemon
+		// Converte os bytes para uma struct models.Pokemon se nao houver lapide
+		var pokemonAtual models.Pokemon
 		if lapide != 0 {
-			if err = pokemonAtual.parseBinToPoke(pokeBytes); err != nil {
-				return Pokemon{}, inicioRegistro, fmt.Errorf("erro ao converter registro para Pokemon: %v Linha Corrompida: %d", err, inicioRegistro)
+			if err = pokemonAtual.ParseBinToPoke(pokeBytes); err != nil {
+				return models.Pokemon{}, inicioRegistro, fmt.Errorf("erro ao converter registro para Pokemon: %v Linha Corrompida: %d", err, inicioRegistro)
 			}
 		}
 
@@ -71,10 +73,10 @@ func readBinToPoke(id int) (Pokemon, int64, error) {
 
 	// Se não encontrou o Pokémon procurado, retorna um erro
 	pos, _ := file.Seek(0, io.SeekCurrent)
-	return Pokemon{}, pos, fmt.Errorf("Pokemon não encontrado")
+	return models.Pokemon{}, pos, fmt.Errorf("Pokemon não encontrado")
 }
 
-func deletarPokemon(posicao int64) error {
+func DeletarPokemon(posicao int64) error {
 	file, err := os.OpenFile(BIN_FILE, os.O_RDWR, 0644)
 	if err != nil {
 		return fmt.Errorf("erro ao abrir arquivo: %v", err)

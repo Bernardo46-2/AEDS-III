@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
 	"bytes"
@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 	"unsafe"
+
+	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
 const MAX_NAME_LEN = 40
@@ -115,51 +117,51 @@ func (p *Pokemon) ToBytes() []byte {
 		binary.LittleEndian.PutUint32(japName[i*4:(i+1)*4], uint32(v))
 	}
 
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(int32(valid)), offset)
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Total), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(int32(valid)), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Size.Total), offset)
 
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Numero), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Numero), offset)
 
 	pokeBytes, offset = copyBytes(pokeBytes, []byte(p.Nome), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, filler, offset)
 
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(int32(len(runes)*4)), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(int32(len(runes)*4)), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, japName, offset)
 
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Geracao), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Geracao), offset)
 
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Lancamento), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Size.Lancamento), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, releaseDate, offset)
 
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Especie), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Size.Especie), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, []byte(p.Especie), offset)
 
 	pokeBytes, offset = copyBytes(pokeBytes, lendario, offset)
 	pokeBytes, offset = copyBytes(pokeBytes, mitico, offset)
 
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Size.Tipo), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Size.Tipo), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, []byte(p.Tipo[0]+","), offset)
 
 	if len(p.Tipo) > 1 {
 		pokeBytes, offset = copyBytes(pokeBytes, []byte(p.Tipo[1]), offset)
 	}
 
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Atk), offset)
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Def), offset)
-	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Hp), offset)
-	pokeBytes, offset = copyBytes(pokeBytes, FloatToBytes(p.Altura), offset)
-	pokeBytes, _ = copyBytes(pokeBytes, FloatToBytes(p.Peso), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Atk), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Def), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Hp), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.FloatToBytes(p.Altura), offset)
+	pokeBytes, _ = copyBytes(pokeBytes, utils.FloatToBytes(p.Peso), offset)
 
 	return pokeBytes
 }
 
-// parseBinToPoke é responsável por interpretar os bytes de um registro binário
+// ParseBinToPoke é responsável por interpretar os bytes de um registro binário
 // contendo informações sobre um Pokémon e criar um objeto do tipo Pokemon
 // a partir desses dados.
 //
 // A função retorna um objeto do tipo Pokemon preenchido com as informações do
 // registro binário.
-func (p *Pokemon) parseBinToPoke(registro []byte) error {
+func (p *Pokemon) ParseBinToPoke(registro []byte) error {
 	ptr := 0
 
 	p.Numero, ptr = bytesToInt32(registro, ptr)
@@ -334,13 +336,13 @@ func bytesToFloat32(registro []byte, ptr int) (float32, int) {
 	return float, ptr + size
 }
 
-func parsePokemon(line []string) Pokemon {
+func ParsePokemon(line []string) Pokemon {
 	var pokemon Pokemon
 
-	pokemon.Numero, _ = Atoi32(line[1])
+	pokemon.Numero, _ = utils.Atoi32(line[1])
 	pokemon.Nome = line[2]
-	pokemon.NomeJap = RemoveAfterSpace(line[4])
-	geracao, _ := Atoi32(line[5])
+	pokemon.NomeJap = utils.RemoveAfterSpace(line[4])
+	geracao, _ := utils.Atoi32(line[5])
 	pokemon.Geracao = geracao
 	pokemon.Lancamento, _ = time.Parse("2006/01/02", GenReleaseDates[int(geracao)])
 	pokemon.Especie = line[9]
@@ -350,9 +352,9 @@ func parsePokemon(line []string) Pokemon {
 	if len(line[12]) > 0 {
 		pokemon.Tipo = append(pokemon.Tipo, line[12])
 	}
-	pokemon.Atk, _ = Atoi32(line[21])
-	pokemon.Def, _ = Atoi32(line[22])
-	pokemon.Hp, _ = Atoi32(line[20])
+	pokemon.Atk, _ = utils.Atoi32(line[21])
+	pokemon.Def, _ = utils.Atoi32(line[22])
+	pokemon.Hp, _ = utils.Atoi32(line[20])
 	altura, _ := strconv.ParseFloat(line[13], 32)
 	peso, _ := strconv.ParseFloat(line[14], 32)
 
@@ -405,76 +407,76 @@ func (p *Pokemon) calculateSize() {
 		p.Size.Peso + 4 + 1
 }
 
-func readPokemon() Pokemon {
+func ReadPokemon() Pokemon {
 	var p Pokemon
 	var tmpNomeJap string
 	prompt := ""
-	p.Numero, prompt = lerInt32("Numero da pokedex", prompt)
-	p.Nome, prompt = lerString("Nome", prompt)
-	tmpNomeJap, prompt = lerString("Nome Japones", prompt)
-	p.NomeJap = ToKatakana(tmpNomeJap)
+	p.Numero, prompt = utils.LerInt32("Numero da pokedex", prompt)
+	p.Nome, prompt = utils.LerString("Nome", prompt)
+	tmpNomeJap, prompt = utils.LerString("Nome Japones", prompt)
+	p.NomeJap = utils.ToKatakana(tmpNomeJap)
 	fmt.Printf("Conversao para japones: %s\n", p.NomeJap)
 	prompt += "Conversao para japones: " + p.NomeJap + "\n"
-	p.Geracao, prompt = lerInt32("Geraçao", prompt, len(GenReleaseDates))
+	p.Geracao, prompt = utils.LerInt32("Geraçao", prompt, len(GenReleaseDates))
 	p.Lancamento, _ = time.Parse("2006/01/02", GenReleaseDates[int(p.Geracao)])
 	fmt.Printf("Data da geracao = %s\n", GenReleaseDates[int(p.Geracao)])
 	prompt += "Data da geracao = " + GenReleaseDates[int(p.Geracao)] + "\n"
-	p.Especie, prompt = lerString("Especie", prompt)
-	p.Lendario, prompt = lerBool("É Lendario", prompt)
-	p.Mitico, prompt = lerBool("É Mitico", prompt)
-	p.Tipo, prompt = lerStringSlice("Tipo do pokemon", prompt, 2)
-	p.Atk, prompt = lerInt32("Atk", prompt)
-	p.Def, prompt = lerInt32("Def", prompt)
-	p.Hp, prompt = lerInt32("Hp", prompt)
-	p.Altura, prompt = lerFloat32("Altura", prompt)
-	p.Peso, _ = lerFloat32("Peso", prompt)
+	p.Especie, prompt = utils.LerString("Especie", prompt)
+	p.Lendario, prompt = utils.LerBool("É Lendario", prompt)
+	p.Mitico, prompt = utils.LerBool("É Mitico", prompt)
+	p.Tipo, prompt = utils.LerStringSlice("Tipo do pokemon", prompt, 2)
+	p.Atk, prompt = utils.LerInt32("Atk", prompt)
+	p.Def, prompt = utils.LerInt32("Def", prompt)
+	p.Hp, prompt = utils.LerInt32("Hp", prompt)
+	p.Altura, prompt = utils.LerFloat32("Altura", prompt)
+	p.Peso, _ = utils.LerFloat32("Peso", prompt)
 	p.calculateSize()
 
 	return p
 }
 
-func (p *Pokemon) alterarCampo() {
+func (p *Pokemon) AlterarCampo() {
 	continuar := true
 	for continuar {
 		prompt := ""
-		campo, prompt := lerString(p.ToString()+"\nQual campo quer alterar", prompt)
+		campo, prompt := utils.LerString(p.ToString()+"\nQual campo quer alterar", prompt)
 		switch campo {
 		case "Numero":
-			p.Numero, prompt = lerInt32("Novo Numero", prompt)
+			p.Numero, prompt = utils.LerInt32("Novo Numero", prompt)
 		case "Nome":
-			p.Nome, prompt = lerString("Novo Nome", prompt)
+			p.Nome, prompt = utils.LerString("Novo Nome", prompt)
 		case "NomeJap":
-			tmpNomeJap, prompt := lerString("Novo Nome Japones", prompt)
-			p.NomeJap = ToKatakana(tmpNomeJap)
+			tmpNomeJap, prompt := utils.LerString("Novo Nome Japones", prompt)
+			p.NomeJap = utils.ToKatakana(tmpNomeJap)
 			fmt.Printf("Conversao para japones: %s\n", p.NomeJap)
 			prompt += "Conversao para japones: " + p.NomeJap + "\n"
 		case "Geracao":
-			p.Geracao, prompt = lerInt32("Nova Geracao", prompt)
+			p.Geracao, prompt = utils.LerInt32("Nova Geracao", prompt)
 		case "Lancamento":
-			p.Lancamento, prompt = lerTime("Novo Data de Lancamento", prompt)
+			p.Lancamento, prompt = utils.LerTime("Novo Data de Lancamento", prompt)
 		case "Especie":
-			p.Especie, prompt = lerString("Nova Especie", prompt)
+			p.Especie, prompt = utils.LerString("Nova Especie", prompt)
 		case "Lendario":
-			p.Lendario, prompt = lerBool("Novo Status Lendario", prompt)
+			p.Lendario, prompt = utils.LerBool("Novo Status Lendario", prompt)
 		case "Mitico":
-			p.Mitico, prompt = lerBool("Novo Status Mitico", prompt)
+			p.Mitico, prompt = utils.LerBool("Novo Status Mitico", prompt)
 		case "Tipo":
-			p.Tipo, prompt = lerStringSlice("Novo Tipo", prompt, 2)
+			p.Tipo, prompt = utils.LerStringSlice("Novo Tipo", prompt, 2)
 		case "Atk":
-			p.Atk, prompt = lerInt32("Novo Atk", prompt)
+			p.Atk, prompt = utils.LerInt32("Novo Atk", prompt)
 		case "Def":
-			p.Def, prompt = lerInt32("Nova Def", prompt)
+			p.Def, prompt = utils.LerInt32("Nova Def", prompt)
 		case "Hp":
-			p.Hp, prompt = lerInt32("Novo Hp", prompt)
+			p.Hp, prompt = utils.LerInt32("Novo Hp", prompt)
 		case "Altura":
-			p.Altura, prompt = lerFloat32("Nova Altura", prompt)
+			p.Altura, prompt = utils.LerFloat32("Nova Altura", prompt)
 		case "Peso":
-			p.Peso, prompt = lerFloat32("Novo Peso", prompt)
+			p.Peso, prompt = utils.LerFloat32("Novo Peso", prompt)
 		default:
 			fmt.Println("\nCampo invalido, digite novamente")
-			pause()
+			utils.Pause()
 		}
-		continuar, _ = lerBool("\nDeseja alterar mais algum campo? S/N", prompt)
+		continuar, _ = utils.LerBool("\nDeseja alterar mais algum campo? S/N", prompt)
 	}
 	p.calculateSize()
 }
