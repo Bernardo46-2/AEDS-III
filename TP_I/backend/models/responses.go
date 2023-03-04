@@ -4,8 +4,8 @@ import "net/http"
 
 type Response struct {
 	Success bool   `json:"sucesso"`
-	Codigo  int    `json:"codigo"`
-	Message string `json:"message"`
+	Code    int    `json:"codigo"`
+	Message string `json:"mensagem"`
 }
 
 func ErrorResponse(codigo int) Response {
@@ -46,7 +46,7 @@ func ErrorResponse(codigo int) Response {
 		msg = "Erro desconhecido"
 	}
 
-	return Response{Success: false, Codigo: codigo, Message: msg}
+	return Response{Success: false, Code: codigo, Message: msg}
 }
 
 func SuccessResponse(codigo int) Response {
@@ -69,5 +69,5 @@ func SuccessResponse(codigo int) Response {
 		msg = "Mensagem de sucesso desconhecida"
 	}
 
-	return Response{Success: true, Codigo: codigo, Message: msg}
+	return Response{Success: true, Code: codigo, Message: msg}
 }
