@@ -73,7 +73,7 @@ func ReadBinToPoke(id int) (models.Pokemon, int64, error) {
 
 	// Se não encontrou o Pokémon procurado, retorna um erro
 	pos, _ := file.Seek(0, io.SeekCurrent)
-	return models.Pokemon{}, pos, fmt.Errorf("okemon não encontrado")
+	return models.Pokemon{}, pos, fmt.Errorf("pokemon não encontrado")
 }
 
 func DeletarPokemon(posicao int64) error {
@@ -127,19 +127,19 @@ func AlterarNumRegistros(n int32) error {
 	return nil
 }
 
-func AppendPokemon(pokemon []byte) error {
+func AppendPokemon(pokemon []byte) (int, error) {
 	file, err := os.OpenFile(BIN_FILE, os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
-		return err
+		return -1, err
 	}
 	defer file.Close()
 
 	err = binary.Write(file, binary.LittleEndian, pokemon)
 	if err != nil {
-		return err
+		return -1, err
 	}
 
 	AlterarNumRegistros(1)
 
-	return nil
+	return 22, err
 }

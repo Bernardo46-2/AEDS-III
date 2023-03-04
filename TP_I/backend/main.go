@@ -14,7 +14,8 @@ func main() {
 	http.HandleFunc("/post/", middlewares.EnableCORS(handlers.PostPokemon))
 	http.HandleFunc("/put/", middlewares.EnableCORS(handlers.PutPokemon))
 	http.HandleFunc("/delete/", middlewares.EnableCORS(handlers.DeletePokemon))
-	http.HandleFunc("/load-database", middlewares.EnableCORS(handlers.LoadDatabase))
+	http.HandleFunc("/loadDatabase", middlewares.EnableCORS(handlers.LoadDatabase))
+	http.HandleFunc("/toKatakana/", middlewares.EnableCORS(handlers.ToKatakana))
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

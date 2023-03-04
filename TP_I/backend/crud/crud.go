@@ -7,13 +7,13 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/models"
 )
 
-func Create(pokemon models.Pokemon) (err error) {
+func Create(pokemon models.Pokemon) (id int, err error) {
 	pokemon.CalculateSize()
 
 	fmt.Printf("%s", pokemon.ToString())
 	pokeBytes := pokemon.ToBytes()
 
-	err = dataManager.AppendPokemon(pokeBytes)
+	id, err = dataManager.AppendPokemon(pokeBytes)
 
 	return
 }
@@ -35,7 +35,7 @@ func Update(pokemon models.Pokemon) (err error) {
 		return
 	}
 
-	if err = dataManager.AppendPokemon(pokeBytes); err != nil {
+	if _, err = dataManager.AppendPokemon(pokeBytes); err != nil {
 		return
 	}
 
@@ -51,8 +51,6 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 	if err = dataManager.DeletarPokemon(pos); err != nil {
 		return
 	}
-
-	// AlterarNumRegistros(-1)
 
 	return
 }
