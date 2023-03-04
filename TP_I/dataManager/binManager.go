@@ -73,7 +73,7 @@ func ReadBinToPoke(id int) (models.Pokemon, int64, error) {
 
 	// Se não encontrou o Pokémon procurado, retorna um erro
 	pos, _ := file.Seek(0, io.SeekCurrent)
-	return models.Pokemon{}, pos, fmt.Errorf("Pokemon não encontrado")
+	return models.Pokemon{}, pos, fmt.Errorf("okemon não encontrado")
 }
 
 func DeletarPokemon(posicao int64) error {

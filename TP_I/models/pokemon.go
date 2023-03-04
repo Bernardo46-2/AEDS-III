@@ -17,24 +17,24 @@ import (
 const MAX_NAME_LEN = 40
 
 type Pokemon struct {
-	Numero     int32
-	Nome       string
-	NomeJap    string
-	Geracao    int32
-	Lancamento time.Time
-	Especie    string
-	Lendario   bool
-	Mitico     bool
-	Tipo       []string
-	Atk        int32
-	Def        int32
-	Hp         int32
-	Altura     float32
-	Peso       float32
-	Size       PokemonSize
+	Numero     int32     `json:"numero"`
+	Nome       string    `json:"nome,omitempty"`
+	NomeJap    string    `json:"nome_jap,omitempty"`
+	Geracao    int32     `json:"geracao"`
+	Lancamento time.Time `json:"lancamento"`
+	Especie    string    `json:"especie"`
+	Lendario   bool      `json:"lendario"`
+	Mitico     bool      `json:"mitico"`
+	Tipo       []string  `json:"tipo"`
+	Atk        int32     `json:"atk"`
+	Def        int32     `json:"def"`
+	Hp         int32     `json:"hp"`
+	Altura     float32   `json:"altura"`
+	Peso       float32   `json:"peso"`
+	Size       PokeSize  `json:"-"`
 }
 
-type PokemonSize struct {
+type PokeSize struct {
 	Total      int32
 	Numero     int32
 	Nome       int32
@@ -178,7 +178,7 @@ func (p *Pokemon) ParseBinToPoke(registro []byte) error {
 	p.Hp, ptr = bytesToInt32(registro, ptr)
 	p.Altura, ptr = bytesToFloat32(registro, ptr)
 	p.Peso, _ = bytesToFloat32(registro, ptr)
-	p.calculateSize()
+	p.CalculateSize()
 
 	return nil
 }
@@ -234,7 +234,7 @@ func bytesToString(registro []byte, ptr int) (string, int) {
 func bytesToNome(registro []byte, ptr int) (string, int) {
 	nome := make([]byte, MAX_NAME_LEN)
 	io.ReadFull(bytes.NewReader(registro[ptr:ptr+MAX_NAME_LEN]), nome)
-	return strings.TrimSpace(string(nome)), ptr + MAX_NAME_LEN
+	return strings.TrimRight(string(nome), "\x00"), ptr + MAX_NAME_LEN
 }
 
 // bytesToArrayString é responsável por extrair um array de strings com
@@ -361,12 +361,12 @@ func ParsePokemon(line []string) Pokemon {
 	pokemon.Altura = float32(altura)
 	pokemon.Peso = float32(peso)
 
-	pokemon.calculateSize()
+	pokemon.CalculateSize()
 
 	return pokemon
 }
 
-func (p *Pokemon) calculateSize() {
+func (p *Pokemon) CalculateSize() {
 	p.Size.Numero = int32(unsafe.Sizeof(p.Numero))
 	p.Size.Nome = MAX_NAME_LEN
 	p.Size.NomeJap = int32(len(p.NomeJap) / 3 * 4)
@@ -430,7 +430,7 @@ func ReadPokemon() Pokemon {
 	p.Hp, prompt = utils.LerInt32("Hp", prompt)
 	p.Altura, prompt = utils.LerFloat32("Altura", prompt)
 	p.Peso, _ = utils.LerFloat32("Peso", prompt)
-	p.calculateSize()
+	p.CalculateSize()
 
 	return p
 }
@@ -478,5 +478,5 @@ func (p *Pokemon) AlterarCampo() {
 		}
 		continuar, _ = utils.LerBool("\nDeseja alterar mais algum campo? S/N", prompt)
 	}
-	p.calculateSize()
+	p.CalculateSize()
 }
