@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>POST Pokemon</title>
+</head>
+<body>
+    <script src="script.js"></script>
+	<h1>POST Pokemon</h1>
+	<form>
+		<label>
+			Numero:
+			<input type="number" id="numero" name="numero">
+		</label>
+		<br>
+		<label>
+			Nome:
+			<input type="text" id="nome" name="nome">
+		</label>
+		<br>
+		<label>
+			Nome Japones:
+			<input type="text" id="nome_jap" name="nome_jap" accept-charset="UTF-8">
+		</label>
+		<br>
+		<label>
+			Geração:
+			<input type="number" id="geracao" name="geracao">
+		</label>
+		<br>
+		<label>
+			Lançamento:
+			<input type="date" id="lancamento" name="lancamento">
+		</label>
+		<br>
+		<label>
+			Espécie:
+			<input type="text" id="especie" name="especie">
+		</label>
+		<br>
+		<label>
+			Lendário:
+			<input type="checkbox" id="lendario" name="lendario">
+		</label>
+		<br>
+		<label>
+			Mítico:
+			<input type="checkbox" id="mitico" name="mitico">
+		</label>
+		<br>
+		<label>
+			Tipo:
+			<input type="text" id="tipo" name="tipo">
+		</label>
+		<br>
+		<label>
+			Atk:
+			<input type="number" id="atk" name="atk">
+		</label>
+		<br>
+		<label>
+			Def:
+			<input type="number" id="def" name="def">
+		</label>
+		<br>
+		<label>
+			Hp:
+			<input type="number" id="hp" name="hp">
+		</label>
+		<br>
+		<label>
+			Altura:
+			<input type="number" step="0.01" id="altura" name="altura">
+		</label>
+		<br>
+		<label>
+			Peso:
+			<input type="number" step="0.01" id="peso" name="peso">
+		</label>
+		<br>
+		<button type="button" onclick="postData()">Enviar</button>
+	</form>
+</body>
