@@ -17,7 +17,7 @@ func create() {
 }
 
 func read() {
-	pokemon, err, _ := readBinToPoke(lerInt("Digite o numero da pokedex a pesquisar:\n"))
+	pokemon, _, err := readBinToPoke(lerInt("Digite o numero da pokedex a pesquisar:\n"))
 	if err != nil {
 		fmt.Printf("\n%s\n", err)
 	} else {
@@ -26,7 +26,7 @@ func read() {
 }
 
 func update() {
-	pokemon, err, pos := readBinToPoke(lerInt("Digite o numero da pokedex a pesquisar:\n"))
+	pokemon, pos, err := readBinToPoke(lerInt("Digite o numero da pokedex a pesquisar:\n"))
 
 	if err != nil {
 		if err.Error() == "Pokemon não encontrado" {
@@ -54,7 +54,7 @@ func update() {
 }
 
 func delete() {
-	pokemon, err, pos := readBinToPoke(lerInt("Digite o numero da pokedex a deletar:\n"))
+	pokemon, pos, err := readBinToPoke(lerInt("Digite o numero da pokedex a deletar:\n"))
 	if err != nil {
 		fmt.Printf("Erro ao excluir\n%s\n", err)
 	} else {

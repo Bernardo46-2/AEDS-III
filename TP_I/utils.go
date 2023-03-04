@@ -87,8 +87,8 @@ func lerInt(prompt string) int {
 
 func lerInt32(prompt string, backup string, limite ...int) (int32, string) {
 	clearScreen()
-	fmt.Printf(backup)
-	fmt.Printf(prompt + ": ")
+	fmt.Printf("%s", backup)
+	fmt.Printf("%s: ", prompt)
 
 	var input string
 	var result int
@@ -116,8 +116,8 @@ func lerInt32(prompt string, backup string, limite ...int) (int32, string) {
 
 func lerFloat32(prompt string, backup string) (float32, string) {
 	clearScreen()
-	fmt.Printf(backup)
-	fmt.Printf(prompt + ": ")
+	fmt.Printf("%s", backup)
+	fmt.Printf("%s: ", prompt)
 
 	var input string
 	var result float64
@@ -145,7 +145,7 @@ func parseBool(str string) (bool, error) {
 	case "0", "f", "F", "false", "FALSE", "False", "n", "N", "nao", "Nao", "NAO", "não", "Não", "NÃO", "no", "No", "NO":
 		return false, nil
 	}
-	return false, fmt.Errorf("Erro de sintaxe")
+	return false, fmt.Errorf("erro de sintaxe")
 }
 
 // lerBool é uma função que lê um valor booleano da entrada do usuário.
@@ -156,8 +156,8 @@ func parseBool(str string) (bool, error) {
 func lerBool(prompt string, backup string) (bool, string) {
 	// Limpa a tela e exibe a mensagem de backup
 	clearScreen()
-	fmt.Printf(backup)
-	fmt.Printf(prompt + ": ")
+	fmt.Printf("%s", backup)
+	fmt.Printf("%s: ", prompt)
 
 	var input string
 	var result bool
@@ -185,8 +185,8 @@ func lerBool(prompt string, backup string) (bool, string) {
 
 func lerTime(prompt string, backup string) (time.Time, string) {
 	clearScreen()
-	fmt.Printf(backup)
-	fmt.Printf(prompt + " (dd/mm/aaaa): ")
+	fmt.Printf("%s", backup)
+	fmt.Printf("%s (dd/mm/aaaa): ", prompt)
 
 	var input string
 	var t time.Time
@@ -209,8 +209,8 @@ func lerTime(prompt string, backup string) (time.Time, string) {
 
 func lerString(prompt string, backup string) (string, string) {
 	clearScreen()
-	fmt.Printf(backup)
-	fmt.Printf(prompt + ": ")
+	fmt.Printf("%s", backup)
+	fmt.Printf("%s: ", prompt)
 
 	reader := bufio.NewReader(os.Stdin)
 	var input string
@@ -230,8 +230,8 @@ func lerString(prompt string, backup string) (string, string) {
 // foi lido.
 func lerStringSlice(prompt string, backup string, maxLen int) ([]string, string) {
 	clearScreen()
-	fmt.Printf(backup)
-	fmt.Printf(prompt)
+	fmt.Printf("%s", backup)
+	fmt.Printf("%s", prompt)
 
 	var slice []string
 	var s string

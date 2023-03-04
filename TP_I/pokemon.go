@@ -148,9 +148,9 @@ func (p *Pokemon) ToBytes() []byte {
 	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Def), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, IntToBytes(p.Hp), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, FloatToBytes(p.Altura), offset)
-	pokeBytes, offset = copyBytes(pokeBytes, FloatToBytes(p.Peso), offset)
+	pokeBytes, _ = copyBytes(pokeBytes, FloatToBytes(p.Peso), offset)
 
-    return pokeBytes
+	return pokeBytes
 }
 
 // parseBinToPoke é responsável por interpretar os bytes de um registro binário
@@ -175,7 +175,7 @@ func (p *Pokemon) parseBinToPoke(registro []byte) error {
 	p.Def, ptr = bytesToInt32(registro, ptr)
 	p.Hp, ptr = bytesToInt32(registro, ptr)
 	p.Altura, ptr = bytesToFloat32(registro, ptr)
-	p.Peso, ptr = bytesToFloat32(registro, ptr)
+	p.Peso, _ = bytesToFloat32(registro, ptr)
 	p.calculateSize()
 
 	return nil
@@ -230,9 +230,9 @@ func bytesToString(registro []byte, ptr int) (string, int) {
 }
 
 func bytesToNome(registro []byte, ptr int) (string, int) {
-    nome := make([]byte, MAX_NAME_LEN)
-    io.ReadFull(bytes.NewReader(registro[ptr:ptr+MAX_NAME_LEN]), nome)
-    return strings.TrimSpace(string(nome)), ptr + MAX_NAME_LEN
+	nome := make([]byte, MAX_NAME_LEN)
+	io.ReadFull(bytes.NewReader(registro[ptr:ptr+MAX_NAME_LEN]), nome)
+	return strings.TrimSpace(string(nome)), ptr + MAX_NAME_LEN
 }
 
 // bytesToArrayString é responsável por extrair um array de strings com
@@ -328,7 +328,7 @@ func bytesToBool(registro []byte, ptr int) (bool, int) {
 //
 // A função retorna o valor float32 convertido e o novo ponteiro após a conversão.
 func bytesToFloat32(registro []byte, ptr int) (float32, int) {
-    size := 4
+	size := 4
 	bits := binary.LittleEndian.Uint32(registro[ptr : ptr+size])
 	float := math.Float32frombits(bits)
 	return float, ptr + size
@@ -427,7 +427,7 @@ func readPokemon() Pokemon {
 	p.Def, prompt = lerInt32("Def", prompt)
 	p.Hp, prompt = lerInt32("Hp", prompt)
 	p.Altura, prompt = lerFloat32("Altura", prompt)
-	p.Peso, prompt = lerFloat32("Peso", prompt)
+	p.Peso, _ = lerFloat32("Peso", prompt)
 	p.calculateSize()
 
 	return p
