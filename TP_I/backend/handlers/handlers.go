@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/Bernardo46-2/AEDS-III/crud"
+	"github.com/Bernardo46-2/AEDS-III/dataManager"
 	"github.com/Bernardo46-2/AEDS-III/models"
 )
 
@@ -83,4 +84,13 @@ func DeletePokemon(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Registro deletado com sucesso!"))
+}
+
+func LoadDatabase(w http.ResponseWriter, r *http.Request) {
+	// Leitura do arquivo CSV e popule o banco de dados binário
+	dataManager.ImportCSV().CsvToBin()
+
+	// Retorne uma resposta indicando que a operação foi concluída
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Banco de dados carregado com sucesso!"))
 }
