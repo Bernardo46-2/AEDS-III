@@ -21,13 +21,9 @@ func writeError(w http.ResponseWriter, codes ...int) {
 	json.NewEncoder(w).Encode(models.ErrorResponse(code))
 }
 
-func writeSuccess(w http.ResponseWriter, codes ...int) {
+func writeSuccess(w http.ResponseWriter, code int) {
 	w.Header().Set("Content-Type", "application/json")
-	code := codes[0]
-	w.WriteHeader(code)
-	if len(codes) > 1 {
-		code = codes[1]
-	}
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(models.SuccessResponse(code))
 }
 
@@ -94,7 +90,7 @@ func PutPokemon(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeSuccess(w, http.StatusOK, 2)
+	writeSuccess(w, 4)
 }
 
 func DeletePokemon(w http.ResponseWriter, r *http.Request) {
@@ -107,13 +103,13 @@ func DeletePokemon(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeSuccess(w, 3)
+	writeSuccess(w, 5)
 }
 
 func LoadDatabase(w http.ResponseWriter, r *http.Request) {
 	dataManager.ImportCSV().CsvToBin()
 
-	writeSuccess(w, 4)
+	writeSuccess(w, 6)
 }
 
 func ToKatakana(w http.ResponseWriter, r *http.Request) {
