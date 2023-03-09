@@ -1,82 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
+
 <head>
-	<title>POST Pokemon</title>
+    <meta charset="UTF-8">
+    <title>Pokédex</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link href="https://fonts.googleapis.com/css?family=Rubik&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
 </head>
-<body>
-    <script src="script.js"></script>
-	<h1>POST Pokemon</h1>
-	<form>
-		<label>
-			Numero:
-			<input type="number" id="numero" name="numero">
-		</label>
-		<br>
-		<label>
-			Nome:
-			<input type="text" id="nome" name="nome">
-		</label>
-		<br>
-		<label>
-			Nome Japones:
-			<input type="text" id="nome_jap" name="nome_jap" accept-charset="UTF-8">
-		</label>
-		<br>
-		<label>
-			Geração:
-			<input type="number" id="geracao" name="geracao">
-		</label>
-		<br>
-		<label>
-			Lançamento:
-			<input type="date" id="lancamento" name="lancamento">
-		</label>
-		<br>
-		<label>
-			Espécie:
-			<input type="text" id="especie" name="especie">
-		</label>
-		<br>
-		<label>
-			Lendário:
-			<input type="checkbox" id="lendario" name="lendario">
-		</label>
-		<br>
-		<label>
-			Mítico:
-			<input type="checkbox" id="mitico" name="mitico">
-		</label>
-		<br>
-		<label>
-			Tipo:
-			<input type="text" id="tipo" name="tipo">
-		</label>
-		<br>
-		<label>
-			Atk:
-			<input type="number" id="atk" name="atk">
-		</label>
-		<br>
-		<label>
-			Def:
-			<input type="number" id="def" name="def">
-		</label>
-		<br>
-		<label>
-			Hp:
-			<input type="number" id="hp" name="hp">
-		</label>
-		<br>
-		<label>
-			Altura:
-			<input type="number" step="0.01" id="altura" name="altura">
-		</label>
-		<br>
-		<label>
-			Peso:
-			<input type="number" step="0.01" id="peso" name="peso">
-		</label>
-		<br>
-		<button type="button" onclick="postData()">Enviar</button>
-	</form>
+
+<body class="scrollbar">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2 p-0 bgd-dark pre-sidebar">
+                <div class="sidebar">
+                    <img class="logo" src="imagens/pngegg.png" alt="Descrição da imagem">
+                    <button type="button" class="btn btn-primary btn-Pikachu btn-sidebar"><span></span><span></span><span></span><span></span>Todos os Pokemons</button>
+                    <button type="button" class="btn btn-primary btn-Bulbasaur btn-sidebar"><span></span><span></span><span></span><span></span>Adicionar</button>
+                    <button type="button" class="btn btn-primary btn-Charmander btn-sidebar"><span></span><span></span><span></span><span></span>Buscar</button>
+                    <button type="button" class="btn btn-primary btn-Squirtle btn-sidebar"><span></span><span></span><span></span><span></span>Atualizar</button>
+                    <button type="button" class="btn btn-primary btn-Eevee btn-sidebar"><span></span><span></span><span></span><span></span>Deletar</button>
+                    <button type="button" class="btn btn-primary btn-Gengar btn-sidebar"><span></span><span></span><span></span><span></span>Ordenar</button>
+                    <button type="button" class="btn btn-primary btn-Jigglypuff btn-sidebar"><span></span><span></span><span></span><span></span>Randomizar</button>
+                    <button type="button" class="btn btn-primary btn-Psyduck btn-sidebar"><span></span><span></span><span></span><span></span>Lixeira</button>
+                    <button type="button" class="btn btn-primary btn-Geodude btn-sidebar"><span></span><span></span><span></span><span></span>Importar CSV</button>
+                    <button type="button" class="btn btn-primary btn-Magikarp btn-sidebar"><span></span><span></span><span></span><span></span>Ajuda</button>
+                    <!--<button type="button" class="btn btn-primary btn-Abra btn-sidebar"><span></span><span></span><span></span><span></span>Abra</button>-->
+                    <!--<button type="button" class="btn btn-primary btn-Machop btn-sidebar"><span></span><span></span><span></span><span></span>Machop</button>-->
+                    <!--<button type="button" class="btn btn-primary btn-Jolteon btn-sidebar"><span></span><span></span><span></span><span></span>Jolteon</button>-->
+                    <!--<button type="button" class="btn btn-primary btn-Vaporeon btn-sidebar"><span></span><span></span><span></span><span></span>Vaporeon</button>-->
+                    <div class="bottom-section">
+                        <div class="divisoria"></div>
+                        <p>Marcos Lommez</p>
+                        <p>Bernardo Marques</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-10 p-0 bgd-medium-dark">
+                <div class="content">
+                    <div class="row justify-content-evenly">
+                        <div class="card bgd-eevee col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/eevee.png" alt="Eevee">
+                            <h5 class="card-title text-center">eevee</h5>
+                        </div>
+
+                        <div class="card bgd-squirtle col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/squirtle.png" alt="Eevee">
+                            <h5 class="card-title text-center">squirtle</h5>
+                        </div>
+
+                        <div class="card bgd-dragonair col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/dragonair.png" alt="Eevee">
+                            <h5 class="card-title text-center">dragonair</h5>
+                        </div>
+
+                        <div class="card bgd-jigglypuff col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/jigglypuff.png" alt="Eevee">
+                            <h5 class="card-title text-center">jigglypuff</h5>
+                        </div>
+
+                        <div class="card bgd-meowth col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/meowth.png" alt="Eevee">
+                            <h5 class="card-title text-center">meowth</h5>
+                        </div>
+
+                        <div class="card bgd-minum col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/minum.png" alt="Eevee">
+                            <h5 class="card-title text-center">minum</h5>
+                        </div>
+
+                        <div class="card bgd-pikachu col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/pikachu.png" alt="Eevee">
+                            <h5 class="card-title text-center">pikachu</h5>
+                        </div>
+
+                        <div class="card bgd-quilava col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/quilava.png" alt="Eevee">
+                            <h5 class="card-title text-center">quilava</h5>
+                        </div>
+
+                        <div class="card bgd-vaporeon col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/vaporeon.png" alt="Eevee">
+                            <h5 class="card-title text-center">vaporeon</h5>
+                        </div>
+
+                        <div class="card bgd-zapdos col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/zapdos.png" alt="Eevee">
+                            <h5 class="card-title text-center">zapdos</h5>
+                        </div>
+
+                        <div class="card bgd-geodude col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/geodude.png" alt="Eevee">
+                            <h5 class="card-title text-center">geodude</h5>
+                        </div>
+
+                        <div class="card bgd-flareon col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/flareon.png" alt="Eevee">
+                            <h5 class="card-title text-center">flareon</h5>
+                        </div>
+
+                        <div class="card bgd-gengar col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/gengar.png" alt="Eevee">
+                            <h5 class="card-title text-center">gengar</h5>
+                        </div>
+
+                        <div class="card bgd-charmander col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/charmander.png" alt="Eevee">
+                            <h5 class="card-title text-center">charmander</h5>
+                        </div>
+
+                        <div class="card bgd-psyduck col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/psyduck.png" alt="Eevee">
+                            <h5 class="card-title text-center">psyduck</h5>
+                        </div>
+
+                        <div class="card bgd-magikarp col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/magikarp.png" alt="Eevee">
+                            <h5 class="card-title text-center">magikarp</h5>
+                        </div>
+
+                        <div class="card bgd-abra col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/abra.png" alt="Eevee">
+                            <h5 class="card-title text-center">abra</h5>
+                        </div>
+
+                        <div class="card bgd-umbreon col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/umbreon.png" alt="Eevee">
+                            <h5 class="card-title text-center">umbreon</h5>
+                        </div>
+
+                        <div class="card bgd-jolteon col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/jolteon.png" alt="Eevee">
+                            <h5 class="card-title text-center">jolteon</h5>
+                        </div>
+
+                        <div class="card bgd-jigglypuff col-sm-6 col-lg-3 col-xxl-2">
+                            <img class="card-img-top" src="imagens/jigglypuff.png" alt="Eevee">
+                            <h5 class="card-title text-center">jigglypuff</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </body>
+
+</html>
