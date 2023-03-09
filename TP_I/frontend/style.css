@@ -1,4 +1,5 @@
 :root {
+    --random: 0;
     --background-dark: #161a1f;
     --background-medium-dark: #2b2e36;
     --text-secondary: #5a5c5f;
@@ -45,7 +46,149 @@
     --meowth-transparent: #f1b61c6c;
     --minum-transparent: #e6d5716c;
     --quilava-transparent: #EE81306c;
+    --pikachu-escuro: #ccad2e;
+    --flareon-escuro: #b40c0c;
+    --bulbasaur-escuro: #648f38;
+    --Normal: #A8A878;
+    --Fire: #F08030;
+    --Water: #6890F0;
+    --Electric: #F8D030;
+    --Grass: #78C850;
+    --Ice: #98D8D8;
+    --Fighting: #C03028;
+    --Poison: #A040A0;
+    --Ground: #E0C068;
+    --Flying: #A890F0;
+    --Psychic: #F85888;
+    --Bug: #A8B820;
+    --Rock: #B8A038;
+    --Ghost: #705898;
+    --Dragon: #7038F8;
+    --Dark: #705848;
+    --Steel: #B8B8D0;
+    --Fairy: #EE99AC;
 }
+
+.text-box {
+    color: #fff;
+    border-radius: 30px;
+    width: 200px;
+    text-align: center;
+    font-family: 'Tilt Neon', cursive !important;
+    font-size: 2em !important;
+    margin: 10px !important;
+    margin-top: 25px !important;
+}
+
+.modal-title {
+    font-family: 'Tilt Neon', cursive !important;
+    font-size: 5em !important;
+    text-shadow: 1px 1px 3px black;
+    text-align: center;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.modal-title-jap {
+    font-family: 'Tilt Neon', cursive !important;
+    font-size: 3em !important;
+    text-shadow: 1px 1px 3px black;
+    text-align: center;
+    width: 100%;
+    margin-top: -10px;
+}
+
+.disabled {
+    pointer-events: none !important;
+    visibility: visible !important;
+}
+
+
+/*  * * * * * * * * * * * * *
+ *
+ *  Modal Base
+ *
+ * * * * * * * * * * * * * * */
+
+.modal-content {
+    color: black;
+    position: fixed;
+    left: calc(30vw - 40px);
+    width: calc(70vw + 40px) !important;
+    height: 100vh !important;
+    border-radius: 0px;
+}
+
+.modal-content2 {
+    color: black;
+    position: fixed;
+    left: 0;
+    width: calc(30vw) !important;
+    height: 100vh !important;
+    border-radius: 0px;
+}
+
+.modal-dialog {
+    height: 100vh !important;
+}
+
+.modal {
+    margin: 0px !important;
+    opacity: 0;
+    transition: transform 0.5s ease-in-out;
+}
+
+.modal.show {
+    opacity: 1;
+}
+
+.modal-backdrop {
+    background-color: transparent !important;
+}
+
+.slide-from-left {
+    transform: translateX(200%) translateY(var(--random));
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide-from-left.show {
+    transform: translateX(0);
+}
+
+.modal-footer {
+    border-top: none !important;
+}
+
+.btn-modal {
+    margin-right: 10px !important;
+}
+
+.modal-backdrop {
+    transition: none !important;
+}
+
+.slide-out-right {
+    animation-name: slide-out-right;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes slide-out-right {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        transform: translateX(200%) translateY(var(--random));
+    }
+}
+
+
+/*  * * * * * * * * * * * * *
+ *
+ *  Mini-Cards
+ *
+ * * * * * * * * * * * * * * */
 
 .card {
     border-radius: 30px !important;
@@ -55,6 +198,20 @@
     aspect-ratio: 1/1 !important;
     margin-left: 10px;
     border: none !important;
+}
+
+.card-to-fullscreen {
+    position: absolute;
+    width: 30vw !important;
+    height: 100vh !important;
+    border-radius: 0px;
+    margin: 0px !important;
+    z-index: 2000;
+    border-radius: 0px 40px 40px 0px;
+}
+
+.z-index-min {
+    z-index: -1;
 }
 
 @media only screen and (min-width: 1025px) and (max-width: 1440px) {
@@ -83,13 +240,13 @@
 .card:not(:hover) {
     box-shadow: 5px 7px 15px 5px rgba(0, 0, 0, 0.356);
     transition: 1s;
-    z-index: 9999;
+    z-index: 1;
 }
 
 .card:hover {
     transform: scale(103%);
     transition: 1s;
-    z-index: 9999;
+    z-index: 2;
 }
 
 .card:active {
@@ -139,6 +296,7 @@
     margin-left: -14px;
 }
 
+
 /*  * * * * * * * * * * * * *
  *
  *  Scrollbar
@@ -149,17 +307,18 @@
     background-color: var(--background-medium-dark);
     border-radius: 10px;
 }
- 
+
 .scrollbar::-webkit-scrollbar {
     width: 10px;
     background-color: var(--background-medium-dark);
 }
- 
+
 .scrollbar::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: var(--background-dark);
     box-shadow: 0px 0px 10px 10px var(--background-dark);
 }
+
 
 /*  * * * * * * * * * * * * *
  *
@@ -182,128 +341,293 @@
  *
  * * * * * * * * * * * * * * */
 
+.bgd-Normal {
+    background-color: var(--Normal);
+}
+
+.bgd-Fire {
+    background-color: var(--Fire);
+}
+
+.bgd-Water {
+    background-color: var(--Water);
+}
+
+.bgd-Electric {
+    background-color: var(--Electric);
+}
+
+.bgd-Grass {
+    background-color: var(--Grass);
+}
+
+.bgd-Ice {
+    background-color: var(--Ice);
+}
+
+.bgd-Fighting {
+    background-color: var(--Fighting);
+}
+
+.bgd-Poison {
+    background-color: var(--Poison);
+}
+
+.bgd-Ground {
+    background-color: var(--Ground);
+}
+
+.bgd-Flying {
+    background-color: var(--Flying);
+}
+
+.bgd-Psychic {
+    background-color: var(--Psychic);
+}
+
+.bgd-Bug {
+    background-color: var(--Bug);
+}
+
+.bgd-Rock {
+    background-color: var(--Rock);
+}
+
+.bgd-Ghost {
+    background-color: var(--Ghost);
+}
+
+.bgd-Dragon {
+    background-color: var(--Dragon);
+}
+
+.bgd-Dark {
+    background-color: var(--Dark);
+}
+
+.bgd-Steel {
+    background-color: var(--Steel);
+}
+
+.bgd-Fairy {
+    background-color: var(--Fairy);
+}
+
+.btn-pikachu-classic {
+    background-color: var(--pikachu) !important;
+    color: white !important;
+    transition: 0.5s;
+}
+
+.btn-flareon-classic {
+    background-color: var(--flareon) !important;
+    color: white !important;
+    transition: 0.5s;
+}
+
+.btn-bulbasaur-classic {
+    background-color: var(--bulbasaur) !important;
+    color: white !important;
+    transition: 0.5s;
+}
+
+.btn-pikachu-classic:hover {
+    background-color: var(--pikachu-escuro) !important;
+}
+
+.btn-flareon-classic:hover {
+    background-color: var(--flareon-escuro) !important;
+}
+
+.btn-bulbasaur-classic:hover {
+    background-color: var(--bulbasaur-escuro) !important;
+}
+
 .bgd-pikachu {
     background-color: var(--pikachu) !important;
+}
+
+.bgd-pikachu-shadow {
     box-shadow: 0 0 30px 10px var(--pikachu);
     transition: 1s;
 }
 
 .bgd-charmander {
     background-color: var(--charmander) !important;
+}
+
+.bgd-charmander-shadow {
     box-shadow: 0 0 30px 10px var(--charmander);
     transition: 1s;
 }
 
 .bgd-bulbasaur {
     background-color: var(--bulbasaur) !important;
+}
+
+.bgd-bulbasaur-shadow {
     box-shadow: 0 0 30px 10px var(--bulbasaur);
     transition: 1s;
 }
 
 .bgd-squirtle {
     background-color: var(--squirtle) !important;
+}
+
+.bgd-squirtle-shadow {
     box-shadow: 0 0 30px 10px var(--squirtle);
     transition: 1s;
 }
 
 .bgd-eevee {
     background-color: var(--eevee) !important;
+}
+
+.bgd-eevee-shadow {
     box-shadow: 0 0 30px 10px var(--eevee);
     transition: 1s;
 }
 
 .bgd-umbreon {
     background-color: var(--umbreon) !important;
+}
+
+.bgd-umbreon-shadow {
     box-shadow: 0 0 30px 10px var(--umbreon);
     transition: 1s;
 }
 
 .bgd-gengar {
     background-color: var(--gengar) !important;
+}
+
+.bgd-gengar-shadow {
     box-shadow: 0 0 30px 10px var(--gengar);
     transition: 1s;
 }
 
 .bgd-jigglypuff {
     background-color: var(--jigglypuff) !important;
+}
+
+.bgd-jigglypuff-shadow {
     box-shadow: 0 0 30px 10px var(--jigglypuff);
     transition: 1s;
 }
 
 .bgd-psyduck {
     background-color: var(--psyduck) !important;
+}
+
+.bgd-psyduck-shadow {
     box-shadow: 0 0 30px 10px var(--psyduck);
     transition: 1s;
 }
 
 .bgd-magikarp {
     background-color: var(--magikarp) !important;
+}
+
+.bgd-magikarp-shadow {
     box-shadow: 0 0 30px 10px var(--magikarp);
     transition: 1s;
 }
 
 .bgd-abra {
     background-color: var(--abra) !important;
+}
+
+.bgd-abra-shadow {
     box-shadow: 0 0 30px 10px var(--abra);
     transition: 1s;
 }
 
 .bgd-machop {
     background-color: var(--machop) !important;
+}
+
+.bgd-machop-shadow {
     box-shadow: 0 0 30px 10px var(--machop);
     transition: 1s;
 }
 
 .bgd-geodude {
     background-color: var(--geodude) !important;
+}
+
+.bgd-geodude-shadow {
     box-shadow: 0 0 30px 10px var(--geodude);
     transition: 1s;
 }
 
 .bgd-jolteon {
     background-color: var(--jolteon) !important;
+}
+
+.bgd-jolteon-shadow {
     box-shadow: 0 0 30px 10px var(--jolteon);
     transition: 1s;
 }
 
 .bgd-vaporeon {
     background-color: var(--vaporeon) !important;
+}
+
+.bgd-vaporeon-shadow {
     box-shadow: 0 0 30px 10px var(--vaporeon);
     transition: 1s;
 }
 
 .bgd-flareon {
     background-color: var(--flareon) !important;
+}
+
+.bgd-flareon-shadow {
     box-shadow: 0 0 30px 10px var(--flareon);
     transition: 1s;
 }
 
 .bgd-dragonair {
     background-color: var(--dragonair) !important;
+}
+
+.bgd-dragonair-shadow {
     box-shadow: 0 0 30px 10px var(--dragonair);
     transition: 1s;
 }
 
 .bgd-zapdos {
     background-color: var(--zapdos) !important;
+}
+
+.bgd-zapdos-shadow {
     box-shadow: 0 0 30px 10px var(--zapdos);
     transition: 1s;
 }
 
 .bgd-meowth {
     background-color: var(--meowth) !important;
+}
+
+.bgd-meowth-shadow {
     box-shadow: 0 0 30px 10px var(--meowth);
     transition: 1s;
 }
 
 .bgd-minum {
     background-color: var(--minum) !important;
+}
+
+.bgd-minum-shadow {
     box-shadow: 0 0 30px 10px var(--minum);
     transition: 1s;
 }
 
 .bgd-quilava {
     background-color: var(--quilava) !important;
+}
+
+.bgd-quilava-shadow {
     box-shadow: 0 0 30px 10px var(--quilava);
     transition: 1s;
 }
@@ -528,7 +852,6 @@
     display: inline-block;
     margin-bottom: 10px;
     overflow: hidden;
-    background-color: transparent !important;
     font-family: 'Tilt Neon', cursive !important;
     font-weight: bolder !important;
     font-size: 1.2em !important;
@@ -606,6 +929,7 @@ button:active span:nth-child(4) {
     width: 94%;
     margin: 3%;
     height: 45px;
+    background-color: transparent !important;
 }
 
 html {
@@ -628,6 +952,9 @@ body {
     top: 0;
     height: 100vh;
     background-color: var(--sidebar-color);
+}
+
+.sidebar-shadow {
     box-shadow: 5px -3px 20px 5px rgba(0, 0, 0, 0.315);
 }
 
