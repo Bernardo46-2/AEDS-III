@@ -52,6 +52,19 @@ func GetPokemon(w http.ResponseWriter, r *http.Request) {
 	writeJson(w, pokemon)
 }
 
+func GetAllPokemon(w http.ResponseWriter, r *http.Request) {
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+
+	pokemon, err := crud.ReadAll(page)
+
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, 2)
+		return
+	}
+
+	writeJson(w, pokemon)
+}
+
 func PostPokemon(w http.ResponseWriter, r *http.Request) {
 	var pokemon models.Pokemon
 

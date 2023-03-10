@@ -23,6 +23,14 @@ func Read(id int) (pokemon models.Pokemon, err error) {
 	return
 }
 
+func ReadAll(page int) (pokemon []models.Pokemon, err error) {
+	numRegistros, _ := dataManager.NumRegistros()
+	for i := page * 60; i < numRegistros; i++ {
+		pokemon = append(pokemon, models.Pokemon{})
+	}
+	return
+}
+
 func Update(pokemon models.Pokemon) (err error) {
 	pokemon, pos, err := dataManager.ReadBinToPoke(int(pokemon.Numero))
 

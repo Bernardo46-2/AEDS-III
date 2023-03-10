@@ -10,6 +10,7 @@ import (
 
 func main() {
 	// define os handlers para GET e POST
+	http.HandleFunc("/getAll/", middlewares.EnableCORS(handlers.GetAllPokemon))
 	http.HandleFunc("/get/", middlewares.EnableCORS(handlers.GetPokemon))
 	http.HandleFunc("/post/", middlewares.EnableCORS(handlers.PostPokemon))
 	http.HandleFunc("/put/", middlewares.EnableCORS(handlers.PutPokemon))
