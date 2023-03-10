@@ -11,7 +11,6 @@ const scrollbar = document.querySelector('.scrollbar');
 const rangers = document.querySelectorAll('.rangers');
 
 window.addEventListener('resize', function() {
-    const viewedHeight = window.innerHeight + window.scrollY;
     const totalHeight = document.documentElement.scrollHeight;
     const scrollbarHeight = window.innerHeight;
     const thumbHeight = Math.max(scrollbarHeight * (window.innerHeight / totalHeight), 20);
@@ -21,8 +20,7 @@ window.addEventListener('resize', function() {
     scrollbar.style.top = `${thumbPosition}px`;
 });
 
-document.addEventListener("scroll", (event) => {
-    const viewedHeight = window.innerHeight + window.scrollY;
+document.addEventListener("scroll", () => {
     const totalHeight = document.documentElement.scrollHeight;
     const scrollbarHeight = window.innerHeight;
     const thumbHeight = Math.max(scrollbarHeight * (window.innerHeight / totalHeight), 20);
@@ -143,8 +141,6 @@ modalClose2.addEventListener('click', function() {
     
         clonedCard.classList.remove('card-to-fullscreen');
         clonedCard.classList.add('card');
-    
-        const div = document.querySelector('.slide-from-left');
     
         clonedCard.addEventListener("transitionend", () => {
             clonedCard.remove();
