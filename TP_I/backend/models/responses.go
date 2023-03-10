@@ -2,17 +2,18 @@ package models
 
 import "net/http"
 
-type Error struct {
-	Codigo  int    `json:"codigo"`
-	Message string `json:"error"`
+type Response struct {
+	Success bool   `json:"sucesso"`
+	Code    int    `json:"codigo"`
+	Message string `json:"mensagem"`
 }
 
-func ErrorResponse(codigo int) Error {
+func ErrorResponse(codigo int) Response {
 	var msg string
 
 	switch codigo {
 	case 1:
-		msg = "Sucesso"
+		msg = "Erro"
 	case 2:
 		msg = "Erro ao buscar o Pokemon"
 	case 3:
@@ -21,6 +22,8 @@ func ErrorResponse(codigo int) Error {
 		msg = "Erro ao atualizar o Pokemon"
 	case 5:
 		msg = "Erro ao deletar o Pokemon"
+	case 6:
+		msg = "Erro ao importar CSV"
 	case http.StatusBadRequest:
 		msg = "Erro ao converter o JSON para Pokemon"
 	case http.StatusInternalServerError:
@@ -43,29 +46,28 @@ func ErrorResponse(codigo int) Error {
 		msg = "Erro desconhecido"
 	}
 
-	return Error{Codigo: codigo, Message: msg}
+	return Response{Success: false, Code: codigo, Message: msg}
 }
 
-type Success struct {
-	Codigo  int    `json:"codigo"`
-	Message string `json:"message"`
-}
-
-func SuccessResponse(codigo int) Success {
+func SuccessResponse(codigo int) Response {
 	var msg string
 
 	switch codigo {
 	case 1:
 		msg = "Sucesso"
 	case 2:
-		msg = "Pokemon Atualizado com sucesso"
+		msg = "Pokemon encontrado com sucesso"
 	case 3:
-		msg = "Pokemon Deletado com sucesso"
+		msg = "Pokemon criado com sucesso"
 	case 4:
-		msg = "Banco de dados carregado com sucesso!"
+		msg = "Pokemon atualizado com sucesso"
+	case 5:
+		msg = "Pokemon deletado com sucesso"
+	case 6:
+		msg = "CSV importado com sucesso"
 	default:
 		msg = "Mensagem de sucesso desconhecida"
 	}
 
-	return Success{Codigo: codigo, Message: msg}
+	return Response{Success: true, Code: codigo, Message: msg}
 }

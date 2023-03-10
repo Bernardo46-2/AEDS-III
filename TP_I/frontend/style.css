@@ -1,0 +1,1012 @@
+:root {
+    --random: 0;
+    --background-dark: #161a1f;
+    --background-medium-dark: #2b2e36;
+    --text-secondary: #5a5c5f;
+    --text-primary: #fffdf0;
+    --pikachu: #fdd835;
+    --charmander: #f08030;
+    --bulbasaur: #7ac74c;
+    --squirtle: #3399ff;
+    --eevee: #c5b358;
+    --umbreon: #191a1b;
+    --gengar: #605c78;
+    --jigglypuff: #f9bbc1;
+    --psyduck: #f4c430;
+    --magikarp: #ff7f00;
+    --abra: #F8D030;
+    --machop: #755E8C;
+    --geodude: #7B7D72;
+    --jolteon: #fdd835;
+    --vaporeon: #29abe2;
+    --flareon: #ff1f1f;
+    --dragonair: #7038F8;
+    --zapdos: #FFD54F;
+    --meowth: #f1b61c;
+    --minum: #e6d571;
+    --quilava: #EE8130;
+    --pikachu-transparent: #fdd8356c;
+    --charmander-transparent: #f080306c;
+    --bulbasaur-transparent: #7ac74c6c;
+    --squirtle-transparent: #3399ff6c;
+    --eevee-transparent: #c5b3586c;
+    --umbreon-transparent: #191a1b6c;
+    --gengar-transparent: #605c786c;
+    --jigglypuff-transparent: #f9bbc16c;
+    --psyduck-transparent: #f4c4306c;
+    --magikarp-transparent: #ff7f006c;
+    --abra-transparent: #F8D0306c;
+    --machop-transparent: #755E8C6c;
+    --geodude-transparent: #7B7D726c;
+    --jolteon-transparent: #fdd8356c;
+    --vaporeon-transparent: #29abe26c;
+    --flareon-transparent: #ff1f1f6c;
+    --dragonair-transparent: #7038F86c;
+    --zapdos-transparent: #FFD54F6c;
+    --meowth-transparent: #f1b61c6c;
+    --minum-transparent: #e6d5716c;
+    --quilava-transparent: #EE81306c;
+    --pikachu-escuro: #ccad2e;
+    --flareon-escuro: #b40c0c;
+    --bulbasaur-escuro: #648f38;
+    --Normal: #A8A878;
+    --Fire: #F08030;
+    --Water: #6890F0;
+    --Electric: #F8D030;
+    --Grass: #78C850;
+    --Ice: #98D8D8;
+    --Fighting: #C03028;
+    --Poison: #A040A0;
+    --Ground: #E0C068;
+    --Flying: #A890F0;
+    --Psychic: #F85888;
+    --Bug: #A8B820;
+    --Rock: #B8A038;
+    --Ghost: #705898;
+    --Dragon: #7038F8;
+    --Dark: #705848;
+    --Steel: #B8B8D0;
+    --Fairy: #EE99AC;
+}
+
+.text-box {
+    color: #fff;
+    border-radius: 30px;
+    width: 200px;
+    text-align: center;
+    font-family: 'Tilt Neon', cursive !important;
+    font-size: 2em !important;
+    margin: 10px !important;
+    margin-top: 25px !important;
+}
+
+.modal-title {
+    font-family: 'Tilt Neon', cursive !important;
+    font-size: 5em !important;
+    text-shadow: 1px 1px 3px black;
+    text-align: center;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.modal-title-jap {
+    font-family: 'Tilt Neon', cursive !important;
+    font-size: 3em !important;
+    text-shadow: 1px 1px 3px black;
+    text-align: center;
+    width: 100%;
+    margin-top: -10px;
+}
+
+.disabled {
+    pointer-events: none !important;
+    visibility: visible !important;
+}
+
+
+/*  * * * * * * * * * * * * *
+ *
+ *  Modal Base
+ *
+ * * * * * * * * * * * * * * */
+
+.modal-content {
+    color: black;
+    position: fixed;
+    left: calc(30vw - 40px);
+    width: calc(70vw + 40px) !important;
+    height: 100vh !important;
+    border-radius: 0px;
+}
+
+.modal-content2 {
+    color: black;
+    position: fixed;
+    left: 0;
+    width: calc(30vw) !important;
+    height: 100vh !important;
+    border-radius: 0px;
+}
+
+.modal-dialog {
+    height: 100vh !important;
+}
+
+.modal {
+    margin: 0px !important;
+    opacity: 0;
+    transition: transform 0.5s ease-in-out;
+}
+
+.modal.show {
+    opacity: 1;
+}
+
+.modal-backdrop {
+    background-color: transparent !important;
+}
+
+.slide-from-left {
+    transform: translateX(200%) translateY(var(--random));
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide-from-left.show {
+    transform: translateX(0);
+}
+
+.modal-footer {
+    border-top: none !important;
+}
+
+.btn-modal {
+    margin-right: 10px !important;
+}
+
+.modal-backdrop {
+    transition: none !important;
+}
+
+.slide-out-right {
+    animation-name: slide-out-right;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes slide-out-right {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        transform: translateX(200%) translateY(var(--random));
+    }
+}
+
+
+/*  * * * * * * * * * * * * *
+ *
+ *  Mini-Cards
+ *
+ * * * * * * * * * * * * * * */
+
+.card {
+    border-radius: 30px !important;
+    text-align: center;
+    box-sizing: border-box;
+    margin-bottom: 35px;
+    aspect-ratio: 1/1 !important;
+    margin-left: 10px;
+    border: none !important;
+}
+
+.card-to-fullscreen {
+    position: absolute;
+    width: 30vw !important;
+    height: 100vh !important;
+    border-radius: 0px;
+    margin: 0px !important;
+    z-index: 2000;
+    border-radius: 0px 40px 40px 0px;
+}
+
+.z-index-min {
+    z-index: -1;
+}
+
+@media only screen and (min-width: 1025px) and (max-width: 1440px) {
+    .card {
+        max-width: calc(((100%/12)*4) - 160px) !important;
+        min-width: 190px !important;
+        margin-left: 20px;
+    }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+    .card {
+        max-width: calc(((100%/12)*4) - 40px) !important;
+        min-width: 250px !important;
+        margin-left: 10px;
+    }
+}
+
+@media only screen and (min-width: 0px) and (max-width: 768px) {
+    .card {
+        max-width: calc(((100%/12)*6) - 50px) !important;
+        min-width: 150px !important;
+    }
+}
+
+.card:not(:hover) {
+    box-shadow: 5px 7px 15px 5px rgba(0, 0, 0, 0.356);
+    transition: 1s;
+    z-index: 1;
+}
+
+.card:hover {
+    transform: scale(103%);
+    transition: 1s;
+    z-index: 2;
+}
+
+.card:active {
+    transform: s
+}
+
+.card-img-top {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    max-width: 75%;
+    max-height: 75%;
+    object-fit: contain;
+}
+
+.card-title {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Tilt Neon', cursive !important;
+    font-size: 2.2em !important;
+    text-shadow: 1px 1px 3px black;
+}
+
+.logo {
+    width: 90%;
+    margin: 5%;
+}
+
+.bottom-section {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    color: white;
+    margin-left: 20px;
+    margin-top: 30px;
+}
+
+.divisoria {
+    margin-bottom: 20px;
+    height: 1px;
+    background-color: #d8d8d8;
+    border: none;
+    width: calc(16vw - 2px);
+    margin-left: -14px;
+}
+
+
+/*  * * * * * * * * * * * * *
+ *
+ *  Scrollbar
+ *
+ * * * * * * * * * * * * * * */
+
+.scrollbar::-webkit-scrollbar-track {
+    background-color: var(--background-medium-dark);
+    border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar {
+    width: 10px;
+    background-color: var(--background-medium-dark);
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--background-dark);
+    box-shadow: 0px 0px 10px 10px var(--background-dark);
+}
+
+
+/*  * * * * * * * * * * * * *
+ *
+ *  Cores Padrões
+ *
+ * * * * * * * * * * * * * * */
+
+.bgd-dark {
+    background-color: var(--background-dark) !important;
+}
+
+.bgd-medium-dark {
+    background-color: var(--background-medium-dark) !important;
+}
+
+
+/*  * * * * * * * * * * * * *
+ *
+ *  Definição dos pokemons
+ *
+ * * * * * * * * * * * * * * */
+
+.bgd-Normal {
+    background-color: var(--Normal);
+}
+
+.bgd-Fire {
+    background-color: var(--Fire);
+}
+
+.bgd-Water {
+    background-color: var(--Water);
+}
+
+.bgd-Electric {
+    background-color: var(--Electric);
+}
+
+.bgd-Grass {
+    background-color: var(--Grass);
+}
+
+.bgd-Ice {
+    background-color: var(--Ice);
+}
+
+.bgd-Fighting {
+    background-color: var(--Fighting);
+}
+
+.bgd-Poison {
+    background-color: var(--Poison);
+}
+
+.bgd-Ground {
+    background-color: var(--Ground);
+}
+
+.bgd-Flying {
+    background-color: var(--Flying);
+}
+
+.bgd-Psychic {
+    background-color: var(--Psychic);
+}
+
+.bgd-Bug {
+    background-color: var(--Bug);
+}
+
+.bgd-Rock {
+    background-color: var(--Rock);
+}
+
+.bgd-Ghost {
+    background-color: var(--Ghost);
+}
+
+.bgd-Dragon {
+    background-color: var(--Dragon);
+}
+
+.bgd-Dark {
+    background-color: var(--Dark);
+}
+
+.bgd-Steel {
+    background-color: var(--Steel);
+}
+
+.bgd-Fairy {
+    background-color: var(--Fairy);
+}
+
+.btn-pikachu-classic {
+    background-color: var(--pikachu) !important;
+    color: white !important;
+    transition: 0.5s;
+}
+
+.btn-flareon-classic {
+    background-color: var(--flareon) !important;
+    color: white !important;
+    transition: 0.5s;
+}
+
+.btn-bulbasaur-classic {
+    background-color: var(--bulbasaur) !important;
+    color: white !important;
+    transition: 0.5s;
+}
+
+.btn-pikachu-classic:hover {
+    background-color: var(--pikachu-escuro) !important;
+}
+
+.btn-flareon-classic:hover {
+    background-color: var(--flareon-escuro) !important;
+}
+
+.btn-bulbasaur-classic:hover {
+    background-color: var(--bulbasaur-escuro) !important;
+}
+
+.bgd-pikachu {
+    background-color: var(--pikachu) !important;
+}
+
+.bgd-pikachu-shadow {
+    box-shadow: 0 0 30px 10px var(--pikachu);
+    transition: 1s;
+}
+
+.bgd-charmander {
+    background-color: var(--charmander) !important;
+}
+
+.bgd-charmander-shadow {
+    box-shadow: 0 0 30px 10px var(--charmander);
+    transition: 1s;
+}
+
+.bgd-bulbasaur {
+    background-color: var(--bulbasaur) !important;
+}
+
+.bgd-bulbasaur-shadow {
+    box-shadow: 0 0 30px 10px var(--bulbasaur);
+    transition: 1s;
+}
+
+.bgd-squirtle {
+    background-color: var(--squirtle) !important;
+}
+
+.bgd-squirtle-shadow {
+    box-shadow: 0 0 30px 10px var(--squirtle);
+    transition: 1s;
+}
+
+.bgd-eevee {
+    background-color: var(--eevee) !important;
+}
+
+.bgd-eevee-shadow {
+    box-shadow: 0 0 30px 10px var(--eevee);
+    transition: 1s;
+}
+
+.bgd-umbreon {
+    background-color: var(--umbreon) !important;
+}
+
+.bgd-umbreon-shadow {
+    box-shadow: 0 0 30px 10px var(--umbreon);
+    transition: 1s;
+}
+
+.bgd-gengar {
+    background-color: var(--gengar) !important;
+}
+
+.bgd-gengar-shadow {
+    box-shadow: 0 0 30px 10px var(--gengar);
+    transition: 1s;
+}
+
+.bgd-jigglypuff {
+    background-color: var(--jigglypuff) !important;
+}
+
+.bgd-jigglypuff-shadow {
+    box-shadow: 0 0 30px 10px var(--jigglypuff);
+    transition: 1s;
+}
+
+.bgd-psyduck {
+    background-color: var(--psyduck) !important;
+}
+
+.bgd-psyduck-shadow {
+    box-shadow: 0 0 30px 10px var(--psyduck);
+    transition: 1s;
+}
+
+.bgd-magikarp {
+    background-color: var(--magikarp) !important;
+}
+
+.bgd-magikarp-shadow {
+    box-shadow: 0 0 30px 10px var(--magikarp);
+    transition: 1s;
+}
+
+.bgd-abra {
+    background-color: var(--abra) !important;
+}
+
+.bgd-abra-shadow {
+    box-shadow: 0 0 30px 10px var(--abra);
+    transition: 1s;
+}
+
+.bgd-machop {
+    background-color: var(--machop) !important;
+}
+
+.bgd-machop-shadow {
+    box-shadow: 0 0 30px 10px var(--machop);
+    transition: 1s;
+}
+
+.bgd-geodude {
+    background-color: var(--geodude) !important;
+}
+
+.bgd-geodude-shadow {
+    box-shadow: 0 0 30px 10px var(--geodude);
+    transition: 1s;
+}
+
+.bgd-jolteon {
+    background-color: var(--jolteon) !important;
+}
+
+.bgd-jolteon-shadow {
+    box-shadow: 0 0 30px 10px var(--jolteon);
+    transition: 1s;
+}
+
+.bgd-vaporeon {
+    background-color: var(--vaporeon) !important;
+}
+
+.bgd-vaporeon-shadow {
+    box-shadow: 0 0 30px 10px var(--vaporeon);
+    transition: 1s;
+}
+
+.bgd-flareon {
+    background-color: var(--flareon) !important;
+}
+
+.bgd-flareon-shadow {
+    box-shadow: 0 0 30px 10px var(--flareon);
+    transition: 1s;
+}
+
+.bgd-dragonair {
+    background-color: var(--dragonair) !important;
+}
+
+.bgd-dragonair-shadow {
+    box-shadow: 0 0 30px 10px var(--dragonair);
+    transition: 1s;
+}
+
+.bgd-zapdos {
+    background-color: var(--zapdos) !important;
+}
+
+.bgd-zapdos-shadow {
+    box-shadow: 0 0 30px 10px var(--zapdos);
+    transition: 1s;
+}
+
+.bgd-meowth {
+    background-color: var(--meowth) !important;
+}
+
+.bgd-meowth-shadow {
+    box-shadow: 0 0 30px 10px var(--meowth);
+    transition: 1s;
+}
+
+.bgd-minum {
+    background-color: var(--minum) !important;
+}
+
+.bgd-minum-shadow {
+    box-shadow: 0 0 30px 10px var(--minum);
+    transition: 1s;
+}
+
+.bgd-quilava {
+    background-color: var(--quilava) !important;
+}
+
+.bgd-quilava-shadow {
+    box-shadow: 0 0 30px 10px var(--quilava);
+    transition: 1s;
+}
+
+.btn-Pikachu {
+    color: var(--pikachu) !important;
+    border: 1px solid var(--pikachu-transparent) !important;
+}
+
+.btn-Pikachu:hover,
+.btn-Pikachu:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--pikachu) !important;
+    box-shadow: 0 0 10px var(--pikachu-transparent), 0 0 40px var(--pikachu-transparent), 0 0 80px var(--pikachu-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Charmander {
+    color: var(--charmander) !important;
+    border: 1px solid var(--charmander-transparent) !important;
+}
+
+.btn-Charmander:hover,
+.btn-Charmander:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--charmander) !important;
+    box-shadow: 0 0 10px var(--charmander-transparent), 0 0 40px var(--charmander-transparent), 0 0 80px var(--charmander-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Bulbasaur {
+    color: var(--bulbasaur) !important;
+    border: 1px solid var(--bulbasaur-transparent) !important;
+}
+
+.btn-Bulbasaur:hover,
+.btn-Bulbasaur:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--bulbasaur) !important;
+    box-shadow: 0 0 10px var(--bulbasaur-transparent), 0 0 40px var(--bulbasaur-transparent), 0 0 80px var(--bulbasaur-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Squirtle {
+    color: var(--squirtle) !important;
+    border: 1px solid var(--squirtle-transparent) !important;
+}
+
+.btn-Squirtle:hover,
+.btn-Squirtle:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--squirtle) !important;
+    box-shadow: 0 0 10px var(--squirtle-transparent), 0 0 40px var(--squirtle-transparent), 0 0 80px var(--squirtle-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Eevee {
+    color: var(--eevee) !important;
+    border: 1px solid var(--eevee-transparent) !important;
+}
+
+.btn-Eevee:hover,
+.btn-Eevee:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--eevee) !important;
+    box-shadow: 0 0 10px var(--eevee-transparent), 0 0 40px var(--eevee-transparent), 0 0 80px var(--eevee-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Umbreon {
+    color: var(--umbreon) !important;
+    border: 1px solid var(--umbreon-transparent) !important;
+}
+
+.btn-Umbreon:hover,
+.btn-Umbreon:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--umbreon) !important;
+    box-shadow: 0 0 10px var(--umbreon-transparent), 0 0 40px var(--umbreon-transparent), 0 0 80px var(--umbreon-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Gengar {
+    color: var(--gengar) !important;
+    border: 1px solid var(--gengar-transparent) !important;
+}
+
+.btn-Gengar:hover,
+.btn-Gengar:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--gengar) !important;
+    box-shadow: 0 0 10px var(--gengar-transparent), 0 0 40px var(--gengar-transparent), 0 0 80px var(--gengar-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Jigglypuff {
+    color: var(--jigglypuff) !important;
+    border: 1px solid var(--jigglypuff-transparent) !important;
+}
+
+.btn-Jigglypuff:hover,
+.btn-Jigglypuff:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--jigglypuff) !important;
+    box-shadow: 0 0 10px var(--jigglypuff-transparent), 0 0 40px var(--jigglypuff-transparent), 0 0 80px var(--jigglypuff-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Psyduck {
+    color: var(--psyduck) !important;
+    border: 1px solid var(--psyduck-transparent) !important;
+}
+
+.btn-Psyduck:hover,
+.btn-Psyduck:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--psyduck) !important;
+    box-shadow: 0 0 10px var(--psyduck-transparent), 0 0 40px var(--psyduck-transparent), 0 0 80px var(--psyduck-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Magikarp {
+    color: var(--magikarp) !important;
+    border: 1px solid var(--magikarp-transparent) !important;
+}
+
+.btn-Magikarp:hover,
+.btn-Magikarp:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--magikarp) !important;
+    box-shadow: 0 0 10px var(--magikarp-transparent), 0 0 40px var(--magikarp-transparent), 0 0 80px var(--magikarp-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Abra {
+    color: var(--abra) !important;
+    border: 1px solid var(--abra-transparent) !important;
+}
+
+.btn-Abra:hover,
+.btn-Abra:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--abra) !important;
+    box-shadow: 0 0 10px var(--abra-transparent), 0 0 40px var(--abra-transparent), 0 0 80px var(--abra-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Machop {
+    color: var(--machop) !important;
+    border: 1px solid var(--machop-transparent) !important;
+}
+
+.btn-Machop:hover,
+.btn-Machop:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--machop) !important;
+    box-shadow: 0 0 10px var(--machop-transparent), 0 0 40px var(--machop-transparent), 0 0 80px var(--machop-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Geodude {
+    color: var(--geodude) !important;
+    border: 1px solid var(--geodude-transparent) !important;
+}
+
+.btn-Geodude:hover,
+.btn-Geodude:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--geodude) !important;
+    box-shadow: 0 0 10px var(--geodude-transparent), 0 0 40px var(--geodude-transparent), 0 0 80px var(--geodude-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Jolteon {
+    color: var(--jolteon) !important;
+    border: 1px solid var(--jolteon-transparent) !important;
+}
+
+.btn-Jolteon:hover,
+.btn-Jolteon:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--jolteon) !important;
+    box-shadow: 0 0 10px var(--jolteon-transparent), 0 0 40px var(--jolteon-transparent), 0 0 80px var(--jolteon-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Vaporeon {
+    color: var(--vaporeon) !important;
+    border: 1px solid var(--vaporeon-transparent) !important;
+}
+
+.btn-Vaporeon:hover,
+.btn-Vaporeon:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--vaporeon) !important;
+    box-shadow: 0 0 10px var(--vaporeon-transparent), 0 0 40px var(--vaporeon-transparent), 0 0 80px var(--vaporeon-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Flareon {
+    color: var(--flareon) !important;
+    border: 1px solid var(--flareon-transparent) !important;
+}
+
+.btn-Flareon:hover,
+.btn-Flareon:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--flareon) !important;
+    box-shadow: 0 0 10px var(--flareon-transparent), 0 0 40px var(--flareon-transparent), 0 0 80px var(--flareon-transparent);
+    transition-duration: 0.8s;
+}
+
+
+/*  * * * * * * * * * * * 
+ *
+ *  Definição dos botões
+ *
+ * * * * * * * * * * * * */
+
+.btn {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 10px;
+    overflow: hidden;
+    font-family: 'Tilt Neon', cursive !important;
+    font-weight: bolder !important;
+    font-size: 1.2em !important;
+}
+
+.btn:active {
+    opacity: 0.5;
+}
+
+button span {
+    position: absolute;
+    display: block;
+}
+
+button span:nth-child(1) {
+    top: 0;
+    left: -101%;
+    width: 101%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, currentColor);
+}
+
+button:hover span:nth-child(1),
+button:active span:nth-child(1) {
+    left: 100%;
+    transition: 0.5s;
+}
+
+button span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, currentColor);
+}
+
+button:hover span:nth-child(2),
+button:active span:nth-child(2) {
+    top: 100%;
+    transition: 0.5s;
+    transition-delay: 0.1s;
+}
+
+button span:nth-child(3) {
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg, transparent, currentColor);
+}
+
+button:hover span:nth-child(3),
+button:active span:nth-child(3) {
+    right: 100%;
+    transition: 0.5s;
+    transition-delay: 0.3s;
+}
+
+button span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(360deg, transparent, currentColor);
+}
+
+button:hover span:nth-child(4),
+button:active span:nth-child(4) {
+    bottom: 100%;
+    transition: 0.5s;
+    transition-delay: 0.4s;
+}
+
+.btn-sidebar {
+    width: 94%;
+    margin: 3%;
+    height: 45px;
+    background-color: transparent !important;
+}
+
+html {
+    max-width: 100vw;
+    max-height: 100vh;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.pre-sidebar {
+    position: relative;
+}
+
+.sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    background-color: var(--sidebar-color);
+}
+
+.sidebar-shadow {
+    box-shadow: 5px -3px 20px 5px rgba(0, 0, 0, 0.315);
+}
+
+.sidebar h1 {
+    font-size: 1.5em;
+    margin-top: 0;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar li {
+    margin: 10px 0;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.sidebar a:hover {
+    background-color: #fff;
+}
+
+.content {
+    margin: 20px 30px 0px 20px;
+    background-color: var(--background-color);
+    color: var(--text-primary);
+}
+
+h1,
+h2,
+h3 {
+    color: var(--text-primary);
+}
+
+button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--accent-color);
+}
