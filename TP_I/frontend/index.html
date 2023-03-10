@@ -12,20 +12,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
 </head>
 
-<body class="scrollbar">
+<body>
+    <div class="scrollbar"></div>
     <div class="container-fluid">
         <div class="row">
             <div class="col-2 p-0 bgd-dark pre-sidebar sidebar-shadow" id="sidebar">
                 <div class="sidebar">
                     <img class="logo" src="imagens/pngegg.png" alt="Descrição da imagem">
-                    <button type="button" class="btn btn-primary btn-Pikachu btn-sidebar"><span></span><span></span><span></span><span></span>Todos os Pokemons</button>
-                    <button type="button" class="btn btn-primary btn-Bulbasaur btn-sidebar"><span></span><span></span><span></span><span></span>Adicionar</button>
-                    <button type="button" class="btn btn-primary btn-Charmander btn-sidebar"><span></span><span></span><span></span><span></span>Buscar</button>
+                    <button type="button" class="btn btn-primary btn-Pikachu btn-sidebar"><span></span><span></span><span></span><span></span>Gotta Catch 'Em All!</button>
+                    <button type="button" class="btn btn-primary btn-Bulbasaur btn-sidebar"><span></span><span></span><span></span><span></span>Registrar</button>
+                    <button type="button" class="btn btn-primary btn-Charmander btn-sidebar"><span></span><span></span><span></span><span></span>Pesquisar</button>
                     <button type="button" class="btn btn-primary btn-Squirtle btn-sidebar"><span></span><span></span><span></span><span></span>Atualizar</button>
                     <button type="button" class="btn btn-primary btn-Eevee btn-sidebar"><span></span><span></span><span></span><span></span>Deletar</button>
-                    <button type="button" class="btn btn-primary btn-Gengar btn-sidebar"><span></span><span></span><span></span><span></span>Ordenar</button>
-                    <button type="button" class="btn btn-primary btn-Jigglypuff btn-sidebar"><span></span><span></span><span></span><span></span>Randomizar</button>
-                    <button type="button" class="btn btn-primary btn-Psyduck btn-sidebar"><span></span><span></span><span></span><span></span>Lixeira</button>
+                    <button type="button" class="btn btn-primary btn-Gengar btn-sidebar"><span></span><span></span><span></span><span></span>Ordenação</button>
+                    <button type="button" class="btn btn-primary btn-Jigglypuff btn-sidebar"><span></span><span></span><span></span><span></span>Random</button>
+                    <button type="button" class="btn btn-primary btn-Psyduck btn-sidebar"><span></span><span></span><span></span><span></span>Apagados</button>
                     <button type="button" class="btn btn-primary btn-Geodude btn-sidebar"><span></span><span></span><span></span><span></span>Importar CSV</button>
                     <button type="button" class="btn btn-primary btn-Magikarp btn-sidebar"><span></span><span></span><span></span><span></span>Ajuda</button>
                     <!--<button type="button" class="btn btn-primary btn-Abra btn-sidebar"><span></span><span></span><span></span><span></span>Abra</button>-->
@@ -143,27 +144,154 @@
                             <h5 class="card-title text-center">jigglypuff</h5>
                         </div>
 
-                        <!-- Modal -->
-                        <div class="modal slide-from-left" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
-                            <div class="modal-dialog modal-fullscreen modal-inner">
-                                <div class="modal-content bgd-dark">
-                                    <div class="modal-content2 bgd-dark">a</div>
-                                    <div class="">
-                                        <h1 class="modal-title" id="exampleModalLabel">Pikachu</h1>
-                                        <h4 class="modal-title-jap">(ピカチュウ)</h4>
-                                        <div class="row justify-content-center">
-                                            <p class="text-box bgd-Electric col-2 poke-types">Electric</p>
-                                            <p class="text-box bgd-Poison col-2 poke-types">Poison</p>
+                        <button type="button" class="btn btn-Psyduck">Mostrar Mais</button>
+                    </div>
+
+                    <!-- Conteudo Pokemon -->
+                    <div class="modal slide-from-left" id="exampleModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+                        <div class="modal-dialog modal-fullscreen modal-inner">
+                            <div class="modal-content bgd-dark">
+                                <div class="modal-content2 bgd-dark">a</div>
+                                <div class="modal-body scrollbar2">
+                                    <div class="row justify-content-center">
+                                        <p class="modal-title" id="exampleModalLabel">Pikachu</p>
+                                        <p class="modal-title-jap">ピカチュウ</p>
+                                        <p class="poke-type">Mouse Pokémon</p>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <p class="tipo-pokemon bgd-Electric col-4">Electric</p>
+                                        <p class="tipo-pokemon bgd-Poison col-4">Poison</p>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-2 descricao">
+                                            <p class="poke-text">12.3 KG</p>
+                                            <p class="poke-desc">Peso</p>
+                                        </div>
+                                        <div class="col-2 descricao">
+                                            <p class="poke-text">0.8 M</p>
+                                            <p class="poke-desc">Altura</p>
                                         </div>
                                     </div>
-                                    <div class="modal-body">
-                                        ...
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <p class="base-stats">Base Stats</p>
+                                            <div class="row linha-status justify-content-center">
+                                                <p class="col-2 allign-text">HP</p>
+                                                <div class="col-10 progress poke-bars">
+                                                    <div class="progress-bar bgd-bulbasaur" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <p class="col-2 allign-text2">75</p>
+                                            </div>
+                                            <div class="row linha-status justify-content-center">
+                                                <p class="col-2 allign-text">ATK</p>
+                                                <div class="col-10 progress poke-bars">
+                                                    <div class="progress-bar bgd-charmander" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <p class="col-2 allign-text2">150</p>
+                                            </div>
+                                            <div class="row linha-status justify-content-center">
+                                                <p class="col-2 allign-text">DEF</p>
+                                                <div class="col-10 progress poke-bars">
+                                                    <div class="progress-bar bgd-squirtle" role="progressbar" style="width: 100%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <p class="col-2 allign-text2">300</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" id="close" class="btn btn-flareon-classic btn-modal">Close</button>
-                                        <button id="meu-botao" data-bs-dismiss="modal" hidden>Botão Oculto</button>
-                                        <button type="button" id="save" class="btn btn-bulbasaur-classic btn-modal">Save changes</button>
+                                    <div class="row justify-content-center">
+                                        <div class="col-2 descricao">
+                                            <p class="poke-text">1ª</p>
+                                            <p class="poke-desc">Geração</p>
+                                        </div>
+                                        <div class="col-2 descricao">
+                                            <p class="poke-text">22/03/2008</p>
+                                            <p class="poke-desc">Lançamento</p>
+                                        </div>
                                     </div>
+                                    <div class="row justify-content-center">
+                                        <p class="poke-rare lendario-n shadow-effect col-4">Lendario</p>
+                                        <p class="poke-rare mitico-n col-4">Mitico</p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="close" class="btn btn-flareon-classic btn-modal">Close</button>
+                                    <button id="meu-botao" data-bs-dismiss="modal" hidden>Botão Oculto</button>
+                                    <button type="button" id="edit" class="btn btn-bulbasaur-classic btn-modal" data-bs-toggle="modal" data-bs-target="#modalInput">Editar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Editar Pokemon -->
+                    <div class="modal" id="modalInput" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-2" aria-labelledby="modalInput" aria-hidden="false">
+                        <div class="modal-dialog modal-fullscreen modal-inner">
+                            <div class="modal-content bgd-dark">
+                                <div class="modal-content2 bgd-dark">a</div>
+                                <div class="modal-body scrollbar2">
+                                    <div class="row justify-content-center">
+                                        <input class="modal-title-input" type="text" name="nome" id="nome" placeholder="Pikachu">
+                                        <input class="modal-title-jap-input" type="text" name="nome-jap" id="nome-jap" placeholder="ピカチュウ">
+                                        <input class="poke-type-input" type="text" name="tipo-pokemon" id="tipo-pokemon" placeholder="Mouse Pokémon">
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <input class="tipo-pokemon-input col-4" type="text" name="tipo1" id="tipo1" placeholder="Electric">
+                                        <input class="tipo-pokemon-input col-4" type="text" name="tipo2" id="tipo2" placeholder="Electric">
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-2 descricao">
+                                            <input class="poke-text-input col-4" type="text" name="tipo2" id="tipo2" placeholder="12.3">
+                                            <p class="poke-desc">Peso</p>
+                                        </div>
+                                        <div class="col-2 descricao">
+                                            <input class="poke-text-input col-4" type="text" name="tipo2" id="tipo2" placeholder="12.3">
+                                            <p class="poke-desc">Altura</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <p class="base-stats">Base Stats</p>
+                                            <div class="row linha-status justify-content-center">
+                                                <p class="col-2 allign-text">HP</p>
+                                                <div class="col-10 progress poke-bars">
+                                                    <input class="progress-bar-input rangers" type="range" id="--bulbasaur" min="0" max="300" value="75">
+                                                </div>
+                                                <p class="col-2 allign-text2" id="--bulbasaur2">75</p>
+                                            </div>
+                                            <div class="row linha-status justify-content-center">
+                                                <p class="col-2 allign-text">ATK</p>
+                                                <div class="col-10 progress poke-bars">
+                                                    <input class="progress-bar-input rangers" type="range" id="--charmander" min="0" max="300" value="150">
+                                                </div>
+                                                <p class="col-2 allign-text2" id="--charmander2">150</p>
+                                            </div>
+                                            <div class="row linha-status justify-content-center">
+                                                <p class="col-2 allign-text">DEF</p>
+                                                <div class="col-10 progress poke-bars">
+                                                    <input class="progress-bar-input rangers" type="range" id="--squirtle" min="0" max="300" value="300">
+                                                </div>
+                                                <p class="col-2 allign-text2" id="--squirtle2">300</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-2 descricao">
+                                            <input class="poke-text-input col-4" type="text" name="tipo2" id="geracao" placeholder="1">
+                                            <p class="poke-desc">Geração</p>
+                                        </div>
+                                        <div class="col-2 descricao">
+                                            <input class="poke-text-input col-4" type="text" name="tipo2" id="lancamento" pattern="\d{2}/\d{2}/\d{4}" inputmode="numeric" placeholder="22/03/2008">
+                                            <p class="poke-desc">Lançamento</p>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <p class="poke-rare lendario-n col-4 pointer" id="lendario">Lendario</p>
+                                        <p class="poke-rare mitico-n col-4 pointer" id="mitico">Mitico</p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="close2" class="btn btn-flareon-classic btn-modal">Close</button>
+                                    <button id="meu-botao2" data-bs-dismiss="modal" hidden>Botão Oculto</button>
+                                    <button type="button" id="save" class="btn btn-bulbasaur-classic btn-modal">Save changes</button>
                                 </div>
                             </div>
                         </div>

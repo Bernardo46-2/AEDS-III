@@ -76,6 +76,22 @@ func ReadBinToPoke(id int) (models.Pokemon, int64, error) {
 	return models.Pokemon{}, pos, fmt.Errorf("pokemon não encontrado")
 }
 
+func NumRegistros() (int, error) {
+	file, err := os.Open(BIN_FILE)
+	if err != nil {
+		return 0, fmt.Errorf("erro ao abrir o arquivo: %v", err)
+	}
+	defer file.Close()
+
+	// Lê o número de entradas no arquivo
+	var numEntradas int32
+	if err = binary.Read(file, binary.LittleEndian, &numEntradas); err != nil {
+		return 0, fmt.Errorf("erro ao ler número de entradas: %v Linha Corrompida: 0", err)
+	}
+
+	return int(numEntradas), nil
+}
+
 func DeletarPokemon(posicao int64) error {
 	file, err := os.OpenFile(BIN_FILE, os.O_RDWR, 0644)
 	if err != nil {
