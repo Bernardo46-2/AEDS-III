@@ -6,6 +6,7 @@ const modal = document.querySelector('#exampleModal');
 const modal2 = document.querySelector('#modalInput');
 const meuBotao = document.querySelector('#meu-botao');
 const meuBotao2 = document.querySelector('#meu-botao2');
+const meuBotao3 = document.querySelector('#meu-botao3');
 const scrollbar = document.querySelector('.scrollbar');
 const rangers = document.querySelectorAll('.rangers');
 
@@ -134,20 +135,29 @@ modalClose2.addEventListener('click', function() {
         modal2.removeEventListener('transitionend', onModalTransitionEnd);
     });
 
-    clonedCard.style.top = (getOffset(original).top - scrollTop - 5) + "px";
-    clonedCard.style.left = getOffset(original).left - 18 + "px";
-    clonedCard.style.width = original.offsetWidth + "px";
-    clonedCard.style.height = original.offsetHeight + "px";
-
-    clonedCard.classList.remove('card-to-fullscreen');
-    clonedCard.classList.add('card');
-
-    const div = document.querySelector('.slide-from-left');
-
-    clonedCard.addEventListener("transitionend", () => {
-        clonedCard.remove();
-        original.id = "";
-    });
+    if (original) {
+        clonedCard.style.top = (getOffset(original).top - scrollTop - 5) + "px";
+        clonedCard.style.left = getOffset(original).left - 18 + "px";
+        clonedCard.style.width = original.offsetWidth + "px";
+        clonedCard.style.height = original.offsetHeight + "px";
+    
+        clonedCard.classList.remove('card-to-fullscreen');
+        clonedCard.classList.add('card');
+    
+        const div = document.querySelector('.slide-from-left');
+    
+        clonedCard.addEventListener("transitionend", () => {
+            clonedCard.remove();
+            original.id = "";
+        });
+    } else {
+        clonedCard.style.top = "0";
+        clonedCard.style.left = "-100%";
+        clonedCard.addEventListener("transitionend", () => {
+            clonedCard.remove();
+            original.id = "";
+        });
+    }
 })
 
 const rangeValueDisplay = document.querySelector('.input-print');
@@ -195,3 +205,33 @@ mitico.addEventListener('click', function() {
         miticoMarca = false;
     }
 });
+
+const registrar = document.querySelector('#Registrar');
+registrar.addEventListener('click', function() {
+    modal2.classList.add("slide-from-left");
+    meuBotao3.click();
+    
+    let clonedCard = button[0].cloneNode(true);
+    document.body.appendChild(clonedCard);
+    
+    
+    clonedCard.id = 'clonedCard';
+    clonedCard.style.position = "fixed";
+    clonedCard.style.top = "0";
+    clonedCard.style.left = "-100%";
+    clonedCard.style.width = "100%";
+    clonedCard.style.height = "100%";
+
+    clonedCard.style.transition = "all 0.5s ease-in-out";
+
+    setTimeout(function() {
+        clonedCard.style.left = "0%";
+    }, 0);
+
+    // Remove a classe "card" da cópia e adiciona a classe "card-to-fullscreen"
+    clonedCard.classList.remove("card");
+    clonedCard.classList.add("card-to-fullscreen");
+    clonedCard.classList.add("disabled");
+
+    modal2.classList.remove("slide-from-left");
+})
