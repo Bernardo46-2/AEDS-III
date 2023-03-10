@@ -235,3 +235,54 @@ registrar.addEventListener('click', function() {
 
     modal2.classList.remove("slide-from-left");
 })
+
+const pesquisar = document.querySelector('#Pesquisar');
+const pesquisarForm = document.querySelector('#pesquisar-form');
+let pesquisaAberta = false;
+pesquisar.addEventListener('click', function() {
+    if (!pesquisaAberta) {
+        pesquisar.style.height = 100 + "px";
+        pesquisarForm.classList.remove('displayNone');
+        pesquisarForm.classList.remove('btn-Charmander');
+        pesquisaAberta = true;
+    } else {
+        pesquisar.style.height = 45 + "px";
+        pesquisarForm.classList.add('displayNone');
+        pesquisarForm.classList.add('btn-Charmander');
+        pesquisaAberta = false;
+    }
+})
+
+const atualizar = document.querySelector('#Atualizar');
+const atualizarForm = document.querySelector('#atualizar-form');
+let atualizarAberta = false;
+atualizar.addEventListener('click', function() {
+    if (!atualizarAberta) {
+        atualizar.style.height = 100 + "px";
+        atualizarForm.classList.remove('displayNone');
+        atualizarForm.classList.remove('btn-Squirtle');
+        atualizarAberta = true;
+    } else {
+        atualizar.style.height = 45 + "px";
+        atualizarForm.classList.add('displayNone');
+        atualizarForm.classList.add('btn-Squirtle');
+        atualizarAberta = false;
+    }
+})
+
+const deletar = document.querySelector('#Deletar');
+const deletarForm = document.querySelector('#deletar-form');
+let deletarAberta = false;
+deletar.addEventListener('click', function() {
+    if (!deletarAberta) {
+        deletar.style.height = 100 + "px";
+        deletarForm.classList.remove('displayNone');
+        deletarForm.classList.remove('btn-Eevee');
+        deletarAberta = true;
+    } else {
+        deletar.style.height = 45 + "px";
+        deletarForm.classList.add('displayNone');
+        deletarForm.classList.add('btn-Eevee');
+        deletarAberta = false;
+    }
+})

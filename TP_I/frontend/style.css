@@ -70,6 +70,31 @@
     --Fairy: #EE99AC;
 }
 
+.displayNone {
+    display: none !important;
+}
+
+.search-in-button{
+    background-color: var(--background-dark) !important;
+    color: white !important;
+    box-shadow: 0 0 0 1px var(--charmander-transparent)!important;
+    margin-top: 10px;
+}
+
+.update-in-button{
+    background-color: var(--background-dark) !important;
+    color: white !important;
+    box-shadow: 0 0 0 1px var(--squirtle-transparent)!important;
+    margin-top: 10px;
+}
+
+.delete-in-button{
+    background-color: var(--background-dark) !important;
+    color: white !important;
+    box-shadow: 0 0 0 1px var(--eevee-transparent)!important;
+    margin-top: 10px;
+}
+
 .tipo-pokemon {
     color: #fff;
     border-radius: 30px;
@@ -499,8 +524,9 @@ input[type="text"] {
     bottom: 0px;
     left: 0px;
     color: white;
-    margin-left: 20px;
-    margin-top: 30px;
+    padding-left: 20px;
+    padding-top: 10px;
+    width: 100%;
 }
 
 .divisoria {
