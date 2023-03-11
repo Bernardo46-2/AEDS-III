@@ -82,13 +82,24 @@
 
 .search-in-button {
     background-color: var(--background-dark) !important;
+    border: none !important;
     color: white !important;
     box-shadow: 0 0 0 1px var(--charmander-transparent) !important;
     margin-top: 10px;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number] {
+    text-align: center;
+}
+
 .update-in-button {
     background-color: var(--background-dark) !important;
+    border: none !important;
     color: white !important;
     box-shadow: 0 0 0 1px var(--squirtle-transparent) !important;
     margin-top: 10px;
@@ -96,6 +107,7 @@
 
 .delete-in-button {
     background-color: var(--background-dark) !important;
+    border: none !important;
     color: white !important;
     box-shadow: 0 0 0 1px var(--eevee-transparent) !important;
     margin-top: 10px;
@@ -237,6 +249,7 @@
 
 .poke-text {
     color: #fff;
+    width: 200px !important;
     text-align: center;
     font-family: "Tilt Neon", cursive !important;
     font-size: 2.3em !important;
@@ -258,10 +271,10 @@
 .poke-text-input {
     color: #fff;
     text-align: center;
-    width: 200px !important;
+    width: 220px !important;
     font-family: "Tilt Neon", cursive !important;
     font-size: 2.3em !important;
-    margin-top: 15px !important;
+    margin-top: 12px !important;
     white-space: nowrap;
 }
 
@@ -272,15 +285,12 @@
 .poke-desc {
     color: #b9b9b9;
     text-align: center;
+    width: 200px !important;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1.5em !important;
     margin: 10px !important;
-    margin-top: 15px !important;
+    margin-top: 13px !important;
     white-space: nowrap;
-}
-
-.descricao {
-    margin-top: 0px !important;
 }
 
 .base-stats {
@@ -359,7 +369,7 @@ input[type="text"] {
 
 .poke-type {
     color: #b9b9b9;
-    width: 200px !important;
+    width: 400px !important;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1.5em !important;
@@ -368,7 +378,7 @@ input[type="text"] {
 
 .poke-type-input {
     color: #b9b9b9;
-    width: 200px !important;
+    width: 400px !important;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1.5em !important;
@@ -508,7 +518,7 @@ input[type="text"] {
     text-align: center;
     box-sizing: border-box;
     margin-bottom: 35px;
-    aspect-ratio: 1/1 !important;
+    aspect-ratio: 1/1;
     margin-left: 10px;
     border: none !important;
 }

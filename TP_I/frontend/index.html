@@ -19,17 +19,17 @@
             <div class="col-2 p-0 bgd-dark pre-sidebar sidebar-shadow" id="sidebar">
                 <div class="sidebar">
                     <img class="logo" src="imagens/pngegg.png" alt="Descrição da imagem">
-                    <button id="meu-botao3" data-bs-toggle="modal" data-bs-target="#modalInput" hidden>Botão Oculto</button>
+                    <button id="meu-botao3" data-bs-toggle="modal" data-bs-target="#modalPage" hidden>Botão Oculto</button>
                     <button type="button" class="btn btn-primary btn-Pikachu btn-sidebar" id="All"><span></span><span></span><span></span><span></span>Gotta Catch 'Em All!</button>
                     <button type="button" class="btn btn-primary btn-Bulbasaur btn-sidebar" id="Registrar"><span></span><span></span><span></span><span></span>Registrar</button>
-                    <button type="button" class="btn btn-primary btn-Charmander btn-sidebar" id="Pesquisar"><span></span><span></span><span></span><span></span>Pesquisar
-                        <input type="text" class="displayNone search-in-button form-control" id="pesquisar-form"/>
+                    <button type="button" class="btn btn-primary btn-Charmander btn-sidebar" id="Pesquisar"><span></span><span></span><span></span><span></span>Pesquisar por ID
+                        <input type="number" class="displayNone search-in-button form-control" id="pesquisar-form"/>
                     </button>
                     <button type="button" class="btn btn-primary btn-Squirtle btn-sidebar" id="Atualizar"><span></span><span></span><span></span><span></span>Atualizar
-                        <input type="text" class="displayNone update-in-button form-control" id="atualizar-form"/>
+                        <input type="number" class="displayNone update-in-button form-control" id="atualizar-form"/>
                     </button>
                     <button type="button" class="btn btn-primary btn-Eevee btn-sidebar" id="Deletar"><span></span><span></span><span></span><span></span>Deletar
-                        <input type="text" class="displayNone delete-in-button form-control" id="deletar-form"/>
+                        <input type="number" class="displayNone delete-in-button form-control" id="deletar-form"/>
                     </button>
                     <button type="button" class="btn btn-primary btn-Gengar btn-sidebar" id="Ordenação"><span></span><span></span><span></span><span></span>Ordenação</button>
                     <button type="button" class="btn btn-primary btn-Jigglypuff btn-sidebar" id="Random"><span></span><span></span><span></span><span></span>Random</button>
@@ -51,95 +51,20 @@
             <div class="col-10 p-0 bgd-medium-dark">
                 <div class="content">
                     <div class="row justify-content-evenly" id="cards">
-                        <button type="button" class="btn btn-Psyduck">Mostrar Mais</button>
+                        
                     </div>
 
                     <!-- Conteudo Pokemon -->
-                    <div class="modal slide-from-left" id="exampleModal" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+                    <div class="modal slide-from-left" id="modalPage">
                         <div class="modal-dialog modal-fullscreen modal-inner">
                             <div class="modal-content bgd-dark">
-                                <div class="modal-content2 bgd-dark">a</div>
+                                <div class="modal-content2 bgd-dark"></div>
                                 <div class="modal-body scrollbar2" id="conteudoPokemon">
-                                    
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" id="close" class="btn btn-flareon-classic btn-modal">Close</button>
                                     <button id="meu-botao" data-bs-dismiss="modal" hidden>Botão Oculto</button>
-                                    <button type="button" id="edit" class="btn btn-bulbasaur-classic btn-modal" data-bs-toggle="modal" data-bs-target="#modalInput">Editar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Editar Pokemon -->
-                    <div class="modal" id="modalInput" data-bs-backdrop="false" data-bs-keyboard="false" tabindex="-2" aria-labelledby="modalInput" aria-hidden="false">
-                        <div class="modal-dialog modal-fullscreen modal-inner">
-                            <div class="modal-content bgd-dark">
-                                <div class="modal-content2 bgd-dark">a</div>
-                                <div class="modal-body scrollbar2">
-                                    <div class="row justify-content-center">
-                                        <input class="modal-title-input" type="text" name="nome" id="nome" placeholder="Pikachu">
-                                        <input class="modal-title-jap-input" type="text" name="nome-jap" id="nome-jap" placeholder="ピカチュウ">
-                                        <input class="poke-type-input" type="text" name="tipo-pokemon" id="tipo-pokemon" placeholder="Mouse Pokémon">
-                                    </div>
-                                    <div class="row justify-content-center">
-                                        <input class="tipo-pokemon-input col-4" type="text" name="tipo1" id="tipo1" placeholder="Electric">
-                                        <input class="tipo-pokemon-input col-4" type="text" name="tipo2" id="tipo2" placeholder="Electric">
-                                    </div>
-                                    <div class="row justify-content-center">
-                                        <div class="col-2 descricao">
-                                            <input class="poke-text-input col-4" type="text" name="tipo2" id="tipo2" placeholder="12.3">
-                                            <p class="poke-desc">Peso</p>
-                                        </div>
-                                        <div class="col-2 descricao">
-                                            <input class="poke-text-input col-4" type="text" name="tipo2" id="tipo2" placeholder="12.3">
-                                            <p class="poke-desc">Altura</p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <p class="base-stats">Base Stats</p>
-                                            <div class="row linha-status justify-content-center">
-                                                <p class="col-2 allign-text">HP</p>
-                                                <div class="col-10 progress poke-bars">
-                                                    <input class="progress-bar-input rangers" type="range" id="--bulbasaur" min="0" max="300" value="75">
-                                                </div>
-                                                <p class="col-2 allign-text2" id="--bulbasaur2">75</p>
-                                            </div>
-                                            <div class="row linha-status justify-content-center">
-                                                <p class="col-2 allign-text">ATK</p>
-                                                <div class="col-10 progress poke-bars">
-                                                    <input class="progress-bar-input rangers" type="range" id="--charmander" min="0" max="300" value="150">
-                                                </div>
-                                                <p class="col-2 allign-text2" id="--charmander2">150</p>
-                                            </div>
-                                            <div class="row linha-status justify-content-center">
-                                                <p class="col-2 allign-text">DEF</p>
-                                                <div class="col-10 progress poke-bars">
-                                                    <input class="progress-bar-input rangers" type="range" id="--squirtle" min="0" max="300" value="300">
-                                                </div>
-                                                <p class="col-2 allign-text2" id="--squirtle2">300</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row justify-content-center">
-                                        <div class="col-2 descricao">
-                                            <input class="poke-text-input col-4" type="text" name="tipo2" id="geracao" placeholder="1">
-                                            <p class="poke-desc">Geração</p>
-                                        </div>
-                                        <div class="col-2 descricao">
-                                            <input class="poke-text-input col-4" type="text" name="tipo2" id="lancamento" pattern="\d{2}/\d{2}/\d{4}" inputmode="numeric" placeholder="22/03/2008">
-                                            <p class="poke-desc">Lançamento</p>
-                                        </div>
-                                    </div>
-                                    <div class="row justify-content-center">
-                                        <p class="poke-rare lendario-n col-4 pointer" id="lendario">Lendario</p>
-                                        <p class="poke-rare mitico-n col-4 pointer" id="mitico">Mitico</p>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" id="close2" class="btn btn-flareon-classic btn-modal">Close</button>
-                                    <button id="meu-botao2" data-bs-dismiss="modal" hidden>Botão Oculto</button>
+                                    <button type="button" id="edit" class="btn btn-bulbasaur-classic btn-modal">Editar</button>
                                     <button type="button" id="save" class="btn btn-bulbasaur-classic btn-modal">Save changes</button>
                                 </div>
                             </div>

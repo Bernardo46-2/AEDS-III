@@ -16,11 +16,13 @@ function modalAviso(mostrar = "Servidor Desligado") {
 
     setTimeout(function () {
         modalContainer.classList.add('out');
-    }, 4000);
+    }, 3000);
 
-    modalContainer.addEventListener('click', () => {
-        modalContainer.classList.add('out');
-    });
+    setTimeout(function () {
+        modalContainer.addEventListener('click', () => {
+            modalContainer.classList.add('out');
+        });
+    }, 1200);
 }
 
 importarCsv.onclick = () => {
@@ -85,16 +87,16 @@ const classes = {
 
 function adicionarCards(data) {
     const cardsHtml = document.getElementById('cards');
-    let content = cardsHtml.innerHTML;
+    let content = `<button type="button" class="btn btn-Psyduck">Mostrar Mais</button>`;
     cardsHtml.innerHTML = "";
     for (let i = 0; i < data.length; i++) {
         let nome = data[i].nome.toLowerCase();
 
 
         let bgd = classes[nome] ?? classes[Object.keys(classes)[Math.floor(Math.random() * 18)]];
-        let imagem = (classes[nome] === undefined)? "pokebola":nome;
+        let imagem = (classes[nome] === undefined) ? "pokebola" : nome;
         let pokemonCard = `
-        <div class="card ${bgd} ${bgd}-shadow col-sm-6 col-lg-3 col-xxl-2" data-bs-toggle="modal" data-bs-target="#exampleModal" id="${data[i].numero}">
+        <div class="card ${bgd} ${bgd}-shadow col-sm-6 col-lg-3 col-xxl-2" data-bs-toggle="modal" data-bs-target="#modalPage" id="${data[i].numero}">
         <img class="card-img-top" src="imagens/${imagem}.png" alt="${nome}">
         <h5 class="card-title text-center">${nome}</h5>
         </div>
@@ -113,7 +115,7 @@ function adicionarCards(data) {
  * * * * * * * * * * * * * * */
 
 function carregarDados(id) {
-    fetch('http://localhost:8080/get/?id='+id)
+    fetch('http://localhost:8080/get/?id=' + id)
         .then(response => response.json())
         .then(data => adicionarDadosModal(data))
         .catch(error => {
@@ -135,12 +137,12 @@ function adicionarDadosModal(data) {
     const ano = dateObj.getFullYear().toString();
     const dataFormatada = `${dia}/${mes}/${ano}`;
 
-    let lendario = data.lendario?'lendario-y':'lendario-n';
-    let mitico = data.mitico?'mitico-y':'mitico-n';
+    let lendario = data.lendario ? 'lendario-y' : 'lendario-n';
+    let mitico = data.mitico ? 'mitico-y' : 'mitico-n';
 
     let modalContent = `
     <div class="row justify-content-center">
-        <p class="modal-title" id="exampleModalLabel">${data.nome}</p>
+        <p class="modal-title" id="modalPage">${data.nome}</p>
         <p class="modal-title-jap">${data.nome_jap}</p>
         <p class="poke-type">${data.especie}</p>
     </div>
@@ -149,14 +151,13 @@ function adicionarDadosModal(data) {
         <p class="tipo-pokemon bgd-${data.tipo[1]} col-4">${data.tipo[1]}</p>
     </div>
     <div class="row justify-content-center">
-        <div class="col-2 descricao">
-            <p class="poke-text">${data.peso} KG</p>
-            <p class="poke-desc">Peso</p>
+        <p class="poke-text">${data.peso} KG</p>
+        <p class="poke-text">${data.altura} M</p>
         </div>
-        <div class="col-2 descricao">
-            <p class="poke-text">${data.altura} M</p>
-            <p class="poke-desc">Altura</p>
-        </div>
+        <div class="row justify-content-center">
+        <p class="poke-desc">Peso</p>
+        <p class="poke-desc">Altura</p>
+    </div>
     </div>
     <div class="row">
         <div class="col-12">
@@ -164,35 +165,33 @@ function adicionarDadosModal(data) {
             <div class="row linha-status justify-content-center">
                 <p class="col-2 allign-text">HP</p>
                 <div class="col-10 progress poke-bars">
-                    <div class="progress-bar bgd-bulbasaur" role="progressbar" style="width: ${Math.min(data.hp/150*100, 150)}%" aria-valuenow="${data.hp}" aria-valuemin="0" aria-valuemax="300"></div>
+                    <div class="progress-bar bgd-bulbasaur" role="progressbar" style="width: ${Math.min(data.hp / 2, 200)}%" aria-valuenow="${data.hp}" aria-valuemin="0" aria-valuemax="300"></div>
                 </div>
                 <p class="col-2 allign-text2">${data.hp}</p>
             </div>
             <div class="row linha-status justify-content-center">
                 <p class="col-2 allign-text">ATK</p>
                 <div class="col-10 progress poke-bars">
-                    <div class="progress-bar bgd-charmander" role="progressbar" style="width: ${Math.min(data.atk/150*100, 150)}%" aria-valuenow="${data.atk}" aria-valuemin="0" aria-valuemax="300"></div>
+                    <div class="progress-bar bgd-charmander" role="progressbar" style="width: ${Math.min(data.atk / 2, 200)}%" aria-valuenow="${data.atk}" aria-valuemin="0" aria-valuemax="300"></div>
                 </div>
                 <p class="col-2 allign-text2">${data.atk}</p>
             </div>
             <div class="row linha-status justify-content-center">
                 <p class="col-2 allign-text">DEF</p>
                 <div class="col-10 progress poke-bars">
-                    <div class="progress-bar bgd-squirtle" role="progressbar" style="width: ${Math.min(data.def/150*100, 150)}%" aria-valuenow="${data.def}" aria-valuemin="0" aria-valuemax="300"></div>
+                    <div class="progress-bar bgd-squirtle" role="progressbar" style="width: ${Math.min(data.def / 2, 200)}%" aria-valuenow="${data.def}" aria-valuemin="0" aria-valuemax="300"></div>
                 </div>
                 <p class="col-2 allign-text2">${data.def}</p>
             </div>
         </div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-2 descricao">
-            <p class="poke-text">${data.geracao}ª</p>
-            <p class="poke-desc">Geração</p>
+        <p class="poke-text">${data.geracao}ª</p>
+        <p class="poke-text">${dataFormatada}</p>
         </div>
-        <div class="col-2 descricao">
-            <p class="poke-text">${dataFormatada}</p>
-            <p class="poke-desc">Lançamento</p>
-        </div>
+        <div class="row justify-content-center">
+        <p class="poke-desc">Geração</p>
+        <p class="poke-desc">Lançamento</p>
     </div>
     <div class="row justify-content-center">
         <p class="poke-rare ${lendario} col-4">Lendario</p>
@@ -201,4 +200,362 @@ function adicionarDadosModal(data) {
     `;
 
     conteudoPokemon.innerHTML = modalContent;
+    editButton.onclick = () => editarDadosModal(data)
 }
+
+/*  * * * * * * * * * * * * *
+ *
+ *  Editar Dados
+ *
+ * * * * * * * * * * * * * * */
+
+const editButton = document.getElementById('edit');
+
+
+function editarDadosModal(data) {
+    const conteudoPokemon = document.getElementById('conteudoPokemon');
+
+    const dateObj = new Date(data.lancamento);
+    const dia = dateObj.getDate().toString().padStart(2, '0');
+    const mes = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+    const ano = dateObj.getFullYear().toString();
+    const dataFormatada = `${dia}/${mes}/${ano}`;
+
+    let modalContent =
+        `<div class="row justify-content-center">
+    <input class="modal-title-input" type="text" name="nome" id="nome" value="${data.nome}">
+    <input class="modal-title-jap-input" type="text" name="nome-jap" id="nome-jap" value="${data.nome_jap}">
+    <input class="poke-type-input" type="text" name="tipo-pokemon" id="tipo-pokemon" value="${data.especie}">
+    </div>
+    <div class="row justify-content-center">
+    <input class="tipo-pokemon-input col-4" type="text" name="tipo1" id="tipo1" value="${data.tipo[0]}">
+    <input class="tipo-pokemon-input col-4" type="text" name="tipo2" id="tipo2" value="${data.tipo[1]}">
+    </div>
+    <div class="row justify-content-center">
+        <input class="poke-text-input col-4" type="text" name="tipo2" id="tipo2" value="${data.peso}">
+        <input class="poke-text-input col-4" type="text" name="tipo2" id="tipo2" value="${data.altura}">
+    </div>
+    <div class="row justify-content-center">
+        <p class="poke-desc">Peso</p>
+        <p class="poke-desc">Altura</p>
+    </div>
+    <div class="row">
+    <div class="col-12">
+        <p class="base-stats">Base Stats</p>
+        <div class="row linha-status justify-content-center">
+            <p class="col-2 allign-text">HP</p>
+            <div class="col-10 progress poke-bars">
+                <input class="progress-bar-input rangers" type="range" id="--bulbasaur" min="0" max="200" value="${(Math.min(data.hp / 2, 200))}">
+            </div>
+            <p class="col-2 allign-text2" id="--bulbasaur2">${data.hp}</p>
+        </div>
+        <div class="row linha-status justify-content-center">
+            <p class="col-2 allign-text">ATK</p>
+            <div class="col-10 progress poke-bars">
+                <input class="progress-bar-input rangers" type="range" id="--charmander" min="0" max="200" value="${(Math.min(data.atk / 2, 200))}">
+            </div>
+            <p class="col-2 allign-text2" id="--charmander2">${data.atk}</p>
+        </div>
+        <div class="row linha-status justify-content-center">
+            <p class="col-2 allign-text">DEF</p>
+            <div class="col-10 progress poke-bars">
+                <input class="progress-bar-input rangers" type="range" id="--squirtle" min="0" max="200" value="${(Math.min(data.def / 2, 200))}">
+            </div>
+            <p class="col-2 allign-text2" id="--squirtle2">${data.def}</p>
+        </div>
+    </div>
+    </div>
+    <div class="row justify-content-center">
+        <input class="poke-text-input col-4" type="text" name="tipo2" id="geracao" value="${data.geracao}">
+        <input class="poke-text-input col-4" type="text" name="tipo2" id="lancamento" pattern="\d{2}/\d{2}/\d{4}" inputmode="numeric" value="${dataFormatada}">
+    </div>
+    <div class="row justify-content-center">
+        <p class="poke-desc">Geração</p>
+        <p class="poke-desc">Lançamento</p>
+    </div>
+    </div>
+    <div class="row justify-content-center">
+    <p class="poke-rare lendario-n col-4 pointer" id="lendario">Lendario</p>
+    <p class="poke-rare mitico-n col-4 pointer" id="mitico">Mitico</p>
+    </div>
+    `;
+
+    conteudoPokemon.innerHTML = modalContent;
+
+    const lendario = document.querySelector('#lendario');
+    const mitico = document.querySelector('#mitico');
+    let lendarioMarca = false;
+    let miticoMarca = false;
+
+    lendario.addEventListener('click', function () {
+        if (!lendarioMarca) {
+            lendario.classList.remove('lendario-n');
+            lendario.classList.add('lendario-y');
+            lendarioMarca = true;
+        } else {
+            lendario.classList.remove('lendario-y');
+            lendario.classList.add('lendario-n');
+            lendarioMarca = false;
+        }
+    });
+
+    mitico.addEventListener('click', function () {
+        if (!miticoMarca) {
+            mitico.classList.remove('mitico-n');
+            mitico.classList.add('mitico-y');
+            mitico.classList.add('shadow-effect');
+            miticoMarca = true;
+        } else {
+            mitico.classList.remove('mitico-y');
+            mitico.classList.remove('shadow-effect');
+            mitico.classList.add('mitico-n');
+            miticoMarca = false;
+        }
+    });
+
+    const rangers = document.querySelectorAll('.rangers');
+    rangers.forEach(range => {
+        const rangeValueDisplay = document.querySelector("#" + range.id + 2);
+        const defaultValue = range.value;
+        range.style.background = `linear-gradient(to right, var(${range.id}) 0%, var(${range.id}) ${defaultValue}%, #f3f3f3 ${defaultValue}%, #f3f3f3 100%)`;
+        range.addEventListener('input', () => {
+            const value = range.value / 2;
+            range.style.background = `linear-gradient(to right, var(${range.id}) 0%, var(${range.id}) ${value}%, #f3f3f3 ${value}%, #f3f3f3 100%)`;
+            rangeValueDisplay.textContent = Math.floor(value * 2);
+        });
+    });
+}
+
+const registrar = document.querySelector('#Registrar');
+registrar.addEventListener('click', function () {
+    abrirModal(undefined, true, undefined);
+});
+
+/*  * * * * * * * * * * * * *
+ *
+ *  Barra Lateral
+ *
+ * * * * * * * * * * * * * * */
+const pesquisar = document.querySelector('#Pesquisar');
+const pesquisarForm = document.querySelector('#pesquisar-form');
+var pesquisarAberto = false;
+const atualizar = document.querySelector('#Atualizar');
+const atualizarForm = document.querySelector('#atualizar-form');
+let atualizarAberto = false;
+const deletar = document.querySelector('#Deletar');
+const deletarForm = document.querySelector('#deletar-form');
+let deletarAberto = false;
+
+pesquisar.addEventListener('click', function (event) {
+    if (event.target === pesquisar && !pesquisarAberto) {
+        pesquisar.style.height = 100 + "px";
+        pesquisarForm.classList.remove('displayNone');
+        pesquisarForm.classList.remove('btn-Charmander');
+        pesquisarAberto = true;
+    } else if (event.target === pesquisar) {
+        pesquisar.style.height = 45 + "px";
+        pesquisarForm.classList.add('displayNone');
+        pesquisarForm.classList.add('btn-Charmander');
+        pesquisarAberto = false;
+    }
+})
+
+pesquisarForm.addEventListener('keyup', function (event) {
+    if (event.keyCode === 13) {
+        pesquisar.style.height = 45 + "px";
+        pesquisarForm.classList.add('displayNone');
+        pesquisarForm.classList.add('btn-Charmander');
+        pesquisarAberto = false;
+
+        fetch('http://localhost:8080/get/?id=' + pesquisarForm.value)
+            .then(response => response.json())
+            .then(data => {
+                if ('mensagem' in data) {
+                    modalAviso("Pokemon inexistente");
+                } else {
+                    abrirModal(data.nome, false, data)
+                }
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    }
+});
+
+atualizar.addEventListener('click', function (event) {
+    if (event.target === atualizar && !atualizarAberto) {
+        atualizar.style.height = 100 + "px";
+        atualizarForm.classList.remove('displayNone');
+        atualizarForm.classList.remove('btn-Charmander');
+        atualizarAberto = true;
+    } else if (event.target === atualizar) {
+        atualizar.style.height = 45 + "px";
+        atualizarForm.classList.add('displayNone');
+        atualizarForm.classList.add('btn-Charmander');
+        atualizarAberto = false;
+    }
+})
+
+atualizarForm.addEventListener('keyup', function (event) {
+    if (event.keyCode === 13) {
+        atualizar.style.height = 45 + "px";
+        atualizarForm.classList.add('displayNone');
+        atualizarForm.classList.add('btn-Charmander');
+        atualizarAberto = false;
+
+        fetch('http://localhost:8080/get/?id=' + atualizarForm.value)
+            .then(response => response.json())
+            .then(data => {
+                if ('mensagem' in data) {
+                    modalAviso("Pokemon inexistente");
+                } else {
+                    abrirModal(data.nome, true, data)
+                }
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    }
+});
+
+deletar.addEventListener('click', function (event) {
+    if (event.target === deletar && !deletarAberto) {
+        deletar.style.height = 100 + "px";
+        deletarForm.classList.remove('displayNone');
+        deletarForm.classList.remove('btn-Charmander');
+        deletarAberto = true;
+    } else if (event.target === deletar) {
+        deletar.style.height = 45 + "px";
+        deletarForm.classList.add('displayNone');
+        deletarForm.classList.add('btn-Charmander');
+        deletarAberto = false;
+    }
+})
+
+deletarForm.addEventListener('keyup', function (event) {
+    if (event.keyCode === 13) {
+        deletar.style.height = 45 + "px";
+        deletarForm.classList.add('displayNone');
+        deletarForm.classList.add('btn-Charmander');
+        deletarAberto = false;
+
+        fetch('http://localhost:8080/delete/?id=' + deletarForm.value)
+            .then(response => response.json())
+            .then(data => modalAviso(data.mensagem))
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    }
+});
+
+function abrirModal(pokemon = "pokebola", editar = false, data) {
+    pokemon = pokemon.toLowerCase();
+    if (data === undefined) {
+        data = {
+            "numero": 1,
+            "nome": "Nome",
+            "nome_jap": "和名",
+            "geracao": 1,
+            "lancamento": "1996-02-27T00:00:00Z",
+            "especie": "Especie Pokemon",
+            "lendario": false,
+            "mitico": false,
+            "tipo": [
+                "Tipo 1",
+                "Tipo 2"
+            ],
+            "atk": Math.floor(Math.random() * 100),
+            "def": Math.floor(Math.random() * 100),
+            "hp": Math.floor(Math.random() * 100),
+            "altura": 0.0,
+            "peso": 0.0
+        };
+    }
+
+    const cardsHtml = document.getElementById('cards');
+    modal.style.setProperty('--random', 0 + '%');
+    document.querySelector('#meu-botao3').click();
+
+    const novaDiv = document.createElement('div');
+
+    var imagem
+    var bgdClass
+    if (classes[pokemon] === undefined) {
+        bgdClass = classes[Object.keys(classes)[Math.floor(Math.random() * 18)]];
+        imagem = "pokebola";
+    } else {
+        bgdClass = classes[pokemon];
+        imagem = pokemon;
+    }
+
+    let pokemonCard = `
+    <div class="card ${bgdClass} col-sm-6 col-lg-3 col-xxl-2" data-bs-toggle="modal" data-bs-target="#modalPage" id="novaDiv">
+    <img class="card-img-top" src="imagens/${imagem}.png" alt="pokeball">
+    </div>
+    `;
+
+    novaDiv.innerHTML = pokemonCard;
+    let novoPokemon = novaDiv.querySelector('#novaDiv');
+    cardsHtml.appendChild(novoPokemon);
+
+    novoPokemon.style.position = "fixed";
+    novoPokemon.style.top = "0";
+    novoPokemon.style.left = "-40%";
+    novoPokemon.style.width = "100%";
+    novoPokemon.style.height = "100%";
+    novoPokemon.style.transition = "all 0.5s ease-in-out";
+    setTimeout(function () {
+        novoPokemon.style.left = "0%";
+    }, 0);
+
+    novoPokemon.classList.add("card-to-fullscreen");
+    novoPokemon.classList.remove("card");
+    novoPokemon.classList.add("disabled");
+
+    if (editar) {
+        editarDadosModal(data);
+    } else {
+        adicionarDadosModal(data);
+    }
+
+    const modalClose = document.querySelector('#close');
+    modalClose.addEventListener('click', function destruirClone() {
+        novoPokemon.style.transition = "all 1s ease-in-out";
+        modal.classList.add("slide-out-right");
+        // Adiciona um event listener para a transição
+        modal.addEventListener('transitionend', function onModalTransitionEnd() {
+            setTimeout(function () {
+                meuBotao.click();
+                modal.classList.remove("slide-out-right");
+            }, 500);
+            modal.removeEventListener('transitionend', onModalTransitionEnd);
+        });
+
+        novoPokemon.style.left = "-50%";
+        novoPokemon.style.width = "100%";
+
+
+        const div = document.querySelector('.slide-from-left');
+
+        novoPokemon.addEventListener("transitionend", () => {
+            novoPokemon.remove();
+        });
+    });
+}
+
+
+
+atualizarForm.addEventListener('keyup', function (event) {
+    if (event.keyCode === 13) {
+        console.log('Pesquisar:', atualizarForm.value);
+    }
+});
+
+deletarForm.addEventListener('keyup', function (event) {
+    if (event.keyCode === 13) {
+        console.log('Pesquisar:', deletarForm.value);
+    }
+});
