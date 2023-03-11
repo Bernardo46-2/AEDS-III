@@ -42,7 +42,6 @@ func writeJson(w http.ResponseWriter, v any) {
 
 func GetPokemon(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
-
 	pokemon, err := crud.Read(id)
 
 	if err != nil {
@@ -50,6 +49,7 @@ func GetPokemon(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.Println("GET", "Id de numero "+strconv.Itoa(id))
 	writeJson(w, pokemon)
 }
 

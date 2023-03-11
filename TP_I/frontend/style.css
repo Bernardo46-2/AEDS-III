@@ -233,7 +233,6 @@
 
 .disabled {
     pointer-events: none !important;
-    visibility: visible !important;
 }
 
 .poke-text {
@@ -666,6 +665,10 @@ body::-webkit-scrollbar {
  *  Definição dos pokemons
  *
  * * * * * * * * * * * * * * */
+
+.bgd-Null {
+    display: none;
+}
 
 .bgd-Normal {
     background-color: var(--Normal);
