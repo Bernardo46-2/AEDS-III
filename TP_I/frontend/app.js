@@ -10,12 +10,12 @@ const meuBotao3 = document.querySelector('#meu-botao3');
 const scrollbar = document.querySelector('.scrollbar');
 const rangers = document.querySelectorAll('.rangers');
 
-window.addEventListener('resize', function() {
+window.addEventListener('resize', function () {
     const totalHeight = document.documentElement.scrollHeight;
     const scrollbarHeight = window.innerHeight;
     const thumbHeight = Math.max(scrollbarHeight * (window.innerHeight / totalHeight), 20);
     const thumbPosition = (scrollbarHeight - thumbHeight) * (window.scrollY / (totalHeight - window.innerHeight));
-    
+
     scrollbar.style.height = `${thumbHeight}px`;
     scrollbar.style.top = `${thumbPosition}px`;
 });
@@ -25,7 +25,7 @@ document.addEventListener("scroll", () => {
     const scrollbarHeight = window.innerHeight;
     const thumbHeight = Math.max(scrollbarHeight * (window.innerHeight / totalHeight), 20);
     const thumbPosition = (scrollbarHeight - thumbHeight) * (window.scrollY / (totalHeight - window.innerHeight));
-    
+
     scrollbar.style.height = `${thumbHeight}px`;
     scrollbar.style.top = `${thumbPosition}px`;
 });
@@ -38,7 +38,7 @@ function getOffset(el) {
 }
 
 button.forEach(element => {
-    let click = function() {
+    let click = function () {
         // Obtém a posição atual da barra de rolagem
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
@@ -86,7 +86,7 @@ button.forEach(element => {
             modal.classList.add("slide-out-right");
             // Adiciona um event listener para a transição
             modal.addEventListener('transitionend', function onModalTransitionEnd() {
-                setTimeout(function() {
+                setTimeout(function () {
                     meuBotao.click();
                     modal.classList.remove("slide-out-right");
                 }, 500);
@@ -104,7 +104,7 @@ button.forEach(element => {
             const div = document.querySelector('.slide-from-left');
 
             clonedCard.addEventListener("transitionend", () => {
-                    clonedCard.remove();
+                clonedCard.remove();
             });
         });
     }
@@ -113,11 +113,11 @@ button.forEach(element => {
     element.addEventListener('click', click);
 });
 
-modalEdit.addEventListener('click', function() {
+modalEdit.addEventListener('click', function () {
     console.log("uheuheuhe");
 })
 
-modalClose2.addEventListener('click', function() {
+modalClose2.addEventListener('click', function () {
     const clonedCard = document.querySelector('#clonedCard');
     const original = document.querySelector('#originalCard');
 
@@ -126,7 +126,7 @@ modalClose2.addEventListener('click', function() {
     modal2.classList.add("slide-out-right");
     // Adiciona um event listener para a transição
     modal2.addEventListener('transitionend', function onModalTransitionEnd() {
-        setTimeout(function() {
+        setTimeout(function () {
             meuBotao2.click();
             modal2.classList.remove("slide-out-right");
         }, 500);
@@ -138,10 +138,10 @@ modalClose2.addEventListener('click', function() {
         clonedCard.style.left = getOffset(original).left - 18 + "px";
         clonedCard.style.width = original.offsetWidth + "px";
         clonedCard.style.height = original.offsetHeight + "px";
-    
+
         clonedCard.classList.remove('card-to-fullscreen');
         clonedCard.classList.add('card');
-    
+
         clonedCard.addEventListener("transitionend", () => {
             clonedCard.remove();
             original.id = "";
@@ -161,7 +161,7 @@ const rangeValueDisplay = document.querySelector('.input-print');
 rangers.forEach(range => {
     const rangeValueDisplay = document.querySelector("#" + range.id + 2);
     const defaultValue = range.value / 3;
-    range.style.background = `linear-gradient(to right, var(${range.id}) 0%, var(${range.id}) ${defaultValue}%, #f3f3f3 ${defaultValue}%, #f3f3f3 100%)`;  
+    range.style.background = `linear-gradient(to right, var(${range.id}) 0%, var(${range.id}) ${defaultValue}%, #f3f3f3 ${defaultValue}%, #f3f3f3 100%)`;
     range.addEventListener('input', () => {
         const value = Math.ceil((range.value - range.min) / (range.max - range.min) * 100);
         range.style.background = `linear-gradient(to right, var(${range.id}) 0%, var(${range.id}) ${value}%, #f3f3f3 ${value}%, #f3f3f3 100%)`;
@@ -174,7 +174,7 @@ const mitico = document.querySelector('#mitico');
 let lendarioMarca = false;
 let miticoMarca = false;
 
-lendario.addEventListener('click', function() {
+lendario.addEventListener('click', function () {
     if (!lendarioMarca) {
         lendario.classList.remove('lendario-n');
         lendario.classList.add('lendario-y');
@@ -188,7 +188,7 @@ lendario.addEventListener('click', function() {
     }
 });
 
-mitico.addEventListener('click', function() {
+mitico.addEventListener('click', function () {
     if (!miticoMarca) {
         mitico.classList.remove('mitico-n');
         mitico.classList.add('mitico-y');
@@ -203,14 +203,14 @@ mitico.addEventListener('click', function() {
 });
 
 const registrar = document.querySelector('#Registrar');
-registrar.addEventListener('click', function() {
+registrar.addEventListener('click', function () {
     modal2.classList.add("slide-from-left");
     meuBotao3.click();
-    
+
     let clonedCard = button[0].cloneNode(true);
     document.body.appendChild(clonedCard);
-    
-    
+
+
     clonedCard.id = 'clonedCard';
     clonedCard.style.position = "fixed";
     clonedCard.style.top = "0";
@@ -220,7 +220,7 @@ registrar.addEventListener('click', function() {
 
     clonedCard.style.transition = "all 0.5s ease-in-out";
 
-    setTimeout(function() {
+    setTimeout(function () {
         clonedCard.style.left = "0%";
     }, 0);
 
@@ -235,7 +235,7 @@ registrar.addEventListener('click', function() {
 const pesquisar = document.querySelector('#Pesquisar');
 const pesquisarForm = document.querySelector('#pesquisar-form');
 let pesquisaAberta = false;
-pesquisar.addEventListener('click', function() {
+pesquisar.addEventListener('click', function () {
     if (!pesquisaAberta) {
         pesquisar.style.height = 100 + "px";
         pesquisarForm.classList.remove('displayNone');
@@ -252,7 +252,7 @@ pesquisar.addEventListener('click', function() {
 const atualizar = document.querySelector('#Atualizar');
 const atualizarForm = document.querySelector('#atualizar-form');
 let atualizarAberta = false;
-atualizar.addEventListener('click', function() {
+atualizar.addEventListener('click', function () {
     if (!atualizarAberta) {
         atualizar.style.height = 100 + "px";
         atualizarForm.classList.remove('displayNone');
@@ -269,7 +269,7 @@ atualizar.addEventListener('click', function() {
 const deletar = document.querySelector('#Deletar');
 const deletarForm = document.querySelector('#deletar-form');
 let deletarAberta = false;
-deletar.addEventListener('click', function() {
+deletar.addEventListener('click', function () {
     if (!deletarAberta) {
         deletar.style.height = 100 + "px";
         deletarForm.classList.remove('displayNone');

@@ -7,6 +7,7 @@ import (
 
 	"github.com/Bernardo46-2/AEDS-III/crud"
 	"github.com/Bernardo46-2/AEDS-III/dataManager"
+	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
@@ -123,6 +124,7 @@ func LoadDatabase(w http.ResponseWriter, r *http.Request) {
 	dataManager.ImportCSV().CsvToBin()
 
 	writeSuccess(w, 6)
+	logger.Println("INFO", "Database Recarregada")
 }
 
 func ToKatakana(w http.ResponseWriter, r *http.Request) {

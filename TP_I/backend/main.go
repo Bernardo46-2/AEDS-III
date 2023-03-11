@@ -5,10 +5,13 @@ import (
 	"net/http"
 
 	"github.com/Bernardo46-2/AEDS-III/handlers"
+	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
 )
 
 func main() {
+	logger.LigarServidor()
+
 	// define os handlers para GET e POST
 	http.HandleFunc("/getAll/", middlewares.EnableCORS(handlers.GetAllPokemon))
 	http.HandleFunc("/get/", middlewares.EnableCORS(handlers.GetPokemon))

@@ -54,19 +54,19 @@ func SuccessResponse(codigo int) Response {
 
 	switch codigo {
 	case 1:
-		msg = "Sucesso"
+		msg = "Sucesso!"
 	case 2:
-		msg = "Pokemon encontrado com sucesso"
+		msg = "Pokemon encontrado com sucesso!"
 	case 3:
-		msg = "Pokemon criado com sucesso"
+		msg = "Pokemon criado com sucesso!"
 	case 4:
-		msg = "Pokemon atualizado com sucesso"
+		msg = "Pokemon atualizado com sucesso!"
 	case 5:
-		msg = "Pokemon deletado com sucesso"
+		msg = "Pokemon deletado com sucesso!"
 	case 6:
-		msg = "CSV importado com sucesso"
+		msg = "CSV importado com sucesso!"
 	default:
-		msg = "Mensagem de sucesso desconhecida"
+		msg = "Mensagem de sucesso desconhecida!"
 	}
 
 	return Response{Success: true, Code: codigo, Message: msg}

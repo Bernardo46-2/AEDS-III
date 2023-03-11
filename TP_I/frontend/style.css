@@ -15,17 +15,17 @@
     --jigglypuff: #f9bbc1;
     --psyduck: #f4c430;
     --magikarp: #ff7f00;
-    --abra: #F8D030;
-    --machop: #755E8C;
-    --geodude: #7B7D72;
+    --abra: #f8d030;
+    --machop: #755e8c;
+    --geodude: #7b7d72;
     --jolteon: #fdd835;
     --vaporeon: #29abe2;
     --flareon: #ff1f1f;
-    --dragonair: #7038F8;
-    --zapdos: #FFD54F;
+    --dragonair: #7038f8;
+    --zapdos: #ffd54f;
     --meowth: #f1b61c;
     --minum: #e6d571;
-    --quilava: #EE8130;
+    --quilava: #ee8130;
     --pikachu-transparent: #fdd8356c;
     --charmander-transparent: #f080306c;
     --bulbasaur-transparent: #7ac74c6c;
@@ -36,71 +36,145 @@
     --jigglypuff-transparent: #f9bbc16c;
     --psyduck-transparent: #f4c4306c;
     --magikarp-transparent: #ff7f006c;
-    --abra-transparent: #F8D0306c;
-    --machop-transparent: #755E8C6c;
-    --geodude-transparent: #7B7D726c;
+    --abra-transparent: #f8d0306c;
+    --machop-transparent: #755e8c6c;
+    --geodude-transparent: #7b7d726c;
     --jolteon-transparent: #fdd8356c;
     --vaporeon-transparent: #29abe26c;
     --flareon-transparent: #ff1f1f6c;
-    --dragonair-transparent: #7038F86c;
-    --zapdos-transparent: #FFD54F6c;
+    --dragonair-transparent: #7038f86c;
+    --zapdos-transparent: #ffd54f6c;
     --meowth-transparent: #f1b61c6c;
     --minum-transparent: #e6d5716c;
-    --quilava-transparent: #EE81306c;
+    --quilava-transparent: #ee81306c;
     --pikachu-escuro: #ccad2e;
     --flareon-escuro: #b40c0c;
     --bulbasaur-escuro: #648f38;
-    --Normal: #A8A878;
-    --Fire: #F08030;
-    --Water: #6890F0;
-    --Electric: #F8D030;
-    --Grass: #78C850;
-    --Ice: #98D8D8;
-    --Fighting: #C03028;
-    --Poison: #A040A0;
-    --Ground: #E0C068;
-    --Flying: #A890F0;
-    --Psychic: #F85888;
-    --Bug: #A8B820;
-    --Rock: #B8A038;
+    --Normal: #a8a878;
+    --Fire: #f08030;
+    --Water: #6890f0;
+    --Electric: #f8d030;
+    --Grass: #78c850;
+    --Ice: #98d8d8;
+    --Fighting: #c03028;
+    --Poison: #a040a0;
+    --Ground: #e0c068;
+    --Flying: #a890f0;
+    --Psychic: #f85888;
+    --Bug: #a8b820;
+    --Rock: #b8a038;
     --Ghost: #705898;
-    --Dragon: #7038F8;
+    --Dragon: #7038f8;
     --Dark: #705848;
-    --Steel: #B8B8D0;
-    --Fairy: #EE99AC;
+    --Steel: #b8b8d0;
+    --Fairy: #ee99ac;
 }
+
+/*  * * * * * * * * * * * * *
+ *
+ *  Botoes barra lateral
+ *
+ * * * * * * * * * * * * * * */
 
 .displayNone {
     display: none !important;
 }
 
-.search-in-button{
+.search-in-button {
     background-color: var(--background-dark) !important;
     color: white !important;
-    box-shadow: 0 0 0 1px var(--charmander-transparent)!important;
+    box-shadow: 0 0 0 1px var(--charmander-transparent) !important;
     margin-top: 10px;
 }
 
-.update-in-button{
+.update-in-button {
     background-color: var(--background-dark) !important;
     color: white !important;
-    box-shadow: 0 0 0 1px var(--squirtle-transparent)!important;
+    box-shadow: 0 0 0 1px var(--squirtle-transparent) !important;
     margin-top: 10px;
 }
 
-.delete-in-button{
+.delete-in-button {
     background-color: var(--background-dark) !important;
     color: white !important;
-    box-shadow: 0 0 0 1px var(--eevee-transparent)!important;
+    box-shadow: 0 0 0 1px var(--eevee-transparent) !important;
     margin-top: 10px;
 }
+
+#modal-container {
+    position: fixed;
+    display: table;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    transform: scale(0);
+    z-index: 9999;
+}
+
+#modal-container.one {
+    transform: scaleY(0.01) scaleX(0);
+    animation: unfoldIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+#modal-container.one.out {
+    transform: scale(1);
+    animation: unfoldOut 0.5s 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+#modal-container .modal-background {
+    display: table-cell;
+    background: rgba(0, 0, 0, 0.8);
+    text-align: center;
+    vertical-align: middle;
+}
+
+.modal-content-success {
+    color: #fff;
+    font-family: "Tilt Neon", cursive !important;
+    font-size: 2em;
+}
+
+@keyframes unfoldIn {
+    0% {
+        transform: scaleY(0.005) scaleX(0);
+    }
+
+    50% {
+        transform: scaleY(0.005) scaleX(1);
+    }
+
+    100% {
+        transform: scaleY(1) scaleX(1);
+    }
+}
+
+@keyframes unfoldOut {
+    0% {
+        transform: scaleY(1) scaleX(1);
+    }
+
+    50% {
+        transform: scaleY(0.005) scaleX(1);
+    }
+
+    100% {
+        transform: scaleY(0.005) scaleX(0);
+    }
+}
+
+/*  * * * * * * * * * * * * *
+ *
+ *  Dados Pokemon
+ *
+ * * * * * * * * * * * * * * */
 
 .tipo-pokemon {
     color: #fff;
     border-radius: 30px;
     width: 200px !important;
     text-align: center;
-    font-family: 'Tilt Neon', cursive !important;
+    font-family: "Tilt Neon", cursive !important;
     font-size: 2em !important;
     margin: 10px !important;
     margin-top: 10px !important;
@@ -112,7 +186,7 @@
     border-radius: 30px;
     width: 200px !important;
     text-align: center;
-    font-family: 'Tilt Neon', cursive !important;
+    font-family: "Tilt Neon", cursive !important;
     font-size: 2em !important;
     margin: 10px !important;
     margin-top: 10px !important;
@@ -121,7 +195,7 @@
 }
 
 .modal-title {
-    font-family: 'Tilt Neon', cursive !important;
+    font-family: "Tilt Neon", cursive !important;
     font-size: 5em !important;
     text-shadow: 1px 1px 3px black;
     text-align: center;
@@ -130,7 +204,7 @@
 }
 
 .modal-title-jap {
-    font-family: 'Tilt Neon', cursive !important;
+    font-family: "Tilt Neon", cursive !important;
     font-size: 3em !important;
     text-shadow: 1px 1px 3px black;
     text-align: center;
@@ -139,7 +213,7 @@
 }
 
 .modal-title-input {
-    font-family: 'Tilt Neon', cursive !important;
+    font-family: "Tilt Neon", cursive !important;
     font-size: 5em !important;
     text-shadow: 1px 1px 3px black;
     text-align: center;
@@ -148,7 +222,7 @@
 }
 
 .modal-title-jap-input {
-    font-family: 'Tilt Neon', cursive !important;
+    font-family: "Tilt Neon", cursive !important;
     font-size: 3em !important;
     text-shadow: 1px 1px 3px black;
     text-align: center;
@@ -165,7 +239,7 @@
 .poke-text {
     color: #fff;
     text-align: center;
-    font-family: 'Tilt Neon', cursive !important;
+    font-family: "Tilt Neon", cursive !important;
     font-size: 2.3em !important;
     margin: 10px !important;
     margin-top: 15px !important;
@@ -176,7 +250,7 @@
     color: #fff;
     text-align: center;
     margin-right: 40px !important;
-    font-family: 'Tilt Neon', cursive !important;
+    font-family: "Tilt Neon", cursive !important;
     font-size: 2.3em !important;
     margin-top: 15px !important;
     white-space: nowrap;
@@ -186,7 +260,7 @@
     color: #fff;
     text-align: center;
     width: 200px !important;
-    font-family: 'Tilt Neon', cursive !important;
+    font-family: "Tilt Neon", cursive !important;
     font-size: 2.3em !important;
     margin-top: 15px !important;
     white-space: nowrap;
@@ -215,7 +289,7 @@
     color: #fff;
     width: 100%;
     text-align: center !important;
-    font-family: 'Tilt Neon', cursive !important;
+    font-family: "Tilt Neon", cursive !important;
     font-size: 3em !important;
     margin-top: 20px !important;
 }
@@ -257,7 +331,6 @@ input[type="text"] {
     font-size: inherit;
     color: inherit;
 }
-
 
 .linha-status {
     display: inline-block;
@@ -310,7 +383,7 @@ input[type="text"] {
     border-radius: 30px;
     width: 200px !important;
     text-align: center;
-    font-family: 'Tilt Neon', cursive !important;
+    font-family: "Tilt Neon", cursive !important;
     font-size: 2em !important;
     margin: 10px !important;
     margin-top: 25px !important;
@@ -419,11 +492,11 @@ input[type="text"] {
     0% {
         transform: translateX(0) translateY(0);
     }
+
     100% {
         transform: translateX(200%) translateY(var(--random));
     }
 }
-
 
 /*  * * * * * * * * * * * * *
  *
@@ -457,7 +530,7 @@ input[type="text"] {
 
 @media only screen and (min-width: 1025px) and (max-width: 1440px) {
     .card {
-        max-width: calc(((100%/12)*4) - 160px) !important;
+        max-width: calc(((100% / 12) * 4) - 160px) !important;
         min-width: 190px !important;
         margin-left: 20px;
     }
@@ -465,7 +538,7 @@ input[type="text"] {
 
 @media only screen and (min-width: 769px) and (max-width: 1024px) {
     .card {
-        max-width: calc(((100%/12)*4) - 40px) !important;
+        max-width: calc(((100% / 12) * 4) - 40px) !important;
         min-width: 250px !important;
         margin-left: 10px;
     }
@@ -473,7 +546,7 @@ input[type="text"] {
 
 @media only screen and (min-width: 0px) and (max-width: 768px) {
     .card {
-        max-width: calc(((100%/12)*6) - 50px) !important;
+        max-width: calc(((100% / 12) * 6) - 50px) !important;
         min-width: 150px !important;
     }
 }
@@ -491,7 +564,7 @@ input[type="text"] {
 }
 
 .card:active {
-    transform: s
+    transform: s;
 }
 
 .card-img-top {
@@ -509,7 +582,7 @@ input[type="text"] {
     top: 80%;
     left: 50%;
     transform: translateX(-50%);
-    font-family: 'Tilt Neon', cursive !important;
+    font-family: "Tilt Neon", cursive !important;
     font-size: 2.2em !important;
     text-shadow: 1px 1px 3px black;
 }
@@ -537,7 +610,6 @@ input[type="text"] {
     width: calc(16vw - 2px);
     margin-left: -14px;
 }
-
 
 /*  * * * * * * * * * * * * *
  *
@@ -588,7 +660,6 @@ body::-webkit-scrollbar {
 .bgd-medium-dark {
     background-color: var(--background-medium-dark) !important;
 }
-
 
 /*  * * * * * * * * * * * * *
  *
@@ -896,7 +967,8 @@ body::-webkit-scrollbar {
 .btn-Pikachu:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--pikachu) !important;
-    box-shadow: 0 0 10px var(--pikachu-transparent), 0 0 40px var(--pikachu-transparent), 0 0 80px var(--pikachu-transparent);
+    box-shadow: 0 0 10px var(--pikachu-transparent),
+        0 0 40px var(--pikachu-transparent), 0 0 80px var(--pikachu-transparent);
     transition-duration: 0.8s;
 }
 
@@ -909,7 +981,9 @@ body::-webkit-scrollbar {
 .btn-Charmander:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--charmander) !important;
-    box-shadow: 0 0 10px var(--charmander-transparent), 0 0 40px var(--charmander-transparent), 0 0 80px var(--charmander-transparent);
+    box-shadow: 0 0 10px var(--charmander-transparent),
+        0 0 40px var(--charmander-transparent),
+        0 0 80px var(--charmander-transparent);
     transition-duration: 0.8s;
 }
 
@@ -922,7 +996,8 @@ body::-webkit-scrollbar {
 .btn-Bulbasaur:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--bulbasaur) !important;
-    box-shadow: 0 0 10px var(--bulbasaur-transparent), 0 0 40px var(--bulbasaur-transparent), 0 0 80px var(--bulbasaur-transparent);
+    box-shadow: 0 0 10px var(--bulbasaur-transparent),
+        0 0 40px var(--bulbasaur-transparent), 0 0 80px var(--bulbasaur-transparent);
     transition-duration: 0.8s;
 }
 
@@ -935,7 +1010,8 @@ body::-webkit-scrollbar {
 .btn-Squirtle:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--squirtle) !important;
-    box-shadow: 0 0 10px var(--squirtle-transparent), 0 0 40px var(--squirtle-transparent), 0 0 80px var(--squirtle-transparent);
+    box-shadow: 0 0 10px var(--squirtle-transparent),
+        0 0 40px var(--squirtle-transparent), 0 0 80px var(--squirtle-transparent);
     transition-duration: 0.8s;
 }
 
@@ -948,7 +1024,8 @@ body::-webkit-scrollbar {
 .btn-Eevee:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--eevee) !important;
-    box-shadow: 0 0 10px var(--eevee-transparent), 0 0 40px var(--eevee-transparent), 0 0 80px var(--eevee-transparent);
+    box-shadow: 0 0 10px var(--eevee-transparent),
+        0 0 40px var(--eevee-transparent), 0 0 80px var(--eevee-transparent);
     transition-duration: 0.8s;
 }
 
@@ -961,7 +1038,8 @@ body::-webkit-scrollbar {
 .btn-Umbreon:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--umbreon) !important;
-    box-shadow: 0 0 10px var(--umbreon-transparent), 0 0 40px var(--umbreon-transparent), 0 0 80px var(--umbreon-transparent);
+    box-shadow: 0 0 10px var(--umbreon-transparent),
+        0 0 40px var(--umbreon-transparent), 0 0 80px var(--umbreon-transparent);
     transition-duration: 0.8s;
 }
 
@@ -974,7 +1052,8 @@ body::-webkit-scrollbar {
 .btn-Gengar:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--gengar) !important;
-    box-shadow: 0 0 10px var(--gengar-transparent), 0 0 40px var(--gengar-transparent), 0 0 80px var(--gengar-transparent);
+    box-shadow: 0 0 10px var(--gengar-transparent),
+        0 0 40px var(--gengar-transparent), 0 0 80px var(--gengar-transparent);
     transition-duration: 0.8s;
 }
 
@@ -987,7 +1066,9 @@ body::-webkit-scrollbar {
 .btn-Jigglypuff:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--jigglypuff) !important;
-    box-shadow: 0 0 10px var(--jigglypuff-transparent), 0 0 40px var(--jigglypuff-transparent), 0 0 80px var(--jigglypuff-transparent);
+    box-shadow: 0 0 10px var(--jigglypuff-transparent),
+        0 0 40px var(--jigglypuff-transparent),
+        0 0 80px var(--jigglypuff-transparent);
     transition-duration: 0.8s;
 }
 
@@ -1000,7 +1081,8 @@ body::-webkit-scrollbar {
 .btn-Psyduck:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--psyduck) !important;
-    box-shadow: 0 0 10px var(--psyduck-transparent), 0 0 40px var(--psyduck-transparent), 0 0 80px var(--psyduck-transparent);
+    box-shadow: 0 0 10px var(--psyduck-transparent),
+        0 0 40px var(--psyduck-transparent), 0 0 80px var(--psyduck-transparent);
     transition-duration: 0.8s;
 }
 
@@ -1013,7 +1095,8 @@ body::-webkit-scrollbar {
 .btn-Magikarp:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--magikarp) !important;
-    box-shadow: 0 0 10px var(--magikarp-transparent), 0 0 40px var(--magikarp-transparent), 0 0 80px var(--magikarp-transparent);
+    box-shadow: 0 0 10px var(--magikarp-transparent),
+        0 0 40px var(--magikarp-transparent), 0 0 80px var(--magikarp-transparent);
     transition-duration: 0.8s;
 }
 
@@ -1026,7 +1109,8 @@ body::-webkit-scrollbar {
 .btn-Abra:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--abra) !important;
-    box-shadow: 0 0 10px var(--abra-transparent), 0 0 40px var(--abra-transparent), 0 0 80px var(--abra-transparent);
+    box-shadow: 0 0 10px var(--abra-transparent), 0 0 40px var(--abra-transparent),
+        0 0 80px var(--abra-transparent);
     transition-duration: 0.8s;
 }
 
@@ -1039,7 +1123,8 @@ body::-webkit-scrollbar {
 .btn-Machop:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--machop) !important;
-    box-shadow: 0 0 10px var(--machop-transparent), 0 0 40px var(--machop-transparent), 0 0 80px var(--machop-transparent);
+    box-shadow: 0 0 10px var(--machop-transparent),
+        0 0 40px var(--machop-transparent), 0 0 80px var(--machop-transparent);
     transition-duration: 0.8s;
 }
 
@@ -1052,7 +1137,8 @@ body::-webkit-scrollbar {
 .btn-Geodude:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--geodude) !important;
-    box-shadow: 0 0 10px var(--geodude-transparent), 0 0 40px var(--geodude-transparent), 0 0 80px var(--geodude-transparent);
+    box-shadow: 0 0 10px var(--geodude-transparent),
+        0 0 40px var(--geodude-transparent), 0 0 80px var(--geodude-transparent);
     transition-duration: 0.8s;
 }
 
@@ -1065,7 +1151,8 @@ body::-webkit-scrollbar {
 .btn-Jolteon:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--jolteon) !important;
-    box-shadow: 0 0 10px var(--jolteon-transparent), 0 0 40px var(--jolteon-transparent), 0 0 80px var(--jolteon-transparent);
+    box-shadow: 0 0 10px var(--jolteon-transparent),
+        0 0 40px var(--jolteon-transparent), 0 0 80px var(--jolteon-transparent);
     transition-duration: 0.8s;
 }
 
@@ -1078,7 +1165,8 @@ body::-webkit-scrollbar {
 .btn-Vaporeon:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--vaporeon) !important;
-    box-shadow: 0 0 10px var(--vaporeon-transparent), 0 0 40px var(--vaporeon-transparent), 0 0 80px var(--vaporeon-transparent);
+    box-shadow: 0 0 10px var(--vaporeon-transparent),
+        0 0 40px var(--vaporeon-transparent), 0 0 80px var(--vaporeon-transparent);
     transition-duration: 0.8s;
 }
 
@@ -1091,10 +1179,10 @@ body::-webkit-scrollbar {
 .btn-Flareon:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--flareon) !important;
-    box-shadow: 0 0 10px var(--flareon-transparent), 0 0 40px var(--flareon-transparent), 0 0 80px var(--flareon-transparent);
+    box-shadow: 0 0 10px var(--flareon-transparent),
+        0 0 40px var(--flareon-transparent), 0 0 80px var(--flareon-transparent);
     transition-duration: 0.8s;
 }
-
 
 /*  * * * * * * * * * * * 
  *
@@ -1107,7 +1195,7 @@ body::-webkit-scrollbar {
     display: inline-block;
     margin-bottom: 10px;
     overflow: hidden;
-    font-family: 'Tilt Neon', cursive !important;
+    font-family: "Tilt Neon", cursive !important;
     font-weight: bolder !important;
     font-size: 1.2em !important;
 }
