@@ -36,3 +36,65 @@ INFO: 2023/03/11 07:16:55 Database Recarregada
 INFO: 2023/03/11 07:19:31 Database Recarregada
 GET: 2023/03/11 07:19:37 Id de numero 25
 GET: 2023/03/11 07:19:51 Id de numero 25
+STATUS: 2023/03/11 07:22:47 Servidor desligado
+STATUS: 2023/03/11 07:22:56 Servidor iniciado
+STATUS: 2023/03/11 07:23:00 Servidor desligado
+STATUS: 2023/03/11 07:23:48 Servidor iniciado
+GET: 2023/03/11 07:25:37 Id de numero 4
+GET: 2023/03/11 07:28:10 Id de numero 25
+GET: 2023/03/11 07:28:54 Id de numero 25
+GET: 2023/03/11 07:30:16 Id de numero 25
+GET: 2023/03/11 07:31:14 Id de numero 6
+GET: 2023/03/11 07:31:56 Id de numero 25
+GET: 2023/03/11 07:32:29 Id de numero 25
+GET: 2023/03/11 07:32:33 Id de numero 25
+GET: 2023/03/11 07:36:29 Id de numero 7
+GET: 2023/03/11 07:37:09 Id de numero 23
+GET: 2023/03/11 07:37:41 Id de numero 14
+GET: 2023/03/11 07:37:45 Id de numero 14
+GET: 2023/03/11 07:37:51 Id de numero 25
+GET: 2023/03/11 07:37:57 Id de numero 25
+GET: 2023/03/11 07:38:03 Id de numero 33
+INFO: 2023/03/11 07:38:18 Database Recarregada
+GET: 2023/03/11 07:38:24 Id de numero 7
+GET: 2023/03/11 07:39:02 Id de numero 1
+GET: 2023/03/11 07:39:07 Id de numero 43
+GET: 2023/03/11 07:39:33 Id de numero 25
+GET: 2023/03/11 07:39:43 Id de numero 328
+INFO: 2023/03/11 07:40:03 Database Recarregada
+GET: 2023/03/11 07:40:09 Id de numero 25
+GET: 2023/03/11 07:42:26 Id de numero 7
+GET: 2023/03/11 07:57:10 Id de numero 7
+GET: 2023/03/11 07:57:56 Id de numero 7
+GET: 2023/03/11 07:58:05 Id de numero 25
+GET: 2023/03/11 07:58:13 Id de numero 25
+GET: 2023/03/11 07:59:04 Id de numero 7
+GET: 2023/03/11 07:59:10 Id de numero 123
+INFO: 2023/03/11 07:59:18 Database Recarregada
+GET: 2023/03/11 07:59:25 Id de numero 22
+GET: 2023/03/11 08:04:23 Id de numero 53
+GET: 2023/03/11 08:04:26 Id de numero 53
+GET: 2023/03/11 08:17:31 Id de numero 52
+GET: 2023/03/11 08:20:14 Id de numero 1
+GET: 2023/03/11 08:20:20 Id de numero 15
+GET: 2023/03/11 08:25:15 Id de numero 9
+GET: 2023/03/11 08:25:47 Id de numero 1
+GET: 2023/03/11 08:26:04 Id de numero 1
+GET: 2023/03/11 08:26:34 Id de numero 1
+GET: 2023/03/11 08:26:47 Id de numero 1
+GET: 2023/03/11 08:28:30 Id de numero 890
+GET: 2023/03/11 08:30:32 Id de numero 1
+GET: 2023/03/11 08:30:51 Id de numero 1
+GET: 2023/03/11 08:30:56 Id de numero 1
+GET: 2023/03/11 08:31:35 Id de numero 25
+GET: 2023/03/11 08:31:49 Id de numero 1
+GET: 2023/03/11 08:32:39 Id de numero 1
+GET: 2023/03/11 08:33:06 Id de numero 1
+GET: 2023/03/11 08:33:15 Id de numero 25
+GET: 2023/03/11 08:33:21 Id de numero 25
+GET: 2023/03/11 08:38:02 Id de numero 3
+GET: 2023/03/11 08:39:19 Id de numero 3
+GET: 2023/03/11 08:42:10 Id de numero 657
+GET: 2023/03/11 08:42:34 Id de numero 876
+GET: 2023/03/11 08:43:54 Id de numero 744
+GET: 2023/03/11 08:44:42 Id de numero 788

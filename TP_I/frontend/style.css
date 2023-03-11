@@ -93,6 +93,7 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 input[type=number] {
     text-align: center;
 }
@@ -245,6 +246,28 @@ input[type=number] {
 
 .disabled {
     pointer-events: none !important;
+}
+
+.poke-id {
+    color: #ffffff9c;
+    position: absolute;
+    top: -5px;
+    right: 5px;
+    font-family: "Tilt Neon", cursive !important;
+    font-size: 2em !important;
+    margin: 10px !important;
+    white-space: nowrap;
+}
+
+.poke-id2 {
+    color: #ffffff9c;
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    font-family: "Tilt Neon", cursive !important;
+    font-size: 3em !important;
+    margin: 10px !important;
+    white-space: nowrap;
 }
 
 .poke-text {
@@ -578,7 +601,7 @@ input[type="text"] {
 
 .card-img-top {
     position: absolute;
-    top: 42%;
+    top: 44%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
     max-width: 75%;
@@ -588,7 +611,7 @@ input[type="text"] {
 
 .card-title {
     position: absolute;
-    top: 80%;
+    top: 81%;
     left: 50%;
     transform: translateX(-50%);
     font-family: "Tilt Neon", cursive !important;
@@ -1284,7 +1307,7 @@ button:active span:nth-child(4) {
 .btn-sidebar {
     width: 94%;
     margin: 3%;
-    height: 45px;
+    min-height: 45px;
     background-color: transparent !important;
 }
 

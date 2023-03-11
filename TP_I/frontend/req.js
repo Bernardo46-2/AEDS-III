@@ -98,7 +98,8 @@ function adicionarCards(data) {
         let pokemonCard = `
         <div class="card ${bgd} ${bgd}-shadow col-sm-6 col-lg-3 col-xxl-2" data-bs-toggle="modal" data-bs-target="#modalPage" id="${data[i].numero}">
         <img class="card-img-top" src="imagens/${imagem}.png" alt="${nome}">
-        <h5 class="card-title text-center">${nome}</h5>
+        <h5 class="card-title text-center">${capt(nome)}</h5>
+        <p class="poke-id">#${data[i].numero}</p>
         </div>
         `;
 
@@ -125,6 +126,11 @@ function carregarDados(id) {
 }
 
 function adicionarDadosModal(data) {
+    const editButton = document.querySelector('#edit');
+    const saveButton = document.querySelector('#save');
+    editButton.hidden = false;
+    saveButton.hidden = true;
+
     const conteudoPokemon = document.getElementById('conteudoPokemon');
 
     if (data.tipo.length < 2) {
@@ -141,8 +147,9 @@ function adicionarDadosModal(data) {
     let mitico = data.mitico ? 'mitico-y' : 'mitico-n';
 
     let modalContent = `
+    <p class="poke-id2">#${data.numero}</p>
     <div class="row justify-content-center">
-        <p class="modal-title" id="modalPage">${data.nome}</p>
+        <p class="modal-title" id="modalPage">${capt(data.nome)}</p>
         <p class="modal-title-jap">${data.nome_jap}</p>
         <p class="poke-type">${data.especie}</p>
     </div>
@@ -200,7 +207,7 @@ function adicionarDadosModal(data) {
     `;
 
     conteudoPokemon.innerHTML = modalContent;
-    editButton.onclick = () => editarDadosModal(data)
+    editButton.onclick = () => editarDadosModal(data, false)
 }
 
 /*  * * * * * * * * * * * * *
@@ -211,8 +218,12 @@ function adicionarDadosModal(data) {
 
 const editButton = document.getElementById('edit');
 
+function editarDadosModal(data, shouldCreate = false) {
+    const editButton = document.querySelector('#edit');
+    const saveButton = document.querySelector('#save');
+    editButton.hidden = true;
+    saveButton.hidden = false;
 
-function editarDadosModal(data) {
     const conteudoPokemon = document.getElementById('conteudoPokemon');
 
     const dateObj = new Date(data.lancamento);
@@ -221,9 +232,10 @@ function editarDadosModal(data) {
     const ano = dateObj.getFullYear().toString();
     const dataFormatada = `${dia}/${mes}/${ano}`;
 
-    let modalContent =
-        `<div class="row justify-content-center">
-    <input class="modal-title-input" type="text" name="nome" id="nome" value="${data.nome}">
+    let modalContent =`
+    <p class="poke-id2">${shouldCreate?"":"#"+data.numero}</p>
+    <div class="row justify-content-center">
+    <input class="modal-title-input" type="text" name="nome" id="nome" value="${capt(data.nome)}">
     <input class="modal-title-jap-input" type="text" name="nome-jap" id="nome-jap" value="${data.nome_jap}">
     <input class="poke-type-input" type="text" name="tipo-pokemon" id="tipo-pokemon" value="${data.especie}">
     </div>
@@ -452,10 +464,12 @@ deletarForm.addEventListener('keyup', function (event) {
 });
 
 function abrirModal(pokemon = "pokebola", editar = false, data) {
+    const closeButton = document.querySelector('#close');
+
     pokemon = pokemon.toLowerCase();
     if (data === undefined) {
         data = {
-            "numero": 1,
+            "numero": 0,
             "nome": "Nome",
             "nome_jap": "和名",
             "geracao": 1,
@@ -516,13 +530,12 @@ function abrirModal(pokemon = "pokebola", editar = false, data) {
     novoPokemon.classList.add("disabled");
 
     if (editar) {
-        editarDadosModal(data);
+        editarDadosModal(data, data.numero == 0 ? true : false);
     } else {
         adicionarDadosModal(data);
     }
 
-    const modalClose = document.querySelector('#close');
-    modalClose.addEventListener('click', function destruirClone() {
+    closeButton.addEventListener('click', function destruirClone() {
         novoPokemon.style.transition = "all 1s ease-in-out";
         modal.classList.add("slide-out-right");
         // Adiciona um event listener para a transição
@@ -537,25 +550,8 @@ function abrirModal(pokemon = "pokebola", editar = false, data) {
         novoPokemon.style.left = "-50%";
         novoPokemon.style.width = "100%";
 
-
-        const div = document.querySelector('.slide-from-left');
-
         novoPokemon.addEventListener("transitionend", () => {
             novoPokemon.remove();
         });
     });
 }
-
-
-
-atualizarForm.addEventListener('keyup', function (event) {
-    if (event.keyCode === 13) {
-        console.log('Pesquisar:', atualizarForm.value);
-    }
-});
-
-deletarForm.addEventListener('keyup', function (event) {
-    if (event.keyCode === 13) {
-        console.log('Pesquisar:', deletarForm.value);
-    }
-});

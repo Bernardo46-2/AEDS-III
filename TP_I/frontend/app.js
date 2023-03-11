@@ -71,6 +71,8 @@ function gerarModalPokemon() {
             clonedCard.classList.add("disabled");
             const cardTitle = clonedCard.querySelector('.card-title');
             cardTitle.remove();
+            const cardId = clonedCard.querySelector('.poke-id');
+            cardId.remove();
             const image = clonedCard.querySelector('.card-img-top');
             image.style.top = '50%';
 
@@ -120,4 +122,6 @@ function gerarModalPokemon() {
     });
 }
 
-
+function capt(str) {
+    return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
+}
