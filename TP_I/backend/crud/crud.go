@@ -24,7 +24,7 @@ func Read(id int) (pokemon models.Pokemon, err error) {
 }
 
 func ReadAll(page int) (pokemon []models.Pokemon, err error) {
-	numRegistros, _ := dataManager.NumRegistros()
+	numRegistros, _, _ := dataManager.NumRegistros()
 	i := page * 60
 
 	for total := 0; total < 60 && i < numRegistros; i++ {
