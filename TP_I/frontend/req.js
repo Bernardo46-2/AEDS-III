@@ -425,30 +425,29 @@ pesquisar.addEventListener('click', function (event) {
         pesquisarForm.classList.add('btn-Charmander');
         pesquisarAberto = false;
     }
-})
-
-pesquisarForm.addEventListener('keyup', function (event) {
-    if (event.keyCode === 13) {
-        pesquisar.style.height = 45 + "px";
-        pesquisarForm.classList.add('displayNone');
-        pesquisarForm.classList.add('btn-Charmander');
-        pesquisarAberto = false;
-
-        fetch('http://localhost:8080/get/?id=' + pesquisarForm.value)
-            .then(response => response.json())
-            .then(data => {
-                if ('mensagem' in data) {
-                    modalAviso("Pokemon inexistente");
-                } else {
-                    abrirModal(data.nome, false, data)
-                }
-            })
-            .catch(error => {
-                modalAviso();
-                console.log(error)
-            });
-    }
 });
+
+document.getElementById('actual-pesquisar-form').onsubmit = e => {
+    e.preventDefault();
+    pesquisar.style.height = 45 + "px";
+    pesquisarForm.classList.add('displayNone');
+    pesquisarForm.classList.add('btn-Charmander');
+    pesquisarAberto = false;
+
+    fetch('http://localhost:8080/get/?id=' + pesquisarForm.value)
+        .then(response => response.json())
+        .then(data => {
+            if ('mensagem' in data) {
+                modalAviso("Pokemon inexistente");
+            } else {
+                abrirModal(data.nome, false, data)
+            }
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+};
 
 atualizar.addEventListener('click', function (event) {
     if (event.target === atualizar && !atualizarAberto) {
@@ -501,22 +500,22 @@ deletar.addEventListener('click', function (event) {
     }
 })
 
-deletarForm.addEventListener('keyup', function (event) {
-    if (event.keyCode === 13) {
-        deletar.style.height = 45 + "px";
-        deletarForm.classList.add('displayNone');
-        deletarForm.classList.add('btn-Charmander');
-        deletarAberto = false;
+document.getElementById('actual-deletar-form').onsubmit = e => {
+    e.preventDefault();
 
-        fetch('http://localhost:8080/delete/?id=' + deletarForm.value)
-            .then(response => response.json())
-            .then(data => modalAviso(data.mensagem))
-            .catch(error => {
-                modalAviso();
-                console.log(error)
-            });
-    }
-});
+    deletar.style.height = 45 + "px";
+    deletarForm.classList.add('displayNone');
+    deletarForm.classList.add('btn-Charmander');
+    deletarAberto = false;
+
+    fetch('http://localhost:8080/delete/?id=' + deletarForm.value)
+        .then(response => response.json())
+        .then(data => modalAviso(data.mensagem))
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+};
 
 function abrirModal(pokemon = "pokebola", editar = false, data) {
     const closeButton = document.querySelector('#close');
