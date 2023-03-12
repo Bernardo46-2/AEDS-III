@@ -20,7 +20,7 @@ func main() {
 	if command == 0 {
 		dataManager.IntercalacaoBalanceadaComum()
 	} else if command == 1 {
-		dataManager.IntercalacaoTamanhoVariavel()
+		dataManager.IntercalacaoBalanceadaVariavel()
 	} else if command == 2 {
 		logger.LigarServidor()
 

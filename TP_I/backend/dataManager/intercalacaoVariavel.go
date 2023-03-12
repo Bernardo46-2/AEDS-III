@@ -5,222 +5,131 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"sort"
 
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-const INTERCALACAO_VARIAVEL_MIN_BLOCK_SIZE int64 = 8192
-
-func IntercalacaoTamanhoVariavel() {
-	// blockSize := INTERCALACAO_VARIAVEL_MIN_BLOCK_SIZE
-	sortBlocksToFile(BIN_FILE, INTERCALACAO_VARIAVEL_MIN_BLOCK_SIZE, "data/tmp/variadic_sort")
-
-	/* 	for sorted := false; !sorted; {
-		blockSize *= 2
-		sorted = sortFiles("data/tmp/variadic_sort1.dat", "data/tmp/variadic_sort2.dat", blockSize, "data/tmp/variadic_sort3.dat", "data/tmp/variadic_sort4.dat")
-
-		if !sorted {
-			blockSize *= 2
-			sorted = sortFiles("data/tmp/variadic_sort3.dat", "data/tmp/variadic_sort4.dat", blockSize, "data/tmp/variadic_sort1.dat", "data/tmp/variadic_sort2.dat")
-		}
-	} */
+func IntercalacaoBalanceadaVariavel() {
+	arquivosTemp, _ := divideArquivoEmBlocosVariaveis(BIN_FILE, 8192, TMP_DIR_PATH)
+	PrintBin(arquivosTemp[0])
+	/* arquivoOrdenado := intercalaDoisEmDois(arquivosTemp)
+	CopyFile(BIN_FILE, arquivoOrdenado)
+	RemoveFile(arquivoOrdenado) */
 }
 
-func extractBlockFixedSize(f *os.File, registerStart int64, registersRead *int, numRegisters int, blockSize int64, count *int) ([]models.Pokemon, int64) {
-	ptr := registerStart
-	currentBlockSize := int64(0)
-	block := []models.Pokemon{}
-	full := false
+func divideArquivoEmBlocosVariaveis(caminhoEntrada string, tamanhoBloco int64, dirTemp string) ([]string, error) {
+	// Abrir arquivo de entrada
+	file, err := os.Open(caminhoEntrada)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
 
-	for !full && *registersRead < numRegisters {
-		ptr, _ = f.Seek(0, io.SeekCurrent)
-		registerSize, valid, _ := tamanhoProxRegistro(f, ptr)
+	// Ler o número total de registros
+	numRegistros, _, _ := NumRegistros()
+	file.Seek(4, io.SeekStart)
 
-		if valid != 0 {
-			if registerSize+currentBlockSize > blockSize {
-				f.Seek(-8, io.SeekCurrent)
-				full = true
+	// Criar os arquivos temporários
+	arquivosTemp := []string{}
+	pokeSlice := []models.Pokemon{}
+	lastPoke := models.Pokemon{}
+	for i, j := 0, 0; j < numRegistros; i++ {
+		tamBlocoAtual := int64(0)
+		for j < numRegistros {
+			inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
+			ponteiroAtual := inicioRegistro
+			// Pega tamanho do registro e se possui lapide
+			tamanhoRegistro, lapide, _ := tamanhoProxRegistro(file, ponteiroAtual)
+
+			// Se nao tem lapide le o registro e salva, se nao pula
+			if lapide != 0 {
+				// Se nao couber no bloco finaliza e da append, se nao le e adiciona ao slice atual
+				if tamBlocoAtual+tamanhoRegistro > tamanhoBloco {
+					file.Seek(-8, io.SeekCurrent)
+					break
+				} else {
+					tamBlocoAtual += tamanhoRegistro
+					pokemonAtual, _, _ := readRegistro(file, inicioRegistro)
+					pokemonAtual.CalculateSize()
+					pokeSlice = append(pokeSlice, pokemonAtual)
+					j++
+				}
 			} else {
-				currentBlockSize += registerSize
-				pokemon, _, _ := readRegistro(f, ptr)
-				pokemon.CalculateSize()
-				*registersRead += 1
-				*count++
-				block = append(block, pokemon)
+				readRegistro(file, inicioRegistro)
+				j++
 			}
-		} else {
-			readRegistro(f, ptr)
 		}
-	}
 
-	return block, currentBlockSize
-}
-
-func extractBlockAnySize(f *os.File, registerStart int64, registersRead *int, numRegisters int, maxBlockSize int64) ([]models.Pokemon, int64) {
-	ptr := registerStart
-	currentBlockSize := int64(0)
-	block := []models.Pokemon{}
-	full := false
-	lastPokemon := models.Pokemon{Numero: -1}
-	for !full && *registersRead < numRegisters {
-		ptr, _ = f.Seek(0, io.SeekCurrent)
-		registerSize, valid, _ := tamanhoProxRegistro(f, ptr)
-		fmt.Println(ptr)
-		pokemon, positionBackup, _ := readRegistro(f, ptr)
-
-		if valid != 0 {
-			if registerSize+currentBlockSize > maxBlockSize || pokemon.Numero > lastPokemon.Numero {
-				f.Seek(positionBackup-8, io.SeekStart)
-				full = true
-			} else {
-				currentBlockSize += registerSize
-				pokemon.CalculateSize()
-				*registersRead += 1
-				block = append(block, pokemon)
-			}
-		} else {
-			readRegistro(f, ptr)
-		}
-	}
-
-	return block, currentBlockSize
-}
-
-func sortBlocksToFile(inputFile string, blockSize int64, outputFile string) {
-	inFile, err1 := os.Open(inputFile)
-	outputFiles := make([]*os.File, 2)
-	tmp, err2 := os.Create(outputFile + "1.dat")
-	outputFiles[0] = tmp
-	tmp, err3 := os.Create(outputFile + "2.dat")
-	outputFiles[1] = tmp
-	outFileSizes := make([]int64, 2)
-	whichFile := 0
-	numRegistros := make([]int, 2)
-
-	if err1 != nil || err2 != nil || err3 != nil {
-		return
-	}
-	defer inFile.Close()
-	defer outputFiles[0].Close()
-	defer outputFiles[1].Close()
-
-	numRegisters, start, _ := NumRegistros()
-	start, _ = inFile.Seek(start, io.SeekStart)
-
-	binary.Write(outputFiles[0], binary.LittleEndian, utils.IntToBytes(int32(outFileSizes[0])))
-	binary.Write(outputFiles[1], binary.LittleEndian, utils.IntToBytes(int32(outFileSizes[1])))
-
-	for i := 0; i < numRegisters; i++ {
-		registerStart, _ := inFile.Seek(0, io.SeekCurrent)
-		block, currentBlockSize := extractBlockFixedSize(inFile, registerStart, &i, numRegisters, blockSize, &numRegistros[whichFile])
-		outFileSizes[whichFile] += currentBlockSize
-
-		sort.Slice(block, func(i, j int) bool {
-			return block[i].Numero < block[j].Numero
+		sort.Slice(pokeSlice, func(i, j int) bool {
+			return pokeSlice[i].Numero < pokeSlice[j].Numero
 		})
 
-		for i := 0; i < len(block); i++ {
-			tmp := block[i].ToBytes()
-			binary.Write(outputFiles[whichFile], binary.LittleEndian, tmp)
-		}
+		if i > 0 {
+			if lastPoke.Numero < pokeSlice[0].Numero {
+				path := fmt.Sprintf(dirTemp+"temp_%d.bin", i-1)
+				fileAppendFinal, _ := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 
-		if whichFile == 0 {
-			whichFile = 1
-		} else {
-			whichFile = 0
-		}
-	}
+				for i := 0; i < len(pokeSlice); i++ {
+					tmp := pokeSlice[i].ToBytes()
+					binary.Write(fileAppendFinal, binary.LittleEndian, tmp)
+				}
 
-	outputFiles[0].Seek(0, io.SeekStart)
-	binary.Write(outputFiles[0], binary.LittleEndian, utils.IntToBytes(int32(numRegistros[0])))
-	outputFiles[1].Seek(0, io.SeekStart)
-	binary.Write(outputFiles[1], binary.LittleEndian, utils.IntToBytes(int32(numRegistros[1])))
-}
+				fileAppendFinal.Seek(0, io.SeekStart)
+				var novoNumRegistros int32
+				binary.Read(fileAppendFinal, binary.LittleEndian, &novoNumRegistros)
+				novoNumRegistros += int32(len(pokeSlice))
+				fileAppendFinal.Close()
 
-func mergeBlocksToFile(file *os.File, numRegistros int, block1, block2 []models.Pokemon) {
-	var n int
+				fileAppendStart, _ := os.OpenFile(path, os.O_RDWR, 0644)
 
-	if len(block1) < len(block2) {
-		n = len(block1)
-	} else {
-		n = len(block2)
-	}
+				fileAppendStart.Seek(0, io.SeekStart)
+				binary.Write(fileAppendStart, binary.LittleEndian, novoNumRegistros)
 
-	for i := 0; i < n; i++ {
-		if i < len(block1) && i < len(block2) {
-			if block1[i].Numero < block2[i].Numero {
-				binary.Write(file, binary.LittleEndian, block1[i].ToBytes())
-				binary.Write(file, binary.LittleEndian, block2[i].ToBytes())
-			} else {
-				binary.Write(file, binary.LittleEndian, block2[i].ToBytes())
-				binary.Write(file, binary.LittleEndian, block1[i].ToBytes())
+				fileAppendStart.Close()
+
+				i--
 			}
-		} else if i < len(block1) {
-			binary.Write(file, binary.LittleEndian, block1[i].ToBytes())
-		} else if i < len(block2) {
-			binary.Write(file, binary.LittleEndian, block2[i].ToBytes())
+		} else {
+			lastPoke = pokeSlice[len(pokeSlice)-1]
+
+			caminhoTemp := filepath.Join(dirTemp, fmt.Sprintf("temp_%d.bin", i))
+			arquivoTemp, _ := os.Create(caminhoTemp)
+			arquivosTemp = append(arquivosTemp, caminhoTemp)
+
+			binary.Write(arquivoTemp, binary.LittleEndian, utils.IntToBytes(int32(len(pokeSlice))))
+
+			for i := 0; i < len(pokeSlice); i++ {
+				tmp := pokeSlice[i].ToBytes()
+				binary.Write(arquivoTemp, binary.LittleEndian, tmp)
+			}
+
+			arquivoTemp.Close()
 		}
+
+		pokeSlice = []models.Pokemon{}
 	}
 
-	file.Seek(0, io.SeekStart)
-	binary.Write(file, binary.LittleEndian, int32(n))
+	return arquivosTemp, err
 }
 
-func sortFiles(inputFile1, inputFile2 string, maxBlockSize int64, outputFile1, outputFile2 string) bool {
-	file1, err1 := os.Open(inputFile1)
-	file2, err2 := os.Open(outputFile2)
-	file3, err3 := os.Create(outputFile1)
-	file4, err4 := os.Create(outputFile2)
-	file3Size := int64(0)
-	file4Size := int64(0)
-	whichFile := 0
-	sorted := false
-
-	if err1 != nil || err2 != nil || err3 != nil || err4 != nil {
-		panic("Error opening files")
+/* func AppendPokemon(pokemon []byte) error {
+/* func AppendPokemon(pokemon []byte) error {
+	file, err := os.OpenFile(BIN_FILE, os.O_WRONLY|os.O_APPEND, 0644
+	if err != nil.OpenFile(BIN_FILE, os.O_WRONLY|os.O_APPEND, 0644
+	if err != il
+		eturn er
 	}
-	defer file1.Close()
-	defer file2.Close()
-	defer file3.Close()
-	defer file4.Close()
+defer file.Close(
 
-	numRegisters1, start1, _ := NumRegistros()
-	numRegisters2, start2, _ := NumRegistros()
-	numRegisters := numRegisters1 + numRegisters2
+	err = binary.ite(file, binary.LittleEndian, pokemon
+	if err != il
+return er
 
-	start1, _ = file1.Seek(start1, io.SeekStart)
-	start2, _ = file2.Seek(start2, io.SeekStart)
-	binary.Write(file3, binary.LittleEndian, utils.IntToBytes(int32(file3Size)))
-	binary.Write(file4, binary.LittleEndian, utils.IntToBytes(int32(file4Size)))
 
-	for i := 0; i < numRegisters; i++ {
-		registerStart1, _ := file1.Seek(0, io.SeekCurrent)
-		registerStart2, _ := file2.Seek(0, io.SeekCurrent)
-		block1, currentBlockSize1 := extractBlockAnySize(file1, registerStart1, &i, numRegisters1, maxBlockSize)
-		file3Size += currentBlockSize1
-		block2, currentBlockSize2 := extractBlockAnySize(file2, registerStart2, &i, numRegisters2, maxBlockSize)
-		file4Size += currentBlockSize2
+AlterarNumRegistros(1
 
-		binary.Write(file3, binary.LittleEndian, utils.IntToBytes(int32(len(block1))))
-		binary.Write(file4, binary.LittleEndian, utils.IntToBytes(int32(len(block2))))
-
-		if whichFile == 0 {
-			mergeBlocksToFile(file3, numRegisters, block1, block2)
-			whichFile = 1
-		} else {
-			mergeBlocksToFile(file4, numRegisters, block1, block2)
-			whichFile = 0
-		}
-
-		sorted = len(block1) == 1 && len(block2) == 1
-		if whichFile == 0 {
-			whichFile = 1
-		} else {
-			whichFile = 0
-		}
-	}
-
-	return sorted
-}
+	retrn er
+} */
