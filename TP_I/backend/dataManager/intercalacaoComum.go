@@ -82,11 +82,7 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 
 func IntercalacaoBalanceadaComum() {
 	arquivosTemp, _ := divideArquivoEmBlocos(BIN_FILE, 8192, TMP_DIR_PATH)
-
-	novoArquivo, _ := intercala(arquivosTemp[0], arquivosTemp[0+1])
-	CopyFile(arquivosTemp[0], novoArquivo)
-	PrintBin(novoArquivo)
-	// fmt.Println(intercalaDoisEmDois(arquivosTemp))
+	intercalaDoisEmDois(arquivosTemp)
 }
 
 func intercalaDoisEmDois(arquivos []string) string {
@@ -99,7 +95,7 @@ func intercalaDoisEmDois(arquivos []string) string {
 		if i+1 < len(arquivos) {
 			novoArquivo, _ := intercala(arquivos[i], arquivos[i+1])
 			CopyFile(arquivos[i], novoArquivo)
-			novosArquivos = append(novosArquivos, novoArquivo)
+			novosArquivos = append(novosArquivos, arquivos[i])
 		} else {
 			// Caso ímpar, só adiciona o arquivo na lista de novos arquivos
 			novosArquivos = append(novosArquivos, arquivos[i])
@@ -147,22 +143,22 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 	var tamFile2 int32
 	err = binary.Read(file1, binary.LittleEndian, &tamFile1)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println(err.Error() + " erro no arquivo: " + arquivo1)
 		panic(33)
 	}
 	err = binary.Read(file2, binary.LittleEndian, &tamFile2)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println(err.Error() + " erro no arquivo: " + arquivo2)
 		panic(44)
 	}
 
-	ponteiro1, err := file1.Seek(4, io.SeekStart)
+	_, err = file1.Seek(4, io.SeekStart)
 	if err != nil {
 		fmt.Println(err.Error())
 		panic(4)
 	}
 
-	ponteiro2, err := file2.Seek(4, io.SeekStart)
+	_, err = file2.Seek(4, io.SeekStart)
 	if err != nil {
 		fmt.Println(err.Error())
 		panic(5)
@@ -202,7 +198,8 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 
 	// Se houver linhas restantes em um dos arquivos, escreve no novo arquivo
 	for i < int(tamFile1) {
-		pokemon1, ponteiro1, err = readRegistro(file1, ponteiro1)
+		ponteiro1, _ := file1.Seek(0, io.SeekCurrent)
+		pokemon1, _, err = readRegistro(file1, ponteiro1)
 		if err != nil {
 			fmt.Println(err.Error())
 			panic(8)
@@ -213,7 +210,8 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 	}
 
 	for j < int(tamFile2) {
-		pokemon2, ponteiro2, err = readRegistro(file2, ponteiro2)
+		ponteiro2, _ := file2.Seek(0, io.SeekCurrent)
+		pokemon2, _, err = readRegistro(file2, ponteiro2)
 		if err != nil {
 			fmt.Println(err.Error())
 			panic(9)
@@ -225,22 +223,6 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 
 	// Retorna o nome do novo arquivo criado
 	return novoArquivo.Name(), err
-}
-
-func tamArq(path string) int {
-	file, err := os.Open(path)
-	if err != nil {
-		return 0
-	}
-	defer file.Close()
-
-	// Lê o número de entradas no arquivo
-	var numEntradas int32
-	if err = binary.Read(file, binary.LittleEndian, &numEntradas); err != nil {
-		return 0
-	}
-
-	return int(numEntradas)
 }
 
 func CopyFile(destPath, srcPath string) error {
