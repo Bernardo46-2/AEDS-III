@@ -20,6 +20,8 @@ func main() {
 	if command == 0 {
 		dataManager.IntercalacaoBalanceadaComum()
 	} else if command == 1 {
+        dataManager.IntercalacaoTamanhoVariavel()
+    } else if command == 2 {
 		logger.LigarServidor()
 
 		// define os handlers para GET e POST

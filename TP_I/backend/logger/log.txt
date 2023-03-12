@@ -232,3 +232,6 @@ GET: 2023/03/12 00:17:58 Id de numero 33
 GET: 2023/03/12 00:18:02 Id de numero 25
 GET: 2023/03/12 00:18:14 Id de numero 890
 GET: 2023/03/12 00:20:01 Id de numero 22
+STATUS: 2023/03/12 00:29:28 Servidor desligado
+STATUS: 2023/03/12 00:29:36 Servidor iniciado
+STATUS: 2023/03/12 00:40:38 Servidor desligado
