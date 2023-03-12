@@ -258,7 +258,7 @@ document.querySelector('#save').onclick = async () => {
     const method = pokemon.numero == 1000 ? 'post' : 'put';
 
     fetch(`http://localhost:8080/${method}/`, {
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify(pokemon)
     })
         .then(res => res.text())
@@ -463,27 +463,27 @@ atualizar.addEventListener('click', function (event) {
     }
 })
 
-atualizarForm.addEventListener('keyup', function (event) {
-    if (event.keyCode === 13) {
-        atualizar.style.height = 45 + "px";
-        atualizarForm.classList.add('displayNone');
-        atualizarForm.classList.add('btn-Charmander');
-        atualizarAberto = false;
+document.getElementById('actual-atualizar-form').addEventListener('submit', e => {
+    e.preventDefault();
 
-        fetch('http://localhost:8080/get/?id=' + atualizarForm.value)
-            .then(response => response.json())
-            .then(data => {
-                if ('mensagem' in data) {
-                    modalAviso("Pokemon inexistente");
-                } else {
-                    abrirModal(data.nome, true, data)
-                }
-            })
-            .catch(error => {
-                modalAviso();
-                console.log(error)
-            });
-    }
+    atualizar.style.height = 45 + "px";
+    atualizarForm.classList.add('displayNone');
+    atualizarForm.classList.add('btn-Charmander');
+    atualizarAberto = false;
+
+    fetch('http://localhost:8080/get/?id=' + atualizarForm.value)
+        .then(response => response.json())
+        .then(data => {
+            if ('mensagem' in data) {
+                modalAviso("Pokemon inexistente");
+            } else {
+                abrirModal(data.nome, true, data)
+            }
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
 });
 
 deletar.addEventListener('click', function (event) {
