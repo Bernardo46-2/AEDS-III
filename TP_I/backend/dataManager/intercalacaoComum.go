@@ -1,11 +1,15 @@
 package dataManager
 
 import (
+	"encoding/binary"
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
+	"sort"
 
 	"github.com/Bernardo46-2/AEDS-III/models"
+	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
 const TMP_DIR_PATH string = "data/tmp/"
@@ -29,19 +33,21 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 	defer file.Close()
 
 	// Ler o número total de registros
-	numRegistros, inicioRegistro, _ := NumRegistros()
-	inicioRegistro, _ = file.Seek(inicioRegistro, io.SeekStart)
-	fmt.Printf("inicioRegistro = %d\n", inicioRegistro)
+	numRegistros, _, _ := NumRegistros()
+	file.Seek(4, io.SeekStart)
 
 	// Criar os arquivos temporários
-	/* arquivosTemp := []string{} */
+	arquivosTemp := []string{}
+	pokeSlice := []models.Pokemon{}
 
-	slicePokemons := [][]models.Pokemon{}
 	for i, j := 0, 0; j < numRegistros; i++ {
+		caminhoTemp := filepath.Join(dirTemp, fmt.Sprintf("temp_%d.bin", i))
+		arquivoTemp, _ := os.Create(caminhoTemp)
+		arquivosTemp = append(arquivosTemp, caminhoTemp)
+
 		tamBlocoAtual := int64(0)
-		slicePokemons = append(slicePokemons, []models.Pokemon{})
 		for j < numRegistros {
-			inicioRegistro, _ = file.Seek(0, io.SeekCurrent)
+			inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
 			ponteiroAtual := inicioRegistro
 			// Pega tamanho do registro e se possui lapide
 			tamanhoRegistro, lapide, _ := tamanhoProxRegistro(file, ponteiroAtual)
@@ -55,7 +61,8 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 				} else {
 					tamBlocoAtual += tamanhoRegistro
 					pokemonAtual, _, _ := readRegistro(file, inicioRegistro)
-					slicePokemons[i] = append(slicePokemons[i], pokemonAtual)
+					pokemonAtual.CalculateSize()
+					pokeSlice = append(pokeSlice, pokemonAtual)
 					j++
 				}
 			} else {
@@ -64,14 +71,21 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 			}
 		}
 
+		sort.Slice(pokeSlice, func(i, j int) bool {
+			return pokeSlice[i].Numero < pokeSlice[j].Numero
+		})
+
+		binary.Write(arquivoTemp, binary.LittleEndian, utils.IntToBytes(int32(len(pokeSlice))))
+
+		for i := 0; i < len(pokeSlice); i++ {
+			tmp := pokeSlice[i].ToBytes()
+			binary.Write(arquivoTemp, binary.LittleEndian, tmp)
+		}
+
+		pokeSlice = []models.Pokemon{}
 	}
 
-	fmt.Printf("Numero de blocos = %d\n", len(slicePokemons))
-	for i := 0; i < len(slicePokemons); i++ {
-		fmt.Printf("[%d] = %d\n", i, len(slicePokemons[i]))
-	}
-
-	return nil, nil
+	return arquivosTemp, err
 }
 
 // Função auxiliar para escrever um bloco de tamanho fixo em um arquivo
