@@ -20,8 +20,8 @@ func main() {
 	if command == 0 {
 		dataManager.IntercalacaoBalanceadaComum()
 	} else if command == 1 {
-        dataManager.IntercalacaoTamanhoVariavel()
-    } else if command == 2 {
+		dataManager.IntercalacaoTamanhoVariavel()
+	} else if command == 2 {
 		logger.LigarServidor()
 
 		// define os handlers para GET e POST
@@ -32,6 +32,9 @@ func main() {
 		http.HandleFunc("/delete/", middlewares.EnableCORS(handlers.DeletePokemon))
 		http.HandleFunc("/loadDatabase", middlewares.EnableCORS(handlers.LoadDatabase))
 		http.HandleFunc("/toKatakana/", middlewares.EnableCORS(handlers.ToKatakana))
+		http.HandleFunc("/intercalacaoComum/", middlewares.EnableCORS(handlers.IntercalacaoComum))
+		http.HandleFunc("/intercalacaoVariavel/", middlewares.EnableCORS(handlers.IntercalacaoVariavel))
+		http.HandleFunc("/selecaoPorSubstituicao/", middlewares.EnableCORS(handlers.SelecaoPorSubstituicao))
 
 		log.Fatal(http.ListenAndServe(":8080", nil))
 	}

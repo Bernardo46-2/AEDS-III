@@ -127,3 +127,20 @@ STATUS: 2023/03/12 04:49:11 Servidor iniciado
 GET: 2023/03/12 04:49:18 Id de numero 1
 GET: 2023/03/12 04:49:37 Id de numero 2
 STATUS: 2023/03/12 04:49:57 Servidor desligado
+STATUS: 2023/03/12 06:51:06 Servidor iniciado
+INFO: 2023/03/12 06:51:20 Database Recarregada
+GET: 2023/03/12 06:51:42 Id de numero 2
+STATUS: 2023/03/12 06:51:59 Servidor desligado
+STATUS: 2023/03/12 06:55:16 Servidor iniciado
+STATUS: 2023/03/12 06:59:05 Servidor desligado
+STATUS: 2023/03/12 07:00:42 Servidor iniciado
+STATUS: 2023/03/12 07:01:42 Servidor desligado
+STATUS: 2023/03/12 07:01:46 Servidor iniciado
+STATUS: 2023/03/12 07:04:24 Servidor desligado
+STATUS: 2023/03/12 07:04:33 Servidor iniciado
+STATUS: 2023/03/12 07:05:12 Servidor desligado
+STATUS: 2023/03/12 07:06:01 Servidor iniciado
+STATUS: 2023/03/12 07:08:31 Servidor desligado
+STATUS: 2023/03/12 07:08:45 Servidor iniciado
+STATUS: 2023/03/12 07:09:14 Servidor desligado
+STATUS: 2023/03/12 07:09:30 Servidor iniciado

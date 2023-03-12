@@ -135,3 +135,16 @@ func ToKatakana(w http.ResponseWriter, r *http.Request) {
 
 	writeJson(w, convertedString)
 }
+
+func IntercalacaoComum(w http.ResponseWriter, r *http.Request) {
+	dataManager.IntercalacaoBalanceadaComum()
+	writeSuccess(w, 7)
+}
+
+func IntercalacaoVariavel(w http.ResponseWriter, r *http.Request) {
+	writeSuccess(w, 0)
+}
+
+func SelecaoPorSubstituicao(w http.ResponseWriter, r *http.Request) {
+	writeSuccess(w, 0)
+}
