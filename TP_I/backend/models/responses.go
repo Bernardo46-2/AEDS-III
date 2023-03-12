@@ -12,8 +12,8 @@ func ErrorResponse(codigo int) Response {
 	var msg string
 
 	switch codigo {
-	case 1:
-		msg = "Erro"
+	case 0:
+		msg = "Funcao nao implementada"
 	case 2:
 		msg = "Pokemon nao encontrado"
 	case 3:
@@ -53,6 +53,8 @@ func SuccessResponse(codigo int) Response {
 	var msg string
 
 	switch codigo {
+	case 0:
+		msg = "Funcao nao implementada"
 	case 1:
 		msg = "Sucesso!"
 	case 2:
@@ -65,6 +67,12 @@ func SuccessResponse(codigo int) Response {
 		msg = "Pokemon deletado com sucesso!"
 	case 6:
 		msg = "CSV importado com sucesso!"
+	case 7:
+		msg = "Intercalacao Balanceada Comum realizada com sucesso!"
+	case 8:
+		msg = "Intercalacao Balanceada Variavel realizada com sucesso!"
+	case 9:
+		msg = "Intercalacao Por Substituicao realizada com sucesso!"
 	default:
 		msg = "Mensagem de sucesso desconhecida!"
 	}

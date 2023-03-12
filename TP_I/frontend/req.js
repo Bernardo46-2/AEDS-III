@@ -35,6 +35,33 @@ importarCsv.onclick = () => {
         });
 }
 
+const IntercalacaoComum = document.getElementById('IntercalacaoComum');
+const IntercalacaoVariavel = document.getElementById('IntercalacaoVariavel');
+const SelecaoPorSubstituicao = document.getElementById('SelecaoPorSubstituicao');
+
+
+IntercalacaoComum.onclick = () => {
+    fetch('http://localhost:8080/intercalacaoComum/')
+        .then(response => response.json())
+        .then(data => modalAviso(data.mensagem))
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+
+IntercalacaoVariavel.onclick = () => {
+    fetch('http://localhost:8080/intercalacaoVariavel/')
+        .then(response => response.json())
+        .then(data => modalAviso(data.mensagem))
+}
+
+SelecaoPorSubstituicao.onclick = () => {
+    fetch('http://localhost:8080/selecaoPorSubstituicao/')
+        .then(response => response.json())
+        .then(data => modalAviso(data.mensagem))
+}
+
 /*  * * * * * * * * * * * * *
  *
  *  Mostrar Todos

@@ -14,6 +14,13 @@ import (
 
 const TMP_DIR_PATH string = "data/tmp/"
 
+func IntercalacaoBalanceadaComum() {
+	arquivosTemp, _ := divideArquivoEmBlocos(BIN_FILE, 8192, TMP_DIR_PATH)
+	arquivoOrdenado := intercalaDoisEmDois(arquivosTemp)
+	CopyFile(BIN_FILE, arquivoOrdenado)
+	RemoveFile(arquivoOrdenado)
+}
+
 func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp string) ([]string, error) {
 	// Abrir arquivo de entrada
 	file, err := os.Open(caminhoEntrada)
@@ -80,11 +87,6 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 	return arquivosTemp, err
 }
 
-func IntercalacaoBalanceadaComum() {
-	arquivosTemp, _ := divideArquivoEmBlocos(BIN_FILE, 8192, TMP_DIR_PATH)
-	intercalaDoisEmDois(arquivosTemp)
-}
-
 func intercalaDoisEmDois(arquivos []string) string {
 	if len(arquivos) == 1 {
 		return arquivos[0]
@@ -95,6 +97,8 @@ func intercalaDoisEmDois(arquivos []string) string {
 		if i+1 < len(arquivos) {
 			novoArquivo, _ := intercala(arquivos[i], arquivos[i+1])
 			CopyFile(arquivos[i], novoArquivo)
+			RemoveFile(arquivos[i+1])
+			RemoveFile(novoArquivo)
 			novosArquivos = append(novosArquivos, arquivos[i])
 		} else {
 			// Caso ímpar, só adiciona o arquivo na lista de novos arquivos
@@ -275,4 +279,12 @@ func PrintBin(path string) {
 	for i := 0; i < len(pokeArray); i++ {
 		fmt.Printf("Id = %d | Nome = %s\n", pokeArray[i].Numero, pokeArray[i].Nome)
 	}
+}
+
+func RemoveFile(filePath string) error {
+	err := os.Remove(filePath)
+	if err != nil {
+		return fmt.Errorf("erro ao remover arquivo: %v", err)
+	}
+	return nil
 }
