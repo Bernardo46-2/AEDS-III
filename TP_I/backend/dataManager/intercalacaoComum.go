@@ -11,7 +11,7 @@ import (
 const TMP_DIR_PATH string = "data/tmp/"
 
 func IntercalacaoBalanceadaComum() {
-	strings, err := divideArquivoEmBlocos(BIN_FILE, 4096, TMP_DIR_PATH)
+	strings, err := divideArquivoEmBlocos(BIN_FILE, 8192, TMP_DIR_PATH)
 	for i := 0; i < len(strings); i++ {
 		fmt.Println(strings[i])
 	}
@@ -37,13 +37,12 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 	/* arquivosTemp := []string{} */
 
 	slicePokemons := [][]models.Pokemon{}
-	for i := 0; i < 30 && i < numRegistros; i++ {
+	for i, j := 0, 0; j < numRegistros; i++ {
 		tamBlocoAtual := int64(0)
 		slicePokemons = append(slicePokemons, []models.Pokemon{})
-		for continuar := true; continuar; {
+		for j < numRegistros {
 			inicioRegistro, _ = file.Seek(0, io.SeekCurrent)
 			ponteiroAtual := inicioRegistro
-
 			// Pega tamanho do registro e se possui lapide
 			tamanhoRegistro, lapide, _ := tamanhoProxRegistro(file, ponteiroAtual)
 
@@ -52,14 +51,16 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 				// Se nao couber no bloco finaliza e da append, se nao le e adiciona ao slice atual
 				if tamBlocoAtual+tamanhoRegistro > tamanhoBloco {
 					file.Seek(-8, io.SeekCurrent)
-					continuar = false
+					break
 				} else {
 					tamBlocoAtual += tamanhoRegistro
 					pokemonAtual, _, _ := readRegistro(file, inicioRegistro)
 					slicePokemons[i] = append(slicePokemons[i], pokemonAtual)
+					j++
 				}
 			} else {
-				fmt.Printf("TA COM LAPIDE CACETE!\n")
+				readRegistro(file, inicioRegistro)
+				j++
 			}
 		}
 
