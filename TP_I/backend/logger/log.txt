@@ -129,3 +129,53 @@ GET: 2023/03/11 17:30:07 Id de numero 8
 STATUS: 2023/03/11 17:31:41 Servidor desligado
 STATUS: 2023/03/11 17:33:04 Servidor iniciado
 STATUS: 2023/03/11 17:33:07 Servidor desligado
+STATUS: 2023/03/11 18:54:21 Servidor iniciado
+GET: 2023/03/11 18:54:44 Id de numero 1
+GET: 2023/03/11 18:55:38 Id de numero 14
+GET: 2023/03/11 18:55:44 Id de numero 1
+GET: 2023/03/11 18:57:32 Id de numero 1
+GET: 2023/03/11 19:02:10 Id de numero 3
+GET: 2023/03/11 19:02:34 Id de numero 2
+GET: 2023/03/11 19:02:39 Id de numero 13
+GET: 2023/03/11 19:02:47 Id de numero 1
+GET: 2023/03/11 19:02:53 Id de numero 2
+GET: 2023/03/11 19:02:59 Id de numero 4
+GET: 2023/03/11 19:04:11 Id de numero 7
+GET: 2023/03/11 19:04:57 Id de numero 12
+STATUS: 2023/03/11 19:36:18 Servidor iniciado
+GET: 2023/03/11 19:36:21 Id de numero 1
+GET: 2023/03/11 19:36:25 Id de numero 8
+GET: 2023/03/11 19:42:24 Id de numero 1
+GET: 2023/03/11 19:56:11 Id de numero 7
+GET: 2023/03/11 20:02:10 Id de numero 15
+GET: 2023/03/11 20:04:04 Id de numero 5
+GET: 2023/03/11 20:09:54 Id de numero 7
+GET: 2023/03/11 20:10:35 Id de numero 3
+GET: 2023/03/11 20:10:52 Id de numero 3
+GET: 2023/03/11 20:11:10 Id de numero 7
+GET: 2023/03/11 20:12:15 Id de numero 7
+GET: 2023/03/11 20:15:00 Id de numero 2
+GET: 2023/03/11 20:15:08 Id de numero 1
+STATUS: 2023/03/11 20:26:59 Servidor desligado
+STATUS: 2023/03/11 20:27:02 Servidor iniciado
+GET: 2023/03/11 20:47:04 Id de numero 22
+GET: 2023/03/11 20:47:11 Id de numero 1000
+GET: 2023/03/11 20:48:58 Id de numero 1
+GET: 2023/03/11 20:56:40 Id de numero 22
+GET: 2023/03/11 20:58:16 Id de numero 1
+GET: 2023/03/11 20:59:04 Id de numero 1000
+GET: 2023/03/11 21:23:54 Id de numero 1
+GET: 2023/03/11 21:24:15 Id de numero 1
+GET: 2023/03/11 21:25:23 Id de numero 14
+GET: 2023/03/11 21:26:06 Id de numero 6
+GET: 2023/03/11 21:29:40 Id de numero 7
+GET: 2023/03/11 21:34:30 Id de numero 7
+GET: 2023/03/11 21:34:45 Id de numero 1
+GET: 2023/03/11 21:36:19 Id de numero 7
+GET: 2023/03/11 21:36:40 Id de numero 8
+GET: 2023/03/11 21:36:59 Id de numero 7
+GET: 2023/03/11 21:37:33 Id de numero 8
+GET: 2023/03/11 21:37:36 Id de numero 12
+GET: 2023/03/11 21:37:59 Id de numero 1
+GET: 2023/03/11 21:45:48 Id de numero 7
+GET: 2023/03/11 21:47:20 Id de numero 2
