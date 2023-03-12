@@ -1,6 +1,5 @@
 const modalClose = document.querySelector('#close');
-const modalClose2 = document.querySelector('#close2');
-const modalEdit = document.querySelector('#edit');
+const modalSave = document.querySelector('#save');
 const modal = document.querySelector('#modalPage');
 const meuBotao = document.querySelector('#meu-botao');
 const meuBotao2 = document.querySelector('#meu-botao2');
@@ -87,7 +86,36 @@ function gerarModalPokemon() {
 
             carregarDados(element.id);
 
-            modalClose.addEventListener('click', function destruirClone() {
+            modalClose.addEventListener('click', function destruirClone3() {
+                clonedCard.style.transition = "all 1s ease-in-out";
+                modal.classList.add("slide-out-right");
+                // Adiciona um event listener para a transição
+                modal.addEventListener('transitionend', function onModalTransitionEnd() {
+                    setTimeout(function () {
+                        meuBotao.click();
+                        modal.classList.remove("slide-out-right");
+                    }, 500);
+                    modal.removeEventListener('transitionend', onModalTransitionEnd);
+                });
+
+                clonedCard.style.top = (getOffset(element).top - scrollTop - 5) + "px";
+                clonedCard.style.left = getOffset(element).left - 15 + "px";
+                clonedCard.style.width = element.offsetWidth + "px";
+                clonedCard.style.height = element.offsetHeight + "px";
+                clonedCard.classList.remove('card-to-fullscreen');
+                clonedCard.classList.add('card');
+
+                const div = document.querySelector('.slide-from-left');
+
+                clonedCard.addEventListener("transitionend", () => {
+                    element.classList.remove('originalCard')
+                    element.style.opacity = "1";
+                    element.style.transition = "transitionTmp";
+                    clonedCard.remove();
+                });
+            });
+
+            modalSave.addEventListener('click', function destruirClone4() {
                 clonedCard.style.transition = "all 1s ease-in-out";
                 modal.classList.add("slide-out-right");
                 // Adiciona um event listener para a transição

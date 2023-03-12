@@ -67,3 +67,25 @@ STATUS: 2023/03/12 03:54:03 Servidor desligado
 STATUS: 2023/03/12 03:54:09 Servidor iniciado
 GET: 2023/03/12 03:54:23 Id de numero 1
 STATUS: 2023/03/12 03:54:53 Servidor desligado
+STATUS: 2023/03/12 03:58:03 Servidor iniciado
+GET: 2023/03/12 03:58:11 Id de numero 1
+GET: 2023/03/12 04:01:06 Id de numero 1
+GET: 2023/03/12 04:01:14 Id de numero 1
+GET: 2023/03/12 04:03:26 Id de numero 3
+GET: 2023/03/12 04:03:30 Id de numero 3
+GET: 2023/03/12 04:03:35 Id de numero 3
+GET: 2023/03/12 04:04:00 Id de numero 1
+GET: 2023/03/12 04:04:12 Id de numero 1
+GET: 2023/03/12 04:06:20 Id de numero 1
+GET: 2023/03/12 04:07:29 Id de numero 3
+GET: 2023/03/12 04:08:14 Id de numero 1
+GET: 2023/03/12 04:10:48 Id de numero 1
+GET: 2023/03/12 04:10:55 Id de numero 1
+GET: 2023/03/12 04:11:00 Id de numero 2
+GET: 2023/03/12 04:11:24 Id de numero 1
+GET: 2023/03/12 04:12:02 Id de numero 1
+GET: 2023/03/12 04:12:12 Id de numero 1
+GET: 2023/03/12 04:19:08 Id de numero 55
+GET: 2023/03/12 04:19:20 Id de numero 6
+GET: 2023/03/12 04:19:53 Id de numero 5
+STATUS: 2023/03/12 04:21:03 Servidor desligado

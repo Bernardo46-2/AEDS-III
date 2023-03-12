@@ -15,13 +15,13 @@ func ErrorResponse(codigo int) Response {
 	case 1:
 		msg = "Erro"
 	case 2:
-		msg = "Erro ao buscar o Pokemon"
+		msg = "Pokemon nao encontrado"
 	case 3:
 		msg = "Erro ao criar o Pokemon"
 	case 4:
 		msg = "Erro ao atualizar o Pokemon"
 	case 5:
-		msg = "Erro ao deletar o Pokemon"
+		msg = "Pokemon nao encontrado"
 	case 6:
 		msg = "Erro ao importar CSV"
 	case http.StatusBadRequest:

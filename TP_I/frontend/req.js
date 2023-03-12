@@ -254,7 +254,6 @@ const collectFormData = async () => {
 
 document.querySelector('#save').onclick = async () => {
     const pokemon = await collectFormData();
-    console.log(pokemon);
     const method = pokemon.numero == 1000 ? 'post' : 'put';
 
     fetch(`http://localhost:8080/${method}/`, {
@@ -265,12 +264,11 @@ document.querySelector('#save').onclick = async () => {
         }
     })
         .then(res => res.json())
-        .then(data => modalAviso(data.mensagem))
+        .then(data => modalAviso(data.hasOwnProperty('mensagem')?data.mensagem:"Pokemon registrado com o id: " + data.id))
         .catch(error => {
             modalAviso();
             console.log(error)
         });
-
 }
 
 /*  * * * * * * * * * * * * *
@@ -397,8 +395,6 @@ function editarDadosModal(data, shouldCreate = false) {
             rangeValueDisplay.textContent = Math.floor(value * 2);
         });
     });
-
-
 }
 
 const registrar = document.querySelector('#Registrar');
@@ -526,7 +522,8 @@ document.getElementById('actual-deletar-form').onsubmit = e => {
 };
 
 function abrirModal(pokemon = "pokebola", editar = false, data) {
-    const closeButton = document.querySelector('#close');
+    const closeButton = document.getElementById('close');
+    const saveButton = document.getElementById('save')
 
     pokemon = pokemon.toLowerCase();
     if (data === undefined) {
@@ -597,7 +594,27 @@ function abrirModal(pokemon = "pokebola", editar = false, data) {
         adicionarDadosModal(data);
     }
 
-    closeButton.addEventListener('click', function destruirClone() {
+    closeButton.addEventListener('click', function destruirClone1() {
+        novoPokemon.style.transition = "all 1s ease-in-out";
+        modal.classList.add("slide-out-right");
+        // Adiciona um event listener para a transição
+        modal.addEventListener('transitionend', function onModalTransitionEnd() {
+            setTimeout(function () {
+                meuBotao.click();
+                modal.classList.remove("slide-out-right");
+            }, 500);
+            modal.removeEventListener('transitionend', onModalTransitionEnd);
+        });
+
+        novoPokemon.style.left = "-50%";
+        novoPokemon.style.width = "100%";
+
+        novoPokemon.addEventListener("transitionend", () => {
+            novoPokemon.remove();
+        });
+    });
+
+    saveButton.addEventListener('click', function destruirClone2() {
         novoPokemon.style.transition = "all 1s ease-in-out";
         modal.classList.add("slide-out-right");
         // Adiciona um event listener para a transição
