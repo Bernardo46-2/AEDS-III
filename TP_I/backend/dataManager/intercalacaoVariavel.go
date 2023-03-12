@@ -44,35 +44,35 @@ func extractBlockFixedSize(f *os.File, registerStart int64, registersRead *int, 
     return block, currentBlockSize
 }
 
-func extractBlockAnySize(f *os.File, registerStart int64, registersRead *int, numRegisters int) ([]models.Pokemon, int64) {
-    ptr := registerStart
-    currentBlockSize := int64(0)
-    block := []models.Pokemon{}
-    full := false
-    // nextPokemonvalue := 0
+// func extractBlockAnySize(f *os.File, registerStart int64, registersRead *int, numRegisters int) ([]models.Pokemon, int64) {
+//     ptr := registerStart
+//     currentBlockSize := int64(0)
+//     block := []models.Pokemon{}
+//     full := false
+//     // nextPokemonvalue := 0
 
-    for !full && *registersRead < numRegisters {
-        ptr, _ = f.Seek(0, io.SeekCurrent)
-        registerSize, dead, _ := tamanhoProxRegistro(f, ptr)
+//     for !full && *registersRead < numRegisters {
+//         ptr, _ = f.Seek(0, io.SeekCurrent)
+//         registerSize, dead, _ := tamanhoProxRegistro(f, ptr)
         
-        if dead != 0 {
-            if registerSize + currentBlockSize > blockSize {
-                f.Seek(-8, io.SeekCurrent)
-                full = true
-            } else {
-                currentBlockSize += registerSize
-                pokemon, _, _ := readRegistro(f, ptr)
-                pokemon.CalculateSize()
-                *registersRead += 1
-                block = append(block, pokemon)
-            }
-        } else {
-            readRegistro(f, ptr)
-        }
-    }
+//         if dead != 0 {
+//             if registerSize + currentBlockSize > blockSize {
+//                 f.Seek(-8, io.SeekCurrent)
+//                 full = true
+//             } else {
+//                 currentBlockSize += registerSize
+//                 pokemon, _, _ := readRegistro(f, ptr)
+//                 pokemon.CalculateSize()
+//                 *registersRead += 1
+//                 block = append(block, pokemon)
+//             }
+//         } else {
+//             readRegistro(f, ptr)
+//         }
+//     }
     
-    return block, currentBlockSize
-}
+//     return block, currentBlockSize
+// }
 
 func sortBlocksToFile(inputFile string, blockSize int64, outputFile string) {
     inFile, err1 := os.Open(inputFile)
