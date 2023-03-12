@@ -98,20 +98,3 @@ GET: 2023/03/11 08:42:10 Id de numero 657
 GET: 2023/03/11 08:42:34 Id de numero 876
 GET: 2023/03/11 08:43:54 Id de numero 744
 GET: 2023/03/11 08:44:42 Id de numero 788
-STATUS: 2023/03/11 08:53:51 Servidor desligado
-STATUS: 2023/03/11 17:15:11 Servidor iniciado
-GET: 2023/03/11 17:25:42 Id de numero 8
-STATUS: 2023/03/11 17:25:57 Servidor desligado
-STATUS: 2023/03/11 17:27:36 Servidor iniciado
-GET: 2023/03/11 17:27:52 Id de numero 7
-STATUS: 2023/03/11 17:28:00 Servidor desligado
-STATUS: 2023/03/11 17:28:39 Servidor iniciado
-STATUS: 2023/03/11 21:13:26 Servidor iniciado
-GET: 2023/03/11 21:13:32 Id de numero 13
-GET: 2023/03/11 21:13:39 Id de numero 2
-GET: 2023/03/11 21:16:21 Id de numero 1
-GET: 2023/03/11 21:16:32 Id de numero 8
-GET: 2023/03/11 21:16:42 Id de numero 9
-GET: 2023/03/11 21:17:48 Id de numero 4
-GET: 2023/03/11 21:20:20 Id de numero 25
-STATUS: 2023/03/11 21:37:03 Servidor desligado
