@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"reflect"
 
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
@@ -52,12 +53,34 @@ func (csv *CSV) CsvToBin() {
 	}
 	defer file.Close()
 
-	writeBytes(file, utils.IntToBytes(int32(len(csv.file))))
-
+	arrayPokemons := []models.Pokemon{}
 	for i := 1; i < len(csv.file); i++ {
 		row := csv.file[i]
 		pokemon := models.ParsePokemon(row)
-		bytes := pokemon.ToBytes()
+		arrayPokemons = append(arrayPokemons, pokemon)
+	}
+
+	arrayPokemons = removeDuplicates(arrayPokemons, "Numero")
+
+	writeBytes(file, utils.IntToBytes(int32(len(arrayPokemons))))
+
+	for i := 0; i < len(arrayPokemons); i++ {
+		bytes := arrayPokemons[i].ToBytes()
 		writeBytes(file, bytes)
 	}
+}
+
+func removeDuplicates(s []models.Pokemon, field string) []models.Pokemon {
+	keys := make(map[interface{}]bool)
+	var res []models.Pokemon
+
+	for _, p := range s {
+		value := reflect.ValueOf(p).FieldByName(field).Interface()
+		if _, ok := keys[value]; !ok {
+			keys[value] = true
+			res = append(res, p)
+		}
+	}
+
+	return res
 }

@@ -6,11 +6,15 @@ import (
 )
 
 func Create(pokemon models.Pokemon) (id int, err error) {
+	id, _, _ = dataManager.NumRegistros()
+	id++
+	pokemon.Numero = int32(id)
+
 	pokemon.CalculateSize()
 
 	pokeBytes := pokemon.ToBytes()
 
-	id, err = dataManager.AppendPokemon(pokeBytes)
+	err = dataManager.AppendPokemon(pokeBytes)
 
 	return
 }
@@ -47,7 +51,7 @@ func Update(pokemon models.Pokemon) (err error) {
 		return err
 	}
 
-	if _, err = dataManager.AppendPokemon(pokeBytes); err != nil {
+	if err = dataManager.AppendPokemon(pokeBytes); err != nil {
 		return err
 	}
 

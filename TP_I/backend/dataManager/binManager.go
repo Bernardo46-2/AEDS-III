@@ -174,19 +174,19 @@ func AlterarNumRegistros(n int32) error {
 	return nil
 }
 
-func AppendPokemon(pokemon []byte) (int, error) {
+func AppendPokemon(pokemon []byte) error {
 	file, err := os.OpenFile(BIN_FILE, os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
-		return -1, err
+		return err
 	}
 	defer file.Close()
 
 	err = binary.Write(file, binary.LittleEndian, pokemon)
 	if err != nil {
-		return -1, err
+		return err
 	}
 
 	AlterarNumRegistros(1)
 
-	return 22, err
+	return err
 }
