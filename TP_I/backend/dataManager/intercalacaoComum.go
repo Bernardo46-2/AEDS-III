@@ -14,6 +14,13 @@ import (
 
 const TMP_DIR_PATH string = "data/tmp/"
 
+func IntercalacaoBalanceadaComum() {
+	arquivosTemp, _ := divideArquivoEmBlocos(BIN_FILE, 8192, TMP_DIR_PATH)
+	arquivoOrdenado := intercalaDoisEmDois(arquivosTemp)
+	CopyFile(BIN_FILE, arquivoOrdenado)
+	RemoveFile(arquivoOrdenado)
+}
+
 func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp string) ([]string, error) {
 	// Abrir arquivo de entrada
 	file, err := os.Open(caminhoEntrada)
@@ -78,13 +85,6 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 	}
 
 	return arquivosTemp, err
-}
-
-func IntercalacaoBalanceadaComum() {
-	arquivosTemp, _ := divideArquivoEmBlocos(BIN_FILE, 8192, TMP_DIR_PATH)
-	arquivoOrdenado := intercalaDoisEmDois(arquivosTemp)
-	CopyFile(BIN_FILE, arquivoOrdenado)
-	RemoveFile(arquivoOrdenado)
 }
 
 func intercalaDoisEmDois(arquivos []string) string {

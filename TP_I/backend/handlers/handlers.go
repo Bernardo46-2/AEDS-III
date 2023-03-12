@@ -142,9 +142,11 @@ func IntercalacaoComum(w http.ResponseWriter, r *http.Request) {
 }
 
 func IntercalacaoVariavel(w http.ResponseWriter, r *http.Request) {
-	writeSuccess(w, 0)
+	dataManager.IntercalacaoBalanceadaVariavel()
+	writeSuccess(w, 8)
 }
 
 func SelecaoPorSubstituicao(w http.ResponseWriter, r *http.Request) {
-	writeSuccess(w, 0)
+	dataManager.IntercalacaoPorSubstituicao()
+	writeSuccess(w, 9)
 }

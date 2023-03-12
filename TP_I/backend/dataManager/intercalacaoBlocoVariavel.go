@@ -12,12 +12,13 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
+/* Intercalacao Variavel */
+
 func IntercalacaoBalanceadaVariavel() {
 	arquivosTemp, _ := divideArquivoEmBlocosVariaveis(BIN_FILE, 8192, TMP_DIR_PATH)
-	PrintBin(arquivosTemp[0])
-	/* arquivoOrdenado := intercalaDoisEmDois(arquivosTemp)
+	arquivoOrdenado := intercalaDoisEmDois(arquivosTemp)
 	CopyFile(BIN_FILE, arquivoOrdenado)
-	RemoveFile(arquivoOrdenado) */
+	RemoveFile(arquivoOrdenado)
 }
 
 func divideArquivoEmBlocosVariaveis(caminhoEntrada string, tamanhoBloco int64, dirTemp string) ([]string, error) {
@@ -67,31 +68,29 @@ func divideArquivoEmBlocosVariaveis(caminhoEntrada string, tamanhoBloco int64, d
 			return pokeSlice[i].Numero < pokeSlice[j].Numero
 		})
 
-		if i > 0 {
-			if lastPoke.Numero < pokeSlice[0].Numero {
-				path := fmt.Sprintf(dirTemp+"temp_%d.bin", i-1)
-				fileAppendFinal, _ := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
+		if i > 0 && lastPoke.Numero < pokeSlice[0].Numero {
+			path := fmt.Sprintf(dirTemp+"temp_%d.bin", i-1)
+			fileAppendFinal, _ := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 
-				for i := 0; i < len(pokeSlice); i++ {
-					tmp := pokeSlice[i].ToBytes()
-					binary.Write(fileAppendFinal, binary.LittleEndian, tmp)
-				}
-
-				fileAppendFinal.Seek(0, io.SeekStart)
-				var novoNumRegistros int32
-				binary.Read(fileAppendFinal, binary.LittleEndian, &novoNumRegistros)
-				novoNumRegistros += int32(len(pokeSlice))
-				fileAppendFinal.Close()
-
-				fileAppendStart, _ := os.OpenFile(path, os.O_RDWR, 0644)
-
-				fileAppendStart.Seek(0, io.SeekStart)
-				binary.Write(fileAppendStart, binary.LittleEndian, novoNumRegistros)
-
-				fileAppendStart.Close()
-
-				i--
+			for i := 0; i < len(pokeSlice); i++ {
+				tmp := pokeSlice[i].ToBytes()
+				binary.Write(fileAppendFinal, binary.LittleEndian, tmp)
 			}
+
+			fileAppendFinal.Seek(0, io.SeekStart)
+			var novoNumRegistros int32
+			binary.Read(fileAppendFinal, binary.LittleEndian, &novoNumRegistros)
+			novoNumRegistros += int32(len(pokeSlice))
+			fileAppendFinal.Close()
+
+			fileAppendStart, _ := os.OpenFile(path, os.O_RDWR, 0644)
+
+			fileAppendStart.Seek(0, io.SeekStart)
+			binary.Write(fileAppendStart, binary.LittleEndian, novoNumRegistros)
+
+			fileAppendStart.Close()
+
+			i--
 		} else {
 			lastPoke = pokeSlice[len(pokeSlice)-1]
 
@@ -114,22 +113,3 @@ func divideArquivoEmBlocosVariaveis(caminhoEntrada string, tamanhoBloco int64, d
 
 	return arquivosTemp, err
 }
-
-/* func AppendPokemon(pokemon []byte) error {
-/* func AppendPokemon(pokemon []byte) error {
-	file, err := os.OpenFile(BIN_FILE, os.O_WRONLY|os.O_APPEND, 0644
-	if err != nil.OpenFile(BIN_FILE, os.O_WRONLY|os.O_APPEND, 0644
-	if err != il
-		eturn er
-	}
-defer file.Close(
-
-	err = binary.ite(file, binary.LittleEndian, pokemon
-	if err != il
-return er
-
-
-AlterarNumRegistros(1
-
-	retrn er
-} */

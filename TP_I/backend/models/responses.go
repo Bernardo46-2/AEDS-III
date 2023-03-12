@@ -69,6 +69,10 @@ func SuccessResponse(codigo int) Response {
 		msg = "CSV importado com sucesso!"
 	case 7:
 		msg = "Intercalacao Balanceada Comum realizada com sucesso!"
+	case 8:
+		msg = "Intercalacao Balanceada Variavel realizada com sucesso!"
+	case 9:
+		msg = "Intercalacao Por Substituicao realizada com sucesso!"
 	default:
 		msg = "Mensagem de sucesso desconhecida!"
 	}

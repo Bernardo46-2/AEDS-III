@@ -153,3 +153,5 @@ GET: 2023/03/12 08:43:44 Id de numero 1
 GET: 2023/03/12 08:43:47 Id de numero 2
 GET: 2023/03/12 08:43:50 Id de numero 2
 STATUS: 2023/03/12 08:44:26 Servidor desligado
+STATUS: 2023/03/12 09:08:44 Servidor iniciado
+STATUS: 2023/03/12 09:18:36 Servidor desligado
