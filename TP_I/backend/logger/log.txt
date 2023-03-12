@@ -123,3 +123,7 @@ INFO: 2023/03/12 04:46:11 Database Recarregada
 GET: 2023/03/12 04:46:21 Id de numero 891
 GET: 2023/03/12 04:46:35 Id de numero 891
 STATUS: 2023/03/12 04:47:13 Servidor desligado
+STATUS: 2023/03/12 04:49:11 Servidor iniciado
+GET: 2023/03/12 04:49:18 Id de numero 1
+GET: 2023/03/12 04:49:37 Id de numero 2
+STATUS: 2023/03/12 04:49:57 Servidor desligado
