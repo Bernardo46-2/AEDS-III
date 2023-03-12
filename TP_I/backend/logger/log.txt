@@ -224,3 +224,11 @@ STATUS: 2023/03/11 22:55:29 Servidor iniciado
 INFO: 2023/03/11 22:55:40 Database Recarregada
 STATUS: 2023/03/11 22:55:46 Servidor desligado
 >>>>>>> refs/remotes/origin/main
+INFO: 2023/03/12 00:13:32 Database Recarregada
+GET: 2023/03/12 00:14:04 Id de numero 54
+GET: 2023/03/12 00:17:27 Id de numero 25
+GET: 2023/03/12 00:17:43 Id de numero 25
+GET: 2023/03/12 00:17:58 Id de numero 33
+GET: 2023/03/12 00:18:02 Id de numero 25
+GET: 2023/03/12 00:18:14 Id de numero 890
+GET: 2023/03/12 00:20:01 Id de numero 22
