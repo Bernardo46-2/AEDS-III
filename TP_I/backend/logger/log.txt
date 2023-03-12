@@ -179,3 +179,4 @@ GET: 2023/03/11 21:37:36 Id de numero 12
 GET: 2023/03/11 21:37:59 Id de numero 1
 GET: 2023/03/11 21:45:48 Id de numero 7
 GET: 2023/03/11 21:47:20 Id de numero 2
+STATUS: 2023/03/11 21:49:30 Servidor desligado
