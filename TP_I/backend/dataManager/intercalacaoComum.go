@@ -80,7 +80,7 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 
 func IntercalacaoBalanceadaComum() {
 	arquivosTemp, _ := divideArquivoEmBlocos(BIN_FILE, 8192, TMP_DIR_PATH)
-	intercalaDoisEmDois(arquivosTemp)
+	fmt.Println(intercalaDoisEmDois(arquivosTemp))
 }
 
 func intercalaDoisEmDois(arquivos []string) string {
@@ -102,19 +102,33 @@ func intercalaDoisEmDois(arquivos []string) string {
 }
 
 func intercala(arquivo1, arquivo2 string) (string, error) {
+	var err error
+
 	i, j := 0, 0
 	pokemon1 := models.Pokemon{}
 	pokemon2 := models.Pokemon{}
 
 	// Abre os dois arquivos para leitura
-	file1, _ := os.Open(arquivo1)
+	file1, err := os.Open(arquivo1)
+	if err != nil {
+		fmt.Println(err.Error())
+		panic(1)
+	}
 	defer file1.Close()
 
-	file2, _ := os.Open(arquivo2)
+	file2, err := os.Open(arquivo2)
+	if err != nil {
+		fmt.Println(err.Error())
+		panic(1)
+	}
 	defer file2.Close()
 
 	// Cria um novo arquivo temporário para escrita
-	novoArquivo, _ := os.OpenFile(TMP_DIR_PATH, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
+	novoArquivo, err := os.Create("a_" + arquivo1)
+	if err != nil {
+		fmt.Println(err.Error())
+		panic(1)
+	}
 	defer novoArquivo.Close()
 
 	// Lê a primeira linha de cada arquivo
@@ -123,12 +137,28 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 	binary.Read(file1, binary.LittleEndian, &tamFile1)
 	binary.Read(file1, binary.LittleEndian, &tamFile2)
 
-	ponteiro1, _ := file1.Seek(0, io.SeekCurrent)
-	ponteiro2, _ := file2.Seek(0, io.SeekCurrent)
+	ponteiro1, err := file1.Seek(0, io.SeekCurrent)
+	if err != nil {
+		fmt.Println(err.Error())
+		panic(1)
+	}
+	ponteiro2, err := file2.Seek(0, io.SeekCurrent)
+	if err != nil {
+		fmt.Println(err.Error())
+		panic(1)
+	}
 	// Enquanto houver linhas em ambos os arquivos, compara e escreve no novo arquivo
 	for i < int(tamFile1) && j < int(tamFile2) {
-		pokemon1, ponteiro1, _ = readRegistro(file1, ponteiro1)
-		pokemon2, ponteiro2, _ = readRegistro(file2, ponteiro2)
+		pokemon1, ponteiro1, err = readRegistro(file1, ponteiro1)
+		if err != nil {
+			fmt.Println(err.Error())
+			panic(1)
+		}
+		pokemon2, ponteiro2, err = readRegistro(file2, ponteiro2)
+		if err != nil {
+			fmt.Println(err.Error())
+			panic(1)
+		}
 
 		if pokemon1.Numero < pokemon2.Numero {
 			pokemon1.CalculateSize()
@@ -143,17 +173,25 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 
 	// Se houver linhas restantes em um dos arquivos, escreve no novo arquivo
 	for i < int(tamFile1) {
-		pokemon1, ponteiro1, _ = readRegistro(file1, ponteiro1)
+		pokemon1, ponteiro1, err = readRegistro(file1, ponteiro1)
+		if err != nil {
+			fmt.Println(err.Error())
+			panic(1)
+		}
 		binary.Write(novoArquivo, binary.LittleEndian, pokemon1.ToBytes())
 		i++
 	}
 
 	for j < int(tamFile2) {
-		pokemon2, ponteiro2, _ = readRegistro(file2, ponteiro2)
+		pokemon2, ponteiro2, err = readRegistro(file2, ponteiro2)
+		if err != nil {
+			fmt.Println(err.Error())
+			panic(1)
+		}
 		binary.Write(novoArquivo, binary.LittleEndian, pokemon2.ToBytes())
 		i++
 	}
 
 	// Retorna o nome do novo arquivo criado
-	return novoArquivo.Name(), nil
+	return novoArquivo.Name(), err
 }

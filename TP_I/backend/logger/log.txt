@@ -1,0 +1,69 @@
+STATUS: 2023/03/12 03:04:39 Servidor iniciado
+GET: 2023/03/12 03:05:15 Id de numero 2
+GET: 2023/03/12 03:05:25 Id de numero 3
+GET: 2023/03/12 03:05:32 Id de numero 4
+INFO: 2023/03/12 03:06:20 Database Recarregada
+GET: 2023/03/12 03:06:35 Id de numero 1
+GET: 2023/03/12 03:07:40 Id de numero 5
+STATUS: 2023/03/12 03:09:45 Servidor desligado
+STATUS: 2023/03/12 03:09:50 Servidor iniciado
+STATUS: 2023/03/12 03:11:37 Servidor desligado
+STATUS: 2023/03/12 03:11:52 Servidor iniciado
+INFO: 2023/03/12 03:12:47 Database Recarregada
+INFO: 2023/03/12 03:14:03 Database Recarregada
+GET: 2023/03/12 03:14:07 Id de numero 1
+INFO: 2023/03/12 03:14:50 Database Recarregada
+GET: 2023/03/12 03:15:03 Id de numero 2
+GET: 2023/03/12 03:15:11 Id de numero 1
+STATUS: 2023/03/12 03:16:59 Servidor desligado
+STATUS: 2023/03/12 03:17:06 Servidor iniciado
+INFO: 2023/03/12 03:17:13 Database Recarregada
+GET: 2023/03/12 03:17:16 Id de numero 1
+STATUS: 2023/03/12 03:17:47 Servidor desligado
+STATUS: 2023/03/12 03:17:51 Servidor iniciado
+GET: 2023/03/12 03:17:57 Id de numero 1
+STATUS: 2023/03/12 03:19:08 Servidor desligado
+STATUS: 2023/03/12 03:19:14 Servidor iniciado
+STATUS: 2023/03/12 03:21:52 Servidor desligado
+STATUS: 2023/03/12 03:22:26 Servidor iniciado
+GET: 2023/03/12 03:22:38 Id de numero 1
+GET: 2023/03/12 03:23:30 Id de numero 7
+STATUS: 2023/03/12 03:23:42 Servidor desligado
+STATUS: 2023/03/12 03:23:45 Servidor iniciado
+GET: 2023/03/12 03:23:59 Id de numero 14
+STATUS: 2023/03/12 03:25:14 Servidor desligado
+STATUS: 2023/03/12 03:25:33 Servidor iniciado
+STATUS: 2023/03/12 03:27:33 Servidor desligado
+STATUS: 2023/03/12 03:27:38 Servidor iniciado
+STATUS: 2023/03/12 03:28:14 Servidor desligado
+STATUS: 2023/03/12 03:29:06 Servidor iniciado
+GET: 2023/03/12 03:29:19 Id de numero 2
+GET: 2023/03/12 03:29:32 Id de numero 3
+STATUS: 2023/03/12 03:31:30 Servidor desligado
+STATUS: 2023/03/12 03:31:48 Servidor iniciado
+GET: 2023/03/12 03:35:12 Id de numero 3
+STATUS: 2023/03/12 03:36:36 Servidor desligado
+STATUS: 2023/03/12 03:36:41 Servidor iniciado
+STATUS: 2023/03/12 03:37:32 Servidor desligado
+STATUS: 2023/03/12 03:37:36 Servidor iniciado
+STATUS: 2023/03/12 03:39:38 Servidor desligado
+STATUS: 2023/03/12 03:40:10 Servidor iniciado
+INFO: 2023/03/12 03:40:19 Database Recarregada
+STATUS: 2023/03/12 03:41:41 Servidor desligado
+STATUS: 2023/03/12 03:41:46 Servidor iniciado
+STATUS: 2023/03/12 03:42:32 Servidor desligado
+STATUS: 2023/03/12 03:43:02 Servidor iniciado
+GET: 2023/03/12 03:44:23 Id de numero 5
+STATUS: 2023/03/12 03:45:09 Servidor desligado
+STATUS: 2023/03/12 03:45:17 Servidor iniciado
+GET: 2023/03/12 03:45:56 Id de numero 6
+GET: 2023/03/12 03:46:20 Id de numero 3
+GET: 2023/03/12 03:46:22 Id de numero 4
+GET: 2023/03/12 03:52:04 Id de numero 1
+STATUS: 2023/03/12 03:52:23 Servidor desligado
+STATUS: 2023/03/12 03:53:02 Servidor iniciado
+GET: 2023/03/12 03:53:13 Id de numero 1
+STATUS: 2023/03/12 03:54:03 Servidor desligado
+STATUS: 2023/03/12 03:54:09 Servidor iniciado
+GET: 2023/03/12 03:54:23 Id de numero 1
+STATUS: 2023/03/12 03:54:53 Servidor desligado

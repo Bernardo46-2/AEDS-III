@@ -1,8 +1,6 @@
 package crud
 
 import (
-	"fmt"
-
 	"github.com/Bernardo46-2/AEDS-III/dataManager"
 	"github.com/Bernardo46-2/AEDS-III/models"
 )
@@ -10,7 +8,6 @@ import (
 func Create(pokemon models.Pokemon) (id int, err error) {
 	pokemon.CalculateSize()
 
-	fmt.Printf("%s", pokemon.ToString())
 	pokeBytes := pokemon.ToBytes()
 
 	id, err = dataManager.AppendPokemon(pokeBytes)
@@ -38,22 +35,23 @@ func ReadAll(page int) (pokemon []models.Pokemon, err error) {
 }
 
 func Update(pokemon models.Pokemon) (err error) {
-	pokemon, pos, err := dataManager.ReadBinToPoke(int(pokemon.Numero))
+	_, pos, err := dataManager.ReadBinToPoke(int(pokemon.Numero))
 
 	if err != nil {
-		return
+		return err
 	}
 
+	pokemon.CalculateSize()
 	pokeBytes := pokemon.ToBytes()
 	if err = dataManager.DeletarPokemon(pos); err != nil {
-		return
+		return err
 	}
 
 	if _, err = dataManager.AppendPokemon(pokeBytes); err != nil {
-		return
+		return err
 	}
 
-	return
+	return err
 }
 
 func Delete(id int) (pokemon models.Pokemon, err error) {

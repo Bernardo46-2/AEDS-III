@@ -77,6 +77,7 @@ func PostPokemon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id, err := crud.Create(pokemon)
+
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, 3)
 		return

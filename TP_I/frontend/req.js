@@ -258,11 +258,19 @@ document.querySelector('#save').onclick = async () => {
     const method = pokemon.numero == 1000 ? 'post' : 'put';
 
     fetch(`http://localhost:8080/${method}/`, {
-        method: 'PUT',
-        body: JSON.stringify(pokemon)
+        method: 'POST',
+        body: JSON.stringify(pokemon),
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
-        .then(res => res.text())
-        .then(data => console.log(data));
+        .then(res => res.json())
+        .then(data => modalAviso(data.mensagem))
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+
 }
 
 /*  * * * * * * * * * * * * *
@@ -285,8 +293,8 @@ function editarDadosModal(data, shouldCreate = false) {
     const ano = dateObj.getFullYear().toString();
     const dataFormatada = `${dia}/${mes}/${ano}`;
 
-    let modalContent =`
-    <p class="poke-id2">${shouldCreate?"":"#"+data.numero}</p>
+    let modalContent = `
+    <p class="poke-id2">${shouldCreate ? "" : "#" + data.numero}</p>
     <div class="row justify-content-center">
     <input class="modal-title-input" type="text" name="nome" id="nome" value="${capt(data.nome)}">
     <input class="modal-title-jap-input" type="text" name="nome-jap" id="nome-jap" value="${data.nome_jap}">
