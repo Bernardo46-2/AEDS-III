@@ -207,7 +207,62 @@ function adicionarDadosModal(data) {
     `;
 
     conteudoPokemon.innerHTML = modalContent;
-    editButton.onclick = () => editarDadosModal(data, false)
+    editButton.onclick = () => editarDadosModal(data, false);
+}
+
+const collectFormData = async () => {
+    const pokemon = {};
+
+    const pokeNumber = document.querySelector('.poke-id2');
+    const pokeName = document.getElementById('nome');
+    const pokeNameJap = document.getElementById('nome-jap');
+    const pokeEspecies = document.getElementById('tipo-pokemon');
+    const pokeType1 = document.getElementById('tipo1');
+    const pokeType2 = document.getElementById('tipo2');
+    const pokeWeight = document.getElementById('peso');
+    const pokeHeight = document.getElementById('altura');
+    const pokeHP = document.getElementById('--bulbasaur');
+    const pokeAtk = document.getElementById('--charmander');
+    const pokeDef = document.getElementById('--squirtle');
+    const pokeGen = document.getElementById('geracao');
+    const pokeRelease = document.getElementById('lancamento');
+    const pokeLegendary = document.getElementById('lendario');
+    const pokeMitic = document.getElementById('mitico');
+
+    const japName = await fetch(`http://localhost:8080/toKatakana/?stringToConvert=${pokeNameJap.value}`);
+    let number = pokeNumber.innerText;
+    number = number == '' ? 1000 : +number.substring(1);
+
+    pokemon.numero = number;
+    pokemon.nome = pokeName.value;
+    pokemon.nome_jap = await japName.json();
+    pokemon.especie = pokeEspecies.value;
+    pokemon.tipo = [pokeType1.value, pokeType2.value];
+    pokemon.peso = +pokeWeight.value;
+    pokemon.altura = +pokeHeight.value;
+    pokemon.hp = +pokeHP.value;
+    pokemon.atk = +pokeAtk.value;
+    pokemon.def = +pokeDef.value;
+    pokemon.geracao = +pokeGen.value;
+    const dateFields = pokeRelease.value.split('/');
+    pokemon.lancamento = dateFields[2] + '-' + dateFields[1] + '-' + dateFields[0] + 'T00:00:00Z';
+    pokemon.lendario = pokeLegendary.classList.contains('lendario-y');
+    pokemon.mitico = pokeMitic.classList.contains('mitico-y');
+
+    return pokemon;
+}
+
+document.querySelector('#save').onclick = async () => {
+    const pokemon = await collectFormData();
+    console.log(pokemon);
+    const method = pokemon.numero == 1000 ? 'post' : 'put';
+
+    fetch(`http://localhost:8080/${method}/`, {
+        method: 'POST',
+        body: JSON.stringify(pokemon)
+    })
+        .then(res => res.text())
+        .then(data => console.log(data));
 }
 
 /*  * * * * * * * * * * * * *
@@ -215,8 +270,6 @@ function adicionarDadosModal(data) {
  *  Editar Dados
  *
  * * * * * * * * * * * * * * */
-
-const editButton = document.getElementById('edit');
 
 function editarDadosModal(data, shouldCreate = false) {
     const editButton = document.querySelector('#edit');
@@ -244,8 +297,8 @@ function editarDadosModal(data, shouldCreate = false) {
     <input class="tipo-pokemon-input col-4" type="text" name="tipo2" id="tipo2" value="${data.tipo[1]}">
     </div>
     <div class="row justify-content-center">
-        <input class="poke-text-input col-4" type="text" name="tipo2" id="tipo2" value="${data.peso}">
-        <input class="poke-text-input col-4" type="text" name="tipo2" id="tipo2" value="${data.altura}">
+        <input class="poke-text-input col-4" type="text" name="tipo2" id="peso" value="${data.peso}">
+        <input class="poke-text-input col-4" type="text" name="tipo2" id="altura" value="${data.altura}">
     </div>
     <div class="row justify-content-center">
         <p class="poke-desc">Peso</p>
@@ -336,6 +389,8 @@ function editarDadosModal(data, shouldCreate = false) {
             rangeValueDisplay.textContent = Math.floor(value * 2);
         });
     });
+
+
 }
 
 const registrar = document.querySelector('#Registrar');
@@ -370,30 +425,29 @@ pesquisar.addEventListener('click', function (event) {
         pesquisarForm.classList.add('btn-Charmander');
         pesquisarAberto = false;
     }
-})
-
-pesquisarForm.addEventListener('keyup', function (event) {
-    if (event.keyCode === 13) {
-        pesquisar.style.height = 45 + "px";
-        pesquisarForm.classList.add('displayNone');
-        pesquisarForm.classList.add('btn-Charmander');
-        pesquisarAberto = false;
-
-        fetch('http://localhost:8080/get/?id=' + pesquisarForm.value)
-            .then(response => response.json())
-            .then(data => {
-                if ('mensagem' in data) {
-                    modalAviso("Pokemon inexistente");
-                } else {
-                    abrirModal(data.nome, false, data)
-                }
-            })
-            .catch(error => {
-                modalAviso();
-                console.log(error)
-            });
-    }
 });
+
+document.getElementById('actual-pesquisar-form').onsubmit = e => {
+    e.preventDefault();
+    pesquisar.style.height = 45 + "px";
+    pesquisarForm.classList.add('displayNone');
+    pesquisarForm.classList.add('btn-Charmander');
+    pesquisarAberto = false;
+
+    fetch('http://localhost:8080/get/?id=' + pesquisarForm.value)
+        .then(response => response.json())
+        .then(data => {
+            if ('mensagem' in data) {
+                modalAviso("Pokemon inexistente");
+            } else {
+                abrirModal(data.nome, false, data)
+            }
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+};
 
 atualizar.addEventListener('click', function (event) {
     if (event.target === atualizar && !atualizarAberto) {
@@ -446,22 +500,22 @@ deletar.addEventListener('click', function (event) {
     }
 })
 
-deletarForm.addEventListener('keyup', function (event) {
-    if (event.keyCode === 13) {
-        deletar.style.height = 45 + "px";
-        deletarForm.classList.add('displayNone');
-        deletarForm.classList.add('btn-Charmander');
-        deletarAberto = false;
+document.getElementById('actual-deletar-form').onsubmit = e => {
+    e.preventDefault();
 
-        fetch('http://localhost:8080/delete/?id=' + deletarForm.value)
-            .then(response => response.json())
-            .then(data => modalAviso(data.mensagem))
-            .catch(error => {
-                modalAviso();
-                console.log(error)
-            });
-    }
-});
+    deletar.style.height = 45 + "px";
+    deletarForm.classList.add('displayNone');
+    deletarForm.classList.add('btn-Charmander');
+    deletarAberto = false;
+
+    fetch('http://localhost:8080/delete/?id=' + deletarForm.value)
+        .then(response => response.json())
+        .then(data => modalAviso(data.mensagem))
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+};
 
 function abrirModal(pokemon = "pokebola", editar = false, data) {
     const closeButton = document.querySelector('#close');
