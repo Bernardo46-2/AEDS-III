@@ -40,31 +40,35 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 	for i := 0; i < 30 && i < numRegistros; i++ {
 		tamBlocoAtual := int64(0)
 		slicePokemons = append(slicePokemons, []models.Pokemon{})
-		fmt.Printf("slice length = %d\n", len(slicePokemons))
 		for continuar := true; continuar; {
 			inicioRegistro, _ = file.Seek(0, io.SeekCurrent)
 			ponteiroAtual := inicioRegistro
 
+			// Pega tamanho do registro e se possui lapide
 			tamanhoRegistro, lapide, _ := tamanhoProxRegistro(file, ponteiroAtual)
-			fmt.Printf("TamBlocoAtual = %d | tamanhoRegistro = %d\n", tamBlocoAtual, tamanhoRegistro)
 
+			// Se nao tem lapide le o registro e salva, se nao pula
 			if lapide != 0 {
+				// Se nao couber no bloco finaliza e da append, se nao le e adiciona ao slice atual
 				if tamBlocoAtual+tamanhoRegistro > tamanhoBloco {
+					file.Seek(-8, io.SeekCurrent)
 					continuar = false
 				} else {
 					tamBlocoAtual += tamanhoRegistro
 					pokemonAtual, _, _ := readRegistro(file, inicioRegistro)
 					slicePokemons[i] = append(slicePokemons[i], pokemonAtual)
 				}
+			} else {
+				fmt.Printf("TA COM LAPIDE CACETE!\n")
 			}
 		}
 
 	}
 
 	fmt.Printf("Numero de blocos = %d\n", len(slicePokemons))
-	/* 	for i := 0; i < len(slicePokemons); i++ {
+	for i := 0; i < len(slicePokemons); i++ {
 		fmt.Printf("[%d] = %d\n", i, len(slicePokemons[i]))
-	} */
+	}
 
 	return nil, nil
 }
