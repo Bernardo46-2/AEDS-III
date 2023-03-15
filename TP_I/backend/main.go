@@ -1,7 +1,14 @@
+// Autores: Marcos Lommez / Bernardo Marques
+// Data de criação: 15/03/2023
+//
+// Programa para gerenciar uma base de dados de Pokemons,
+// com suporte a operações CRUD e diferentes métodos de ordenação externa.
+// Seu funcionamento é feito atraves de uma comunicação JSON com um frontend
+// O servidor HTTP é inicializado na porta 8080.
+
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/Bernardo46-2/AEDS-III/handlers"
@@ -10,10 +17,10 @@ import (
 )
 
 func main() {
-
+	// Inicializa o servidor de log
 	logger.LigarServidor()
 
-	// define os handlers para GET e POST
+	// Handlers para metodos de CRUD
 	http.HandleFunc("/getAll/", middlewares.EnableCORS(handlers.GetAllPokemon))
 	http.HandleFunc("/get/", middlewares.EnableCORS(handlers.GetPokemon))
 	http.HandleFunc("/post/", middlewares.EnableCORS(handlers.PostPokemon))
@@ -21,10 +28,12 @@ func main() {
 	http.HandleFunc("/delete/", middlewares.EnableCORS(handlers.DeletePokemon))
 	http.HandleFunc("/loadDatabase", middlewares.EnableCORS(handlers.LoadDatabase))
 	http.HandleFunc("/toKatakana/", middlewares.EnableCORS(handlers.ToKatakana))
+
+	// Handlers para metodos de ordenação externa
 	http.HandleFunc("/intercalacaoComum/", middlewares.EnableCORS(handlers.IntercalacaoComum))
 	http.HandleFunc("/intercalacaoVariavel/", middlewares.EnableCORS(handlers.IntercalacaoVariavel))
 	http.HandleFunc("/selecaoPorSubstituicao/", middlewares.EnableCORS(handlers.SelecaoPorSubstituicao))
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
-
+	// Inicializa o servidor HTTP na porta 8080 e escreve no log eventuais erros
+	logger.Fatal(http.ListenAndServe(":8080", nil))
 }

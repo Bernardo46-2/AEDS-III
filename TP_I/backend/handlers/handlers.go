@@ -12,34 +12,6 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-func writeError(w http.ResponseWriter, codes ...int) {
-	w.Header().Set("Content-Type", "application/json")
-	code := codes[0]
-	w.WriteHeader(code)
-	if len(codes) > 1 {
-		code = codes[1]
-	}
-	json.NewEncoder(w).Encode(models.ErrorResponse(code))
-}
-
-func writeSuccess(w http.ResponseWriter, code int) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(models.SuccessResponse(code))
-}
-
-func writeJson(w http.ResponseWriter, v any) {
-	jsonData, err := json.Marshal(v)
-	if err != nil {
-		writeError(w, http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(jsonData)
-}
-
 func GetPokemon(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 	pokemon, err := crud.Read(id)
@@ -149,4 +121,32 @@ func IntercalacaoVariavel(w http.ResponseWriter, r *http.Request) {
 func SelecaoPorSubstituicao(w http.ResponseWriter, r *http.Request) {
 	dataManager.IntercalacaoPorSubstituicao()
 	writeSuccess(w, 9)
+}
+
+func writeError(w http.ResponseWriter, codes ...int) {
+	w.Header().Set("Content-Type", "application/json")
+	code := codes[0]
+	w.WriteHeader(code)
+	if len(codes) > 1 {
+		code = codes[1]
+	}
+	json.NewEncoder(w).Encode(models.ErrorResponse(code))
+}
+
+func writeSuccess(w http.ResponseWriter, code int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(models.SuccessResponse(code))
+}
+
+func writeJson(w http.ResponseWriter, v any) {
+	jsonData, err := json.Marshal(v)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonData)
 }

@@ -33,3 +33,8 @@ func LigarServidor() {
 		os.Exit(0)
 	}()
 }
+
+func Fatal(v ...any) {
+	Println(fmt.Sprint(v...), "ERROR")
+	os.Exit(1)
+}

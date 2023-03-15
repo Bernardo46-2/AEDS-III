@@ -243,3 +243,11 @@ STATUS: 2023/03/15 15:05:04 Servidor iniciado
 INFO: 2023/03/15 15:05:36 Database Recarregada
 GET: 2023/03/15 15:05:42 Id de numero 1
 GET: 2023/03/15 15:05:46 Id de numero 1
+STATUS: 2023/03/15 15:11:55 Servidor iniciado
+GET: 2023/03/15 15:12:35 Id de numero 2
+GET: 2023/03/15 15:12:40 Id de numero 3
+GET: 2023/03/15 15:13:01 Id de numero 890
+GET: 2023/03/15 15:13:08 Id de numero 890
+GET: 2023/03/15 15:13:29 Id de numero 2
+GET: 2023/03/15 15:18:44 Id de numero 1
+STATUS: 2023/03/15 15:29:33 Servidor desligado
