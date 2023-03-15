@@ -162,3 +162,11 @@ STATUS: 2023/03/12 11:22:23 Servidor iniciado
 INFO: 2023/03/12 11:22:29 Database Recarregada
 INFO: 2023/03/12 11:22:51 Database Recarregada
 STATUS: 2023/03/12 11:23:18 Servidor desligado
+STATUS: 2023/03/13 22:11:06 Servidor iniciado
+GET: 2023/03/13 22:11:18 Id de numero 14
+GET: 2023/03/13 22:11:28 Id de numero 54
+GET: 2023/03/13 22:11:49 Id de numero 54
+STATUS: 2023/03/13 23:18:44 Servidor desligado
+STATUS: 2023/03/15 14:59:59 Servidor iniciado
+GET: 2023/03/15 15:01:09 Id de numero 7
+STATUS: 2023/03/15 15:10:54 Servidor desligado
