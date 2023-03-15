@@ -24,9 +24,9 @@ func Read(id int) (pokemon models.Pokemon, err error) {
 	return
 }
 
-func ReadAll(page int) (pokemon []models.Pokemon, err error) {
+func ReadAll(id int) (pokemon []models.Pokemon, err error) {
 	numRegistros, _, _ := dataManager.NumRegistros()
-	i := page * 60
+	i := id + 1
 
 	for total := 0; total < 60 && i < numRegistros; i++ {
 		tmp, _, _ := dataManager.ReadBinToPoke(i)

@@ -26,9 +26,9 @@ func GetPokemon(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllPokemon(w http.ResponseWriter, r *http.Request) {
-	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 
-	pokemon, err := crud.ReadAll(page)
+	pokemon, err := crud.ReadAll(id)
 
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, 2)
