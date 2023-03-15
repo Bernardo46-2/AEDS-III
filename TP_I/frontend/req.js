@@ -6,6 +6,7 @@
 
 const importarCsv = document.getElementById('ImportarCSV');
 const modalContainer = document.getElementById('modal-container');
+const deleteBtn = document.getElementById('delete');
 
 function modalAviso(mostrar = "Servidor Desligado") {
     const mensagem = document.getElementById("mensagem-modal");
@@ -28,7 +29,10 @@ function modalAviso(mostrar = "Servidor Desligado") {
 importarCsv.onclick = () => {
     fetch('http://localhost:8080/loadDatabase')
         .then(response => response.json())
-        .then(data => modalAviso(data.mensagem))
+        .then(data => {
+            modalAviso(data.mensagem);
+            showAll.onclick();
+        })
         .catch(error => {
             modalAviso();
             console.log(error)
@@ -39,27 +43,35 @@ const IntercalacaoComum = document.getElementById('IntercalacaoComum');
 const IntercalacaoVariavel = document.getElementById('IntercalacaoVariavel');
 const SelecaoPorSubstituicao = document.getElementById('SelecaoPorSubstituicao');
 
-
 IntercalacaoComum.onclick = () => {
     fetch('http://localhost:8080/intercalacaoComum/')
         .then(response => response.json())
-        .then(data => modalAviso(data.mensagem))
+        .then(data => {
+            modalAviso(data.mensagem);
+            showAll.onclick();
+        })
         .catch(error => {
             modalAviso();
-            console.log(error)
+            console.log(error);
         });
 }
 
 IntercalacaoVariavel.onclick = () => {
     fetch('http://localhost:8080/intercalacaoVariavel/')
         .then(response => response.json())
-        .then(data => modalAviso(data.mensagem))
+        .then(data => {
+            modalAviso(data.mensagem);
+            showAll.onclick();
+        })
 }
 
 SelecaoPorSubstituicao.onclick = () => {
     fetch('http://localhost:8080/selecaoPorSubstituicao/')
         .then(response => response.json())
-        .then(data => modalAviso(data.mensagem))
+        .then(data => {
+            modalAviso(data.mensagem);
+            showAll.onclick();
+        })
 }
 
 /*  * * * * * * * * * * * * *
@@ -148,7 +160,7 @@ function carregarDados(id) {
         .then(data => adicionarDadosModal(data))
         .catch(error => {
             modalAviso(error);
-            console.log(error)
+            console.log(error);
         });
 }
 
@@ -235,6 +247,14 @@ function adicionarDadosModal(data) {
 
     conteudoPokemon.innerHTML = modalContent;
     editButton.onclick = () => editarDadosModal(data, false);
+    
+    const id = document.querySelector('.poke-id2');
+    const deleteForm = document.getElementById('deletar-form');
+    deleteForm.value = id.innerHTML.substring(1);
+    deleteBtn.onclick = () => {
+        document.getElementById('close').click();
+        document.getElementById('actual-deletar-form').onsubmit();
+    }
 }
 
 const collectFormData = async () => {
@@ -291,7 +311,10 @@ document.querySelector('#save').onclick = async () => {
         }
     })
         .then(res => res.json())
-        .then(data => modalAviso(data.hasOwnProperty('mensagem')?data.mensagem:"Pokemon registrado com o id: " + data.id))
+        .then(data => {
+            modalAviso(data.hasOwnProperty('mensagem')?data.mensagem:"Pokemon registrado com o id: " + data.id);
+            showAll.onclick();
+        })
         .catch(error => {
             modalAviso();
             console.log(error)
@@ -307,8 +330,10 @@ document.querySelector('#save').onclick = async () => {
 function editarDadosModal(data, shouldCreate = false) {
     const editButton = document.querySelector('#edit');
     const saveButton = document.querySelector('#save');
+    const deleteButton = document.querySelector('#delete');
     editButton.hidden = true;
     saveButton.hidden = false;
+    deleteButton.hidden = true;
 
     const conteudoPokemon = document.getElementById('conteudoPokemon');
 
@@ -508,7 +533,7 @@ document.getElementById('actual-atualizar-form').addEventListener('submit', e =>
             if ('mensagem' in data) {
                 modalAviso("Pokemon inexistente");
             } else {
-                abrirModal(data.nome, true, data)
+                abrirModal(data.nome, true, data);
             }
         })
         .catch(error => {
@@ -532,7 +557,7 @@ deletar.addEventListener('click', function (event) {
 })
 
 document.getElementById('actual-deletar-form').onsubmit = e => {
-    e.preventDefault();
+    if(e !== undefined) e.preventDefault();
 
     deletar.style.height = 45 + "px";
     deletarForm.classList.add('displayNone');
@@ -541,7 +566,10 @@ document.getElementById('actual-deletar-form').onsubmit = e => {
 
     fetch('http://localhost:8080/delete/?id=' + deletarForm.value)
         .then(response => response.json())
-        .then(data => modalAviso(data.mensagem))
+        .then(data => {
+            modalAviso(data.mensagem);
+            showAll.click();
+        })
         .catch(error => {
             modalAviso();
             console.log(error)
@@ -550,7 +578,8 @@ document.getElementById('actual-deletar-form').onsubmit = e => {
 
 function abrirModal(pokemon = "pokebola", editar = false, data) {
     const closeButton = document.getElementById('close');
-    const saveButton = document.getElementById('save')
+    const saveButton = document.getElementById('save');
+    document.getElementById('delete').hidden = false;
 
     pokemon = pokemon.toLowerCase();
     if (data === undefined) {
