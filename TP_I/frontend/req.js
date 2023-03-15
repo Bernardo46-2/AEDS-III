@@ -7,6 +7,11 @@
 const importarCsv = document.getElementById('ImportarCSV');
 const modalContainer = document.getElementById('modal-container');
 const deleteBtn = document.getElementById('delete');
+const helpBtn = document.getElementById('Ajuda');
+
+helpBtn.onclick = () => {
+    modalAviso("Por favor me dê um emprego (╥﹏╥)");
+}
 
 function modalAviso(mostrar = "Servidor Desligado") {
     const mensagem = document.getElementById("mensagem-modal");

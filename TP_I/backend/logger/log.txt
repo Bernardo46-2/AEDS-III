@@ -312,3 +312,4 @@ INFO: 2023/03/15 16:08:00 Database Recarregada
 GET: 2023/03/15 16:08:07 Id de numero 7
 GET: 2023/03/15 16:08:18 Id de numero 1
 STATUS: 2023/03/15 16:10:24 Servidor desligado
+STATUS: 2023/03/15 16:15:17 Servidor iniciado
