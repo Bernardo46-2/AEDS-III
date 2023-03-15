@@ -74,7 +74,7 @@ func readRegistro(file *os.File, inicioRegistro int64) (models.Pokemon, int64, e
 	}
 
 	// Converte os bytes para uma struct models.Pokemon se nao houver lapide
-	var pokemonAtual models.Pokemon
+	pokemonAtual := models.Pokemon{Numero: -1}
 	if lapide != 0 {
 		if err := pokemonAtual.ParseBinToPoke(pokeBytes); err != nil {
 			return models.Pokemon{}, inicioRegistro, fmt.Errorf("erro ao converter registro para Pokemon: %v Linha Corrompida: %d", err, inicioRegistro)
