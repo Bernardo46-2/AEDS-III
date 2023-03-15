@@ -32,48 +32,60 @@ func IntercalacaoPorSubstituicao() {
 	arquivosTemp := []string{}
 	pokeHeap := make([]heapNode, 7)
 
-	for i := 0; i < 7; i++ {
+	for i := 0; i < 7 && i < numRegistros; {
 		inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
 		pokemonAtual, _, _ := readRegistro(file, inicioRegistro)
-		pokeHeap[0] = heapNode{0, pokemonAtual}
-		balanceHeap(pokeHeap, 0)
+		if pokemonAtual.Numero != -1 {
+			pokeHeap[0] = heapNode{0, pokemonAtual}
+			balanceHeap(pokeHeap, 0)
+			i++
+		}
 	}
 
 	caminhoTemp := filepath.Join(TMP_DIR_PATH, "temp_0.bin")
 	arquivosTemp = append(arquivosTemp, caminhoTemp)
 	arquivoTemp, _ := os.Create(caminhoTemp)
 	inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
-	fmt.Println(inicioRegistro)
+	/* 	fmt.Println(inicioRegistro) */
 	binary.Write(arquivoTemp, binary.LittleEndian, utils.IntToBytes(int32(0)))
 
 	// last := pokeHeap[0]
 	peso := 0
+
 	for i := 0; i < (numRegistros - 7); i++ {
-		// pega a cabeca do heap
-		pokeTmp := pokeHeap[0].Pokemon
-		pokeTmp.CalculateSize()
-		// last = pokeHeap[0]
-
-		// escreve no arquivo
-		arquivoTemp.Seek(0, io.SeekEnd)
-		binary.Write(arquivoTemp, binary.LittleEndian, pokeTmp.ToBytes())
-		aumentaNumRegistros(arquivoTemp)
-
-		// adiciona novo valor ao heap, se for menor cria novo arquivo e aumenta o peso
+		// fmt.Printf("i = %d\n", i)
 		inicioRegistro, _ = file.Seek(0, io.SeekCurrent)
-		pokemonAtual, _, _ := readRegistro(file, inicioRegistro)
-		pokemonAtual.CalculateSize()
-		if pokemonAtual.Numero < pokeHeap[0].Pokemon.Numero {
-			peso++
-			arquivoTemp.Close()
-			caminhoTemp = filepath.Join(TMP_DIR_PATH, fmt.Sprintf("temp_%d.bin", peso))
-			arquivosTemp = append(arquivosTemp, caminhoTemp)
-			arquivoTemp, _ = os.Create(caminhoTemp)
-		}
-		pokeHeap[0] = heapNode{peso, pokemonAtual}
+		_, lapide, _ := tamanhoProxRegistro(file, inicioRegistro)
+		file.Seek(-8, io.SeekCurrent)
 
-		// balanceia o novo heap
-		balanceHeap(pokeHeap, 0)
+		if lapide != 0 {
+			// pega a cabeca do heap
+			pokeTmp := pokeHeap[0].Pokemon
+			pokeTmp.CalculateSize()
+
+			// escreve no arquivo
+			arquivoTemp.Seek(0, io.SeekEnd)
+			binary.Write(arquivoTemp, binary.LittleEndian, pokeTmp.ToBytes())
+			aumentaNumRegistros(arquivoTemp)
+
+			// adiciona novo valor ao heap, se for menor cria novo arquivo e aumenta o peso
+			pokemonAtual, _, _ := readRegistro(file, inicioRegistro)
+			pokemonAtual.CalculateSize()
+			if pokemonAtual.Numero < pokeHeap[0].Pokemon.Numero {
+				peso++
+				arquivoTemp.Close()
+				caminhoTemp = filepath.Join(TMP_DIR_PATH, fmt.Sprintf("temp_%d.bin", peso))
+				arquivosTemp = append(arquivosTemp, caminhoTemp)
+				arquivoTemp, _ = os.Create(caminhoTemp)
+				binary.Write(arquivoTemp, binary.LittleEndian, utils.IntToBytes(int32(0)))
+			}
+			pokeHeap[0] = heapNode{peso, pokemonAtual}
+
+			// balanceia o novo heap
+			balanceHeap(pokeHeap, 0)
+		} else {
+			readRegistro(file, inicioRegistro)
+		}
 	}
 
 	for i := 0; i < 7; i++ {
@@ -94,6 +106,7 @@ func IntercalacaoPorSubstituicao() {
 			caminhoTemp = filepath.Join(TMP_DIR_PATH, fmt.Sprintf("temp_%d.bin", peso))
 			arquivosTemp = append(arquivosTemp, caminhoTemp)
 			arquivoTemp, _ = os.Create(caminhoTemp)
+			binary.Write(arquivoTemp, binary.LittleEndian, utils.IntToBytes(int32(0)))
 		}
 		pokeHeap[0] = heapNode{peso, pokeHeap[0].Pokemon}
 
