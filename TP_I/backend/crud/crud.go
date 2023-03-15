@@ -80,7 +80,7 @@ func Update(pokemon models.Pokemon) (err error) {
 	return
 }
 
-// Recebe um ID, procura no arquivo e gera a remoçao logica do mesmo
+// Delete recebe um ID, procura no arquivo e gera a remoçao logica do mesmo
 func Delete(id int) (pokemon models.Pokemon, err error) {
 	// Tenta encontrar a posiçao do pokemon no arquivo binario
 	pokemon, pos, err := dataManager.ReadBinToPoke(id)

@@ -14,13 +14,25 @@ import (
 
 const TMP_DIR_PATH string = "data/tmp/"
 
+// IntercalacaoBalanceadaComum executa a ordenação externa do banco de dados binario.
+// A função cria arquivos temporários de tamanho especificado, realiza a ordenação externa
+// em cada um deles, e finalmente intercala os arquivos até obter um arquivo ordenado final.
 func IntercalacaoBalanceadaComum() {
+	// Divide o arquivo de entrada em blocos de tamanho especificado e cria os arquivos temporários
 	arquivosTemp, _ := divideArquivoEmBlocos(BIN_FILE, 8192, TMP_DIR_PATH)
+
+	// Realiza a intercalação dos arquivos temporários até obter um arquivo ordenado final
 	arquivoOrdenado := intercalaDoisEmDois(arquivosTemp)
+
+	// Copia o arquivo ordenado para o arquivo original e paga os paths
 	CopyFile(BIN_FILE, arquivoOrdenado)
 	RemoveFile(arquivoOrdenado)
 }
 
+// divideArquivoEmBlocos realiza uma ordenação externa do arquivo de entrada contendo dados da Pokedex utilizando o algoritmo de merge sort.
+// O arquivo é dividido em vários arquivos menores, cada um contendo um bloco de dados de tamanho especificado, que são ordenados
+// individualmente e posteriormente combinados de forma ordenada em um único arquivo de saída.
+// A função retorna um slice com os caminhos dos arquivos temporários criados.
 func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp string) ([]string, error) {
 	// Abrir arquivo de entrada
 	file, err := os.Open(caminhoEntrada)
@@ -35,17 +47,25 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 
 	// Criar os arquivos temporários
 	arquivosTemp := []string{}
-	pokeSlice := []models.Pokemon{}
 
+	// Itera enquanto houver registro
 	for i, j := 0, 0; j < numRegistros; i++ {
+		// Cria o path com o caminho especificado e salva em variavel
 		caminhoTemp := filepath.Join(dirTemp, fmt.Sprintf("temp_%d.bin", i))
 		arquivoTemp, _ := os.Create(caminhoTemp)
 		arquivosTemp = append(arquivosTemp, caminhoTemp)
+		defer arquivoTemp.Close()
 
+		// Inicializa variaveis
+		pokeSlice := []models.Pokemon{}
 		tamBlocoAtual := int64(0)
+
+		// Repete enquanto existir espaço no bloco
 		for j < numRegistros {
+			// Seta o ponteiro do arquivo
 			inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
 			ponteiroAtual := inicioRegistro
+
 			// Pega tamanho do registro e se possui lapide
 			tamanhoRegistro, lapide, _ := tamanhoProxRegistro(file, ponteiroAtual)
 
@@ -56,6 +76,7 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 					file.Seek(-8, io.SeekCurrent)
 					break
 				} else {
+					// Se for valido realiza o parse
 					tamBlocoAtual += tamanhoRegistro
 					pokemonAtual, _, _ := readRegistro(file, inicioRegistro)
 					pokemonAtual.CalculateSize()
@@ -63,35 +84,45 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 					j++
 				}
 			} else {
+				// Caso tenha lapide faz uma leitura fazia para pular o registro
 				readRegistro(file, inicioRegistro)
 				j++
 			}
 		}
 
+		// Ordena os elementos do bloco
 		sort.Slice(pokeSlice, func(i, j int) bool {
 			return pokeSlice[i].Numero < pokeSlice[j].Numero
 		})
 
+		// Guarda no inicio do arquivo a quantidade de elementos que ele ira possuir
 		binary.Write(arquivoTemp, binary.LittleEndian, utils.IntToBytes(int32(len(pokeSlice))))
 
+		// Serializa e grava os registros
 		for i := 0; i < len(pokeSlice); i++ {
 			tmp := pokeSlice[i].ToBytes()
 			binary.Write(arquivoTemp, binary.LittleEndian, tmp)
 		}
-
-		arquivoTemp.Close()
-
-		pokeSlice = []models.Pokemon{}
 	}
 
 	return arquivosTemp, err
 }
 
+// intercalaDoisEmDois é uma função recursiva que recebe um slice contendo os caminhos
+// dos arquivos a serem intercalados e realiza a intercalação dois a dois atraves do
+// metodo de mergeSort.
+// A função retorna o caminho do arquivo resultante da intercalação.
+//
+// arquivos é um slice contendo os caminhos dos arquivos a serem intercalados.
+//
+// Retorna o caminho do arquivo resultante da intercalação.
 func intercalaDoisEmDois(arquivos []string) string {
+	// Para a recursao quando existir apenas um unico arquivo
 	if len(arquivos) == 1 {
 		return arquivos[0]
 	}
 
+	// Intercala os subconjuntos e remove arquivos de lixo
 	novosArquivos := []string{}
 	for i := 0; i < len(arquivos); i += 2 {
 		if i+1 < len(arquivos) {
@@ -109,84 +140,53 @@ func intercalaDoisEmDois(arquivos []string) string {
 	return intercalaDoisEmDois(novosArquivos)
 }
 
+// Intercala recebe dois paths de arquivos binarios e realiza a intercalação externa dos mesmos
+//
+// # É utilizado uma versão do algoritmo merge sort
+//
+// Retorna uma string contendo o nome do novo arquivo gerado com os dados intercalados
 func intercala(arquivo1, arquivo2 string) (string, error) {
-	var err error
 
+	// Inicializa variaveis
+	var err error
 	i, j := 0, 0
 	pokemon1 := models.Pokemon{}
 	pokemon2 := models.Pokemon{}
 
 	// Abre os dois arquivos para leitura
 	file1, err := os.Open(arquivo1)
-	if err != nil {
-		fmt.Println(err.Error())
-		panic(1)
-	}
-
-	defer file1.Close()
-
 	file2, err := os.Open(arquivo2)
-	if err != nil {
-		fmt.Println(err.Error())
-		panic(2)
-	}
-
+	defer file1.Close()
 	defer file2.Close()
 
 	// Cria um novo arquivo temporário para escrita
 	novoArquivo, err := os.Create("data/tmp/tmp.bin")
-	if err != nil {
-		fmt.Println(err.Error())
-		panic(3)
-	}
-
 	defer novoArquivo.Close()
 
-	// Lê a primeira linha de cada arquivo
+	// Lê a primeira linha contendo o tamanho de cada arquivo
 	var tamFile1 int32
 	var tamFile2 int32
-	err = binary.Read(file1, binary.LittleEndian, &tamFile1)
-	if err != nil {
-		fmt.Println(err.Error() + " erro no arquivo: " + arquivo1)
-		panic(33)
-	}
-	err = binary.Read(file2, binary.LittleEndian, &tamFile2)
-	if err != nil {
-		fmt.Println(err.Error() + " erro no arquivo: " + arquivo2)
-		panic(44)
-	}
+	binary.Read(file1, binary.LittleEndian, &tamFile1)
+	binary.Read(file2, binary.LittleEndian, &tamFile2)
 
-	_, err = file1.Seek(4, io.SeekStart)
-	if err != nil {
-		fmt.Println(err.Error())
-		panic(4)
-	}
+	// Seta o inicio correto de leitura dos arquivos
+	file1.Seek(4, io.SeekStart)
+	file2.Seek(4, io.SeekStart)
 
-	_, err = file2.Seek(4, io.SeekStart)
-	if err != nil {
-		fmt.Println(err.Error())
-		panic(5)
-	}
-
+	// Separa o espaço de contador de registros do novo arquivo
 	binary.Write(novoArquivo, binary.LittleEndian, int32(tamFile1+tamFile2))
 
 	// Enquanto houver linhas em ambos os arquivos, compara e escreve no novo arquivo
 	for i < int(tamFile1) && j < int(tamFile2) {
+		// Guarda a posição a ser manipulada
 		ponteiro1, _ := file1.Seek(0, io.SeekCurrent)
 		ponteiro2, _ := file2.Seek(0, io.SeekCurrent)
 
+		// Lê os registros
 		pokemon1, _, err = readRegistro(file1, ponteiro1)
-		if err != nil {
-			fmt.Println(err.Error())
-			panic(6)
-		}
-
 		pokemon2, _, err = readRegistro(file2, ponteiro2)
-		if err != nil {
-			fmt.Println(err.Error())
-			panic(7)
-		}
 
+		// Insere o menor ID primeiro
 		if pokemon1.Numero < pokemon2.Numero {
 			pokemon1.CalculateSize()
 			binary.Write(novoArquivo, binary.LittleEndian, pokemon1.ToBytes())
@@ -206,19 +206,16 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 		pokemon1, _, err = readRegistro(file1, ponteiro1)
 		if err != nil {
 			fmt.Println(err.Error())
-			panic(8)
 		}
 		pokemon1.CalculateSize()
 		binary.Write(novoArquivo, binary.LittleEndian, pokemon1.ToBytes())
 		i++
 	}
-
 	for j < int(tamFile2) {
 		ponteiro2, _ := file2.Seek(0, io.SeekCurrent)
 		pokemon2, _, err = readRegistro(file2, ponteiro2)
 		if err != nil {
 			fmt.Println(err.Error())
-			panic(9)
 		}
 		pokemon2.CalculateSize()
 		binary.Write(novoArquivo, binary.LittleEndian, pokemon2.ToBytes())
@@ -229,27 +226,40 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 	return novoArquivo.Name(), err
 }
 
-func CopyFile(destPath, srcPath string) error {
+// CopyFile copia um arquivo do caminho de origem para o caminho de destino.
+//
+// destPath é o caminho do arquivo de destino.
+// srcPath é o caminho do arquivo de origem.
+//
+// Retorna um erro, se ocorrer algum problema durante a cópia do arquivo.
+func CopyFile(destPath, srcPath string) (err error) {
+	err = nil
+
+	// Abre o arquivo de origem para leitura
 	srcFile, err := os.Open(srcPath)
 	if err != nil {
 		return err
 	}
 	defer srcFile.Close()
 
+	// Cria o arquivo de destino para escrita
 	destFile, err := os.Create(destPath)
 	if err != nil {
 		return err
 	}
 	defer destFile.Close()
 
+	// Copia o conteúdo do arquivo de origem para o arquivo de destino
 	if _, err := io.Copy(destFile, srcFile); err != nil {
 		return err
 	}
 
+	// Garante que todos os dados sejam gravados no arquivo de destino
 	if err := destFile.Sync(); err != nil {
 		return err
 	}
 
+	// Obtém as informações do arquivo de origem e aplica as mesmas permissões ao arquivo de destino
 	srcFileInfo, err := os.Stat(srcPath)
 	if err != nil {
 		return err
@@ -258,6 +268,9 @@ func CopyFile(destPath, srcPath string) error {
 	return os.Chmod(destPath, srcFileInfo.Mode())
 }
 
+// PrintBin é uma função criada para depuração do codigo.
+//
+// Ela abre um arquivo binario e printa o ID e Nome dos pokemons existentes
 func PrintBin(path string) {
 	// Abre o arquivo binário
 	file, _ := os.Open(path)
@@ -267,8 +280,8 @@ func PrintBin(path string) {
 	var numEntradas int32
 	binary.Read(file, binary.LittleEndian, &numEntradas)
 
-	pokeArray := []models.Pokemon{}
 	// Percorre as entradas do arquivo
+	pokeArray := []models.Pokemon{}
 	for i := 0; i < int(numEntradas); i++ {
 		// Grava a localização do inicio do registro
 		inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
@@ -276,12 +289,17 @@ func PrintBin(path string) {
 		pokeArray = append(pokeArray, pokemonAtual)
 	}
 
+	// Printa o conteudo do arquivo
 	for i := 0; i < len(pokeArray); i++ {
 		fmt.Printf("Id = %d | Nome = %s\n", pokeArray[i].Numero, pokeArray[i].Nome)
 	}
 }
 
+// RemoveFile remove o arquivo no caminho especificado.
+//
+// Retorna um erro, se ocorrer algum problema durante a remoção do arquivo.
 func RemoveFile(filePath string) error {
+	// Tenta remover o arquivo no caminho especificado
 	err := os.Remove(filePath)
 	if err != nil {
 		return fmt.Errorf("erro ao remover arquivo: %v", err)

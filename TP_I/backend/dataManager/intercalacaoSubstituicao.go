@@ -11,11 +11,17 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
+// heapNode faz a adaptação de pokemons para ser utilizado junto de uma variavel de peso
+// para ser utilizado em um heap
 type heapNode struct {
 	Peso    int
 	Pokemon models.Pokemon
 }
 
+// IntercalacaoPorSubstituicao lê um arquivo binário e o ordena utilizando o algoritmo HeapSort. O processo de ordenação
+// é realizado em blocos de tamanho fixo 7, armazenados em um heap. Quando não for possível adicionar mais valores ao heap,
+// um novo arquivo temporário é criado e os valores armazenados no heap são escritos nele, já ordenados. Ao final da
+// leitura do arquivo, é realizado um merge entre os arquivos temporários para obter um único arquivo ordenado.
 func IntercalacaoPorSubstituicao() {
 	// Abrir arquivo de entrada
 	file, err := os.OpenFile(BIN_FILE, os.O_RDWR, 0644)
@@ -42,22 +48,25 @@ func IntercalacaoPorSubstituicao() {
 		}
 	}
 
+	// Cria as variaveis de path
 	caminhoTemp := filepath.Join(TMP_DIR_PATH, "temp_0.bin")
 	arquivosTemp = append(arquivosTemp, caminhoTemp)
 	arquivoTemp, _ := os.Create(caminhoTemp)
 	inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
-	/* 	fmt.Println(inicioRegistro) */
+
+	// Reserva o espaço de contagem de registros
 	binary.Write(arquivoTemp, binary.LittleEndian, utils.IntToBytes(int32(0)))
 
-	// last := pokeHeap[0]
+	// Inicializa o heap com 7 elementos
 	peso := 0
-
 	for i := 0; i < (numRegistros - 7); i++ {
-		// fmt.Printf("i = %d\n", i)
+		// Guarda a posicao de inicio do registro e verifica sua lapide
 		inicioRegistro, _ = file.Seek(0, io.SeekCurrent)
 		_, lapide, _ := tamanhoProxRegistro(file, inicioRegistro)
 		file.Seek(-8, io.SeekCurrent)
 
+		// Se nao possuir lapide lê o registro e adiciona ao heap,
+		// depois retira do tipo do heap e adiciona ao arquivo
 		if lapide != 0 {
 			// pega a cabeca do heap
 			pokeTmp := pokeHeap[0].Pokemon
@@ -84,10 +93,12 @@ func IntercalacaoPorSubstituicao() {
 			// balanceia o novo heap
 			balanceHeap(pokeHeap, 0)
 		} else {
+			// Realiza uma leitura vazia para descartar o valor
 			readRegistro(file, inicioRegistro)
 		}
 	}
 
+	// Esvaziar valores restantes do heap
 	for i := 0; i < 7; i++ {
 		// pega a cabeca do heap
 		pokeTmp := pokeHeap[0].Pokemon
@@ -122,6 +133,9 @@ func IntercalacaoPorSubstituicao() {
 	RemoveFile(arquivoOrdenado)
 }
 
+// balanceHeap recebe um heap e um index e o retorna balanceado.
+// Realiza o balanceamento de maneira recursiva e por isso é necessario
+// fazer a chamada utilizando index = 0
 func balanceHeap(heap []heapNode, index int) []heapNode {
 	leftIndex := 2*index + 1
 	rightIndex := 2*index + 2
@@ -144,6 +158,8 @@ func balanceHeap(heap []heapNode, index int) []heapNode {
 	return heap
 }
 
+// biggerThan Testa a hierarquia de valores do struct heapNode.
+// Onde Peso vem primeiro, Numero depois
 func biggerThan(node1, node2 heapNode) bool {
 	if node1.Peso > node2.Peso {
 		return true
@@ -153,8 +169,11 @@ func biggerThan(node1, node2 heapNode) bool {
 	return false
 }
 
+// aumentaNumRegistros recebe um arquivo e aumenta o numero de registros.
+// A função é um complemento da função ja existente no binManager
 func aumentaNumRegistros(file *os.File) {
 	var err error
+
 	// Ler o valor atual
 	var numRegistros int32
 	file.Seek(0, 0)
@@ -179,32 +198,29 @@ func aumentaNumRegistros(file *os.File) {
 	}
 }
 
+// removeLastItem recebe o heap e o retorna sem o ultimo elemento
 func removeLastItem(s []heapNode) []heapNode {
 	return append([]heapNode(nil), s[:len(s)-1]...)
 }
 
+// testaEDeletaArquivo testa a existencia de um arquivo,
+// caso a mesma seja valida o arquivo sera deletado
 func testaEDeletaArquivo(path string) bool {
 	result := false
 	// Obtém informações sobre o arquivo
-	info, err := os.Stat(path)
-	if err != nil {
-		panic(1)
-	}
+	info, _ := os.Stat(path)
 
 	// Verifica se o tamanho do arquivo é zero
 	if info.Size() == 0 {
 		// Deleta o arquivo
-		err := os.Remove(path)
+		os.Remove(path)
 		result = true
-		if err != nil {
-			panic(2)
-
-		}
 	}
 
 	return result
 }
 
+// apagaVazios recebe um array de strings e retorna sem os valores vazios
 func apagaVazios(paths []string) []string {
 	var result []string
 	for _, path := range paths {
