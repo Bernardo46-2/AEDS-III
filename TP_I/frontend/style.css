@@ -50,6 +50,7 @@
     --pikachu-escuro: #ccad2e;
     --flareon-escuro: #b40c0c;
     --bulbasaur-escuro: #648f38;
+    --gengar-escuro: #3e3a57;
     --Normal: #a8a878;
     --Fire: #f08030;
     --Water: #6890f0;
@@ -781,6 +782,12 @@ body::-webkit-scrollbar {
     transition: 0.5s;
 }
 
+.btn-gengar-classic {
+    background-color: var(--gengar) !important;
+    color: white !important;
+    transition: 0.5s;
+}
+
 .btn-flareon-classic {
     background-color: var(--flareon) !important;
     color: white !important;
@@ -795,6 +802,10 @@ body::-webkit-scrollbar {
 
 .btn-pikachu-classic:hover {
     background-color: var(--pikachu-escuro) !important;
+}
+
+.btn-gengar-classic:hover {
+    background-color: var(--gengar-escuro) !important;
 }
 
 .btn-flareon-classic:hover {

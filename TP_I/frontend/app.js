@@ -36,6 +36,9 @@ function gerarModalPokemon() {
     const button = document.querySelectorAll('.card');
     button.forEach(element => {
         let click = function () {
+            const deleteButton = document.querySelector('#delete');
+            deleteButton.hidden = false;
+
             // Obtém a posição atual da barra de rolagem
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
