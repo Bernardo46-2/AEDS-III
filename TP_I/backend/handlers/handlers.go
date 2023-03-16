@@ -29,7 +29,7 @@ func GetAllPokemon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJson(w, pokemon)
-	logger.Println("GET", "Id de numero "+strconv.Itoa(int(pokemon[0].Numero))+" ate "+strconv.Itoa(int(pokemon[len(pokemon)].Numero)))
+	logger.Println("GET", "Id de numero "+strconv.Itoa(int(pokemon[0].Numero))+" ate "+strconv.Itoa(int(pokemon[len(pokemon)-1].Numero)))
 }
 
 // GetPokemon recupera o pokemon pelo ID fornecido
