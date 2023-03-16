@@ -1,3 +1,6 @@
+// O arquivo csvManager do pacote dataManager realiza a população inicial do
+// arquivo binario, fazendo a conversao de um csv cru em dados tratados.
+// E também caso necessario faz a repopulação do binario
 package dataManager
 
 import (
@@ -79,11 +82,6 @@ func (csv *CSV) CsvToBin() {
 
 // removeDuplicates remove Pokémons duplicados de uma slice dada com base no campo especificado.
 // A função retorna uma nova slice com os elementos não duplicados.
-//
-// s: slice de Pokémons a serem removidos os duplicados
-// field: string representando o campo para comparar valores
-//
-// Retorna uma nova slice com os elementos não duplicados
 func removeDuplicates(s []models.Pokemon, field string) []models.Pokemon {
 	// Cria um mapa para armazenar os valores únicos do campo
 	keys := make(map[interface{}]bool)

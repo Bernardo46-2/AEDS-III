@@ -88,7 +88,7 @@ SelecaoPorSubstituicao.onclick = () => {
 const showAll = document.getElementById('All');
 
 showAll.onclick = () => {
-    fetch('http://localhost:8080/getAll/?page=0')
+    fetch('http://localhost:8080/getAll/?id=0')
         .then(response => response.json())
         .then(data => adicionarCards(data))
         .catch(error => {
@@ -98,7 +98,7 @@ showAll.onclick = () => {
 }
 
 window.onload = function () {
-    fetch('http://localhost:8080/getAll/?page=0')
+    fetch('http://localhost:8080/getAll/?id=0')
         .then(response => response.json())
         .then(data => adicionarCards(data))
         .catch(error => {
@@ -130,6 +130,7 @@ const classes = {
 };
 
 function adicionarCards(data) {
+    console.log(data)
     const cardsHtml = document.getElementById('cards');
     let content = `<button type="button" class="btn btn-Psyduck">Mostrar Mais</button>`;
     cardsHtml.innerHTML = "";

@@ -1,13 +1,25 @@
+// O arquivo Responses do pacote Models permite a criação de uma estrutura de
+// erro ou sucesso para comunicação agil e efetiva com o servidor.
+// Uma mesma estrutura é utilizada para as duas respostas
+// E diferentes funções de parsing de erro para mensagem são feitas
+// de acordo com a necessidade de cada situação.
+//
+// Além disso, também permite a definição de códigos de status personalizados,
+// bem como a adição de dados extras à resposta.
 package models
 
 import "net/http"
 
+// Response gera um padrão de resposta para o frontend
+// contendo um bool para dizer se é sucesso ou erro
+// codigo da mensagem e a mensagem
 type Response struct {
 	Success bool   `json:"sucesso"`
 	Code    int    `json:"codigo"`
 	Message string `json:"mensagem"`
 }
 
+// ErrorResponse faz o parse do codigo do erro em sua respectiva mensagem
 func ErrorResponse(codigo int) Response {
 	var msg string
 
@@ -49,6 +61,7 @@ func ErrorResponse(codigo int) Response {
 	return Response{Success: false, Code: codigo, Message: msg}
 }
 
+// ErrorResponse faz o parse do codigo de sucesso em sua respectiva mensagem
 func SuccessResponse(codigo int) Response {
 	var msg string
 

@@ -49,12 +49,13 @@ func divideArquivoEmBlocosVariaveis(caminhoEntrada string, tamanhoBloco int64, d
 	// Inicializa variaveis
 	arquivosTemp := []string{}
 	lastPoke := models.Pokemon{}
+	os.Mkdir(dirTemp, 0755)
 
-	// Repete enquanto existir espaço no bloco
+	// Recupera os registros e salva em blocos
 	for i, j := 0, 0; j < numRegistros; i++ {
 		pokeSlice := []models.Pokemon{}
-
 		tamBlocoAtual := int64(0)
+
 		for j < numRegistros {
 			// Seta o ponteiro do arquivo
 			inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
@@ -77,7 +78,7 @@ func divideArquivoEmBlocosVariaveis(caminhoEntrada string, tamanhoBloco int64, d
 					j++
 				}
 			} else {
-				// Caso tenha lapide faz uma leitura fazia para pular o registro
+				// Caso tenha lapide faz uma leitura vazia para pular o registro
 				readRegistro(file, inicioRegistro)
 				j++
 			}

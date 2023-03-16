@@ -1,3 +1,9 @@
+// O pacote utils contém uma série de funções utilitárias para ajudar no
+// desenvolvimento do software. As funções incluem conversão de tipos de
+// dados, manipulação de bytes e strings, entre outras.
+// Essas funções foram criadas para melhorar a eficiência e legibilidade
+// do código, além de fornecer soluções para problemas comuns encontrados
+// no desenvolvimento.
 package utils
 
 import (
@@ -10,16 +16,22 @@ import (
 	"time"
 )
 
+// Atoi32 converte uma string em um int32 e retorna o resultado
+// e um erro, se houver algum problema na conversão.
 func Atoi32(s string) (int32, error) {
 	i, err := strconv.Atoi(s)
 	return int32(i), err
 }
 
+// IntToBytes converte um número int32 em uma slice de bytes
+// usando a ordem Little Endian e retorna a slice resultante.
 func IntToBytes(n int32) []byte {
 	var buf []byte
 	return binary.LittleEndian.AppendUint32(buf, uint32(n))
 }
 
+// FloatToBytes converte um número float32 em uma slice de bytes
+// usando a ordem Little Endian e retorna a slice resultante.
 func FloatToBytes(f float32) []byte {
 	b := make([]byte, 4)
 	bits := math.Float32bits(f)
@@ -28,19 +40,24 @@ func FloatToBytes(f float32) []byte {
 	return b
 }
 
+// RemoveAfterSpace remove tudo depois do primeiro espaço em branco
+// encontrado na string e retorna o resultado.
 func RemoveAfterSpace(str string) string {
 	parts := strings.Split(str, " ")
 	return parts[0]
 }
 
+// BytesToVarSize retorna o tamanho de um campo de tamanho variável e avança o ponteiro
 func BytesToVarSize(registro []byte, ptr int) (int, int) {
 	return int(binary.LittleEndian.Uint32(registro[ptr : ptr+4])), ptr + 4
 }
 
+// BytesToInt32 retorna um inteiro de 32 bits e avança o ponteiro ptr
 func BytesToInt32(registro []byte, ptr int) (int32, int) {
 	return int32(binary.LittleEndian.Uint32(registro[ptr : ptr+4])), ptr + 4
 }
 
+// BytesToString retorna uma string de tamanho variável e avança o ponteiro ptr
 func BytesToString(registro []byte, ptr int) (string, int) {
 	size, ptr := BytesToVarSize(registro, ptr)
 	nomeBytes := make([]byte, size)
@@ -48,12 +65,15 @@ func BytesToString(registro []byte, ptr int) (string, int) {
 	return strings.TrimSpace(string(nomeBytes)), ptr + size
 }
 
+// BytesToFixedSizeString retorna uma string de tamanho fixo e avança o ponteiro ptr
 func BytesToFixedSizeString(registro []byte, ptr int, maxSize int) (string, int) {
 	nome := make([]byte, maxSize)
 	io.ReadFull(bytes.NewReader(registro[ptr:ptr+maxSize]), nome)
 	return strings.TrimRight(string(nome), "\x00"), ptr + maxSize
 }
 
+// BytesToArrayString recebe um registro contendo strings tabuladas em virgula
+// e retorna um array de strings e avança o ponteiro ptr
 func BytesToArrayString(registro []byte, ptr int) ([]string, int) {
 	size, ptr := BytesToVarSize(registro, ptr)
 	stringBytes := make([]byte, size)
@@ -62,6 +82,8 @@ func BytesToArrayString(registro []byte, ptr int) ([]string, int) {
 	return strings.Split(s, ","), ptr + size
 }
 
+// BytesToJapName retorna uma string de tamanho variavel escrita em caracteres japoneses
+// (4 bytes) e avança o ponteiro ptr
 func BytesToJapName(registro []byte, ptr int) (string, int) {
 	size, ptr := BytesToVarSize(registro, ptr)
 
@@ -77,6 +99,8 @@ func BytesToJapName(registro []byte, ptr int) (string, int) {
 	return string(japNameRunes), ptr
 }
 
+// BytesToTime converte um slice de bytes contendo uma representação binária de um valor de tempo
+// para um valor do tipo time.Time e move o ponteiro ptr
 func BytesToTime(registro []byte, ptr int) (time.Time, int) {
 	size, ptr := BytesToVarSize(registro, ptr)
 	b := make([]byte, size)
@@ -86,6 +110,8 @@ func BytesToTime(registro []byte, ptr int) (time.Time, int) {
 	return t, ptr + size
 }
 
+// BytesToBool converte um slice de bytes contendo uma representação binária de um valor booleano
+// para um valor do tipo bool e move o ponteiro ptr
 func BytesToBool(registro []byte, ptr int) (bool, int) {
 	if registro[ptr] != 0 {
 		return true, ptr + 1
@@ -94,6 +120,8 @@ func BytesToBool(registro []byte, ptr int) (bool, int) {
 	}
 }
 
+// BytesToFloat32 converte um slice de bytes contendo uma representação binária de um valor float32
+// para um valor do tipo float32 e move o ponteiro ptr
 func BytesToFloat32(registro []byte, ptr int) (float32, int) {
 	size := 4
 	bits := binary.LittleEndian.Uint32(registro[ptr : ptr+size])

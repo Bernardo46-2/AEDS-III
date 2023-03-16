@@ -1,3 +1,6 @@
+// o arquivo Japones do pacote Utils permite a conversão de palavras em alfabeto
+// romanico em tradução literal para o sistema de simbolos estrangeiros usado no japao
+// conhecido como 'katakana'
 package utils
 
 import (
@@ -255,6 +258,7 @@ var postKanaSpecial = strings.NewReplacer(
 	"'", "", // strip out single quotes used to designated moriac n's.
 )
 
+// removeNonJapaneseChards remove todos os caracteres não asiaticos de uma string
 func removeNonJapaneseChars(s string) string {
 	var result []rune
 	for _, r := range s {

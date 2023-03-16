@@ -37,6 +37,7 @@ func IntercalacaoPorSubstituicao() {
 	// Criar os arquivos temporários
 	arquivosTemp := []string{}
 	pokeHeap := make([]heapNode, 7)
+	os.Mkdir(TMP_DIR_PATH, 0755)
 
 	for i := 0; i < 7 && i < numRegistros; {
 		inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
@@ -52,7 +53,6 @@ func IntercalacaoPorSubstituicao() {
 	caminhoTemp := filepath.Join(TMP_DIR_PATH, "temp_0.bin")
 	arquivosTemp = append(arquivosTemp, caminhoTemp)
 	arquivoTemp, _ := os.Create(caminhoTemp)
-	inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
 
 	// Reserva o espaço de contagem de registros
 	binary.Write(arquivoTemp, binary.LittleEndian, utils.IntToBytes(int32(0)))
@@ -61,7 +61,7 @@ func IntercalacaoPorSubstituicao() {
 	peso := 0
 	for i := 0; i < (numRegistros - 7); i++ {
 		// Guarda a posicao de inicio do registro e verifica sua lapide
-		inicioRegistro, _ = file.Seek(0, io.SeekCurrent)
+		inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
 		_, lapide, _ := tamanhoProxRegistro(file, inicioRegistro)
 		file.Seek(-8, io.SeekCurrent)
 

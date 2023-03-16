@@ -1,3 +1,6 @@
+// O arquivo binManager do pacote dataManager realiza o tratamento do arquivo binario
+// Recebe as requisiçoes a partir do pacote Crud e termina recuperando ou editando
+// os registros binarios necessarios.
 package dataManager
 
 import (
@@ -117,7 +120,7 @@ func NumRegistros() (numEntradas int, inicioRegistros int64, err error) {
 
 	// Lê o número de entradas no arquivo
 	var numEntradas32 int32
-	if err = binary.Read(file, binary.LittleEndian, &numEntradas); err != nil {
+	if err = binary.Read(file, binary.LittleEndian, &numEntradas32); err != nil {
 		inicioRegistros, _ := file.Seek(0, io.SeekCurrent)
 		return 0, inicioRegistros, fmt.Errorf("erro ao ler número de entradas: %v Linha Corrompida: 0", err)
 	}

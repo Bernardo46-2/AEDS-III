@@ -47,8 +47,9 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 
 	// Criar os arquivos temporários
 	arquivosTemp := []string{}
+	os.Mkdir(dirTemp, 0755)
 
-	// Itera enquanto houver registro
+	// Recupera os registros e os salva em blocos
 	for i, j := 0, 0; j < numRegistros; i++ {
 		// Cria o path com o caminho especificado e salva em variavel
 		caminhoTemp := filepath.Join(dirTemp, fmt.Sprintf("temp_%d.bin", i))
@@ -154,13 +155,13 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 	pokemon2 := models.Pokemon{}
 
 	// Abre os dois arquivos para leitura
-	file1, err := os.Open(arquivo1)
-	file2, err := os.Open(arquivo2)
+	file1, _ := os.Open(arquivo1)
+	file2, _ := os.Open(arquivo2)
 	defer file1.Close()
 	defer file2.Close()
 
 	// Cria um novo arquivo temporário para escrita
-	novoArquivo, err := os.Create("data/tmp/tmp.bin")
+	novoArquivo, _ := os.Create("data/tmp/tmp.bin")
 	defer novoArquivo.Close()
 
 	// Lê a primeira linha contendo o tamanho de cada arquivo
@@ -183,8 +184,8 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 		ponteiro2, _ := file2.Seek(0, io.SeekCurrent)
 
 		// Lê os registros
-		pokemon1, _, err = readRegistro(file1, ponteiro1)
-		pokemon2, _, err = readRegistro(file2, ponteiro2)
+		pokemon1, _, _ = readRegistro(file1, ponteiro1)
+		pokemon2, _, _ = readRegistro(file2, ponteiro2)
 
 		// Insere o menor ID primeiro
 		if pokemon1.Numero < pokemon2.Numero {

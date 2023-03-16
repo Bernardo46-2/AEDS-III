@@ -1,3 +1,6 @@
+// O arquivo Pokemon do pacote Models permite a criação de uma estrutura pokemon
+// tao como a manipulação de seus dados em diferentes niveis e maneiras.
+// Seja para binario, json, string ou o contrario
 package models
 
 import (
@@ -12,10 +15,15 @@ import (
 
 const MAX_NAME_LEN = 40
 
+// PokemonID faz a formatação do ID para serialização em JSON
 type PokemonID struct {
 	ID int `json:"id"`
 }
 
+// Pokemon representa um Pokémon e seus atributos, como número, nome,
+// espécie, habilidades e características físicas.
+//
+// Todos os dados sao serializaveis com exceção de Size
 type Pokemon struct {
 	Numero     int32     `json:"numero"`
 	Nome       string    `json:"nome,omitempty"`
@@ -34,6 +42,8 @@ type Pokemon struct {
 	Size       PokeSize  `json:"-"`
 }
 
+// PokeSize faz a intermediação para geração de um array de bytes ligado ao
+// tamanho de cada variavel para armazenamento em arquivo binario
 type PokeSize struct {
 	Total      int32
 	Numero     int32
@@ -52,6 +62,7 @@ type PokeSize struct {
 	Peso       int32
 }
 
+// GenReleaseDates é um mapa para facil conversão de geração em data de lançamento
 var GenReleaseDates = map[int]string{
 	1: "1996/02/27",
 	2: "1999/11/21",
@@ -64,6 +75,7 @@ var GenReleaseDates = map[int]string{
 	9: "2022/11/18",
 }
 
+// ToString faz o parsing da struct em formato legivel para debug
 func (p *Pokemon) ToString() string {
 	str := ""
 
@@ -85,12 +97,21 @@ func (p *Pokemon) ToString() string {
 	return str
 }
 
+// copyBytes é uma função que copia os bytes do slice de origem (src)
+// para o slice de destino (dest) a partir do deslocamento especificado (offset).
+// Retorna o slice de destino atualizado e o novo deslocamento atualizado.
 func copyBytes(dest []byte, src []byte, offset int) ([]byte, int) {
 	copy(dest[offset:], src)
 	return dest, offset + len(src)
 }
 
+// ToBytes realiza a serialização em array binario da struct Pokemon
+//
+// O primeiro valor é o tamanho do registro
+// O tamanho dos valores variaveis como strings sao armazenados antes do valor em si
+// O padrão utilizado é int32 para otimizar espaço
 func (p *Pokemon) ToBytes() []byte {
+	// Inicializa dados
 	pokeBytes := make([]byte, p.Size.Total+4)
 	var lendario, mitico []byte
 	offset := 0
@@ -108,6 +129,7 @@ func (p *Pokemon) ToBytes() []byte {
 		mitico = []byte{0}
 	}
 
+	// serialização da data
 	releaseDate, _ := p.Lancamento.MarshalBinary()
 	filler := make([]byte, p.Size.Nome-int32(len(p.Nome)))
 	runes := []rune(p.NomeJap)
@@ -117,6 +139,7 @@ func (p *Pokemon) ToBytes() []byte {
 		binary.LittleEndian.PutUint32(japName[i*4:(i+1)*4], uint32(v))
 	}
 
+	// Longo e chato processo de conversao de tamanho da variavel + variavel
 	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(int32(valid)), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Size.Total), offset)
 
@@ -155,7 +178,10 @@ func (p *Pokemon) ToBytes() []byte {
 	return pokeBytes
 }
 
+// ParseBinToPoke faz a desserialização do arquivo binario e retorna um
+// struct do tipo Pokemon
 func (p *Pokemon) ParseBinToPoke(registro []byte) error {
+	// ptr serve para andar pelo registro de maneira incremental
 	ptr := 0
 
 	p.Numero, ptr = utils.BytesToInt32(registro, ptr)
@@ -177,6 +203,8 @@ func (p *Pokemon) ParseBinToPoke(registro []byte) error {
 	return nil
 }
 
+// ParsePokemon recebe um array de strings vindo do CSV e faz a conversao
+// para a struct
 func ParsePokemon(line []string) Pokemon {
 	var pokemon Pokemon
 
@@ -207,7 +235,11 @@ func ParsePokemon(line []string) Pokemon {
 	return pokemon
 }
 
+// CalculateSize adiciona ao campo nao serializavel SIZE da struct Pokemon
+// o somatorio do tamanho em byte de todos os campos + features necessarias
+// para a serialização em binario
 func (p *Pokemon) CalculateSize() {
+	// Calcula os tamanhos
 	p.Size.Numero = int32(unsafe.Sizeof(p.Numero))
 	p.Size.Nome = MAX_NAME_LEN
 	p.Size.NomeJap = int32(len(p.NomeJap) / 3 * 4)
@@ -232,6 +264,7 @@ func (p *Pokemon) CalculateSize() {
 	p.Size.Altura = int32(unsafe.Sizeof(p.Altura))
 	p.Size.Peso = int32(unsafe.Sizeof(p.Peso))
 
+	// Soma e adiciona o espaço ocupado pelo bit de tamanho
 	p.Size.Total = p.Size.Numero + 4 +
 		MAX_NAME_LEN +
 		p.Size.NomeJap + 4 +
