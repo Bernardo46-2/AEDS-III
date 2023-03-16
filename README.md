@@ -7,7 +7,7 @@ Trabalho desenvolvido ao longo da disciplina de AED's III do curso de Bacharelad
 * Marcos Antonio Lommez
 
 ## Descrição do Projeto
-O objetivo do projeto é criar um banco de dados em arquivo binario, utilizando tecnicas de manipulação, ordenação e busca de dados.
+O objetivo do projeto é criar um banco de dados em arquivo binario, utilizando tecnicas de busca de dados, manipulação, ordenação e endereçamento.
 
 ## Funcionalidades
 O banco de dados suporta as seguintes funcionalidades:
