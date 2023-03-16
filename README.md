@@ -29,6 +29,3 @@ Em seguida, é possível executar o programa abrindo o arquivo *index.html* na p
 
 ## Contribuição
 Esse projeto foi desenvolvido como trabalho de faculdade e não está aberto a contribuições externas. No entanto, sinta-se livre para utilizar o código como referência ou para fins educacionais.
-
-## Licença
-Este projeto está licenciado sob a licença MIT. Consulte o arquivo LICENSE para obter mais informações.
