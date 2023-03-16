@@ -108,41 +108,37 @@ window.onload = function () {
 };
 
 const classes = {
-    'pikachu': 'bgd-pikachu',
-    'charmander': 'bgd-charmander',
-    'squirtle': 'bgd-squirtle',
-    'eevee': 'bgd-eevee',
-    'gengar': 'bgd-gengar',
-    'jigglypuff': 'bgd-jigglypuff',
-    'psyduck': 'bgd-psyduck',
-    'magikarp': 'bgd-magikarp',
-    'abra': 'bgd-abra',
-    'machop': 'bgd-machop',
-    'geodude': 'bgd-geodude',
-    'jolteon': 'bgd-jolteon',
-    'vaporeon': 'bgd-vaporeon',
-    'flareon': 'bgd-flareon',
-    'dragonair': 'bgd-dragonair',
-    'zapdos': 'bgd-zapdos',
-    'meowth': 'bgd-meowth',
-    'minum': 'bgd-minum',
-    'quilava': 'bgd-quilava'
+    'Normal': 'bgd-Normal',
+    'Fire': 'bgd-Fire',
+    'Water': 'bgd-Water',
+    'Electric': 'bgd-Electric',
+    'Grass': 'bgd-Grass',
+    'Ice': 'bgd-Ice',
+    'Fighting': 'bgd-Fighting',
+    'Poison': 'bgd-Poison',
+    'Ground': 'bgd-Ground',
+    'Flying': 'bgd-Flying',
+    'Psychic': 'bgd-Psychic',
+    'Bug': 'bgd-Bug',
+    'Rock': 'bgd-Rock',
+    'Ghost': 'bgd-Ghost',
+    'Dragon': 'bgd-Dragon',
+    'Dark': 'bgd-Dark',
+    'Steel': 'bgd-Steel',
+    'Fairy': 'bgd-Fairy'
 };
 
 function adicionarCards(data) {
     console.log(data)
     const cardsHtml = document.getElementById('cards');
-    let content = `<button type="button" class="btn btn-Psyduck">Mostrar Mais</button>`;
     cardsHtml.innerHTML = "";
     for (let i = 0; i < data.length; i++) {
         let nome = data[i].nome.toLowerCase();
 
-
-        let bgd = classes[nome] ?? classes[Object.keys(classes)[Math.floor(Math.random() * 18)]];
-        let imagem = (classes[nome] === undefined) ? "pokebola" : nome;
+        let bgd = classes && classes[data[i].tipo[0]] ? classes[data[i].tipo[0]] : classes['Normal'];
         let pokemonCard = `
         <div class="card ${bgd} ${bgd}-shadow col-sm-6 col-lg-3 col-xxl-2" data-bs-toggle="modal" data-bs-target="#modalPage" id="${data[i].numero}">
-        <img class="card-img-top" src="imagens/${imagem}.png" alt="${nome}">
+        <img class="card-img-top" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data[i].numero}.png" alt="${nome}">
         <h5 class="card-title text-center">${capt(nome)}</h5>
         <p class="poke-id">#${data[i].numero}</p>
         </div>
@@ -150,8 +146,44 @@ function adicionarCards(data) {
 
         cardsHtml.innerHTML += pokemonCard;
     }
-    cardsHtml.innerHTML += content;
+
+    fetch('http://localhost:8080/getPagesNumber/')
+    .then(response => response.json())
+    .then(data => {
+        const numPaginas = parseInt(data);
+        const novaDiv = document.createElement('div');
+        novaDiv.classList.add('justify-content-center');
+        /* cardsHtml.innerHTML += `<div class="row justify-content-center">`;*/
+        for (let index = 0; index < numPaginas; index++) {
+            const novoElemento = document.createElement('button');
+            novoElemento.type = 'button';
+            novoElemento.classList.add('btn');
+            novoElemento.classList.add('btn-Psyduck-mostrarMais');
+            novoElemento.id = 'mostrarMais'+index;
+            novoElemento.innerHTML = index;
+            novaDiv.appendChild(novoElemento);
+        }
+        cardsHtml.appendChild(novaDiv);
+    })
+    .catch(error => {
+        modalAviso();
+        console.log(error)
+    });
+
+
     gerarModalPokemon();
+
+/*     const mostrarMais = document.getElementById('mostrarMais');
+    mostrarMais.onclick = () => {
+        fetch(`http://localhost:8080/getAll/?id=${data[data.length-1].numero}`)
+            .then(response => response.json())
+            .then(data => adicionarCards(data))
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    }; */
+
 }
 
 /*  * * * * * * * * * * * * *
@@ -626,11 +658,21 @@ function abrirModal(pokemon = "pokebola", editar = false, data) {
         imagem = pokemon;
     }
 
-    let pokemonCard = `
-    <div class="card ${bgdClass} col-sm-6 col-lg-3 col-xxl-2" data-bs-toggle="modal" data-bs-target="#modalPage" id="novaDiv">
-    <img class="card-img-top" src="imagens/${imagem}.png" alt="pokeball">
-    </div>
-    `;
+    let bgd = classes && classes[data.tipo[0]] ? classes[data.tipo[0]] : classes['Normal'];
+    let pokemonCard
+    if (pokemon === "pokebola") {
+        pokemonCard = `
+        <div class="card ${bgd} col-sm-6 col-lg-3 col-xxl-2" data-bs-toggle="modal" data-bs-target="#modalPage" id="novaDiv">
+        <img class="card-img-top" src="imagens/${imagem}.png" alt="pokeball">
+        </div>
+        `;
+    } else {
+        pokemonCard = `
+        <div class="card ${bgd} col-sm-6 col-lg-3 col-xxl-2" data-bs-toggle="modal" data-bs-target="#modalPage" id="novaDiv">
+        <img class="card-img-top" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data.numero}.png" alt="${data.nome}">
+        </div>
+        `;
+    }
 
     novaDiv.innerHTML = pokemonCard;
     let novoPokemon = novaDiv.querySelector('#novaDiv');

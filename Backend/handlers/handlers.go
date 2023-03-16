@@ -16,6 +16,20 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
+// GetPagesNumber retorna a quantidade de paginas disponiveis
+func GetPagesNumber(w http.ResponseWriter, r *http.Request) {
+	// Recuperar ID e ler arquivo
+	numeroPaginas, err := crud.ReadPagesNumber()
+
+	// Resposta
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, 2)
+		return
+	}
+
+	writeJson(w, numeroPaginas)
+}
+
 // GetAllPokemon recupera os 60 pokemons a partir do ID fornecido
 func GetAllPokemon(w http.ResponseWriter, r *http.Request) {
 	// Recuperar ID e ler arquivo

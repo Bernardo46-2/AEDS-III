@@ -705,75 +705,165 @@ body::-webkit-scrollbar {
 }
 
 .bgd-Normal {
-    background-color: var(--Normal);
+    background-color: var(--Normal) !important;
+}
+
+.bgd-Normal-shadow {
+    box-shadow: 0 0 30px 10px var(--Normal);
+    transition: 1s;
 }
 
 .bgd-Fire {
-    background-color: var(--Fire);
+    background-color: var(--Fire) !important;
+}
+
+.bgd-Fire-shadow {
+    box-shadow: 0 0 30px 10px var(--Fire);
+    transition: 1s;
 }
 
 .bgd-Water {
-    background-color: var(--Water);
+    background-color: var(--Water) !important;
+}
+
+.bgd-Water-shadow {
+    box-shadow: 0 0 30px 10px var(--Water);
+    transition: 1s;
 }
 
 .bgd-Electric {
-    background-color: var(--Electric);
+    background-color: var(--Electric) !important;
+}
+
+.bgd-Electric-shadow {
+    box-shadow: 0 0 30px 10px var(--Electric);
+    transition: 1s;
 }
 
 .bgd-Grass {
-    background-color: var(--Grass);
+    background-color: var(--Grass) !important;
+}
+
+.bgd-Grass-shadow {
+    box-shadow: 0 0 30px 10px var(--Grass);
+    transition: 1s;
 }
 
 .bgd-Ice {
-    background-color: var(--Ice);
+    background-color: var(--Ice) !important;
+}
+
+.bgd-Ice-shadow {
+    box-shadow: 0 0 30px 10px var(--Ice);
+    transition: 1s;
 }
 
 .bgd-Fighting {
-    background-color: var(--Fighting);
+    background-color: var(--Fighting) !important;
+}
+
+.bgd-Fighting-shadow {
+    box-shadow: 0 0 30px 10px var(--Fighting);
+    transition: 1s;
 }
 
 .bgd-Poison {
-    background-color: var(--Poison);
+    background-color: var(--Poison) !important;
+}
+
+.bgd-Poison-shadow {
+    box-shadow: 0 0 30px 10px var(--Poison);
+    transition: 1s;
 }
 
 .bgd-Ground {
-    background-color: var(--Ground);
+    background-color: var(--Ground) !important;
+}
+
+.bgd-Ground-shadow {
+    box-shadow: 0 0 30px 10px var(--Ground);
+    transition: 1s;
 }
 
 .bgd-Flying {
-    background-color: var(--Flying);
+    background-color: var(--Flying) !important;
+}
+
+.bgd-Flying-shadow {
+    box-shadow: 0 0 30px 10px var(--Flying);
+    transition: 1s;
 }
 
 .bgd-Psychic {
-    background-color: var(--Psychic);
+    background-color: var(--Psychic) !important;
+}
+
+.bgd-Psychic-shadow {
+    box-shadow: 0 0 30px 10px var(--Psychic);
+    transition: 1s;
 }
 
 .bgd-Bug {
-    background-color: var(--Bug);
+    background-color: var(--Bug) !important;
+}
+
+.bgd-Bug-shadow {
+    box-shadow: 0 0 30px 10px var(--Bug);
+    transition: 1s;
 }
 
 .bgd-Rock {
-    background-color: var(--Rock);
+    background-color: var(--Rock) !important;
+}
+
+.bgd-Rock-shadow {
+    box-shadow: 0 0 30px 10px var(--Rock);
+    transition: 1s;
 }
 
 .bgd-Ghost {
-    background-color: var(--Ghost);
+    background-color: var(--Ghost) !important;
+}
+
+.bgd-Ghost-shadow {
+    box-shadow: 0 0 30px 10px var(--Ghost);
+    transition: 1s;
 }
 
 .bgd-Dragon {
-    background-color: var(--Dragon);
+    background-color: var(--Dragon) !important;
+}
+
+.bgd-Dragon-shadow {
+    box-shadow: 0 0 30px 10px var(--Dragon);
+    transition: 1s;
 }
 
 .bgd-Dark {
-    background-color: var(--Dark);
+    background-color: var(--Dark) !important;
+}
+
+.bgd-Dark-shadow {
+    box-shadow: 0 0 30px 10px var(--Dark);
+    transition: 1s;
 }
 
 .bgd-Steel {
-    background-color: var(--Steel);
+    background-color: var(--Steel) !important;
+}
+
+.bgd-Steel-shadow {
+    box-shadow: 0 0 30px 10px var(--Steel);
+    transition: 1s;
 }
 
 .bgd-Fairy {
-    background-color: var(--Fairy);
+    background-color: var(--Fairy) !important;
+}
+
+.bgd-Fairy-shadow {
+    box-shadow: 0 0 30px 10px var(--Fairy);
+    transition: 1s;
 }
 
 .btn-pikachu-classic {
@@ -1126,6 +1216,24 @@ body::-webkit-scrollbar {
 
 .btn-Psyduck:hover,
 .btn-Psyduck:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--psyduck) !important;
+    box-shadow: 0 0 10px var(--psyduck-transparent),
+        0 0 40px var(--psyduck-transparent), 0 0 80px var(--psyduck-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Psyduck-mostrarMais {
+    width: 60px !important;
+    height: 60px !important;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+    color: var(--psyduck) !important;
+    border: 1px solid var(--psyduck-transparent) !important;
+}
+
+.btn-Psyduck-mostrarMais:hover,
+.btn-Psyduck-mostrarMais:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--psyduck) !important;
     box-shadow: 0 0 10px var(--psyduck-transparent),

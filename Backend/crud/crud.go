@@ -4,6 +4,8 @@
 package crud
 
 import (
+	"math"
+
 	"github.com/Bernardo46-2/AEDS-III/dataManager"
 	"github.com/Bernardo46-2/AEDS-III/models"
 )
@@ -33,15 +35,27 @@ func Read(id int) (models.Pokemon, error) {
 	return pokemon, err
 }
 
+// ReadPagesNumber retorna o numero de paginas disponiveis para a
+// exibiçao dos pokemons na tela inicial do site, como um menu
+// de navegação entre paginas
+func ReadPagesNumber() (numeroPaginas int, err error) {
+	// Recuperação do numero de registros totais
+	numRegistros, _, _ := dataManager.NumRegistros()
+
+	// calcula e retorna o total
+	numeroPaginas = int(math.Ceil((float64(numRegistros) / float64(60))))
+	return
+}
+
 // ReadAll retorna um slice de modelos Pokemon a partir de um ID especificado.
-// Se houver a função lê até 60 registros a partir do ID fornecido e adiciona
+// Se houver a função lê até 40 registros a partir do ID fornecido e adiciona
 // a um slice de Pokemon, retornando o slice e um erro, se houver.
 func ReadAll(id int) (pokemon []models.Pokemon, err error) {
 	// Recuperação do numero de registros totais
 	numRegistros, _, _ := dataManager.NumRegistros()
 
-	// Recupera 60 ids enquanto houverem
-	for i, total := id+1, 0; total < 60 && i < numRegistros; i++ {
+	// Recupera 40 ids enquanto houverem
+	for i, total := id+1, 0; total < 40 && i < numRegistros; i++ {
 		tmp, _, _ := dataManager.ReadBinToPoke(i)
 		if tmp.Numero > 0 {
 			pokemon = append(pokemon, tmp)

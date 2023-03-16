@@ -21,6 +21,7 @@ func main() {
 	logger.LigarServidor()
 
 	// Handlers para metodos de CRUD
+	http.HandleFunc("/getPagesNumber/", middlewares.EnableCORS(handlers.GetPagesNumber))
 	http.HandleFunc("/getAll/", middlewares.EnableCORS(handlers.GetAllPokemon))
 	http.HandleFunc("/get/", middlewares.EnableCORS(handlers.GetPokemon))
 	http.HandleFunc("/post/", middlewares.EnableCORS(handlers.PostPokemon))
