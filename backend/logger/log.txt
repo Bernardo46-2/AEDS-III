@@ -8,3 +8,12 @@ STATUS: 2023/03/16 06:03:07 Servidor desligado
 STATUS: 2023/03/16 06:03:11 Servidor iniciado
 GET: 2023/03/16 06:03:16 Id de numero 1 ate 60
 STATUS: 2023/03/16 06:03:51 Servidor desligado
+STATUS: 2023/03/16 09:27:54 Servidor iniciado
+GET: 2023/03/16 09:28:01 Id de numero 1 ate 60
+INFO: 2023/03/16 09:28:04 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/16 09:28:04 Id de numero 1 ate 60
+GET: 2023/03/16 09:28:07 Id de numero 1 ate 60
+GET: 2023/03/16 09:30:26 Id de numero 25
+INFO: 2023/03/16 09:31:16 Database Recarregada
+GET: 2023/03/16 09:31:16 Id de numero 1 ate 60
+STATUS: 2023/03/16 09:32:38 Servidor desligado
