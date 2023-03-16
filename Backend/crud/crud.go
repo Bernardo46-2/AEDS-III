@@ -48,14 +48,16 @@ func ReadPagesNumber() (numeroPaginas int, err error) {
 }
 
 // ReadAll retorna um slice de modelos Pokemon a partir de um ID especificado.
-// Se houver a função lê até 40 registros a partir do ID fornecido e adiciona
+// Se houver a função lê até 60 registros a partir do ID fornecido e adiciona
 // a um slice de Pokemon, retornando o slice e um erro, se houver.
-func ReadAll(id int) (pokemon []models.Pokemon, err error) {
+func ReadAll(page int) (pokemon []models.Pokemon, err error) {
+	atual := page * 60
+
 	// Recuperação do numero de registros totais
 	numRegistros, _, _ := dataManager.NumRegistros()
 
-	// Recupera 40 ids enquanto houverem
-	for i, total := id+1, 0; total < 40 && i < numRegistros; i++ {
+	// Recupera 60 ids enquanto houverem
+	for i, total := atual+1, 0; total < 60 && i <= numRegistros; i++ {
 		tmp, _, _ := dataManager.ReadBinToPoke(i)
 		if tmp.Numero > 0 {
 			pokemon = append(pokemon, tmp)

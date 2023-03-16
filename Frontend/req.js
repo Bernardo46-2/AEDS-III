@@ -152,6 +152,7 @@ function adicionarCards(data) {
     .then(data => {
         const numPaginas = parseInt(data);
         const novaDiv = document.createElement('div');
+        novaDiv.classList.add('row');
         novaDiv.classList.add('justify-content-center');
         /* cardsHtml.innerHTML += `<div class="row justify-content-center">`;*/
         for (let index = 0; index < numPaginas; index++) {
@@ -162,6 +163,15 @@ function adicionarCards(data) {
             novoElemento.id = 'mostrarMais'+index;
             novoElemento.innerHTML = index;
             novaDiv.appendChild(novoElemento);
+            novoElemento.onclick = () => {
+                fetch(`http://localhost:8080/getAll/?page=${index}`)
+                    .then(response => response.json())
+                    .then(data => adicionarCards(data))
+                    .catch(error => {
+                        modalAviso();
+                        console.log(error)
+                    });
+            };
         }
         cardsHtml.appendChild(novaDiv);
     })
@@ -170,20 +180,7 @@ function adicionarCards(data) {
         console.log(error)
     });
 
-
     gerarModalPokemon();
-
-/*     const mostrarMais = document.getElementById('mostrarMais');
-    mostrarMais.onclick = () => {
-        fetch(`http://localhost:8080/getAll/?id=${data[data.length-1].numero}`)
-            .then(response => response.json())
-            .then(data => adicionarCards(data))
-            .catch(error => {
-                modalAviso();
-                console.log(error)
-            });
-    }; */
-
 }
 
 /*  * * * * * * * * * * * * *

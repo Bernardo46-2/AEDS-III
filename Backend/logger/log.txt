@@ -182,3 +182,135 @@ GET: 2023/03/16 12:20:10 Id de numero 1 ate 40
 GET: 2023/03/16 12:20:15 Id de numero 1 ate 40
 GET: 2023/03/16 12:20:33 Id de numero 1 ate 40
 GET: 2023/03/16 12:20:39 Id de numero 1 ate 40
+STATUS: 2023/03/16 13:44:42 Servidor iniciado
+GET: 2023/03/16 13:44:47 Id de numero 1 ate 40
+GET: 2023/03/16 13:44:57 Id de numero 25
+GET: 2023/03/16 13:45:10 Id de numero 17
+PUT: 2023/03/16 13:45:25 Id de numero 17 atualizado
+GET: 2023/03/16 13:45:26 Id de numero 1 ate 40
+GET: 2023/03/16 13:45:28 Id de numero 1 ate 40
+GET: 2023/03/16 13:45:32 Id de numero 800
+POST: 2023/03/16 13:45:46 Id de numero 894 adicionado
+GET: 2023/03/16 13:45:46 Id de numero 1 ate 40
+GET: 2023/03/16 13:45:52 Id de numero 894
+INFO: 2023/03/16 13:46:10 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/16 13:46:10 Id de numero 1 ate 40
+INFO: 2023/03/16 13:46:20 Database Recarregada
+GET: 2023/03/16 13:46:20 Id de numero 1 ate 40
+GET: 2023/03/16 13:46:23 Id de numero 1 ate 40
+GET: 2023/03/16 13:46:35 Id de numero 7
+GET: 2023/03/16 13:47:04 Id de numero 25
+PUT: 2023/03/16 13:47:12 Id de numero 25 atualizado
+GET: 2023/03/16 13:47:12 Id de numero 1 ate 40
+GET: 2023/03/16 13:47:32 Id de numero 6
+GET: 2023/03/16 13:47:59 Id de numero 13
+GET: 2023/03/16 13:48:23 Id de numero 2
+GET: 2023/03/16 14:14:30 Id de numero 34
+GET: 2023/03/16 14:14:38 Id de numero 6
+GET: 2023/03/16 14:28:12 Id de numero 1 ate 40
+GET: 2023/03/16 14:29:09 Id de numero 1 ate 40
+GET: 2023/03/16 14:29:22 Id de numero 1 ate 40
+GET: 2023/03/16 14:30:49 Id de numero 1 ate 40
+GET: 2023/03/16 14:31:09 Id de numero 1 ate 40
+GET: 2023/03/16 14:31:11 Id de numero 1 ate 40
+GET: 2023/03/16 14:31:25 Id de numero 1 ate 40
+GET: 2023/03/16 14:31:54 Id de numero 1 ate 40
+GET: 2023/03/16 14:31:55 Id de numero 1 ate 40
+STATUS: 2023/03/16 14:32:24 Servidor desligado
+STATUS: 2023/03/16 14:35:04 Servidor iniciado
+GET: 2023/03/16 14:35:09 Id de numero 1 ate 60
+GET: 2023/03/16 14:35:13 Id de numero 61 ate 120
+GET: 2023/03/16 14:35:16 Id de numero 301 ate 360
+GET: 2023/03/16 14:35:20 Id de numero 841 ate 890
+GET: 2023/03/16 14:35:27 Id de numero 841 ate 890
+GET: 2023/03/16 14:36:53 Id de numero 1 ate 60
+GET: 2023/03/16 14:36:58 Id de numero 421 ate 480
+GET: 2023/03/16 14:37:19 Id de numero 474
+GET: 2023/03/16 14:38:26 Id de numero 841 ate 890
+GET: 2023/03/16 14:38:47 Id de numero 865
+GET: 2023/03/16 14:38:54 Id de numero 181 ate 240
+GET: 2023/03/16 14:39:33 Id de numero 239
+GET: 2023/03/16 14:39:39 Id de numero 601 ate 660
+GET: 2023/03/16 14:39:44 Id de numero 641
+GET: 2023/03/16 14:39:57 Id de numero 642
+GET: 2023/03/16 14:40:08 Id de numero 615
+GET: 2023/03/16 14:40:18 Id de numero 623
+GET: 2023/03/16 14:40:24 Id de numero 634
+GET: 2023/03/16 14:40:26 Id de numero 635
+GET: 2023/03/16 14:40:31 Id de numero 721 ate 780
+GET: 2023/03/16 14:40:37 Id de numero 772
+GET: 2023/03/16 14:40:47 Id de numero 778
+GET: 2023/03/16 14:40:54 Id de numero 121 ate 180
+GET: 2023/03/16 14:41:03 Id de numero 1 ate 60
+GET: 2023/03/16 14:41:13 Id de numero 841 ate 890
+POST: 2023/03/16 14:41:17 Id de numero 892 adicionado
+GET: 2023/03/16 14:41:17 Id de numero 1 ate 60
+GET: 2023/03/16 14:41:22 Id de numero 841 ate 890
+GET: 2023/03/16 14:41:26 Id de numero 1 ate 60
+GET: 2023/03/16 14:41:29 Id de numero 841 ate 890
+INFO: 2023/03/16 14:41:37 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/16 14:41:37 Id de numero 1 ate 60
+GET: 2023/03/16 14:41:41 Id de numero 841 ate 890
+POST: 2023/03/16 14:41:52 Id de numero 892 adicionado
+GET: 2023/03/16 14:41:52 Id de numero 1 ate 60
+GET: 2023/03/16 14:41:57 Id de numero 892
+GET: 2023/03/16 14:42:03 Id de numero 1 ate 60
+GET: 2023/03/16 14:42:06 Id de numero 841 ate 890
+GET: 2023/03/16 14:42:10 Id de numero 892
+GET: 2023/03/16 14:42:24 Id de numero 841 ate 890
+GET: 2023/03/16 14:42:36 Id de numero 841 ate 890
+GET: 2023/03/16 14:42:44 Id de numero 781 ate 840
+GET: 2023/03/16 14:42:59 Id de numero 841 ate 890
+INFO: 2023/03/16 14:43:46 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/16 14:43:46 Id de numero 1 ate 60
+GET: 2023/03/16 14:43:50 Id de numero 892
+INFO: 2023/03/16 14:43:58 Database Recarregada
+GET: 2023/03/16 14:43:58 Id de numero 1 ate 60
+POST: 2023/03/16 14:44:10 Id de numero 891 adicionado
+GET: 2023/03/16 14:44:10 Id de numero 1 ate 60
+GET: 2023/03/16 14:44:13 Id de numero 841 ate 890
+GET: 2023/03/16 14:44:18 Id de numero 891
+GET: 2023/03/16 14:44:21 Id de numero 890
+DELETE: 2023/03/16 14:44:22 Id de numero 890 deletado
+GET: 2023/03/16 14:44:22 Id de numero 1 ate 60
+GET: 2023/03/16 14:44:26 Id de numero 841 ate 889
+INFO: 2023/03/16 14:44:37 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/16 14:44:37 Id de numero 1 ate 60
+GET: 2023/03/16 14:44:40 Id de numero 891
+GET: 2023/03/16 14:44:43 Id de numero 1 ate 60
+GET: 2023/03/16 14:44:45 Id de numero 841 ate 889
+GET: 2023/03/16 14:45:38 Id de numero 841 ate 889
+POST: 2023/03/16 14:46:17 Id de numero 891 adicionado
+GET: 2023/03/16 14:46:17 Id de numero 1 ate 60
+POST: 2023/03/16 14:46:21 Id de numero 892 adicionado
+GET: 2023/03/16 14:46:21 Id de numero 1 ate 60
+POST: 2023/03/16 14:46:27 Id de numero 893 adicionado
+GET: 2023/03/16 14:46:27 Id de numero 1 ate 60
+GET: 2023/03/16 14:46:29 Id de numero 1 ate 60
+GET: 2023/03/16 14:46:33 Id de numero 1 ate 60
+GET: 2023/03/16 14:46:36 Id de numero 841 ate 892
+STATUS: 2023/03/16 14:46:48 Servidor desligado
+STATUS: 2023/03/16 14:46:52 Servidor iniciado
+GET: 2023/03/16 14:46:56 Id de numero 1 ate 60
+GET: 2023/03/16 14:46:59 Id de numero 840 ate 892
+GET: 2023/03/16 14:47:05 Id de numero 893
+GET: 2023/03/16 14:47:15 Id de numero 887
+PUT: 2023/03/16 14:47:19 Id de numero 887 atualizado
+GET: 2023/03/16 14:47:19 Id de numero 1 ate 60
+GET: 2023/03/16 14:47:22 Id de numero 1 ate 60
+GET: 2023/03/16 14:47:24 Id de numero 840 ate 893
+STATUS: 2023/03/16 14:47:40 Servidor desligado
+STATUS: 2023/03/16 14:47:42 Servidor iniciado
+GET: 2023/03/16 14:47:46 Id de numero 1 ate 60
+GET: 2023/03/16 14:47:48 Id de numero 840 ate 893
+INFO: 2023/03/16 14:47:53 Database Recarregada
+GET: 2023/03/16 14:47:53 Id de numero 1 ate 60
+GET: 2023/03/16 14:47:57 Id de numero 840 ate 890
+STATUS: 2023/03/16 14:48:11 Servidor desligado
+STATUS: 2023/03/16 14:48:16 Servidor iniciado
+GET: 2023/03/16 14:48:26 Id de numero 1 ate 60
+GET: 2023/03/16 14:48:31 Id de numero 61 ate 120
+GET: 2023/03/16 14:48:37 Id de numero 841 ate 890
+POST: 2023/03/16 14:48:44 Id de numero 891 adicionado
+GET: 2023/03/16 14:48:44 Id de numero 1 ate 60
+GET: 2023/03/16 14:48:48 Id de numero 841 ate 891

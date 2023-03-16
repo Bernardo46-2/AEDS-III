@@ -33,8 +33,8 @@ func GetPagesNumber(w http.ResponseWriter, r *http.Request) {
 // GetAllPokemon recupera os 60 pokemons a partir do ID fornecido
 func GetAllPokemon(w http.ResponseWriter, r *http.Request) {
 	// Recuperar ID e ler arquivo
-	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
-	pokemon, err := crud.ReadAll(id)
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+	pokemon, err := crud.ReadAll(page)
 
 	// Resposta
 	if err != nil {
