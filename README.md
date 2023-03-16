@@ -23,7 +23,7 @@ O banco de dados suporta as seguintes funcionalidades:
 ### Tela de visualização individual e crud
 ![PokeCard](/Outros/CRUD_1.0.png)
 ### Tela de respostas do servidor
-![Resposta do servidor]/Outros/Resposta_1.0.png)
+![Resposta do servidor](/Outros/Resposta_1.0.png)
 
 ## Tecnologias utilizadas
 O projeto foi desenvolvido em linguagem Go e utiliza a biblioteca padrão do Go para manipulação de arquivos binários.
