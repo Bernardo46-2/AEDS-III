@@ -1,4 +1,4 @@
-# Trabalho Final - Algoritmos e Estruturas de Dados III
+# Trabalho Semestral - Algoritmos e Estruturas de Dados III
 
 Trabalho desenvolvido ao longo da disciplina de AED's III do curso de Bacharelado em Ciência da Computação na PUC Minas.
 
