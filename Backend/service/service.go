@@ -52,17 +52,19 @@ func ReadPagesNumber() (numeroPaginas int, err error) {
 // a um slice de Pokemon, retornando o slice e um erro, se houver.
 func ReadAll(page int) (pokemon []models.Pokemon, err error) {
 	atual := page * 60
+	ultimoID := int(dataManager.GetLastPokemon())
 
 	// Recuperação do numero de registros totais
 	numRegistros, _, _ := dataManager.NumRegistros()
 
 	// Recupera 60 ids enquanto houverem
-	for i, total := atual+1, 0; total < 60 && i <= numRegistros; i++ {
-		tmp, _, _ := dataManager.ReadBinToPoke(i)
+	for id, i, total := atual+1, 0, 0; total < 60 && id <= ultimoID && i < numRegistros; i++ {
+		tmp, _, _ := dataManager.ReadBinToPoke(id)
 		if tmp.Numero > 0 {
 			pokemon = append(pokemon, tmp)
 			total++
 		}
+		id++
 	}
 	return
 }

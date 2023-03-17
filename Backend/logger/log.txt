@@ -393,6 +393,7 @@ GET: 2023/03/17 11:32:13 Id de numero 841 ate 894
 GET: 2023/03/17 11:32:50 Id de numero 889
 GET: 2023/03/17 11:33:36 Id de numero 661 ate 720
 STATUS: 2023/03/17 11:33:46 Servidor desligado
+<<<<<<< HEAD
 >>>>>>> refs/remotes/origin/main
 GET: 2023/03/17 11:42:20 Id de numero 421 ate 480
 GET: 2023/03/17 11:42:36 Id de numero 241 ate 300
@@ -490,3 +491,118 @@ GET: 2023/03/17 12:25:53 Id de numero 1 ate 63
 GET: 2023/03/17 12:25:57 Id de numero 1 ate 63
 GET: 2023/03/17 12:26:58 Id de numero 1 ate 63
 GET: 2023/03/17 12:27:22 Id de numero 1 ate 63
+=======
+STATUS: 2023/03/17 11:43:59 Servidor iniciado
+STATUS: 2023/03/17 11:44:10 Servidor desligado
+STATUS: 2023/03/17 11:44:12 Servidor iniciado
+GET: 2023/03/17 11:44:17 Id de numero 1 ate 63
+INFO: 2023/03/17 11:44:20 Database Recarregada
+GET: 2023/03/17 11:44:20 Id de numero 1 ate 60
+GET: 2023/03/17 11:44:41 Id de numero 781 ate 840
+GET: 2023/03/17 11:44:47 Id de numero 795
+GET: 2023/03/17 11:44:58 Id de numero 1 ate 60
+GET: 2023/03/17 11:45:03 Id de numero 7
+DELETE: 2023/03/17 11:45:04 Id de numero 7 deletado
+GET: 2023/03/17 11:45:04 Id de numero 1 ate 61
+POST: 2023/03/17 11:45:41 Id de numero 891 adicionado
+GET: 2023/03/17 11:45:41 Id de numero 1 ate 61
+GET: 2023/03/17 11:45:46 Id de numero 841 ate 891
+GET: 2023/03/17 11:45:47 Id de numero 891
+INFO: 2023/03/17 11:46:13 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/17 11:46:13 Id de numero 1 ate 61
+GET: 2023/03/17 11:46:25 Id de numero 841 ate 890
+POST: 2023/03/17 11:46:36 Id de numero 892 adicionado
+GET: 2023/03/17 11:46:36 Id de numero 1 ate 61
+GET: 2023/03/17 11:46:41 Id de numero 841 ate 891
+INFO: 2023/03/17 11:46:43 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/17 11:46:43 Id de numero 1 ate 61
+GET: 2023/03/17 11:46:47 Id de numero 841 ate 891
+GET: 2023/03/17 11:46:49 Id de numero 841 ate 891
+GET: 2023/03/17 11:46:52 Id de numero 892
+GET: 2023/03/17 12:03:36 Id de numero 1 ate 61
+INFO: 2023/03/17 12:03:38 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/17 12:03:38 Id de numero 1 ate 61
+GET: 2023/03/17 12:03:42 Id de numero 841 ate 891
+INFO: 2023/03/17 12:03:44 Database Recarregada
+GET: 2023/03/17 12:03:44 Id de numero 1 ate 60
+GET: 2023/03/17 12:03:47 Id de numero 841 ate 890
+INFO: 2023/03/17 12:03:52 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/17 12:03:52 Id de numero 1 ate 60
+GET: 2023/03/17 12:03:56 Id de numero 841 ate 890
+POST: 2023/03/17 12:04:00 Id de numero 891 adicionado
+GET: 2023/03/17 12:04:00 Id de numero 1 ate 60
+GET: 2023/03/17 12:04:04 Id de numero 841 ate 891
+INFO: 2023/03/17 12:04:06 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/17 12:04:06 Id de numero 1 ate 60
+GET: 2023/03/17 12:04:10 Id de numero 841 ate 891
+INFO: 2023/03/17 12:04:14 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/17 12:04:15 Id de numero 1 ate 60
+GET: 2023/03/17 12:04:19 Id de numero 841 ate 891
+GET: 2023/03/17 12:04:22 Id de numero 886
+DELETE: 2023/03/17 12:04:24 Id de numero 886 deletado
+GET: 2023/03/17 12:04:24 Id de numero 1 ate 60
+GET: 2023/03/17 12:04:28 Id de numero 841 ate 891
+INFO: 2023/03/17 12:04:31 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/17 12:04:31 Id de numero 1 ate 60
+GET: 2023/03/17 12:04:34 Id de numero 841 ate 890
+INFO: 2023/03/17 12:05:29 Database Recarregada
+GET: 2023/03/17 12:05:29 Id de numero 1 ate 60
+POST: 2023/03/17 12:05:35 Id de numero 891 adicionado
+GET: 2023/03/17 12:05:35 Id de numero 1 ate 60
+GET: 2023/03/17 12:05:37 Id de numero 41
+DELETE: 2023/03/17 12:05:39 Id de numero 41 deletado
+GET: 2023/03/17 12:05:39 Id de numero 1 ate 61
+INFO: 2023/03/17 12:05:41 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/17 12:05:41 Id de numero 1 ate 61
+GET: 2023/03/17 12:05:44 Id de numero 841 ate 890
+GET: 2023/03/17 12:05:47 Id de numero 841 ate 890
+GET: 2023/03/17 12:05:51 Id de numero 891
+INFO: 2023/03/17 12:06:42 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/17 12:06:42 Id de numero 1 ate 61
+GET: 2023/03/17 12:06:45 Id de numero 841 ate 890
+GET: 2023/03/17 12:06:48 Id de numero 891
+INFO: 2023/03/17 12:06:52 Database Recarregada
+GET: 2023/03/17 12:06:52 Id de numero 1 ate 60
+GET: 2023/03/17 12:07:54 Id de numero 841 ate 890
+POST: 2023/03/17 12:08:08 Id de numero 891 adicionado
+GET: 2023/03/17 12:08:08 Id de numero 1 ate 60
+GET: 2023/03/17 12:08:18 Id de numero 42
+DELETE: 2023/03/17 12:08:20 Id de numero 42 deletado
+GET: 2023/03/17 12:08:20 Id de numero 1 ate 61
+INFO: 2023/03/17 12:08:32 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/17 12:08:32 Id de numero 1 ate 61
+GET: 2023/03/17 12:08:42 Id de numero 841 ate 890
+GET: 2023/03/17 12:09:46 Id de numero 841 ate 890
+GET: 2023/03/17 12:09:52 Id de numero 1 ate 61
+INFO: 2023/03/17 12:09:53 Database Recarregada
+GET: 2023/03/17 12:09:53 Id de numero 1 ate 60
+POST: 2023/03/17 12:09:59 Id de numero 891 adicionado
+GET: 2023/03/17 12:09:59 Id de numero 1 ate 60
+GET: 2023/03/17 12:10:02 Id de numero 1
+DELETE: 2023/03/17 12:10:04 Id de numero 1 deletado
+GET: 2023/03/17 12:10:04 Id de numero 2 ate 61
+INFO: 2023/03/17 12:10:08 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/17 12:10:08 Id de numero 2 ate 61
+GET: 2023/03/17 12:10:11 Id de numero 2 ate 61
+GET: 2023/03/17 12:10:52 Id de numero 2 ate 61
+GET: 2023/03/17 12:11:02 Id de numero 841 ate 890
+STATUS: 2023/03/17 12:15:09 Servidor desligado
+STATUS: 2023/03/17 12:15:13 Servidor iniciado
+GET: 2023/03/17 12:15:20 Id de numero 2 ate 61
+STATUS: 2023/03/17 12:15:29 Servidor desligado
+STATUS: 2023/03/17 12:19:54 Servidor iniciado
+GET: 2023/03/17 12:19:58 Id de numero 2 ate 61
+GET: 2023/03/17 12:20:00 Id de numero 841 ate 891
+INFO: 2023/03/17 12:20:04 Database Recarregada
+GET: 2023/03/17 12:20:04 Id de numero 1 ate 60
+GET: 2023/03/17 12:20:06 Id de numero 1 ate 60
+POST: 2023/03/17 12:20:09 Id de numero 891 adicionado
+GET: 2023/03/17 12:20:09 Id de numero 1 ate 60
+GET: 2023/03/17 12:20:11 Id de numero 41
+DELETE: 2023/03/17 12:20:12 Id de numero 41 deletado
+GET: 2023/03/17 12:20:12 Id de numero 1 ate 61
+INFO: 2023/03/17 12:20:14 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/17 12:20:14 Id de numero 1 ate 61
+GET: 2023/03/17 12:20:17 Id de numero 841 ate 891
+STATUS: 2023/03/17 12:20:29 Servidor desligado
+>>>>>>> refs/remotes/origin/main
