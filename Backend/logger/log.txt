@@ -314,3 +314,47 @@ GET: 2023/03/16 14:48:37 Id de numero 841 ate 890
 POST: 2023/03/16 14:48:44 Id de numero 891 adicionado
 GET: 2023/03/16 14:48:44 Id de numero 1 ate 60
 GET: 2023/03/16 14:48:48 Id de numero 841 ate 891
+STATUS: 2023/03/17 11:04:47 Servidor iniciado
+GET: 2023/03/17 11:04:48 Id de numero 1 ate 60
+GET: 2023/03/17 11:05:07 Id de numero 1 ate 60
+GET: 2023/03/17 11:05:11 Id de numero 61 ate 120
+GET: 2023/03/17 11:07:20 Id de numero 1 ate 60
+GET: 2023/03/17 11:09:38 Id de numero 47
+GET: 2023/03/17 11:09:45 Id de numero 361 ate 420
+GET: 2023/03/17 11:09:55 Id de numero 383
+GET: 2023/03/17 11:09:58 Id de numero 382
+GET: 2023/03/17 11:10:42 Id de numero 721 ate 780
+GET: 2023/03/17 11:10:45 Id de numero 778
+GET: 2023/03/17 11:11:53 Id de numero 661 ate 720
+GET: 2023/03/17 11:11:59 Id de numero 721 ate 780
+GET: 2023/03/17 11:14:47 Id de numero 1 ate 60
+GET: 2023/03/17 11:25:46 Id de numero 1 ate 60
+GET: 2023/03/17 11:25:48 Id de numero 1 ate 60
+GET: 2023/03/17 11:27:18 Id de numero 1 ate 60
+GET: 2023/03/17 11:27:29 Id de numero 1 ate 60
+GET: 2023/03/17 11:27:32 Id de numero 421 ate 480
+GET: 2023/03/17 11:28:12 Id de numero 1 ate 60
+GET: 2023/03/17 11:28:21 Id de numero 421 ate 480
+GET: 2023/03/17 11:30:20 Id de numero 1 ate 60
+GET: 2023/03/17 11:30:49 Id de numero 1 ate 60
+GET: 2023/03/17 11:30:54 Id de numero 361 ate 420
+GET: 2023/03/17 11:31:06 Id de numero 1 ate 60
+GET: 2023/03/17 11:31:33 Id de numero 1 ate 60
+GET: 2023/03/17 11:32:13 Id de numero 1 ate 60
+GET: 2023/03/17 11:32:37 Id de numero 1 ate 60
+GET: 2023/03/17 11:32:39 Id de numero 241 ate 300
+GET: 2023/03/17 11:32:45 Id de numero 1 ate 60
+GET: 2023/03/17 11:34:08 Id de numero 781 ate 840
+GET: 2023/03/17 11:34:37 Id de numero 1 ate 60
+GET: 2023/03/17 11:34:42 Id de numero 781 ate 840
+GET: 2023/03/17 11:34:53 Id de numero 1 ate 60
+GET: 2023/03/17 11:34:55 Id de numero 841 ate 891
+GET: 2023/03/17 11:35:01 Id de numero 891
+GET: 2023/03/17 11:35:30 Id de numero 890
+GET: 2023/03/17 11:36:17 Id de numero 1 ate 60
+GET: 2023/03/17 11:36:20 Id de numero 841 ate 891
+GET: 2023/03/17 11:36:22 Id de numero 1 ate 60
+GET: 2023/03/17 11:36:28 Id de numero 841 ate 891
+GET: 2023/03/17 11:36:31 Id de numero 1 ate 60
+GET: 2023/03/17 11:39:14 Id de numero 24
+GET: 2023/03/17 11:39:27 Id de numero 26

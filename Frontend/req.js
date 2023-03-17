@@ -155,7 +155,7 @@ function adicionarCards(data) {
         novaDiv.classList.add('row');
         novaDiv.classList.add('justify-content-center');
         /* cardsHtml.innerHTML += `<div class="row justify-content-center">`;*/
-        for (let index = 0; index < numPaginas; index++) {
+        for (let index = 1; index <= numPaginas; index++) {
             const novoElemento = document.createElement('button');
             novoElemento.type = 'button';
             novoElemento.classList.add('btn');
@@ -164,12 +164,17 @@ function adicionarCards(data) {
             novoElemento.innerHTML = index;
             novaDiv.appendChild(novoElemento);
             novoElemento.onclick = () => {
-                fetch(`http://localhost:8080/getAll/?page=${index}`)
+                const cards = document.querySelectorAll('[id^="mostrarMais"]');
+                for(let i = 0; i < numPaginas; i++)
+                    cards[i].classList.remove('active');
+                novoElemento.classList.add('active');
+
+                fetch(`http://localhost:8080/getAll/?page=${index - 1}`)
                     .then(response => response.json())
                     .then(data => adicionarCards(data))
                     .catch(error => {
                         modalAviso();
-                        console.log(error)
+                        console.log(error);
                     });
             };
         }
@@ -177,7 +182,7 @@ function adicionarCards(data) {
     })
     .catch(error => {
         modalAviso();
-        console.log(error)
+        console.log(error);
     });
 
     gerarModalPokemon();
@@ -646,7 +651,6 @@ function abrirModal(pokemon = "pokebola", editar = false, data) {
     const novaDiv = document.createElement('div');
 
     var imagem
-    var bgdClass
     if (classes[pokemon] === undefined) {
         bgdClass = classes[Object.keys(classes)[Math.floor(Math.random() * 18)]];
         imagem = "pokebola";
