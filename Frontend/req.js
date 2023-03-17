@@ -128,10 +128,11 @@ const classes = {
     'Fairy': 'bgd-Fairy'
 };
 
-let lastClicked = 1;
+let lastClicked = 7;
+let insertDots = true;
 
 function adicionarCards(data) {
-    console.log(data)
+    // console.log(data);
     const cardsHtml = document.getElementById('cards');
     cardsHtml.innerHTML = "";
     for (let i = 0; i < data.length; i++) {
@@ -150,46 +151,57 @@ function adicionarCards(data) {
     }
 
     fetch('http://localhost:8080/getPagesNumber/')
-    .then(response => response.json())
-    .then(data => {
-        const numPaginas = parseInt(data);
-        const novaDiv = document.createElement('div');
-        novaDiv.classList.add('row');
-        novaDiv.classList.add('justify-content-center');
-        /* cardsHtml.innerHTML += `<div class="row justify-content-center">`;*/
-        for (let index = 1; index <= numPaginas; index++) {
-            const novoElemento = document.createElement('button');
-            novoElemento.type = 'button';
-            novoElemento.classList.add('btn');
-            novoElemento.classList.add('btn-Psyduck-mostrarMais');
-            novoElemento.id = 'mostrarMais'+index;
-            novoElemento.innerHTML = index;
-            novaDiv.appendChild(novoElemento);
-            novoElemento.onclick = () => {
-                lastClicked = index;
-                // const cards = document.querySelectorAll('[id^="mostrarMais"]');
-                // for(let i = 0; i < numPaginas; i++)
-                //     cards[i].classList.remove('active');
-                // novoElemento.classList.add('active');
+        .then(response => response.json())
+        .then(data => {
+            const numPaginas = +data;
+            const novaDiv = document.createElement('div');
+            novaDiv.classList.add('row');
+            novaDiv.classList.add('justify-content-center');
+            /* cardsHtml.innerHTML += `<div class="row justify-content-center">`;*/
+            for (let index = 1; index <= numPaginas; index++) {
+                if(index == 1 || index == numPaginas || (index >= lastClicked - 2 && index <= lastClicked + 2)) {
+                    const novoElemento = document.createElement('button');
+                    novoElemento.type = 'button';
+                    novoElemento.classList.add('btn');
+                    novoElemento.classList.add('btn-Psyduck-mostrarMais');
+                    novoElemento.id = 'mostrarMais' + index;
+                    novoElemento.innerHTML = index;
+                    novaDiv.appendChild(novoElemento);
+            
+                    novoElemento.onclick = () => {
+                        lastClicked = index;
+                        fetch(`http://localhost:8080/getAll/?page=${index - 1}`)
+                            .then(response => response.json())
+                            .then(data => adicionarCards(data))
+                            .catch(error => {
+                                modalAviso();
+                                console.log(error);
+                            });
 
-                fetch(`http://localhost:8080/getAll/?page=${index - 1}`)
-                    .then(response => response.json())
-                    .then(data => adicionarCards(data))
-                    .catch(error => {
-                        modalAviso();
-                        console.log(error);
-                    });
-            };
-        }
-        cardsHtml.appendChild(novaDiv);
-        const btn = document.getElementById(`mostrarMais${lastClicked}`);
-        btn.classList.add('active');
-        btn.classList.remove('btn-Psyduck-mostrarMais');
-    })
-    .catch(error => {
-        modalAviso();
-        console.log(error);
-    });
+                        window.scrollTo(0, 0);
+                        insertDots = true;
+                    };
+
+                    if(index == lastClicked) insertDots = true;
+                } else if(insertDots) {
+                    const dots = document.createElement('button');
+                    dots.innerHTML = '...';
+                    dots.classList.add('btn');
+                    dots.classList.add('btn-Psyduck-mostrarMais');
+                    novaDiv.appendChild(dots);
+                    insertDots = false;
+                }
+            }
+
+            cardsHtml.appendChild(novaDiv);
+            const btn = document.getElementById(`mostrarMais${lastClicked}`);
+            btn.classList.add('active');
+            btn.classList.remove('btn-Psyduck-mostrarMais');
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error);
+        });
 
     gerarModalPokemon();
 }
