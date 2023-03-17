@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 STATUS: 2023/03/16 05:57:55 Servidor iniciado
 STATUS: 2023/03/16 06:00:48 Servidor desligado
 STATUS: 2023/03/16 06:02:11 Servidor iniciado
@@ -358,3 +359,38 @@ GET: 2023/03/17 11:36:28 Id de numero 841 ate 891
 GET: 2023/03/17 11:36:31 Id de numero 1 ate 60
 GET: 2023/03/17 11:39:14 Id de numero 24
 GET: 2023/03/17 11:39:27 Id de numero 26
+=======
+STATUS: 2023/03/17 11:11:59 Servidor iniciado
+GET: 2023/03/17 11:12:04 Id de numero 1 ate 60
+GET: 2023/03/17 11:12:09 Id de numero 841 ate 890
+STATUS: 2023/03/17 11:12:17 Servidor desligado
+STATUS: 2023/03/17 11:13:33 Servidor iniciado
+GET: 2023/03/17 11:13:44 Id de numero 1 ate 60
+POST: 2023/03/17 11:13:51 Id de numero 891 adicionado
+GET: 2023/03/17 11:13:51 Id de numero 1 ate 60
+STATUS: 2023/03/17 11:17:47 Servidor desligado
+STATUS: 2023/03/17 11:30:57 Servidor iniciado
+GET: 2023/03/17 11:31:03 Id de numero 1 ate 60
+GET: 2023/03/17 11:31:07 Id de numero 301 ate 360
+POST: 2023/03/17 11:31:12 Id de numero 892 adicionado
+GET: 2023/03/17 11:31:12 Id de numero 1 ate 60
+GET: 2023/03/17 11:31:18 Id de numero 1 ate 60
+POST: 2023/03/17 11:31:21 Id de numero 893 adicionado
+GET: 2023/03/17 11:31:21 Id de numero 1 ate 60
+GET: 2023/03/17 11:31:23 Id de numero 7
+GET: 2023/03/17 11:31:26 Id de numero 7
+DELETE: 2023/03/17 11:31:27 Id de numero 7 deletado
+GET: 2023/03/17 11:31:27 Id de numero 1 ate 61
+GET: 2023/03/17 11:31:29 Id de numero 9
+DELETE: 2023/03/17 11:31:30 Id de numero 9 deletado
+GET: 2023/03/17 11:31:30 Id de numero 1 ate 62
+GET: 2023/03/17 11:31:34 Id de numero 6
+DELETE: 2023/03/17 11:31:35 Id de numero 6 deletado
+GET: 2023/03/17 11:31:35 Id de numero 1 ate 63
+POST: 2023/03/17 11:31:41 Id de numero 894 adicionado
+GET: 2023/03/17 11:31:41 Id de numero 1 ate 63
+GET: 2023/03/17 11:32:13 Id de numero 841 ate 894
+GET: 2023/03/17 11:32:50 Id de numero 889
+GET: 2023/03/17 11:33:36 Id de numero 661 ate 720
+STATUS: 2023/03/17 11:33:46 Servidor desligado
+>>>>>>> refs/remotes/origin/main

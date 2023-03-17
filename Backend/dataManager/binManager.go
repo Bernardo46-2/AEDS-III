@@ -1,5 +1,5 @@
 // O arquivo binManager do pacote dataManager realiza o tratamento do arquivo binario
-// Recebe as requisiçoes a partir do pacote Crud e termina recuperando ou editando
+// Recebe as requisiçoes a partir do pacote service e termina recuperando ou editando
 // os registros binarios necessarios.
 package dataManager
 
@@ -129,6 +129,41 @@ func NumRegistros() (numEntradas int, inicioRegistros int64, err error) {
 	inicioRegistros, _ = file.Seek(0, io.SeekCurrent)
 	numEntradas = int(numEntradas32)
 	return
+}
+
+func GetLastPokemon() (lastID int32) {
+	file, err := os.Open(BIN_FILE)
+	if err != nil {
+		return -1
+	}
+	defer file.Close()
+
+	// Lê o número de entradas no arquivo
+	var numEntradas32 int32
+	binary.Read(file, binary.LittleEndian, &numEntradas32)
+	numEntradas := int(numEntradas32)
+
+	// pula registros ate chegar ao ultimo
+	for i := 0; i < numEntradas-1; i++ {
+		var lapide int32
+		binary.Read(file, binary.LittleEndian, &lapide)
+		var tamReg int32
+		binary.Read(file, binary.LittleEndian, &tamReg)
+		pokeBytes := make([]byte, tamReg-4)
+		io.ReadFull(file, pokeBytes)
+	}
+
+	// Lê o ultimo registro
+	var lapide int32
+	binary.Read(file, binary.LittleEndian, &lapide)
+	var tamReg int32
+	binary.Read(file, binary.LittleEndian, &tamReg)
+	pokeBytes := make([]byte, tamReg-4)
+	io.ReadFull(file, pokeBytes)
+	pokemonAtual := models.Pokemon{Numero: -1}
+	pokemonAtual.ParseBinToPoke(pokeBytes)
+
+	return pokemonAtual.Numero
 }
 
 // DeletarPokemon recebe a posição da lapide a ser alterada no arquivo

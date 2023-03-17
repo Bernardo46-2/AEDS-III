@@ -1,7 +1,7 @@
-// O pacote Crud realiza a conversa entre as requisiçoes e o DataManager
+// O pacote service realiza a conversa entre as requisiçoes e o DataManager
 // recebendo dados ja em formato struct e fazendo as devidas chamadas de ediçao
 // no arquivo binario
-package crud
+package service
 
 import (
 	"math"
@@ -15,17 +15,17 @@ import (
 // Recebe um modelo pokemon e serializa para inserir
 // Por fim retorna o ID do pokemon criado e erro se houver.
 func Create(pokemon models.Pokemon) (int, error) {
-	// Gera o id fazendo total de pokemons + 1
-	id, _, _ := dataManager.NumRegistros()
-	id++
-	pokemon.Numero = int32(id)
+	// Recupera o ultimo ID para gerar o proximo
+	ultimoID := dataManager.GetLastPokemon()
+	ultimoID++
+	pokemon.Numero = ultimoID
 
 	// Prepara, serializa e insere
 	pokemon.CalculateSize()
 	pokeBytes := pokemon.ToBytes()
 	err := dataManager.AppendPokemon(pokeBytes)
 
-	return id, err
+	return int(ultimoID), err
 }
 
 // Read recebe o ID de um pokemon, procura no banco de dados e

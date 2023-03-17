@@ -1110,6 +1110,10 @@ body::-webkit-scrollbar {
     transition-duration: 0.8s;
 }
 
+.btn-Pikachu-Permanente-Hover {
+    background-color: var(--pikachu) !important;
+}
+
 .btn-Charmander {
     color: var(--charmander) !important;
     border: 1px solid var(--charmander-transparent) !important;

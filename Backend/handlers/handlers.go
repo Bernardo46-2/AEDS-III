@@ -1,5 +1,5 @@
 // O pacote handlers faz a ligação entre as requisições http e suas respectivas funções
-// ligando o Crud para manipulação do banco de dados, ou chamando diretamente as funções
+// ligando o service para manipulação do banco de dados, ou chamando diretamente as funções
 // de ordenação no DataManager
 // Handlers também realiza o parsing entre JSON e Objeto
 package handlers
@@ -9,17 +9,17 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Bernardo46-2/AEDS-III/crud"
 	"github.com/Bernardo46-2/AEDS-III/dataManager"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/models"
+	"github.com/Bernardo46-2/AEDS-III/service"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
 // GetPagesNumber retorna a quantidade de paginas disponiveis
 func GetPagesNumber(w http.ResponseWriter, r *http.Request) {
 	// Recuperar ID e ler arquivo
-	numeroPaginas, err := crud.ReadPagesNumber()
+	numeroPaginas, err := service.ReadPagesNumber()
 
 	// Resposta
 	if err != nil {
@@ -34,7 +34,7 @@ func GetPagesNumber(w http.ResponseWriter, r *http.Request) {
 func GetAllPokemon(w http.ResponseWriter, r *http.Request) {
 	// Recuperar ID e ler arquivo
 	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
-	pokemon, err := crud.ReadAll(page)
+	pokemon, err := service.ReadAll(page)
 
 	// Resposta
 	if err != nil {
@@ -50,7 +50,7 @@ func GetAllPokemon(w http.ResponseWriter, r *http.Request) {
 func GetPokemon(w http.ResponseWriter, r *http.Request) {
 	// recuperar ID e ler do arquivo
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
-	pokemon, err := crud.Read(id)
+	pokemon, err := service.Read(id)
 
 	// Gera resposta de acordo com o resultado
 	if err != nil {
@@ -75,7 +75,7 @@ func PostPokemon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create
-	id, err := crud.Create(pokemon)
+	id, err := service.Create(pokemon)
 
 	// Resposta
 	if err != nil {
@@ -101,7 +101,7 @@ func PutPokemon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update
-	err = crud.Update(pokemon)
+	err = service.Update(pokemon)
 
 	// Resposta
 	if err != nil {
@@ -120,7 +120,7 @@ func DeletePokemon(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
 
 	// Delete
-	_, err := crud.Delete(id)
+	_, err := service.Delete(id)
 
 	// Resposta
 	if err != nil {
