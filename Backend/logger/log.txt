@@ -394,3 +394,99 @@ GET: 2023/03/17 11:32:50 Id de numero 889
 GET: 2023/03/17 11:33:36 Id de numero 661 ate 720
 STATUS: 2023/03/17 11:33:46 Servidor desligado
 >>>>>>> refs/remotes/origin/main
+GET: 2023/03/17 11:42:20 Id de numero 421 ate 480
+GET: 2023/03/17 11:42:36 Id de numero 241 ate 300
+GET: 2023/03/17 11:42:48 Id de numero 301 ate 360
+GET: 2023/03/17 11:43:46 Id de numero 541 ate 600
+GET: 2023/03/17 11:45:37 Id de numero 1 ate 63
+GET: 2023/03/17 11:45:53 Id de numero 1 ate 63
+GET: 2023/03/17 11:45:54 Id de numero 1 ate 63
+GET: 2023/03/17 11:46:34 Id de numero 1 ate 63
+GET: 2023/03/17 11:47:19 Id de numero 1 ate 63
+GET: 2023/03/17 11:47:21 Id de numero 421 ate 480
+GET: 2023/03/17 11:48:01 Id de numero 1 ate 63
+GET: 2023/03/17 11:53:20 Id de numero 61 ate 120
+GET: 2023/03/17 11:53:25 Id de numero 1 ate 63
+GET: 2023/03/17 11:53:32 Id de numero 61 ate 120
+GET: 2023/03/17 11:53:39 Id de numero 88
+GET: 2023/03/17 11:53:43 Id de numero 89
+GET: 2023/03/17 11:53:48 Id de numero 89
+GET: 2023/03/17 11:53:56 Id de numero 92
+GET: 2023/03/17 11:54:02 Id de numero 94
+GET: 2023/03/17 11:54:06 Id de numero 92
+GET: 2023/03/17 11:54:18 Id de numero 121 ate 180
+GET: 2023/03/17 11:54:22 Id de numero 169
+GET: 2023/03/17 11:54:29 Id de numero 137
+GET: 2023/03/17 11:54:50 Id de numero 138
+GET: 2023/03/17 11:54:53 Id de numero 142
+GET: 2023/03/17 11:54:56 Id de numero 151
+GET: 2023/03/17 11:55:00 Id de numero 150
+GET: 2023/03/17 11:55:04 Id de numero 155
+GET: 2023/03/17 11:55:07 Id de numero 152
+GET: 2023/03/17 11:55:35 Id de numero 158
+GET: 2023/03/17 11:55:41 Id de numero 241 ate 300
+GET: 2023/03/17 11:55:42 Id de numero 283
+GET: 2023/03/17 11:55:46 Id de numero 281
+GET: 2023/03/17 11:55:50 Id de numero 181 ate 240
+GET: 2023/03/17 11:55:54 Id de numero 238
+GET: 2023/03/17 11:55:57 Id de numero 240
+GET: 2023/03/17 11:56:00 Id de numero 241 ate 300
+GET: 2023/03/17 11:56:03 Id de numero 241
+GET: 2023/03/17 11:56:06 Id de numero 243
+GET: 2023/03/17 11:56:10 Id de numero 246
+GET: 2023/03/17 11:56:14 Id de numero 248
+GET: 2023/03/17 11:56:19 Id de numero 249
+GET: 2023/03/17 11:56:23 Id de numero 252
+GET: 2023/03/17 11:56:29 Id de numero 252
+GET: 2023/03/17 11:56:32 Id de numero 253
+GET: 2023/03/17 11:56:35 Id de numero 254
+GET: 2023/03/17 11:56:38 Id de numero 255
+GET: 2023/03/17 11:56:41 Id de numero 256
+GET: 2023/03/17 11:56:45 Id de numero 255
+GET: 2023/03/17 11:56:47 Id de numero 253
+GET: 2023/03/17 11:56:50 Id de numero 254
+GET: 2023/03/17 11:56:53 Id de numero 257
+GET: 2023/03/17 11:56:59 Id de numero 258
+GET: 2023/03/17 11:57:04 Id de numero 259
+GET: 2023/03/17 11:57:08 Id de numero 260
+GET: 2023/03/17 11:58:27 Id de numero 1 ate 63
+GET: 2023/03/17 11:58:37 Id de numero 1 ate 63
+STATUS: 2023/03/17 11:58:43 Servidor desligado
+STATUS: 2023/03/17 11:58:44 Servidor iniciado
+GET: 2023/03/17 11:58:49 Id de numero 1 ate 63
+GET: 2023/03/17 11:59:34 Id de numero 1 ate 63
+GET: 2023/03/17 11:59:36 Id de numero 1 ate 63
+GET: 2023/03/17 12:00:17 Id de numero 1 ate 63
+GET: 2023/03/17 12:00:40 Id de numero 1 ate 63
+GET: 2023/03/17 12:00:42 Id de numero 1 ate 63
+GET: 2023/03/17 12:00:57 Id de numero 1 ate 63
+GET: 2023/03/17 12:01:01 Id de numero 1 ate 63
+GET: 2023/03/17 12:01:09 Id de numero 1 ate 63
+GET: 2023/03/17 12:01:10 Id de numero 1 ate 63
+GET: 2023/03/17 12:03:41 Id de numero 1 ate 63
+GET: 2023/03/17 12:03:46 Id de numero 1 ate 63
+GET: 2023/03/17 12:03:53 Id de numero 1 ate 63
+GET: 2023/03/17 12:04:37 Id de numero 1 ate 63
+GET: 2023/03/17 12:04:45 Id de numero 1 ate 63
+GET: 2023/03/17 12:04:48 Id de numero 361 ate 420
+GET: 2023/03/17 12:05:06 Id de numero 1 ate 63
+GET: 2023/03/17 12:05:08 Id de numero 1 ate 63
+GET: 2023/03/17 12:05:11 Id de numero 301 ate 360
+GET: 2023/03/17 12:05:36 Id de numero 241 ate 300
+GET: 2023/03/17 12:06:14 Id de numero 301 ate 360
+GET: 2023/03/17 12:08:37 Id de numero 355
+GET: 2023/03/17 12:08:42 Id de numero 360
+GET: 2023/03/17 12:08:48 Id de numero 325
+GET: 2023/03/17 12:09:26 Id de numero 361 ate 420
+GET: 2023/03/17 12:11:14 Id de numero 241 ate 300
+GET: 2023/03/17 12:11:29 Id de numero 241 ate 300
+GET: 2023/03/17 12:14:30 Id de numero 1 ate 63
+GET: 2023/03/17 12:14:34 Id de numero 1 ate 63
+GET: 2023/03/17 12:15:08 Id de numero 1 ate 63
+GET: 2023/03/17 12:21:12 Id de numero 1 ate 63
+GET: 2023/03/17 12:21:18 Id de numero 1 ate 63
+GET: 2023/03/17 12:21:21 Id de numero 61 ate 120
+GET: 2023/03/17 12:25:53 Id de numero 1 ate 63
+GET: 2023/03/17 12:25:57 Id de numero 1 ate 63
+GET: 2023/03/17 12:26:58 Id de numero 1 ate 63
+GET: 2023/03/17 12:27:22 Id de numero 1 ate 63

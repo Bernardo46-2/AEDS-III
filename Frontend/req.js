@@ -128,6 +128,8 @@ const classes = {
     'Fairy': 'bgd-Fairy'
 };
 
+let lastClicked = 1;
+
 function adicionarCards(data) {
     console.log(data)
     const cardsHtml = document.getElementById('cards');
@@ -164,10 +166,11 @@ function adicionarCards(data) {
             novoElemento.innerHTML = index;
             novaDiv.appendChild(novoElemento);
             novoElemento.onclick = () => {
-                const cards = document.querySelectorAll('[id^="mostrarMais"]');
-                for(let i = 0; i < numPaginas; i++)
-                    cards[i].classList.remove('active');
-                novoElemento.classList.add('active');
+                lastClicked = index;
+                // const cards = document.querySelectorAll('[id^="mostrarMais"]');
+                // for(let i = 0; i < numPaginas; i++)
+                //     cards[i].classList.remove('active');
+                // novoElemento.classList.add('active');
 
                 fetch(`http://localhost:8080/getAll/?page=${index - 1}`)
                     .then(response => response.json())
@@ -179,6 +182,9 @@ function adicionarCards(data) {
             };
         }
         cardsHtml.appendChild(novaDiv);
+        const btn = document.getElementById(`mostrarMais${lastClicked}`);
+        btn.classList.add('active');
+        btn.classList.remove('btn-Psyduck-mostrarMais');
     })
     .catch(error => {
         modalAviso();
