@@ -2,7 +2,7 @@
 // Data de criação: 15/03/2023
 //
 // Programa para gerenciar uma base de dados de Pokemons,
-// com suporte a operações CRUD e diferentes métodos de ordenação externa.
+// com suporte a operações crud e diferentes métodos de ordenação externa.
 // Seu funcionamento é feito atraves de uma comunicação JSON com um frontend
 // O servidor HTTP é inicializado na porta 8080.
 
@@ -20,7 +20,7 @@ func main() {
 	// Inicializa o servidor de log
 	logger.LigarServidor()
 
-	// Handlers para metodos de CRUD
+	// Handlers para metodos de service
 	http.HandleFunc("/getPagesNumber/", middlewares.EnableCORS(handlers.GetPagesNumber))
 	http.HandleFunc("/getAll/", middlewares.EnableCORS(handlers.GetAllPokemon))
 	http.HandleFunc("/get/", middlewares.EnableCORS(handlers.GetPokemon))
