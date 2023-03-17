@@ -606,3 +606,29 @@ GET: 2023/03/17 12:20:14 Id de numero 1 ate 61
 GET: 2023/03/17 12:20:17 Id de numero 841 ate 891
 STATUS: 2023/03/17 12:20:29 Servidor desligado
 >>>>>>> refs/remotes/origin/main
+INFO: 2023/03/17 12:49:38 Database Recarregada
+GET: 2023/03/17 12:49:38 Id de numero 1 ate 60
+GET: 2023/03/17 12:49:45 Id de numero 3
+GET: 2023/03/17 12:49:50 Id de numero 19
+GET: 2023/03/17 12:49:57 Id de numero 20
+GET: 2023/03/17 12:50:01 Id de numero 3
+GET: 2023/03/17 12:50:04 Id de numero 8
+GET: 2023/03/17 12:50:08 Id de numero 6
+GET: 2023/03/17 12:50:12 Id de numero 18
+GET: 2023/03/17 12:50:17 Id de numero 59
+GET: 2023/03/17 12:50:31 Id de numero 58
+GET: 2023/03/17 12:50:35 Id de numero 56
+GET: 2023/03/17 12:50:40 Id de numero 301 ate 360
+GET: 2023/03/17 12:50:46 Id de numero 353
+GET: 2023/03/17 12:50:53 Id de numero 661 ate 720
+GET: 2023/03/17 12:50:57 Id de numero 717
+GET: 2023/03/17 12:51:05 Id de numero 601 ate 660
+GET: 2023/03/17 12:51:13 Id de numero 609
+GET: 2023/03/17 12:51:19 Id de numero 541 ate 600
+GET: 2023/03/17 12:51:22 Id de numero 721 ate 780
+GET: 2023/03/17 12:51:24 Id de numero 778
+GET: 2023/03/17 12:53:24 Id de numero 774
+GET: 2023/03/17 12:54:21 Id de numero 1 ate 60
+GET: 2023/03/17 12:54:25 Id de numero 541 ate 600
+GET: 2023/03/17 12:54:29 Id de numero 841 ate 890
+GET: 2023/03/17 13:00:08 Id de numero 889

@@ -141,7 +141,7 @@ function adicionarCards(data) {
         let pokemonCard = `
         <div class="card ${bgd} ${bgd}-shadow col-sm-6 col-lg-3 col-xxl-2" data-bs-toggle="modal" data-bs-target="#modalPage" id="${data[i].numero}">
         <img class="card-img-top" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data[i].numero}.png" alt="${nome}">
-        <h5 class="card-title text-center">${capt(nome)}</h5>
+        <h5 class="card-title text-center">${capt(nome.split(' ')[0])}</h5>
         <p class="poke-id">#${data[i].numero}</p>
         </div>
         `;
