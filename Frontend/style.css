@@ -411,6 +411,39 @@ input[type="text"] {
     margin-bottom: 18px !important;
 }
 
+.poke-descricao-titulo {
+    text-align: center;
+    color: #fff;
+    width: 100%;
+    text-align: center !important;
+    font-family: "Tilt Neon", cursive !important;
+    font-size: 3em !important;
+    margin-top: 20px !important;
+}
+
+.poke-descricao {
+    color: #ffffff;
+    width: 60% !important;
+    text-align: center;
+    font-family: "Tilt Neon", cursive !important;
+    font-size: 1.7em !important;
+}
+
+.poke-descricao-input {
+    color: #ffffff;
+    background-color: var(--background-dark);
+    border: none;
+    width: 60% !important;
+    text-align: center;
+    font-family: "Tilt Neon", cursive !important;
+    font-size: 1.7em !important;
+    margin-bottom: 18px !important;
+}
+
+textarea {
+    resize: none !important;
+}
+
 .poke-rare {
     color: #fff;
     border-radius: 30px;

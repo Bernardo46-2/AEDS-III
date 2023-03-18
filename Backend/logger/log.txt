@@ -911,3 +911,73 @@ GET: 2023/03/18 15:08:40 Id de numero 1 ate 61
 INFO: 2023/03/18 15:08:43 Database Recarregada
 GET: 2023/03/18 15:08:43 Id de numero 1 ate 60
 STATUS: 2023/03/18 15:08:58 Servidor desligado
+STATUS: 2023/03/18 15:11:13 Servidor iniciado
+GET: 2023/03/18 15:11:18 Id de numero 1 ate 60
+GET: 2023/03/18 15:11:19 Id de numero 2
+GET: 2023/03/18 15:11:26 Id de numero 8
+GET: 2023/03/18 15:11:53 Id de numero 1 ate 60
+GET: 2023/03/18 15:11:54 Id de numero 7
+GET: 2023/03/18 15:12:09 Id de numero 1 ate 60
+GET: 2023/03/18 15:12:10 Id de numero 7
+GET: 2023/03/18 15:12:16 Id de numero 1 ate 60
+GET: 2023/03/18 15:12:16 Id de numero 7
+GET: 2023/03/18 15:12:27 Id de numero 1 ate 60
+GET: 2023/03/18 15:12:28 Id de numero 7
+GET: 2023/03/18 15:13:12 Id de numero 1 ate 60
+GET: 2023/03/18 15:13:13 Id de numero 7
+GET: 2023/03/18 15:13:31 Id de numero 1 ate 60
+GET: 2023/03/18 15:13:31 Id de numero 7
+GET: 2023/03/18 15:13:40 Id de numero 1
+GET: 2023/03/18 15:13:43 Id de numero 8
+GET: 2023/03/18 15:13:54 Id de numero 1 ate 60
+GET: 2023/03/18 15:13:55 Id de numero 8
+GET: 2023/03/18 15:14:01 Id de numero 1 ate 60
+GET: 2023/03/18 15:14:02 Id de numero 7
+GET: 2023/03/18 15:14:20 Id de numero 1 ate 60
+GET: 2023/03/18 15:14:21 Id de numero 7
+GET: 2023/03/18 15:14:34 Id de numero 1 ate 60
+GET: 2023/03/18 15:14:36 Id de numero 8
+GET: 2023/03/18 15:14:49 Id de numero 1 ate 60
+GET: 2023/03/18 15:14:49 Id de numero 7
+GET: 2023/03/18 15:15:42 Id de numero 1 ate 60
+GET: 2023/03/18 15:15:43 Id de numero 7
+GET: 2023/03/18 15:16:09 Id de numero 1 ate 60
+GET: 2023/03/18 15:16:10 Id de numero 7
+GET: 2023/03/18 15:16:50 Id de numero 1 ate 60
+GET: 2023/03/18 15:16:50 Id de numero 7
+GET: 2023/03/18 15:17:03 Id de numero 1 ate 60
+GET: 2023/03/18 15:17:04 Id de numero 7
+GET: 2023/03/18 15:17:30 Id de numero 2
+GET: 2023/03/18 15:17:35 Id de numero 1
+GET: 2023/03/18 15:17:43 Id de numero 9
+GET: 2023/03/18 15:17:55 Id de numero 1 ate 60
+GET: 2023/03/18 15:17:57 Id de numero 25
+GET: 2023/03/18 15:18:05 Id de numero 1 ate 60
+GET: 2023/03/18 15:18:06 Id de numero 7
+GET: 2023/03/18 15:20:05 Id de numero 1 ate 60
+GET: 2023/03/18 15:20:06 Id de numero 7
+GET: 2023/03/18 15:20:28 Id de numero 1 ate 60
+GET: 2023/03/18 15:20:29 Id de numero 7
+GET: 2023/03/18 15:20:44 Id de numero 1 ate 60
+GET: 2023/03/18 15:20:45 Id de numero 7
+GET: 2023/03/18 15:20:55 Id de numero 1 ate 60
+GET: 2023/03/18 15:20:56 Id de numero 7
+GET: 2023/03/18 15:21:07 Id de numero 1 ate 60
+GET: 2023/03/18 15:21:08 Id de numero 7
+GET: 2023/03/18 15:21:56 Id de numero 1 ate 60
+GET: 2023/03/18 15:21:59 Id de numero 52
+GET: 2023/03/18 15:22:38 Id de numero 1 ate 60
+GET: 2023/03/18 15:22:38 Id de numero 7
+GET: 2023/03/18 15:23:17 Id de numero 1 ate 60
+GET: 2023/03/18 15:23:18 Id de numero 8
+GET: 2023/03/18 15:23:27 Id de numero 1 ate 60
+GET: 2023/03/18 15:23:28 Id de numero 7
+GET: 2023/03/18 15:23:33 Id de numero 7
+GET: 2023/03/18 15:24:31 Id de numero 1 ate 60
+GET: 2023/03/18 15:24:32 Id de numero 7
+GET: 2023/03/18 15:24:52 Id de numero 7
+PUT: 2023/03/18 15:24:59 Id de numero 7 atualizado
+GET: 2023/03/18 15:24:59 Id de numero 1 ate 60
+GET: 2023/03/18 15:25:02 Id de numero 1 ate 60
+GET: 2023/03/18 15:25:02 Id de numero 7
+GET: 2023/03/18 15:25:09 Id de numero 841 ate 890
