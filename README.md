@@ -13,7 +13,7 @@ Além disso, o projeto foi feito com o modelo de uma API para comunicação entr
 ### Exemplos de telas do sistema:
 
 #### Tela Principal
-![Tela principal](/Outros/tela_Inicial.png)
+![Tela principal](/Outros/tela_inicial.png)
 #### Tela de visualização individual e crud
 ![PokeCard](/Outros/descricao.png)
 #### Tela de respostas do servidor
