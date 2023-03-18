@@ -13,11 +13,11 @@ Além disso, o projeto foi feito com o modelo de uma API para comunicação entr
 ### Exemplos de telas do sistema:
 
 #### Tela Principal
-![Tela principal](/Outros/Tela_Principal_1.0.png)
+![Tela principal](/Outros/tela_inicial.png)
 #### Tela de visualização individual e crud
-![PokeCard](/Outros/CRUD_1.0.png)
+![PokeCard](/Outros/descricao.png)
 #### Tela de respostas do servidor
-![Resposta do servidor](/Outros/Resposta_1.0.png)
+![Resposta do servidor](/Outros/resposta.png)
 
 ## Funcionalidades
 O banco de dados suporta as seguintes funcionalidades:
