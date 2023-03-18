@@ -36,6 +36,7 @@ if __name__ == '__main__':
         csv_reader = csv.DictReader(file)
         descriptions = get_descriptions()
         last_index = 0
+        last_id = 0
         i = 0
 
         headers = csv_file[i]
@@ -45,9 +46,10 @@ if __name__ == '__main__':
             i += 1
             poke_id = row.get('pokedex_number')
 
-            if poke_id == None:
+            if poke_id == None or poke_id == last_id:
                 continue
 
+            last_id = poke_id
             last_index, description = parse_description(descriptions, poke_id, last_index)
 
             line = csv_file[i]
