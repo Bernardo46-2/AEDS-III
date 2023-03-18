@@ -808,3 +808,26 @@ PUT: 2023/03/18 14:43:06 Id de numero 1 atualizado
 GET: 2023/03/18 14:43:06 Id de numero 1 ate 1
 GET: 2023/03/18 14:43:18 Id de numero 1 ate 1
 STATUS: 2023/03/18 14:43:37 Servidor desligado
+STATUS: 2023/03/18 14:44:32 Servidor iniciado
+GET: 2023/03/18 14:44:36 Id de numero 1 ate 1
+GET: 2023/03/18 14:44:38 Id de numero 1 ate 1
+GET: 2023/03/18 14:44:41 Id de numero 1 ate 1
+GET: 2023/03/18 14:44:43 Id de numero 1
+GET: 2023/03/18 14:44:59 Id de numero 1 ate 1
+INFO: 2023/03/18 14:45:19 Database Recarregada
+GET: 2023/03/18 14:45:19 Id de numero 1 ate 60
+GET: 2023/03/18 14:45:56 Id de numero 1
+GET: 2023/03/18 15:13:35 Id de numero 38
+GET: 2023/03/18 15:13:51 Id de numero 59
+GET: 2023/03/18 15:14:06 Id de numero 42
+GET: 2023/03/18 15:14:12 Id de numero 41
+GET: 2023/03/18 15:18:55 Id de numero 7
+GET: 2023/03/18 15:19:15 Id de numero 29
+GET: 2023/03/18 15:19:19 Id de numero 58
+INFO: 2023/03/18 15:19:40 Database Recarregada
+GET: 2023/03/18 15:19:40 Id de numero 1 ate 60
+GET: 2023/03/18 15:19:42 Id de numero 52
+GET: 2023/03/18 15:20:24 Id de numero 421 ate 480
+GET: 2023/03/18 15:20:27 Id de numero 1 ate 60
+GET: 2023/03/18 15:20:30 Id de numero 1 ate 60
+STATUS: 2023/03/18 15:41:58 Servidor desligado
