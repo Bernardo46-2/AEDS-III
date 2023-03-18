@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 STATUS: 2023/03/16 05:57:55 Servidor iniciado
 STATUS: 2023/03/16 06:00:48 Servidor desligado
 STATUS: 2023/03/16 06:02:11 Servidor iniciado
@@ -831,3 +832,5 @@ GET: 2023/03/18 15:20:24 Id de numero 421 ate 480
 GET: 2023/03/18 15:20:27 Id de numero 1 ate 60
 GET: 2023/03/18 15:20:30 Id de numero 1 ate 60
 STATUS: 2023/03/18 15:41:58 Servidor desligado
+=======
+>>>>>>> refs/remotes/origin/main

@@ -128,7 +128,7 @@ const classes = {
     'Fairy': 'bgd-Fairy'
 };
 
-let lastClicked = 7;
+let lastClicked = 1;
 let insertDots = true;
 
 function adicionarCards(data) {
@@ -223,6 +223,7 @@ function carregarDados(id) {
 }
 
 function adicionarDadosModal(data) {
+    console.log(data);
     const editButton = document.querySelector('#edit');
     const saveButton = document.querySelector('#save');
     editButton.hidden = false;
@@ -302,7 +303,8 @@ function adicionarDadosModal(data) {
         <p class="poke-rare ${mitico} col-4">Mitico</p>
     </div>
     <div class="row justify-content-center">
-        <p class="poke-type">${data.descricao}</p>
+        <p class="poke-descricao-titulo">descrição:</p>
+        <p class="poke-descricao">${data.descricao}</p>
     </div>
 
     `;
@@ -468,7 +470,8 @@ function editarDadosModal(data, shouldCreate = false) {
         <p class="poke-rare mitico-n col-4 pointer" id="mitico">Mitico</p>
     </div>
     <div class="row justify-content-center">
-        <input class="poke-type-input" type="text" name="tipo-pokemon" id="descricao-pokemon" value="${data.descricao}">
+        <p class="poke-descricao-titulo">descrição:</p>
+        <textarea class="poke-descricao-input scrollbar2" type="text" name="tipo-pokemon" id="descricao-pokemon">${data.descricao}</textarea>
     </div>
     `;
 

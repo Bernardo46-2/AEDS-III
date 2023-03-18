@@ -132,6 +132,9 @@ func NumRegistros() (numEntradas int, inicioRegistros int64, err error) {
 }
 
 func GetLastPokemon() (lastID int32) {
+	atualPokemon := models.Pokemon{Numero: -1}
+	ultimoPokemon := models.Pokemon{Numero: -1}
+
 	file, err := os.Open(BIN_FILE)
 	if err != nil {
 		return -1
@@ -144,26 +147,22 @@ func GetLastPokemon() (lastID int32) {
 	numEntradas := int(numEntradas32)
 
 	// pula registros ate chegar ao ultimo
-	for i := 0; i < numEntradas-1; i++ {
+	for i := 0; i < numEntradas; i++ {
 		var lapide int32
 		binary.Read(file, binary.LittleEndian, &lapide)
 		var tamReg int32
 		binary.Read(file, binary.LittleEndian, &tamReg)
 		pokeBytes := make([]byte, tamReg-4)
 		io.ReadFull(file, pokeBytes)
+		if lapide != 0 {
+			atualPokemon.ParseBinToPoke(pokeBytes)
+			if atualPokemon.Numero > ultimoPokemon.Numero {
+				ultimoPokemon = atualPokemon
+			}
+		}
 	}
 
-	// Lê o ultimo registro
-	var lapide int32
-	binary.Read(file, binary.LittleEndian, &lapide)
-	var tamReg int32
-	binary.Read(file, binary.LittleEndian, &tamReg)
-	pokeBytes := make([]byte, tamReg-4)
-	io.ReadFull(file, pokeBytes)
-	pokemonAtual := models.Pokemon{Numero: -1}
-	pokemonAtual.ParseBinToPoke(pokeBytes)
-
-	return pokemonAtual.Numero
+	return ultimoPokemon.Numero
 }
 
 // DeletarPokemon recebe a posição da lapide a ser alterada no arquivo
