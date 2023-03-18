@@ -1,0 +1,14 @@
+STATUS: 2023/03/18 15:49:45 Servidor iniciado
+GET: 2023/03/18 15:49:52 Id de numero 1 ate 60
+GET: 2023/03/18 15:49:55 Id de numero 1 ate 60
+GET: 2023/03/18 15:49:56 Id de numero 1 ate 60
+GET: 2023/03/18 15:49:57 Id de numero 5
+GET: 2023/03/18 15:50:07 Id de numero 12
+INFO: 2023/03/18 15:50:13 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/18 15:50:13 Id de numero 1 ate 60
+INFO: 2023/03/18 15:50:17 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/18 15:50:17 Id de numero 1 ate 60
+GET: 2023/03/18 15:53:18 Id de numero 1 ate 60
+GET: 2023/03/18 15:53:29 Id de numero 1 ate 60
+GET: 2023/03/18 15:53:33 Id de numero 61 ate 120
+GET: 2023/03/18 16:12:01 Id de numero 1 ate 60
