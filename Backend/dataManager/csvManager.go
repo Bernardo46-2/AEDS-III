@@ -14,7 +14,7 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-const FILE string = "data/pokedex.csv"
+const FILE string = "data/pokedex2.csv"
 const BIN_FILE string = "data/pokedex.dat"
 
 // CSV struct contendo os dados csv
