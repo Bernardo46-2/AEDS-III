@@ -301,6 +301,10 @@ function adicionarDadosModal(data) {
         <p class="poke-rare ${lendario} col-4">Lendario</p>
         <p class="poke-rare ${mitico} col-4">Mitico</p>
     </div>
+    <div class="row justify-content-center">
+        <p class="poke-type">${data.descricao}</p>
+    </div>
+
     `;
 
     conteudoPokemon.innerHTML = modalContent;
@@ -333,6 +337,7 @@ const collectFormData = async () => {
     const pokeRelease = document.getElementById('lancamento');
     const pokeLegendary = document.getElementById('lendario');
     const pokeMitic = document.getElementById('mitico');
+    const pokeDescription = document.getElementById('descricao-pokemon');
 
     const japName = await fetch(`http://localhost:8080/toKatakana/?stringToConvert=${pokeNameJap.value}`);
     let number = pokeNumber.innerText;
@@ -353,6 +358,9 @@ const collectFormData = async () => {
     pokemon.lancamento = dateFields[2] + '-' + dateFields[1] + '-' + dateFields[0] + 'T00:00:00Z';
     pokemon.lendario = pokeLegendary.classList.contains('lendario-y');
     pokemon.mitico = pokeMitic.classList.contains('mitico-y');
+    pokemon.descricao = pokeDescription.value;
+
+    console.log(pokemon)
 
     return pokemon;
 }
@@ -456,8 +464,11 @@ function editarDadosModal(data, shouldCreate = false) {
     </div>
     </div>
     <div class="row justify-content-center">
-    <p class="poke-rare lendario-n col-4 pointer" id="lendario">Lendario</p>
-    <p class="poke-rare mitico-n col-4 pointer" id="mitico">Mitico</p>
+        <p class="poke-rare lendario-n col-4 pointer" id="lendario">Lendario</p>
+        <p class="poke-rare mitico-n col-4 pointer" id="mitico">Mitico</p>
+    </div>
+    <div class="row justify-content-center">
+        <input class="poke-type-input" type="text" name="tipo-pokemon" id="descricao-pokemon" value="${data.descricao}">
     </div>
     `;
 
