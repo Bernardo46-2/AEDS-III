@@ -39,6 +39,7 @@ type Pokemon struct {
 	Hp         int32     `json:"hp"`
 	Altura     float32   `json:"altura"`
 	Peso       float32   `json:"peso"`
+    Descricao  string    `json:"descricao"`
 	Size       PokeSize  `json:"-"`
 }
 
@@ -60,6 +61,7 @@ type PokeSize struct {
 	Hp         int32
 	Altura     int32
 	Peso       int32
+    Descricao  int32
 }
 
 // GenReleaseDates é um mapa para facil conversão de geração em data de lançamento
@@ -93,6 +95,7 @@ func (p *Pokemon) ToString() string {
 	str += fmt.Sprintf("Hp         = %d\n", p.Hp)
 	str += fmt.Sprintf("Altura     = %f\n", p.Altura)
 	str += fmt.Sprintf("Peso       = %f\n", p.Peso)
+	str += fmt.Sprintf("Descricao  = %s\n", p.Descricao)
 
 	return str
 }
@@ -174,6 +177,8 @@ func (p *Pokemon) ToBytes() []byte {
 	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Hp), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, utils.FloatToBytes(p.Altura), offset)
 	pokeBytes, _ = copyBytes(pokeBytes, utils.FloatToBytes(p.Peso), offset)
+    pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Size.Descricao), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, []byte(p.Descricao), offset)
 
 	return pokeBytes
 }
@@ -198,6 +203,7 @@ func (p *Pokemon) ParseBinToPoke(registro []byte) error {
 	p.Hp, ptr = utils.BytesToInt32(registro, ptr)
 	p.Altura, ptr = utils.BytesToFloat32(registro, ptr)
 	p.Peso, _ = utils.BytesToFloat32(registro, ptr)
+    p.Descricao, _ = utils.BytesToString(registro, ptr)
 	p.CalculateSize()
 
 	return nil
@@ -229,6 +235,7 @@ func ParsePokemon(line []string) Pokemon {
 
 	pokemon.Altura = float32(altura)
 	pokemon.Peso = float32(peso)
+    pokemon.Descricao = line[len(line) - 1]
 
 	pokemon.CalculateSize()
 
@@ -263,6 +270,7 @@ func (p *Pokemon) CalculateSize() {
 	p.Size.Hp = int32(unsafe.Sizeof(p.Hp))
 	p.Size.Altura = int32(unsafe.Sizeof(p.Altura))
 	p.Size.Peso = int32(unsafe.Sizeof(p.Peso))
+	p.Size.Descricao = int32(len(p.Descricao))
 
 	// Soma e adiciona o espaço ocupado pelo bit de tamanho
 	p.Size.Total = p.Size.Numero + 4 +
@@ -278,5 +286,6 @@ func (p *Pokemon) CalculateSize() {
 		p.Size.Def +
 		p.Size.Hp +
 		p.Size.Altura +
-		p.Size.Peso + 4 + 1
+		p.Size.Peso + 4 +
+        p.Size.Descricao + 4 + 1
 }

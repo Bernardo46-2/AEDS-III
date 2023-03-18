@@ -736,3 +736,18 @@ GET: 2023/03/17 16:55:46 Id de numero 1 ate 61
 INFO: 2023/03/17 16:56:00 Database Recarregada
 GET: 2023/03/17 16:56:00 Id de numero 1 ate 60
 GET: 2023/03/17 16:56:05 Id de numero 7
+GET: 2023/03/18 13:52:21 Id de numero 1 ate 60
+GET: 2023/03/18 13:52:26 Id de numero 7
+INFO: 2023/03/18 13:52:33 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/18 13:52:33 Id de numero 1 ate 60
+GET: 2023/03/18 13:53:19 Id de numero 481 ate 540
+GET: 2023/03/18 13:53:43 Id de numero 1 ate 60
+GET: 2023/03/18 13:53:58 Id de numero 1 ate 60
+GET: 2023/03/18 13:54:00 Id de numero 1 ate 60
+DELETE: 2023/03/18 13:54:12 Id de numero 11 deletado
+GET: 2023/03/18 13:54:12 Id de numero 1 ate 61
+GET: 2023/03/18 13:54:15 Id de numero 1 ate 61
+GET: 2023/03/18 13:54:20 Id de numero 1 ate 61
+GET: 2023/03/18 13:55:12 Id de numero 1 ate 61
+STATUS: 2023/03/18 14:04:28 Servidor iniciado
+STATUS: 2023/03/18 14:06:43 Servidor desligado
