@@ -39,7 +39,7 @@ type Pokemon struct {
 	Hp         int32     `json:"hp"`
 	Altura     float32   `json:"altura"`
 	Peso       float32   `json:"peso"`
-    Descricao  string    `json:"descricao"`
+	Descricao  string    `json:"descricao"`
 	Size       PokeSize  `json:"-"`
 }
 
@@ -61,7 +61,7 @@ type PokeSize struct {
 	Hp         int32
 	Altura     int32
 	Peso       int32
-    Descricao  int32
+	Descricao  int32
 }
 
 // GenReleaseDates é um mapa para facil conversão de geração em data de lançamento
@@ -176,9 +176,9 @@ func (p *Pokemon) ToBytes() []byte {
 	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Def), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Hp), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, utils.FloatToBytes(p.Altura), offset)
-	pokeBytes, _ = copyBytes(pokeBytes, utils.FloatToBytes(p.Peso), offset)
-    pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Size.Descricao), offset)
-	pokeBytes, offset = copyBytes(pokeBytes, []byte(p.Descricao), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.FloatToBytes(p.Peso), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Size.Descricao), offset)
+	pokeBytes, _ = copyBytes(pokeBytes, []byte(p.Descricao), offset)
 
 	return pokeBytes
 }
@@ -202,8 +202,8 @@ func (p *Pokemon) ParseBinToPoke(registro []byte) error {
 	p.Def, ptr = utils.BytesToInt32(registro, ptr)
 	p.Hp, ptr = utils.BytesToInt32(registro, ptr)
 	p.Altura, ptr = utils.BytesToFloat32(registro, ptr)
-	p.Peso, _ = utils.BytesToFloat32(registro, ptr)
-    p.Descricao, _ = utils.BytesToString(registro, ptr)
+	p.Peso, ptr = utils.BytesToFloat32(registro, ptr)
+	p.Descricao, _ = utils.BytesToString(registro, ptr)
 	p.CalculateSize()
 
 	return nil
@@ -235,7 +235,7 @@ func ParsePokemon(line []string) Pokemon {
 
 	pokemon.Altura = float32(altura)
 	pokemon.Peso = float32(peso)
-    pokemon.Descricao = line[len(line) - 1]
+	pokemon.Descricao = line[len(line)-1]
 
 	pokemon.CalculateSize()
 
@@ -286,6 +286,6 @@ func (p *Pokemon) CalculateSize() {
 		p.Size.Def +
 		p.Size.Hp +
 		p.Size.Altura +
-		p.Size.Peso + 4 +
-        p.Size.Descricao + 4 + 1
+		p.Size.Peso +
+		p.Size.Descricao + 4 + 1
 }

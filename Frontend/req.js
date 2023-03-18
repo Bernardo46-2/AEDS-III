@@ -223,6 +223,7 @@ function carregarDados(id) {
 }
 
 function adicionarDadosModal(data) {
+    console.log(data);
     const editButton = document.querySelector('#edit');
     const saveButton = document.querySelector('#save');
     editButton.hidden = false;
