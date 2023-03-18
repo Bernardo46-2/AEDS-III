@@ -751,3 +751,34 @@ GET: 2023/03/18 13:54:20 Id de numero 1 ate 61
 GET: 2023/03/18 13:55:12 Id de numero 1 ate 61
 STATUS: 2023/03/18 14:04:28 Servidor iniciado
 STATUS: 2023/03/18 14:06:43 Servidor desligado
+STATUS: 2023/03/18 14:25:10 Servidor iniciado
+INFO: 2023/03/18 14:25:15 Database Recarregada
+GET: 2023/03/18 14:25:15 Id de numero 1 ate 60
+GET: 2023/03/18 14:25:31 Id de numero 1 ate 60
+GET: 2023/03/18 14:25:35 Id de numero 1
+GET: 2023/03/18 14:26:20 Id de numero 1 ate 60
+GET: 2023/03/18 14:26:22 Id de numero 1
+GET: 2023/03/18 14:26:39 Id de numero 841 ate 890
+GET: 2023/03/18 14:26:41 Id de numero 855
+GET: 2023/03/18 14:27:26 Id de numero 852
+INFO: 2023/03/18 14:28:07 Database Recarregada
+GET: 2023/03/18 14:28:07 Id de numero 1 ate 60
+GET: 2023/03/18 14:28:11 Id de numero 841 ate 890
+GET: 2023/03/18 14:28:20 Id de numero 890
+GET: 2023/03/18 14:28:37 Id de numero 882
+PUT: 2023/03/18 14:28:46 Id de numero 882 atualizado
+GET: 2023/03/18 14:28:46 Id de numero 1 ate 60
+GET: 2023/03/18 14:28:50 Id de numero 841 ate 882
+GET: 2023/03/18 14:28:51 Id de numero 841 ate 882
+INFO: 2023/03/18 14:29:09 Database Recarregada
+GET: 2023/03/18 14:29:09 Id de numero 1 ate 60
+GET: 2023/03/18 14:29:13 Id de numero 841 ate 890
+GET: 2023/03/18 14:29:17 Id de numero 890
+PUT: 2023/03/18 14:29:19 Id de numero 890 atualizado
+GET: 2023/03/18 14:29:19 Id de numero 1 ate 60
+GET: 2023/03/18 14:29:24 Id de numero 841 ate 890
+GET: 2023/03/18 14:29:28 Id de numero 882
+PUT: 2023/03/18 14:29:32 Id de numero 882 atualizado
+GET: 2023/03/18 14:29:32 Id de numero 1 ate 60
+GET: 2023/03/18 14:29:37 Id de numero 841 ate 882
+STATUS: 2023/03/18 14:30:04 Servidor desligado
