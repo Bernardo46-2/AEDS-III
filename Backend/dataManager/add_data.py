@@ -53,6 +53,6 @@ if __name__ == '__main__':
             last_index, description = parse_description(descriptions, poke_id, last_index)
 
             line = csv_file[i]
-            new_file.write(line[:len(line) - 1] + f',"{description if not description.startswith("d,version") else ""}"\n')
+            new_file.write(line[:len(line) - 1] + f',"{description if not description.startswith("d,version") else "descrição."}"\n')
 
         file.close()
