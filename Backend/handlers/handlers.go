@@ -195,7 +195,7 @@ func SelecaoPorSubstituicao(w http.ResponseWriter, r *http.Request) {
 
 func CriarHashingEstendido(w http.ResponseWriter, r *http.Request) {
 	// Ordena
-	dataManager.CriarHashingEstendido()
+	dataManager.StartHashFile()
 
 	// Resposta
 	writeSuccess(w, 9)

@@ -30,7 +30,7 @@ func main() {
 	opcao, _ := strconv.Atoi(scanner.Text())
 	switch opcao {
 	case 1:
-		dataManager.CriarHashingEstendido()
+		dataManager.StartHashFile()
 	case 2:
 		dataManager.ImportCSV().CsvToBin()
 	case 9:
