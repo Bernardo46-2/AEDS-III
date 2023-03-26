@@ -152,9 +152,8 @@ func (hash *DinamicHash) Add(r BucketRecord) {
 			hash.Add(r)
 		} else {
 			fmt.Printf("Bucket estourado! Repartindo! p nao aumenta! p total = %d | p local = %d\n", hash.directory.p, bucket.ActualPower)
-			newPos := int64(r.ID) % (1 << bucket.ActualPower)
 			address := hash.InitializeNewBucket(1)
-			hash.directory.bucketPointer[newPos+pos] = address[0]
+			hash.directory.bucketPointer[int64(hash.GetBucketCount()>>1)+pos] = address[0]
 
 			// redivisao do bucket
 			hash.bucketFile.Seek(hash.directory.bucketPointer[pos], io.SeekStart)
