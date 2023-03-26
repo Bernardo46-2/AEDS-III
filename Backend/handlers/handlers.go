@@ -6,6 +6,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -43,7 +44,6 @@ func GetAllPokemon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJson(w, pokemon)
-	logger.Println("GET", "Id de numero "+strconv.Itoa(int(pokemon[0].Numero))+" ate "+strconv.Itoa(int(pokemon[len(pokemon)-1].Numero)))
 }
 
 // GetPokemon recupera o pokemon pelo ID fornecido
@@ -59,7 +59,6 @@ func GetPokemon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJson(w, pokemon)
-	logger.Println("GET", "Id de numero "+strconv.Itoa(id))
 }
 
 // PostPokemon adiciona o pokemon ao banco de dados
@@ -84,7 +83,6 @@ func PostPokemon(w http.ResponseWriter, r *http.Request) {
 	}
 	pokemonID := models.PokemonID{ID: id}
 	writeJson(w, pokemonID)
-	logger.Println("POST", "Id de numero "+strconv.Itoa(id)+" adicionado")
 }
 
 // PutPokemon recebe um json e atualiza o valor no banco de dados
@@ -110,7 +108,6 @@ func PutPokemon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeSuccess(w, 4)
-	logger.Println("PUT", "Id de numero "+strconv.Itoa(int(pokemon.Numero))+" atualizado")
 }
 
 // DeletePokemon recebe um ID, pesquisa no banco de dados
@@ -129,7 +126,6 @@ func DeletePokemon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeSuccess(w, 5)
-	logger.Println("DELETE", "Id de numero "+strconv.Itoa(id)+" deletado")
 }
 
 // LoadDatabase faz o carregamento do arquivo CSV e o serializa em binario
@@ -180,7 +176,7 @@ func IntercalacaoVariavel(w http.ResponseWriter, r *http.Request) {
 
 	// Resposta
 	writeSuccess(w, 8)
-	logger.Println("INFO", "Database Ordenada (Intercalacao Comum)")
+	logger.Println("INFO", "Database Ordenada (Intercalacao Variavel)")
 }
 
 // SelecaoPorSubstituicao realiza a ordenação externa do BD através de um heap minimo
@@ -194,7 +190,16 @@ func SelecaoPorSubstituicao(w http.ResponseWriter, r *http.Request) {
 
 	// Resposta
 	writeSuccess(w, 9)
-	logger.Println("INFO", "Database Ordenada (Intercalacao Comum)")
+	logger.Println("INFO", "Database Ordenada (Intercalacao Por Substituição)")
+}
+
+func CriarHashingEstendido(w http.ResponseWriter, r *http.Request) {
+	// Ordena
+	dataManager.CriarHashingEstendido()
+
+	// Resposta
+	writeSuccess(w, 9)
+	logger.Println("INFO", "Função Hashing criada")
 }
 
 // writeError recebe um erro de http responde e um id de erro interno,
@@ -209,7 +214,9 @@ func writeError(w http.ResponseWriter, codes ...int) {
 	}
 
 	// Gera uma resposta json personalizada
-	json.NewEncoder(w).Encode(models.ErrorResponse(code))
+	err := models.ErrorResponse(code)
+	json.NewEncoder(w).Encode(err)
+	logger.Println("ERROR", fmt.Sprintf("code: %d, message: %s", err.Code, err.Message))
 }
 
 // writeSuccess gera uma resposta http de sucesso (200) e
