@@ -1,37 +1,55 @@
 package dataManager
 
-import "fmt"
+import (
+	"os"
+)
 
-type diretorio struct {
+const BUCKETS_FILE string = "data/Buckets.csv"
+
+type DinamicHash struct {
+	directory  Directory
+	loadFactor int
+	bucketFile *os.File
+}
+
+type Directory struct {
 	p             int
-	bucketPointer []int
-	loadFactor    int
+	bucketPointer []int64
 }
 
 type Bucket struct {
-	TamanhoAtual int
-	Registros    []RegistroBucket
+	CurrentSize int
+	Registros   []BucketRecord
 }
 
-type RegistroBucket struct {
-	ID       int32
-	Endereco int64
+type BucketRecord struct {
+	ID      int32
+	Address int64
 }
 
-func (d *diretorio) numeroDeBuckets() int {
+func (d *Directory) GetBucketCount() int {
 	return 1 << d.p
 }
 
-func criarDiretorio() *diretorio {
-	numRegistros, _, _ := NumRegistros()
-	return &diretorio{
+func newHash(fileAddress string) *DinamicHash {
+	// numRegistros, _, _ := NumRegistros()
+	arquivo, _ := os.Create(fileAddress)
+
+	d := Directory{
 		p:             1,
-		bucketPointer: make([]int, 0, 2),
-		loadFactor:    int(float64(numRegistros) * 0.05),
+		bucketPointer: make([]int64, 0, 2),
 	}
+
+	hash := DinamicHash{
+		directory:  d,
+		loadFactor: 5, // int(float64(numRegistros) * 0.05),
+		bucketFile: arquivo,
+	}
+
+	return &hash
 }
 
-/* func (d *diretorio) aumentarP() {
+/* func (d *Directory) increasePower() {
 	d.p++
 	novoTamanhoBucket := 1 << d.p
 	novoBucket := make([]int, novoTamanhoBucket)
@@ -39,29 +57,36 @@ func criarDiretorio() *diretorio {
 	d.bucketPointer = novoBucket
 } */
 
-func CriarHashingEstendido() {
-	d := criarDiretorio()
-	fmt.Printf("p = %d, numero de buckets = %d, fator de carga = %d\n\n", d.p, d.numeroDeBuckets(), d.loadFactor)
-
-	c, err := inicializarControleLeitura(BIN_FILE)
-	b := Bucket{
-		TamanhoAtual: 0,
-		Registros:    make([]RegistroBucket, 0),
+func newBucketRecord(registro Registro) BucketRecord {
+	return BucketRecord{
+		ID:      registro.Pokemon.Numero,
+		Address: registro.Endereco,
 	}
+}
 
-	for i := 0; i < d.loadFactor && err == nil; i++ { // i < int(c.TotalRegistros)
+func (hash *DinamicHash) Add(r BucketRecord) {
+	/*
+		b := Bucket{
+			CurrentSize: 0,
+			Registros:   make([]BucketRecord, 0),
+		}
+
+		pos := int(r.ID) % d.GetBucketCount()
+
+		b.CurrentSize++
+		b.Registros = append(b.Registros, r)
+	*/
+}
+
+func CriarHashingEstendido() {
+	hash := newHash(BUCKETS_FILE)
+	c, err := inicializarControleLeitura(BIN_FILE)
+
+	for i := 0; i < 15 && err == nil; i++ { // i < int(c.TotalRegistros)
 		err = c.ReadNext()
 		if c.RegistroAtual.Lapide != 1 {
-			r := RegistroBucket{
-				ID:       c.RegistroAtual.Pokemon.Numero,
-				Endereco: c.RegistroAtual.Endereco,
-			}
-			b.TamanhoAtual++
-			b.Registros = append(b.Registros, r)
+			r := newBucketRecord(*c.RegistroAtual)
+			hash.Add(r)
 		}
-	}
-
-	for i := 0; i < b.TamanhoAtual; i++ {
-		fmt.Printf("ID = %d, Posicao = %x\n", b.Registros[i].ID, b.Registros[i].Endereco)
 	}
 }
