@@ -2,162 +2,132 @@
 2 - Importar CSV
 9 - Ligar Servidor
 
-Registro a ser adicionado = {ID:1 Address:4}
-id = 1 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-conteudo = {ActualPower:1 CurrentSize:1 Records:[{ID:1 Address:4} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
+[  0]     0 = ActualPower:7 | CurrentSize:6 | [ {ID:128 Address: 7C7C} {ID:256 Address: F9CA} {ID:384 Address:1778D} {ID:512 Address:1F709} {ID:640 Address:27AC0} {ID:768 Address:2D987}                                                                                                                    ]
+[  1]    C0 = ActualPower:7 | CurrentSize:7 | [ {ID:  1 Address:    4} {ID:129 Address: 7D79} {ID:257 Address: FACF} {ID:385 Address:17885} {ID:513 Address:1F804} {ID:641 Address:27BD9} {ID:769 Address:2DA45}                                                                                             ]
+[  2]   240 = ActualPower:7 | CurrentSize:7 | [ {ID:  2 Address:   FC} {ID:130 Address: 7E76} {ID:258 Address: FBC3} {ID:386 Address:17979} {ID:514 Address:1F8FF} {ID:642 Address:27CE9} {ID:770 Address:2DAFD}                                                                                             ]
+[  3]   180 = ActualPower:7 | CurrentSize:7 | [ {ID:  3 Address:  201} {ID:131 Address: 7F71} {ID:259 Address: FCC0} {ID:387 Address:17A72} {ID:515 Address:1F9F7} {ID:643 Address:27E0B} {ID:771 Address:2DBBB}                                                                                             ]
+[  4]   540 = ActualPower:7 | CurrentSize:7 | [ {ID:  4 Address:  2FD} {ID:132 Address: 806A} {ID:260 Address: FDB4} {ID:388 Address:17B6A} {ID:516 Address:1FB02} {ID:644 Address:27F11} {ID:772 Address:2DC74}                                                                                             ]
+[  5]   300 = ActualPower:7 | CurrentSize:7 | [ {ID:  5 Address:  3F2} {ID:133 Address: 8169} {ID:261 Address: FEB1} {ID:389 Address:17C55} {ID:517 Address:1FBFB} {ID:645 Address:28016} {ID:773 Address:2DD2F}                                                                                             ]
+[  6]   3C0 = ActualPower:7 | CurrentSize:7 | [ {ID:  6 Address:  4E1} {ID:134 Address: 8264} {ID:262 Address: FFA5} {ID:390 Address:17D49} {ID:518 Address:1FCFB} {ID:646 Address:2812C} {ID:774 Address:2DDEA}                                                                                             ]
+[  7]   480 = ActualPower:7 | CurrentSize:7 | [ {ID:  7 Address:  5D4} {ID:135 Address: 8360} {ID:263 Address:10090} {ID:391 Address:17E3E} {ID:519 Address:1FDF3} {ID:647 Address:281FA} {ID:775 Address:2DE9A}                                                                                             ]
+[  8]   B40 = ActualPower:7 | CurrentSize:7 | [ {ID:  8 Address:  6CD} {ID:136 Address: 845B} {ID:264 Address:1018D} {ID:392 Address:17F44} {ID:520 Address:1FEFC} {ID:648 Address:28302} {ID:776 Address:2DF50}                                                                                             ]
+[  9]   600 = ActualPower:7 | CurrentSize:7 | [ {ID:  9 Address:  7B8} {ID:137 Address: 8558} {ID:265 Address:1028B} {ID:393 Address:18041} {ID:521 Address:20016} {ID:649 Address:283EE} {ID:777 Address:2E00E}                                                                                             ]
+[ 10]   6C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 10 Address:  8B5} {ID:138 Address: 864F} {ID:266 Address:1037F} {ID:394 Address:18145} {ID:522 Address:20128} {ID:650 Address:284EA} {ID:778 Address:2E0CC}                                                                                             ]
+[ 11]   780 = ActualPower:7 | CurrentSize:7 | [ {ID: 11 Address:  9A7} {ID:139 Address: 874A} {ID:267 Address:1047E} {ID:395 Address:1823F} {ID:523 Address:20234} {ID:651 Address:285A0} {ID:779 Address:2E186}                                                                                             ]
+[ 12]   840 = ActualPower:7 | CurrentSize:7 | [ {ID: 12 Address:  AA3} {ID:140 Address: 8841} {ID:268 Address:1058C} {ID:396 Address:18345} {ID:524 Address:2034E} {ID:652 Address:28658} {ID:780 Address:2E245}                                                                                             ]
+[ 13]   900 = ActualPower:7 | CurrentSize:7 | [ {ID: 13 Address:  BA7} {ID:141 Address: 893B} {ID:269 Address:1067F} {ID:397 Address:1844B} {ID:525 Address:20449} {ID:653 Address:28718} {ID:781 Address:2E2FF}                                                                                             ]
+[ 14]   9C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 14 Address:  CA0} {ID:142 Address: 8A36} {ID:270 Address:1078F} {ID:398 Address:18551} {ID:526 Address:2053B} {ID:654 Address:287C3} {ID:782 Address:2E3B8}                                                                                             ]
+[ 15]   A80 = ActualPower:7 | CurrentSize:7 | [ {ID: 15 Address:  D93} {ID:143 Address: 8B22} {ID:271 Address:10882} {ID:399 Address:1864A} {ID:527 Address:20644} {ID:655 Address:28872} {ID:783 Address:2E467}                                                                                             ]
+[ 16]  1740 = ActualPower:7 | CurrentSize:7 | [ {ID: 16 Address:  E96} {ID:144 Address: 8C29} {ID:272 Address:10982} {ID:400 Address:1873A} {ID:528 Address:2074F} {ID:656 Address:2892C} {ID:784 Address:2E522}                                                                                             ]
+[ 17]   C00 = ActualPower:7 | CurrentSize:7 | [ {ID: 17 Address:  F95} {ID:145 Address: 8D1B} {ID:273 Address:10A8B} {ID:401 Address:18836} {ID:529 Address:20869} {ID:657 Address:289E0} {ID:785 Address:2E5E1}                                                                                             ]
+[ 18]   CC0 = ActualPower:7 | CurrentSize:7 | [ {ID: 18 Address: 1090} {ID:146 Address: 8E1C} {ID:274 Address:10B83} {ID:402 Address:1892F} {ID:530 Address:20967} {ID:658 Address:28A98} {ID:786 Address:2E6A5}                                                                                             ]
+[ 19]   D80 = ActualPower:7 | CurrentSize:7 | [ {ID: 19 Address: 1198} {ID:147 Address: 8F1D} {ID:275 Address:10C6E} {ID:403 Address:18A28} {ID:531 Address:20A81} {ID:659 Address:28B4E} {ID:787 Address:2E768}                                                                                             ]
+[ 20]   E40 = ActualPower:7 | CurrentSize:7 | [ {ID: 20 Address: 1283} {ID:148 Address: 901A} {ID:276 Address:10D64} {ID:404 Address:18B1E} {ID:532 Address:20B8C} {ID:660 Address:28BFF} {ID:788 Address:2E829}                                                                                             ]
+[ 21]   F00 = ActualPower:7 | CurrentSize:7 | [ {ID: 21 Address: 1379} {ID:149 Address: 9118} {ID:277 Address:10E67} {ID:405 Address:18C1F} {ID:533 Address:20C93} {ID:661 Address:28CB6} {ID:789 Address:2E8EA}                                                                                             ]
+[ 22]   FC0 = ActualPower:7 | CurrentSize:7 | [ {ID: 22 Address: 1474} {ID:150 Address: 9213} {ID:278 Address:10F66} {ID:406 Address:18D11} {ID:534 Address:20D9A} {ID:662 Address:28D70} {ID:790 Address:2E99F}                                                                                             ]
+[ 23]  1080 = ActualPower:7 | CurrentSize:7 | [ {ID: 23 Address: 156C} {ID:151 Address: 931B} {ID:279 Address:11063} {ID:407 Address:18E0C} {ID:535 Address:20EAD} {ID:663 Address:28E27} {ID:791 Address:2EA57}                                                                                             ]
+[ 24]  1140 = ActualPower:7 | CurrentSize:7 | [ {ID: 24 Address: 1658} {ID:152 Address: 9417} {ID:280 Address:1115F} {ID:408 Address:18F08} {ID:536 Address:20FB7} {ID:664 Address:28EE6} {ID:792 Address:2EB10}                                                                                             ]
+[ 25]  1200 = ActualPower:7 | CurrentSize:7 | [ {ID: 25 Address: 1752} {ID:153 Address: 950D} {ID:281 Address:11257} {ID:409 Address:1900B} {ID:537 Address:210AA} {ID:665 Address:28F9C} {ID:793 Address:2EBC9}                                                                                             ]
+[ 26]  12C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 26 Address: 184F} {ID:154 Address: 95EE} {ID:282 Address:11354} {ID:410 Address:19109} {ID:538 Address:211C8} {ID:666 Address:29052} {ID:794 Address:2EC83}                                                                                             ]
+[ 27]  1380 = ActualPower:7 | CurrentSize:7 | [ {ID: 27 Address: 1940} {ID:155 Address: 96CE} {ID:283 Address:11451} {ID:411 Address:19207} {ID:539 Address:212C9} {ID:667 Address:29104} {ID:795 Address:2ED41}                                                                                             ]
+[ 28]  1440 = ActualPower:7 | CurrentSize:7 | [ {ID: 28 Address: 1A3D} {ID:156 Address: 97C2} {ID:284 Address:11553} {ID:412 Address:19309} {ID:540 Address:213D2} {ID:668 Address:291B6} {ID:796 Address:2EDFF}                                                                                             ]
+[ 29]  1500 = ActualPower:7 | CurrentSize:7 | [ {ID: 29 Address: 1B30} {ID:157 Address: 98C4} {ID:285 Address:11656} {ID:413 Address:19405} {ID:541 Address:214E0} {ID:669 Address:2926D} {ID:797 Address:2EEBA}                                                                                             ]
+[ 30]  15C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 30 Address: 1C33} {ID:158 Address: 99BA} {ID:286 Address:1174D} {ID:414 Address:19508} {ID:542 Address:215EA} {ID:670 Address:29322} {ID:798 Address:2EF73}                                                                                             ]
+[ 31]  1680 = ActualPower:7 | CurrentSize:7 | [ {ID: 31 Address: 1D39} {ID:159 Address: 9AB4} {ID:287 Address:1184E} {ID:415 Address:1960C} {ID:543 Address:216FC} {ID:671 Address:293DB} {ID:799 Address:2F030}                                                                                             ]
+[ 32]  2F40 = ActualPower:7 | CurrentSize:7 | [ {ID: 32 Address: 1E3D} {ID:160 Address: 9BB2} {ID:288 Address:1193C} {ID:416 Address:1970B} {ID:544 Address:21803} {ID:672 Address:29492} {ID:800 Address:2F0EF}                                                                                             ]
+[ 33]  1800 = ActualPower:7 | CurrentSize:7 | [ {ID: 33 Address: 1F3E} {ID:161 Address: 9CA4} {ID:289 Address:11A2A} {ID:417 Address:1980B} {ID:545 Address:2190A} {ID:673 Address:29544} {ID:801 Address:2F1A3}                                                                                             ]
+[ 34]  18C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 34 Address: 2038} {ID:162 Address: 9D8D} {ID:290 Address:11B28} {ID:418 Address:1990B} {ID:546 Address:21A08} {ID:674 Address:295F6} {ID:802 Address:2F25B}                                                                                             ]
+[ 35]  1980 = ActualPower:7 | CurrentSize:7 | [ {ID: 35 Address: 212B} {ID:163 Address: 9E85} {ID:291 Address:11C26} {ID:419 Address:19A10} {ID:547 Address:21B1F} {ID:675 Address:296AD} {ID:803 Address:2F320}                                                                                             ]
+[ 36]  1A40 = ActualPower:7 | CurrentSize:7 | [ {ID: 36 Address: 2224} {ID:164 Address: 9F86} {ID:292 Address:11D20} {ID:420 Address:19B0A} {ID:548 Address:21C31} {ID:676 Address:29765} {ID:804 Address:2F3D4}                                                                                             ]
+[ 37]  1B00 = ActualPower:7 | CurrentSize:7 | [ {ID: 37 Address: 2320} {ID:165 Address: A08B} {ID:293 Address:11E24} {ID:421 Address:19C03} {ID:549 Address:21D38} {ID:677 Address:29819} {ID:805 Address:2F492}                                                                                             ]
+[ 38]  1BC0 = ActualPower:7 | CurrentSize:7 | [ {ID: 38 Address: 240E} {ID:166 Address: A192} {ID:294 Address:11F28} {ID:422 Address:19D03} {ID:550 Address:21E4C} {ID:678 Address:298D1} {ID:806 Address:2F54E}                                                                                             ]
+[ 39]  1C80 = ActualPower:7 | CurrentSize:7 | [ {ID: 39 Address: 2500} {ID:167 Address: A297} {ID:295 Address:12016} {ID:423 Address:19DFF} {ID:551 Address:21F59} {ID:679 Address:2998E} {ID:807 Address:2F608}                                                                                             ]
+[ 40]  1D40 = ActualPower:7 | CurrentSize:7 | [ {ID: 40 Address: 25F5} {ID:168 Address: A39C} {ID:296 Address:1211A} {ID:424 Address:19F07} {ID:552 Address:22071} {ID:680 Address:29A41} {ID:808 Address:2F6BF}                                                                                             ]
+[ 41]  1E00 = ActualPower:7 | CurrentSize:7 | [ {ID: 41 Address: 26E3} {ID:169 Address: A4A2} {ID:297 Address:12217} {ID:425 Address:1A009} {ID:553 Address:22188} {ID:681 Address:29AF8} {ID:809 Address:2F75F}                                                                                             ]
+[ 42]  1EC0 = ActualPower:7 | CurrentSize:7 | [ {ID: 42 Address: 27DF} {ID:170 Address: A5A0} {ID:298 Address:1231C} {ID:426 Address:1A10F} {ID:554 Address:222A1} {ID:682 Address:29BB5} {ID:810 Address:2F7FF}                                                                                             ]
+[ 43]  1F80 = ActualPower:7 | CurrentSize:7 | [ {ID: 43 Address: 28DD} {ID:171 Address: A69B} {ID:299 Address:1241E} {ID:427 Address:1A206} {ID:555 Address:223A2} {ID:683 Address:29C69} {ID:811 Address:2F89D}                                                                                             ]
+[ 44]  2040 = ActualPower:7 | CurrentSize:7 | [ {ID: 44 Address: 29E1} {ID:172 Address: A797} {ID:300 Address:1251A} {ID:428 Address:1A2FD} {ID:556 Address:224AA} {ID:684 Address:29D1F} {ID:812 Address:2F93A}                                                                                             ]
+[ 45]  2100 = ActualPower:7 | CurrentSize:7 | [ {ID: 45 Address: 2AE0} {ID:173 Address: A897} {ID:301 Address:1260F} {ID:429 Address:1A3F6} {ID:557 Address:2259F} {ID:685 Address:29DD8} {ID:813 Address:2F9DA}                                                                                             ]
+[ 46]  21C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 46 Address: 2BDF} {ID:174 Address: A995} {ID:302 Address:12701} {ID:430 Address:1A4FA} {ID:558 Address:226B4} {ID:686 Address:29E8D} {ID:814 Address:2FA78}                                                                                             ]
+[ 47]  2280 = ActualPower:7 | CurrentSize:7 | [ {ID: 47 Address: 2CC7} {ID:175 Address: AA89} {ID:303 Address:127FA} {ID:431 Address:1A602} {ID:559 Address:227CA} {ID:687 Address:29F49} {ID:815 Address:2FB16}                                                                                             ]
+[ 48]  2340 = ActualPower:7 | CurrentSize:7 | [ {ID: 48 Address: 2DC6} {ID:176 Address: AB7E} {ID:304 Address:128F3} {ID:432 Address:1A700} {ID:560 Address:228C7} {ID:688 Address:2A007} {ID:816 Address:2FBB5}                                                                                             ]
+[ 49]  2400 = ActualPower:7 | CurrentSize:7 | [ {ID: 49 Address: 2EB7} {ID:177 Address: AC71} {ID:305 Address:129F3} {ID:433 Address:1A808} {ID:561 Address:229D4} {ID:689 Address:2A0BE} {ID:817 Address:2FC5A}                                                                                             ]
+[ 50]  24C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 50 Address: 2FBA} {ID:178 Address: AD75} {ID:306 Address:12AEF} {ID:434 Address:1A906} {ID:562 Address:22AE6} {ID:690 Address:2A179} {ID:818 Address:2FCFF}                                                                                             ]
+[ 51]  2580 = ActualPower:7 | CurrentSize:7 | [ {ID: 51 Address: 30B2} {ID:179 Address: AE75} {ID:307 Address:12BF0} {ID:435 Address:1AA08} {ID:563 Address:22BF7} {ID:691 Address:2A231} {ID:819 Address:2FDA4}                                                                                             ]
+[ 52]  2640 = ActualPower:7 | CurrentSize:7 | [ {ID: 52 Address: 31A7} {ID:180 Address: AF6D} {ID:308 Address:12CFD} {ID:436 Address:1AB0F} {ID:564 Address:22D00} {ID:692 Address:2A2EE} {ID:820 Address:2FE44}                                                                                             ]
+[ 53]  2700 = ActualPower:7 | CurrentSize:7 | [ {ID: 53 Address: 3296} {ID:181 Address: B06B} {ID:309 Address:12E00} {ID:437 Address:1AC0D} {ID:565 Address:22E14} {ID:693 Address:2A3A4} {ID:821 Address:2FEE4}                                                                                             ]
+[ 54]  27C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 54 Address: 3399} {ID:182 Address: B16D} {ID:310 Address:12EFB} {ID:438 Address:1AD1C} {ID:566 Address:22F14} {ID:694 Address:2A459} {ID:822 Address:2FF87}                                                                                             ]
+[ 55]  2880 = ActualPower:7 | CurrentSize:7 | [ {ID: 55 Address: 3496} {ID:183 Address: B263} {ID:311 Address:13000} {ID:439 Address:1AE18} {ID:567 Address:2300C} {ID:695 Address:2A518} {ID:823 Address:30026}                                                                                             ]
+[ 56]  2940 = ActualPower:7 | CurrentSize:7 | [ {ID: 56 Address: 3589} {ID:184 Address: B366} {ID:312 Address:130F4} {ID:440 Address:1AF0C} {ID:568 Address:23118} {ID:696 Address:2A5D7} {ID:824 Address:300CA}                                                                                             ]
+[ 57]  2A00 = ActualPower:7 | CurrentSize:7 | [ {ID: 57 Address: 3685} {ID:185 Address: B45A} {ID:313 Address:131E8} {ID:441 Address:1B00C} {ID:569 Address:23224} {ID:697 Address:2A68F} {ID:825 Address:30166}                                                                                             ]
+[ 58]  2AC0 = ActualPower:7 | CurrentSize:7 | [ {ID: 58 Address: 378B} {ID:186 Address: B555} {ID:314 Address:132E2} {ID:442 Address:1B103} {ID:570 Address:23339} {ID:698 Address:2A747} {ID:826 Address:3020A}                                                                                             ]
+[ 59]  2B80 = ActualPower:7 | CurrentSize:7 | [ {ID: 59 Address: 3884} {ID:187 Address: B637} {ID:315 Address:133CE} {ID:443 Address:1B208} {ID:571 Address:2343B} {ID:699 Address:2A7F8} {ID:827 Address:302B2}                                                                                             ]
+[ 60]  2C40 = ActualPower:7 | CurrentSize:7 | [ {ID: 60 Address: 3971} {ID:188 Address: B73D} {ID:316 Address:134D0} {ID:444 Address:1B312} {ID:572 Address:2354E} {ID:700 Address:2A8AD} {ID:828 Address:3034D}                                                                                             ]
+[ 61]  2D00 = ActualPower:7 | CurrentSize:7 | [ {ID: 61 Address: 3A6E} {ID:189 Address: B83D} {ID:317 Address:135CE} {ID:445 Address:1B403} {ID:573 Address:23656} {ID:701 Address:2A966} {ID:829 Address:303E8}                                                                                             ]
+[ 62]  2DC0 = ActualPower:7 | CurrentSize:7 | [ {ID: 62 Address: 3B62} {ID:190 Address: B931} {ID:318 Address:136C2} {ID:446 Address:1B50B} {ID:574 Address:23760} {ID:702 Address:2AA25} {ID:830 Address:3048A}                                                                                             ]
+[ 63]  2E80 = ActualPower:7 | CurrentSize:7 | [ {ID: 63 Address: 3C62} {ID:191 Address: BA26} {ID:319 Address:137B8} {ID:447 Address:1B5FE} {ID:575 Address:2386D} {ID:703 Address:2AADD} {ID:831 Address:3052F}                                                                                             ]
+[ 64]  5F40 = ActualPower:7 | CurrentSize:7 | [ {ID: 64 Address: 3D58} {ID:192 Address: BB26} {ID:320 Address:138B7} {ID:448 Address:1B6F9} {ID:576 Address:2397C} {ID:704 Address:2AB8F} {ID:832 Address:305CE}                                                                                             ]
+[ 65]  3000 = ActualPower:7 | CurrentSize:7 | [ {ID: 65 Address: 3E4C} {ID:193 Address: BC12} {ID:321 Address:139B3} {ID:449 Address:1B801} {ID:577 Address:23A8C} {ID:705 Address:2AC40} {ID:833 Address:3066D}                                                                                             ]
+[ 66]  30C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 66 Address: 3F3B} {ID:194 Address: BD19} {ID:322 Address:13AB0} {ID:450 Address:1B902} {ID:578 Address:23B7F} {ID:706 Address:2ACF5} {ID:834 Address:3070E}                                                                                             ]
+[ 67]  3180 = ActualPower:7 | CurrentSize:7 | [ {ID: 67 Address: 4041} {ID:195 Address: BE1A} {ID:323 Address:13BA5} {ID:451 Address:1B9FC} {ID:579 Address:23C8B} {ID:707 Address:2ADA9} {ID:835 Address:307AF}                                                                                             ]
+[ 68]  3240 = ActualPower:7 | CurrentSize:7 | [ {ID: 68 Address: 4138} {ID:196 Address: BF1F} {ID:324 Address:13CA4} {ID:452 Address:1BAFD} {ID:580 Address:23D94} {ID:708 Address:2AE63} {ID:836 Address:30850}                                                                                             ]
+[ 69]  3300 = ActualPower:7 | CurrentSize:7 | [ {ID: 69 Address: 422C} {ID:197 Address: C00C} {ID:325 Address:13D8F} {ID:453 Address:1BC02} {ID:581 Address:23E90} {ID:709 Address:2AF16} {ID:837 Address:308EF}                                                                                             ]
+[ 70]  33C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 70 Address: 4321} {ID:198 Address: C10F} {ID:326 Address:13E8B} {ID:454 Address:1BD07} {ID:582 Address:23FA1} {ID:710 Address:2AFD2} {ID:838 Address:3098B}                                                                                             ]
+[ 71]  3480 = ActualPower:7 | CurrentSize:7 | [ {ID: 71 Address: 4425} {ID:199 Address: C214} {ID:327 Address:13F8D} {ID:455 Address:1BE14} {ID:583 Address:240A0} {ID:711 Address:2B08B} {ID:839 Address:30A2B}                                                                                             ]
+[ 72]  3540 = ActualPower:7 | CurrentSize:7 | [ {ID: 72 Address: 4530} {ID:200 Address: C2F8} {ID:328 Address:14084} {ID:456 Address:1BF1D} {ID:584 Address:24199} {ID:712 Address:2B144} {ID:840 Address:30ACB}                                                                                             ]
+[ 73]  3600 = ActualPower:7 | CurrentSize:7 | [ {ID: 73 Address: 4631} {ID:201 Address: C3E6} {ID:329 Address:14185} {ID:457 Address:1C009} {ID:585 Address:24299} {ID:713 Address:2B1F8} {ID:841 Address:30B74}                                                                                             ]
+[ 74]  36C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 74 Address: 4731} {ID:202 Address: C4E2} {ID:330 Address:14285} {ID:458 Address:1C106} {ID:586 Address:243A9} {ID:714 Address:2B2AA} {ID:842 Address:30C1D}                                                                                             ]
+[ 75]  3780 = ActualPower:7 | CurrentSize:7 | [ {ID: 75 Address: 4832} {ID:203 Address: C5E3} {ID:331 Address:14387} {ID:459 Address:1C1FC} {ID:587 Address:244BC} {ID:715 Address:2B368} {ID:843 Address:30CC8}                                                                                             ]
+[ 76]  3840 = ActualPower:7 | CurrentSize:7 | [ {ID: 76 Address: 4934} {ID:204 Address: C6EC} {ID:332 Address:14476} {ID:460 Address:1C2F8} {ID:588 Address:245C9} {ID:716 Address:2B426} {ID:844 Address:30D6C}                                                                                             ]
+[ 77]  3900 = ActualPower:7 | CurrentSize:7 | [ {ID: 77 Address: 4A2F} {ID:205 Address: C7E6} {ID:333 Address:1456C} {ID:461 Address:1C3FE} {ID:589 Address:246CD} {ID:717 Address:2B4D7} {ID:845 Address:30E10}                                                                                             ]
+[ 78]  39C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 78 Address: 4B2D} {ID:206 Address: C8E9} {ID:334 Address:1466A} {ID:462 Address:1C4F1} {ID:590 Address:247D8} {ID:718 Address:2B594} {ID:846 Address:30EB3}                                                                                             ]
+[ 79]  3A80 = ActualPower:7 | CurrentSize:7 | [ {ID: 79 Address: 4C24} {ID:207 Address: C9DF} {ID:335 Address:14768} {ID:463 Address:1C5FC} {ID:591 Address:248F2} {ID:719 Address:2B649} {ID:847 Address:30F50}                                                                                             ]
+[ 80]  3B40 = ActualPower:7 | CurrentSize:7 | [ {ID: 80 Address: 4D20} {ID:208 Address: CAF1} {ID:336 Address:14861} {ID:464 Address:1C6FA} {ID:592 Address:249F0} {ID:720 Address:2B703} {ID:848 Address:30FEF}                                                                                             ]
+[ 81]  3C00 = ActualPower:7 | CurrentSize:7 | [ {ID: 81 Address: 4E21} {ID:209 Address: CBFA} {ID:337 Address:14961} {ID:465 Address:1C7FD} {ID:593 Address:24AEF} {ID:721 Address:2B7B7} {ID:849 Address:31095}                                                                                             ]
+[ 82]  3CC0 = ActualPower:7 | CurrentSize:7 | [ {ID: 82 Address: 4F13} {ID:210 Address: CCE4} {ID:338 Address:14A6A} {ID:466 Address:1C8F3} {ID:594 Address:24BFD} {ID:722 Address:2B871} {ID:850 Address:3113B}                                                                                             ]
+[ 83]  3D80 = ActualPower:7 | CurrentSize:7 | [ {ID: 83 Address: 501A} {ID:211 Address: CDE4} {ID:339 Address:14B64} {ID:467 Address:1C9F7} {ID:595 Address:24D0C} {ID:723 Address:2B92B} {ID:851 Address:311DE}                                                                                             ]
+[ 84]  3E40 = ActualPower:7 | CurrentSize:7 | [ {ID: 84 Address: 5126} {ID:212 Address: CEE8} {ID:340 Address:14C66} {ID:468 Address:1CAF0} {ID:596 Address:24E21} {ID:724 Address:2B9E9} {ID:852 Address:31281}                                                                                             ]
+[ 85]  3F00 = ActualPower:7 | CurrentSize:7 | [ {ID: 85 Address: 5228} {ID:213 Address: CFE5} {ID:341 Address:14D6A} {ID:469 Address:1CBF4} {ID:597 Address:24F3D} {ID:725 Address:2BAAA} {ID:853 Address:31324}                                                                                             ]
+[ 86]  3FC0 = ActualPower:7 | CurrentSize:7 | [ {ID: 86 Address: 5332} {ID:214 Address: D0D6} {ID:342 Address:14E61} {ID:470 Address:1CCF4} {ID:598 Address:25037} {ID:726 Address:2BB5A} {ID:854 Address:313C7}                                                                                             ]
+[ 87]  4080 = ActualPower:7 | CurrentSize:7 | [ {ID: 87 Address: 542E} {ID:215 Address: D1DD} {ID:343 Address:14F5A} {ID:471 Address:1CDF2} {ID:599 Address:25137} {ID:727 Address:2BC0E} {ID:855 Address:31469}                                                                                             ]
+[ 88]  4140 = ActualPower:7 | CurrentSize:7 | [ {ID: 88 Address: 5514} {ID:216 Address: D2E2} {ID:344 Address:15059} {ID:472 Address:1CEF2} {ID:600 Address:2521B} {ID:728 Address:2BCC2} {ID:856 Address:3150B}                                                                                             ]
+[ 89]  4200 = ActualPower:7 | CurrentSize:7 | [ {ID: 89 Address: 5615} {ID:217 Address: D3E2} {ID:345 Address:15163} {ID:473 Address:1CFFF} {ID:601 Address:25324} {ID:729 Address:2BD73} {ID:857 Address:315AA}                                                                                             ]
+[ 90]  42C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 90 Address: 570A} {ID:218 Address: D4D3} {ID:346 Address:15251} {ID:474 Address:1D0F6} {ID:602 Address:2540B} {ID:730 Address:2BE28} {ID:858 Address:3164B}                                                                                             ]
+[ 91]  4380 = ActualPower:7 | CurrentSize:7 | [ {ID: 91 Address: 580B} {ID:219 Address: D5C1} {ID:347 Address:1534E} {ID:475 Address:1D1EF} {ID:603 Address:25520} {ID:731 Address:2BEE1} {ID:859 Address:316F1}                                                                                             ]
+[ 92]  4440 = ActualPower:7 | CurrentSize:7 | [ {ID: 92 Address: 590A} {ID:220 Address: D6BC} {ID:348 Address:1544C} {ID:476 Address:1D2F4} {ID:604 Address:2562E} {ID:732 Address:2BF9B} {ID:860 Address:31792}                                                                                             ]
+[ 93]  4500 = ActualPower:7 | CurrentSize:7 | [ {ID: 93 Address: 59FB} {ID:221 Address: D7BA} {ID:349 Address:15531} {ID:477 Address:1D3E0} {ID:605 Address:25737} {ID:733 Address:2C059} {ID:861 Address:31836}                                                                                             ]
+[ 94]  45C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 94 Address: 5AFD} {ID:222 Address: D8B4} {ID:350 Address:15622} {ID:478 Address:1D4C5} {ID:606 Address:2582A} {ID:734 Address:2C113} {ID:862 Address:318DA}                                                                                             ]
+[ 95]  4680 = ActualPower:7 | CurrentSize:7 | [ {ID: 95 Address: 5BF6} {ID:223 Address: D9A8} {ID:351 Address:15722} {ID:479 Address:1D5C8} {ID:607 Address:25919} {ID:735 Address:2C1CA} {ID:863 Address:31980}                                                                                             ]
+[ 96]  4740 = ActualPower:7 | CurrentSize:7 | [ {ID: 96 Address: 5CE9} {ID:224 Address: DAA5} {ID:352 Address:1581D} {ID:480 Address:1D6C6} {ID:608 Address:25A1B} {ID:736 Address:2C280} {ID:864 Address:31A1F}                                                                                             ]
+[ 97]  4800 = ActualPower:7 | CurrentSize:7 | [ {ID: 97 Address: 5DDC} {ID:225 Address: DBA0} {ID:353 Address:15920} {ID:481 Address:1D7BD} {ID:609 Address:25AFC} {ID:737 Address:2C330} {ID:865 Address:31ABD}                                                                                             ]
+[ 98]  48C0 = ActualPower:7 | CurrentSize:7 | [ {ID: 98 Address: 5EDC} {ID:226 Address: DCA7} {ID:354 Address:15A1D} {ID:482 Address:1D8B9} {ID:610 Address:25BEF} {ID:738 Address:2C3EA} {ID:866 Address:31B62}                                                                                             ]
+[ 99]  4980 = ActualPower:7 | CurrentSize:7 | [ {ID: 99 Address: 5FD6} {ID:227 Address: DDAA} {ID:355 Address:15B21} {ID:483 Address:1D9B2} {ID:611 Address:25CF5} {ID:739 Address:2C4A8} {ID:867 Address:31C08}                                                                                             ]
+[100]  4A40 = ActualPower:7 | CurrentSize:7 | [ {ID:100 Address: 60D4} {ID:228 Address: DE9F} {ID:356 Address:15C1C} {ID:484 Address:1DAAC} {ID:612 Address:25DE8} {ID:740 Address:2C55E} {ID:868 Address:31CAD}                                                                                             ]
+[101]  4B00 = ActualPower:7 | CurrentSize:7 | [ {ID:101 Address: 61D0} {ID:229 Address: DF95} {ID:357 Address:15D22} {ID:485 Address:1DBB1} {ID:613 Address:25EF2} {ID:741 Address:2C61C} {ID:869 Address:31D4B}                                                                                             ]
+[102]  4BC0 = ActualPower:7 | CurrentSize:7 | [ {ID:102 Address: 62BF} {ID:230 Address: E08A} {ID:358 Address:15E1E} {ID:486 Address:1DCB6} {ID:614 Address:25FFB} {ID:742 Address:2C6D5} {ID:870 Address:31DE9}                                                                                             ]
+[103]  4C80 = ActualPower:7 | CurrentSize:7 | [ {ID:103 Address: 63B2} {ID:231 Address: E17E} {ID:359 Address:15F1F} {ID:487 Address:1DDB9} {ID:615 Address:26100} {ID:743 Address:2C788} {ID:871 Address:31E8E}                                                                                             ]
+[104]  4D40 = ActualPower:7 | CurrentSize:7 | [ {ID:104 Address: 64B7} {ID:232 Address: E27B} {ID:360 Address:16015} {ID:488 Address:1DEBD} {ID:616 Address:261F3} {ID:744 Address:2C83F} {ID:872 Address:31F34}                                                                                             ]
+[105]  4E00 = ActualPower:7 | CurrentSize:7 | [ {ID:105 Address: 65B0} {ID:233 Address: E370} {ID:361 Address:16101} {ID:489 Address:1DFB7} {ID:617 Address:262F0} {ID:745 Address:2C8EC} {ID:873 Address:31FD2}                                                                                             ]
+[106]  4EC0 = ActualPower:7 | CurrentSize:7 | [ {ID:106 Address: 66B1} {ID:234 Address: E46A} {ID:362 Address:161F3} {ID:490 Address:1E0B9} {ID:618 Address:263EA} {ID:746 Address:2C99C} {ID:874 Address:32076}                                                                                             ]
+[107]  4F80 = ActualPower:7 | CurrentSize:7 | [ {ID:107 Address: 67A2} {ID:235 Address: E562} {ID:363 Address:162D9} {ID:491 Address:1E1A0} {ID:619 Address:264FC} {ID:747 Address:2CA4A} {ID:875 Address:32116}                                                                                             ]
+[108]  5040 = ActualPower:7 | CurrentSize:7 | [ {ID:108 Address: 68A7} {ID:236 Address: E661} {ID:364 Address:163CD} {ID:492 Address:1E299} {ID:620 Address:2660B} {ID:748 Address:2CB04} {ID:876 Address:321B4}                                                                                             ]
+[109]  5100 = ActualPower:7 | CurrentSize:7 | [ {ID:109 Address: 69B0} {ID:237 Address: E75C} {ID:365 Address:164C0} {ID:493 Address:1E390} {ID:621 Address:266F7} {ID:749 Address:2CBC2} {ID:877 Address:3225C}                                                                                             ]
+[110]  51C0 = ActualPower:7 | CurrentSize:7 | [ {ID:110 Address: 6AB0} {ID:238 Address: E85C} {ID:366 Address:165C8} {ID:494 Address:1E48C} {ID:622 Address:26800} {ID:750 Address:2CC76} {ID:878 Address:32305}                                                                                             ]
+[111]  5280 = ActualPower:7 | CurrentSize:7 | [ {ID:111 Address: 6BAD} {ID:239 Address: E953} {ID:367 Address:166B8} {ID:495 Address:1E590} {ID:623 Address:26909} {ID:751 Address:2CD2F} {ID:879 Address:323A8}                                                                                             ]
+[112]  5340 = ActualPower:7 | CurrentSize:7 | [ {ID:112 Address: 6CAB} {ID:240 Address: EA4C} {ID:368 Address:167B3} {ID:496 Address:1E69B} {ID:624 Address:26A10} {ID:752 Address:2CDE7} {ID:880 Address:3244B}                                                                                             ]
+[113]  5400 = ActualPower:7 | CurrentSize:7 | [ {ID:113 Address: 6DA6} {ID:241 Address: EB40} {ID:369 Address:168B6} {ID:497 Address:1E7AE} {ID:625 Address:26B1F} {ID:753 Address:2CEA7} {ID:881 Address:324F3}                                                                                             ]
+[114]  54C0 = ActualPower:7 | CurrentSize:7 | [ {ID:114 Address: 6E9E} {ID:242 Address: EC37} {ID:370 Address:169BF} {ID:498 Address:1E8B4} {ID:626 Address:26C28} {ID:754 Address:2CF5C} {ID:882 Address:32598}                                                                                             ]
+[115]  5580 = ActualPower:7 | CurrentSize:7 | [ {ID:115 Address: 6F9A} {ID:243 Address: ED30} {ID:371 Address:16AC2} {ID:499 Address:1E9AB} {ID:627 Address:26D36} {ID:755 Address:2D015} {ID:883 Address:3263D}                                                                                             ]
+[116]  5640 = ActualPower:7 | CurrentSize:7 | [ {ID:116 Address: 7093} {ID:244 Address: EE2F} {ID:372 Address:16BA6} {ID:500 Address:1EAC4} {ID:628 Address:26E47} {ID:756 Address:2D0CF} {ID:884 Address:326DF}                                                                                             ]
+[117]  5700 = ActualPower:7 | CurrentSize:7 | [ {ID:117 Address: 7186} {ID:245 Address: EF11} {ID:373 Address:16CA4} {ID:501 Address:1EBB8} {ID:629 Address:26F4B} {ID:757 Address:2D18D} {ID:885 Address:32783}                                                                                             ]
+[118]  57C0 = ActualPower:7 | CurrentSize:7 | [ {ID:118 Address: 727E} {ID:246 Address: EFFD} {ID:374 Address:16DA7} {ID:502 Address:1ECC7} {ID:630 Address:27050} {ID:758 Address:2D24B} {ID:886 Address:3282B}                                                                                             ]
+[119]  5880 = ActualPower:7 | CurrentSize:7 | [ {ID:119 Address: 7380} {ID:247 Address: F0FF} {ID:375 Address:16EA3} {ID:503 Address:1EDC9} {ID:631 Address:27167} {ID:759 Address:2D30D} {ID:887 Address:328D3}                                                                                             ]
+[120]  5940 = ActualPower:7 | CurrentSize:7 | [ {ID:120 Address: 7484} {ID:248 Address: F202} {ID:376 Address:16FAF} {ID:504 Address:1EED9} {ID:632 Address:27274} {ID:760 Address:2D3CB} {ID:888 Address:32979}                                                                                             ]
+[121]  5A00 = ActualPower:7 | CurrentSize:7 | [ {ID:121 Address: 757F} {ID:249 Address: F2FA} {ID:377 Address:170AC} {ID:505 Address:1EFE6} {ID:633 Address:27373} {ID:761 Address:2D48B} {ID:889 Address:32A1E}                                                                                             ]
+[122]  5AC0 = ActualPower:7 | CurrentSize:7 | [ {ID:122 Address: 7686} {ID:250 Address: F3EF} {ID:378 Address:171AE} {ID:506 Address:1F0F8} {ID:634 Address:27479} {ID:762 Address:2D539} {ID:890 Address:32AC6}                                                                                             ]
+[123]  5B80 = ActualPower:7 | CurrentSize:6 | [ {ID:123 Address: 7791} {ID:251 Address: F4ED} {ID:379 Address:172A4} {ID:507 Address:1F201} {ID:635 Address:2757C} {ID:763 Address:2D5EB}                                                                                                                    ]
+[124]  5C40 = ActualPower:7 | CurrentSize:6 | [ {ID:124 Address: 788C} {ID:252 Address: F5E8} {ID:380 Address:1739C} {ID:508 Address:1F2FE} {ID:636 Address:27683} {ID:764 Address:2D69D}                                                                                                                    ]
+[125]  5D00 = ActualPower:7 | CurrentSize:6 | [ {ID:125 Address: 798F} {ID:253 Address: F6E5} {ID:381 Address:1749B} {ID:509 Address:1F3FA} {ID:637 Address:27792} {ID:765 Address:2D755}                                                                                                                    ]
+[126]  5DC0 = ActualPower:7 | CurrentSize:6 | [ {ID:126 Address: 7A8F} {ID:254 Address: F7DD} {ID:382 Address:1759A} {ID:510 Address:1F509} {ID:638 Address:278A2} {ID:766 Address:2D812}                                                                                                                    ]
+[127]  5E80 = ActualPower:7 | CurrentSize:6 | [ {ID:127 Address: 7B7F} {ID:255 Address: F8D9} {ID:383 Address:17698} {ID:511 Address:1F607} {ID:639 Address:279AA} {ID:767 Address:2D8CE}                                                                                                                    ]
 
-Registro a ser adicionado = {ID:2 Address:252}
-id = 2 | hash = 0 | Posicao da hash no bucket = 0 ou 0x0
-conteudo = {ActualPower:1 CurrentSize:1 Records:[{ID:2 Address:252} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:3 Address:513}
-id = 3 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-conteudo = {ActualPower:1 CurrentSize:2 Records:[{ID:1 Address:4} {ID:3 Address:513} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:4 Address:765}
-id = 4 | hash = 0 | Posicao da hash no bucket = 0 ou 0x0
-conteudo = {ActualPower:1 CurrentSize:2 Records:[{ID:2 Address:252} {ID:4 Address:765} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:5 Address:1010}
-id = 5 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-conteudo = {ActualPower:1 CurrentSize:3 Records:[{ID:1 Address:4} {ID:3 Address:513} {ID:5 Address:1010} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:6 Address:1249}
-id = 6 | hash = 0 | Posicao da hash no bucket = 0 ou 0x0
-conteudo = {ActualPower:1 CurrentSize:3 Records:[{ID:2 Address:252} {ID:4 Address:765} {ID:6 Address:1249} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:7 Address:1492}
-id = 7 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-conteudo = {ActualPower:1 CurrentSize:4 Records:[{ID:1 Address:4} {ID:3 Address:513} {ID:5 Address:1010} {ID:7 Address:1492} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:8 Address:1741}
-id = 8 | hash = 0 | Posicao da hash no bucket = 0 ou 0x0
-conteudo = {ActualPower:1 CurrentSize:4 Records:[{ID:2 Address:252} {ID:4 Address:765} {ID:6 Address:1249} {ID:8 Address:1741} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:9 Address:1976}
-id = 9 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-conteudo = {ActualPower:1 CurrentSize:5 Records:[{ID:1 Address:4} {ID:3 Address:513} {ID:5 Address:1010} {ID:7 Address:1492} {ID:9 Address:1976}]}
-
-Registro a ser adicionado = {ID:10 Address:2229}
-id = 10 | hash = 0 | Posicao da hash no bucket = 0 ou 0x0
-conteudo = {ActualPower:1 CurrentSize:5 Records:[{ID:2 Address:252} {ID:4 Address:765} {ID:6 Address:1249} {ID:8 Address:1741} {ID:10 Address:2229}]}
-
-Registro a ser adicionado = {ID:11 Address:2471}
-id = 11 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-Bucket estourado! Repartindo! aumentando p! p total = 1 | p local = 1
-
-Registro a ser adicionado = {ID:1 Address:4}
-id = 1 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-conteudo = {ActualPower:2 CurrentSize:1 Records:[{ID:1 Address:4} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:3 Address:513}
-id = 3 | hash = 3 | Posicao da hash no bucket = 192 ou 0xC0
-conteudo = {ActualPower:2 CurrentSize:1 Records:[{ID:3 Address:513} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:5 Address:1010}
-id = 5 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-conteudo = {ActualPower:2 CurrentSize:2 Records:[{ID:1 Address:4} {ID:5 Address:1010} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:7 Address:1492}
-id = 7 | hash = 3 | Posicao da hash no bucket = 192 ou 0xC0
-conteudo = {ActualPower:2 CurrentSize:2 Records:[{ID:3 Address:513} {ID:7 Address:1492} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:9 Address:1976}
-id = 9 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-conteudo = {ActualPower:2 CurrentSize:3 Records:[{ID:1 Address:4} {ID:5 Address:1010} {ID:9 Address:1976} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:11 Address:2471}
-id = 11 | hash = 3 | Posicao da hash no bucket = 192 ou 0xC0
-conteudo = {ActualPower:2 CurrentSize:3 Records:[{ID:3 Address:513} {ID:7 Address:1492} {ID:11 Address:2471} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:12 Address:2723}
-id = 12 | hash = 0 | Posicao da hash no bucket = 0 ou 0x0
-Bucket estourado! Repartindo! p nao aumenta! p total = 2 | p local = 1
-
-Registro a ser adicionado = {ID:2 Address:252}
-id = 2 | hash = 2 | Posicao da hash no bucket = 288 ou 0x120
-conteudo = {ActualPower:2 CurrentSize:1 Records:[{ID:2 Address:252} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:4 Address:765}
-id = 4 | hash = 0 | Posicao da hash no bucket = 0 ou 0x0
-conteudo = {ActualPower:2 CurrentSize:1 Records:[{ID:4 Address:765} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:6 Address:1249}
-id = 6 | hash = 2 | Posicao da hash no bucket = 288 ou 0x120
-conteudo = {ActualPower:2 CurrentSize:2 Records:[{ID:2 Address:252} {ID:6 Address:1249} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:8 Address:1741}
-id = 8 | hash = 0 | Posicao da hash no bucket = 0 ou 0x0
-conteudo = {ActualPower:2 CurrentSize:2 Records:[{ID:4 Address:765} {ID:8 Address:1741} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:10 Address:2229}
-id = 10 | hash = 2 | Posicao da hash no bucket = 288 ou 0x120
-conteudo = {ActualPower:2 CurrentSize:3 Records:[{ID:2 Address:252} {ID:6 Address:1249} {ID:10 Address:2229} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:12 Address:2723}
-id = 12 | hash = 0 | Posicao da hash no bucket = 0 ou 0x0
-conteudo = {ActualPower:2 CurrentSize:3 Records:[{ID:4 Address:765} {ID:8 Address:1741} {ID:12 Address:2723} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:13 Address:2983}
-id = 13 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-conteudo = {ActualPower:2 CurrentSize:4 Records:[{ID:1 Address:4} {ID:5 Address:1010} {ID:9 Address:1976} {ID:13 Address:2983} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:14 Address:3232}
-id = 14 | hash = 2 | Posicao da hash no bucket = 288 ou 0x120
-conteudo = {ActualPower:2 CurrentSize:4 Records:[{ID:2 Address:252} {ID:6 Address:1249} {ID:10 Address:2229} {ID:14 Address:3232} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:15 Address:3475}
-id = 15 | hash = 3 | Posicao da hash no bucket = 192 ou 0xC0
-conteudo = {ActualPower:2 CurrentSize:4 Records:[{ID:3 Address:513} {ID:7 Address:1492} {ID:11 Address:2471} {ID:15 Address:3475} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:16 Address:3734}
-id = 16 | hash = 0 | Posicao da hash no bucket = 0 ou 0x0
-conteudo = {ActualPower:2 CurrentSize:4 Records:[{ID:4 Address:765} {ID:8 Address:1741} {ID:12 Address:2723} {ID:16 Address:3734} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:17 Address:3989}
-id = 17 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-conteudo = {ActualPower:2 CurrentSize:5 Records:[{ID:1 Address:4} {ID:5 Address:1010} {ID:9 Address:1976} {ID:13 Address:2983} {ID:17 Address:3989}]}
-
-Registro a ser adicionado = {ID:18 Address:4240}
-id = 18 | hash = 2 | Posicao da hash no bucket = 288 ou 0x120
-conteudo = {ActualPower:2 CurrentSize:5 Records:[{ID:2 Address:252} {ID:6 Address:1249} {ID:10 Address:2229} {ID:14 Address:3232} {ID:18 Address:4240}]}
-
-Registro a ser adicionado = {ID:19 Address:4504}
-id = 19 | hash = 3 | Posicao da hash no bucket = 192 ou 0xC0
-conteudo = {ActualPower:2 CurrentSize:5 Records:[{ID:3 Address:513} {ID:7 Address:1492} {ID:11 Address:2471} {ID:15 Address:3475} {ID:19 Address:4504}]}
-
-Registro a ser adicionado = {ID:20 Address:4739}
-id = 20 | hash = 0 | Posicao da hash no bucket = 0 ou 0x0
-conteudo = {ActualPower:2 CurrentSize:5 Records:[{ID:4 Address:765} {ID:8 Address:1741} {ID:12 Address:2723} {ID:16 Address:3734} {ID:20 Address:4739}]}
-
-Registro a ser adicionado = {ID:21 Address:4985}
-id = 21 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-Bucket estourado! Repartindo! aumentando p! p total = 2 | p local = 2
-
-Registro a ser adicionado = {ID:1 Address:4}
-id = 1 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-conteudo = {ActualPower:3 CurrentSize:1 Records:[{ID:1 Address:4} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:5 Address:1010}
-id = 5 | hash = 5 | Posicao da hash no bucket = 384 ou 0x180
-conteudo = {ActualPower:3 CurrentSize:1 Records:[{ID:5 Address:1010} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:9 Address:1976}
-id = 9 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-conteudo = {ActualPower:3 CurrentSize:2 Records:[{ID:1 Address:4} {ID:9 Address:1976} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:13 Address:2983}
-id = 13 | hash = 5 | Posicao da hash no bucket = 384 ou 0x180
-conteudo = {ActualPower:3 CurrentSize:2 Records:[{ID:5 Address:1010} {ID:13 Address:2983} {ID:0 Address:0} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:17 Address:3989}
-id = 17 | hash = 1 | Posicao da hash no bucket = 96 ou 0x60
-conteudo = {ActualPower:3 CurrentSize:3 Records:[{ID:1 Address:4} {ID:9 Address:1976} {ID:17 Address:3989} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:21 Address:4985}
-id = 21 | hash = 5 | Posicao da hash no bucket = 384 ou 0x180
-conteudo = {ActualPower:3 CurrentSize:3 Records:[{ID:5 Address:1010} {ID:13 Address:2983} {ID:21 Address:4985} {ID:0 Address:0} {ID:0 Address:0}]}
-
-Registro a ser adicionado = {ID:22 Address:5236}
-id = 22 | hash = 6 | Posicao da hash no bucket = 288 ou 0x120
-Bucket estourado! Repartindo! p nao aumenta! p total = 3 | p local = 2

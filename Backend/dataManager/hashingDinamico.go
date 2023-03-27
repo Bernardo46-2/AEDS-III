@@ -38,6 +38,10 @@ func (hash *DinamicHash) GetBucketCount() int {
 	return 1 << hash.directory.p
 }
 
+func GetBucketPower(power int64) int64 {
+	return 1 << power
+}
+
 func (hash *DinamicHash) InitializeNewBucket(numberOfBuckets int) []int64 {
 	hash.bucketFile.Seek(0, io.SeekEnd)
 	bucketAddress := make([]int64, numberOfBuckets)
@@ -62,7 +66,7 @@ func newHash(fileAddress string, numRecords int32) *DinamicHash {
 
 	hash := DinamicHash{
 		directory:  d,
-		loadFactor: 5, // int64(float64(numRecords) * 0.05),
+		loadFactor: 11, // 10 + 1 a mais para tratar overflow
 		bucketFile: arquivo,
 	}
 
@@ -92,6 +96,10 @@ func (hash *DinamicHash) increasePower() {
 	novoBucket := make([]int64, novoTamanhoBucket)
 	copy(novoBucket, hash.directory.bucketPointer)
 	hash.directory.bucketPointer = novoBucket
+
+	for i, j := (hash.GetBucketCount() >> 1), 0; i < hash.GetBucketCount(); i, j = i+1, j+1 {
+		hash.directory.bucketPointer[i] = hash.directory.bucketPointer[j]
+	}
 }
 
 func binToBucket(byteArray []byte, numRecords int64) Bucket {
@@ -116,68 +124,96 @@ func binToBucket(byteArray []byte, numRecords int64) Bucket {
 	return bucket
 }
 
-func (hash *DinamicHash) Add(r BucketRecord) {
-	fmt.Printf("\nRegistro a ser adicionado = %+v\n", r)
+func (hash *DinamicHash) insertIntoBucket(pos int64, power int64, currentSize int64, records []BucketRecord) {
+	hash.bucketFile.Seek(hash.directory.bucketPointer[pos], io.SeekStart)
+	binary.Write(hash.bucketFile, binary.LittleEndian, power)
+	binary.Write(hash.bucketFile, binary.LittleEndian, currentSize)
+	binary.Write(hash.bucketFile, binary.LittleEndian, records)
+}
 
+func (hash *DinamicHash) Add(r BucketRecord) {
 	// Recuperar e dar parsing no bucket a ser editado
 	pos := int64(r.ID) % int64(hash.GetBucketCount())
-	fmt.Printf("id = %d | hash = %d | Posicao da hash no bucket = %d ou 0x%X\n", r.ID, pos, hash.directory.bucketPointer[pos], hash.directory.bucketPointer[pos])
+	// fmt.Printf("ID   = %3d | Address = %5x\nHash = %3d | Posicao da hash no bucket = %3d ou 0x%4X\n", r.ID, r.Address, pos, hash.directory.bucketPointer[pos], hash.directory.bucketPointer[pos])
 	hash.bucketFile.Seek(hash.directory.bucketPointer[pos], io.SeekStart)
 	data := make([]byte, hash.bucketSize)
 	hash.bucketFile.Read(data)
 	bucket := binToBucket(data, hash.loadFactor)
 
 	// Atualiza o bucket com o novo valor
-	if bucket.CurrentSize == hash.loadFactor {
+	if bucket.CurrentSize == hash.loadFactor-1 {
 		// se o bucket tiver apenas 1 ponteiro aumentar p em +1, se nao so atualiza o bucket
 		if bucket.ActualPower == hash.directory.p {
-			fmt.Printf("Bucket estourado! Repartindo! aumentando p! p total = %d | p local = %d\n", hash.directory.p, bucket.ActualPower)
 			hash.increasePower()
-			for i, j := (hash.GetBucketCount() >> 1), 0; i < hash.GetBucketCount(); i, j = i+1, j+1 {
-				hash.directory.bucketPointer[i] = hash.directory.bucketPointer[j]
-			}
-
-			address := hash.InitializeNewBucket(1)
-			hash.directory.bucketPointer[int64(hash.GetBucketCount()>>1)+pos] = address[0]
-
-			// limpeza e reinsercao
-			hash.bucketFile.Seek(hash.directory.bucketPointer[pos], io.SeekStart)
-			binary.Write(hash.bucketFile, binary.LittleEndian, bucket.ActualPower+1)
-			binary.Write(hash.bucketFile, binary.LittleEndian, int64(0))
-			binary.Write(hash.bucketFile, binary.LittleEndian, make([]BucketRecord, hash.loadFactor))
-
-			for i := 0; i < len(bucket.Records); i++ {
-				hash.Add(bucket.Records[i])
-			}
-			hash.Add(r)
-		} else {
-			fmt.Printf("Bucket estourado! Repartindo! p nao aumenta! p total = %d | p local = %d\n", hash.directory.p, bucket.ActualPower)
-			address := hash.InitializeNewBucket(1)
-			hash.directory.bucketPointer[int64(hash.GetBucketCount()>>1)+pos] = address[0]
-
-			// redivisao do bucket
-			hash.bucketFile.Seek(hash.directory.bucketPointer[pos], io.SeekStart)
-			binary.Write(hash.bucketFile, binary.LittleEndian, bucket.ActualPower+1)
-			binary.Write(hash.bucketFile, binary.LittleEndian, int64(0))
-			binary.Write(hash.bucketFile, binary.LittleEndian, make([]BucketRecord, hash.loadFactor))
-
-			for i := 0; i < len(bucket.Records); i++ {
-				hash.Add(bucket.Records[i])
-			}
-			hash.Add(r)
 		}
+
+		address := hash.InitializeNewBucket(1)
+		newPos := GetBucketPower(bucket.ActualPower) + pos
+		if newPos >= int64(hash.GetBucketCount()) {
+			newPos = pos
+			pos %= GetBucketPower(bucket.ActualPower)
+		}
+		hash.directory.bucketPointer[newPos] = address[0]
+		bucket.ActualPower++
+
+		// limpeza e reinsercao
+		//hash.insertIntoBucket(pos, bucket.ActualPower, 0, make([]BucketRecord, hash.loadFactor))
+		bucket1 := Bucket{
+			ActualPower: bucket.ActualPower,
+			CurrentSize: 0,
+			Records:     make([]BucketRecord, hash.loadFactor),
+		}
+		bucket2 := Bucket{
+			ActualPower: bucket.ActualPower,
+			CurrentSize: 0,
+			Records:     make([]BucketRecord, hash.loadFactor),
+		}
+
+		bucket.Records[bucket.CurrentSize] = r
+		for i, b1, b2 := 0, 0, 0; i < len(bucket.Records); i++ {
+			if bucket.Records[i].ID%GetBucketPower(bucket.ActualPower) == pos {
+				bucket1.Records[b1] = bucket.Records[i]
+				bucket1.CurrentSize++
+				b1++
+			} else {
+				bucket2.Records[b2] = bucket.Records[i]
+				bucket2.CurrentSize++
+				b2++
+			}
+		}
+
+		hash.insertIntoBucket(pos, bucket1.ActualPower, bucket1.CurrentSize, bucket1.Records)
+		hash.insertIntoBucket(newPos, bucket2.ActualPower, bucket2.CurrentSize, bucket2.Records)
 	} else {
 		bucket.Records[bucket.CurrentSize] = r
-		bucket.CurrentSize++
-
-		fmt.Printf("conteudo = %+v\n", bucket)
-
-		// Grava novamente
-		hash.bucketFile.Seek(hash.directory.bucketPointer[pos], io.SeekStart)
-		binary.Write(hash.bucketFile, binary.LittleEndian, bucket.ActualPower)
-		binary.Write(hash.bucketFile, binary.LittleEndian, bucket.CurrentSize)
-		binary.Write(hash.bucketFile, binary.LittleEndian, bucket.Records)
+		hash.insertIntoBucket(pos, bucket.ActualPower, bucket.CurrentSize+1, bucket.Records)
 	}
+}
+
+func (hash *DinamicHash) PrintHash() {
+	seen := make(map[int64]bool)
+	fmt.Println()
+	for i := 0; i < len(hash.directory.bucketPointer); i++ {
+		if !seen[hash.directory.bucketPointer[i]] {
+			hash.bucketFile.Seek(hash.directory.bucketPointer[i], io.SeekStart)
+			data := make([]byte, hash.bucketSize)
+			hash.bucketFile.Read(data)
+			bucket := binToBucket(data, hash.loadFactor)
+			fmt.Printf("[%3d] %5X = ActualPower:%d | CurrentSize:%d | [ ", i, hash.directory.bucketPointer[i], bucket.ActualPower, bucket.CurrentSize)
+			for i := 0; i < len(bucket.Records); i++ {
+				if bucket.Records[i].ID != 0 {
+					fmt.Printf("{ID:%3d Address:%5X} ", bucket.Records[i].ID, bucket.Records[i].Address)
+				} else {
+					fmt.Printf("                       ")
+				}
+			}
+			fmt.Printf("]\n")
+			seen[hash.directory.bucketPointer[i]] = true
+		} else {
+			fmt.Printf("[%3d] %5X\n", i, hash.directory.bucketPointer[i])
+		}
+	}
+	fmt.Printf("\n")
 }
 
 func StartHashFile() {
@@ -191,4 +227,6 @@ func StartHashFile() {
 			hash.Add(r)
 		}
 	}
+
+	hash.PrintHash()
 }
