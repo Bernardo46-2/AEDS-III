@@ -118,7 +118,7 @@ func (p *Pokemon) ToBytes() []byte {
 	pokeBytes := make([]byte, p.Size.Total+4)
 	var lendario, mitico []byte
 	offset := 0
-	valid := 1
+	lapide := 0
 
 	if p.Lendario {
 		lendario = []byte{1}
@@ -143,7 +143,7 @@ func (p *Pokemon) ToBytes() []byte {
 	}
 
 	// Longo e chato processo de conversao de tamanho da variavel + variavel
-	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(int32(valid)), offset)
+	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(int32(lapide)), offset)
 	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Size.Total), offset)
 
 	pokeBytes, offset = copyBytes(pokeBytes, utils.IntToBytes(p.Numero), offset)

@@ -57,6 +57,11 @@ func BytesToInt32(registro []byte, ptr int) (int32, int) {
 	return int32(binary.LittleEndian.Uint32(registro[ptr : ptr+4])), ptr + 4
 }
 
+// BytesToInt64 retorna um inteiro de 64 bits e avança o ponteiro ptr
+func BytesToInt64(registro []byte, ptr int) (int64, int) {
+	return int64(binary.LittleEndian.Uint64(registro[ptr : ptr+8])), ptr + 8
+}
+
 // BytesToString retorna uma string de tamanho variável e avança o ponteiro ptr
 func BytesToString(registro []byte, ptr int) (string, int) {
 	size, ptr := BytesToVarSize(registro, ptr)

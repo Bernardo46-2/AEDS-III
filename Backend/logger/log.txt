@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 STATUS: 2023/03/16 05:57:55 Servidor iniciado
 STATUS: 2023/03/16 06:00:48 Servidor desligado
 STATUS: 2023/03/16 06:02:11 Servidor iniciado
@@ -893,3 +894,11 @@ INFO: 2023/03/18 20:52:05 Database Ordenada (Intercalacao Comum)
 GET: 2023/03/18 20:52:05 Id de numero 1 ate 60
 GET: 2023/03/18 20:52:53 Id de numero 9
 STATUS: 2023/03/18 20:55:17 Servidor desligado
+=======
+STATUS: 2023/03/24 21:45:09 Servidor iniciado
+STATUS: 2023/03/24 21:45:15 Servidor desligado
+STATUS: 2023/03/24 21:45:23 Servidor iniciado
+INFO: 2023/03/24 21:45:31 Database Ordenada (Intercalacao Por Substituição)
+INFO: 2023/03/24 21:45:39 Database Recarregada
+STATUS: 2023/03/24 21:48:19 Servidor desligado
+>>>>>>> refs/remotes/origin/main

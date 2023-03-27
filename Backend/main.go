@@ -9,18 +9,43 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
 	"net/http"
+	"os"
+	"strconv"
 
+	"github.com/Bernardo46-2/AEDS-III/dataManager"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
 )
 
 func main() {
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Println("1 - Hashing Dinamico")
+	fmt.Println("2 - Importar CSV")
+	fmt.Println("9 - Ligar Servidor")
+	scanner.Scan()
+	opcao, _ := strconv.Atoi(scanner.Text())
+	switch opcao {
+	case 1:
+		dataManager.StartHashFile()
+	case 2:
+		dataManager.ImportCSV().CsvToBin()
+	case 9:
+		fmt.Println("Servidor Iniciado")
+		servidor()
+	default:
+		fmt.Println("Opção inválida")
+	}
+}
+
+func servidor() {
 	// Inicializa o servidor de log
 	logger.LigarServidor()
 
-	// Handlers para metodos de service
+	// Crud
 	http.HandleFunc("/getPagesNumber/", middlewares.EnableCORS(handlers.GetPagesNumber))
 	http.HandleFunc("/getAll/", middlewares.EnableCORS(handlers.GetAllPokemon))
 	http.HandleFunc("/get/", middlewares.EnableCORS(handlers.GetPokemon))
@@ -30,10 +55,13 @@ func main() {
 	http.HandleFunc("/loadDatabase", middlewares.EnableCORS(handlers.LoadDatabase))
 	http.HandleFunc("/toKatakana/", middlewares.EnableCORS(handlers.ToKatakana))
 
-	// Handlers para metodos de ordenação externa
+	// Ordenação externa
 	http.HandleFunc("/intercalacaoComum/", middlewares.EnableCORS(handlers.IntercalacaoComum))
 	http.HandleFunc("/intercalacaoVariavel/", middlewares.EnableCORS(handlers.IntercalacaoVariavel))
 	http.HandleFunc("/selecaoPorSubstituicao/", middlewares.EnableCORS(handlers.SelecaoPorSubstituicao))
+
+	// Indexação
+	http.HandleFunc("/criarHashingEstendido/", middlewares.EnableCORS(handlers.CriarHashingEstendido))
 
 	// Inicializa o servidor HTTP na porta 8080 e escreve no log eventuais erros
 	logger.Fatal(http.ListenAndServe(":8080", nil))

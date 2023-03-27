@@ -81,7 +81,7 @@ func readRegistro(file *os.File, inicioRegistro int64) (pokemonAtual models.Poke
 	}
 
 	// Converte os bytes para uma struct models.Pokemon se nao houver lapide
-	if lapide != 0 {
+	if lapide != 1 {
 		if err := pokemonAtual.ParseBinToPoke(pokeBytes); err != nil {
 			return pokemonAtual, pos, fmt.Errorf("erro ao converter registro para Pokemon: %v Linha Corrompida: %d", err, pos)
 		}
@@ -154,7 +154,7 @@ func GetLastPokemon() (lastID int32) {
 		binary.Read(file, binary.LittleEndian, &tamReg)
 		pokeBytes := make([]byte, tamReg-4)
 		io.ReadFull(file, pokeBytes)
-		if lapide != 0 {
+		if lapide != 1 {
 			atualPokemon.ParseBinToPoke(pokeBytes)
 			if atualPokemon.Numero > ultimoPokemon.Numero {
 				ultimoPokemon = atualPokemon
@@ -183,7 +183,7 @@ func DeletarPokemon(posicao int64) error {
 	}
 
 	// Escreve o valor da lapide
-	if err = binary.Write(file, binary.LittleEndian, int32(0)); err != nil {
+	if err = binary.Write(file, binary.LittleEndian, int32(1)); err != nil {
 		return fmt.Errorf("erro ao escrever valor no arquivo: %v", err)
 	}
 
@@ -248,4 +248,83 @@ func AppendPokemon(pokemon []byte) (err error) {
 	AlterarNumRegistros(1)
 
 	return
+}
+
+type ControleLeitura struct {
+	Arquivo        *os.File  // ponteiro para o arquivo de registros
+	TotalRegistros int32     // número total de registros no arquivo
+	RegistrosLidos int32     // número de registros já lidos
+	RegistroAtual  *Registro // ponteiro para o registro atual sendo lido
+}
+
+type Registro struct {
+	Lapide   int32
+	Tamanho  int32
+	Pokemon  models.Pokemon
+	Endereco int64
+}
+
+func (c *ControleLeitura) Close() error {
+	return c.Arquivo.Close()
+}
+
+func inicializarControleLeitura(nomeArquivo string) (*ControleLeitura, error) {
+	arquivo, err := os.Open(nomeArquivo)
+	if err != nil {
+		return nil, err
+	}
+
+	// ler o número total de registros do arquivo
+	var totalRegistros int32
+	err = binary.Read(arquivo, binary.LittleEndian, &totalRegistros)
+	if err != nil {
+		return nil, err
+	}
+
+	// criar uma instância do ControleLeitura
+	controle := &ControleLeitura{
+		Arquivo:        arquivo,
+		RegistrosLidos: 0,
+		TotalRegistros: totalRegistros,
+		RegistroAtual:  nil,
+	}
+
+	return controle, nil
+}
+
+func (c *ControleLeitura) ReadNext() error {
+	// verificar se todos os registros já foram lidos
+	if c.RegistrosLidos >= c.TotalRegistros {
+		return io.EOF // fim do arquivo
+	}
+
+	// ler os dados do registro do arquivo
+	endereco, _ := c.Arquivo.Seek(0, io.SeekCurrent)
+	var lapide int32
+	var tamanho int32
+	var conteudo models.Pokemon
+
+	binary.Read(c.Arquivo, binary.LittleEndian, &lapide)
+	binary.Read(c.Arquivo, binary.LittleEndian, &tamanho)
+	conteudoBytes := make([]byte, tamanho-4)
+	binary.Read(c.Arquivo, binary.LittleEndian, &conteudoBytes)
+
+	// Converte os bytes para uma struct models.Pokemon se nao houver lapide
+	if lapide != 1 {
+		conteudo.ParseBinToPoke(conteudoBytes)
+	} else {
+		conteudo.Numero = -1
+	}
+
+	// atualizar o registro atual e o número de registros lidos
+	registro := &Registro{
+		Lapide:   lapide,
+		Tamanho:  tamanho,
+		Pokemon:  conteudo,
+		Endereco: endereco,
+	}
+	c.RegistroAtual = registro
+	c.RegistrosLidos++
+
+	return nil
 }
