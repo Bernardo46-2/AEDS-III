@@ -853,3 +853,43 @@ GET: 2023/03/18 15:53:29 Id de numero 1 ate 60
 GET: 2023/03/18 15:53:33 Id de numero 61 ate 120
 GET: 2023/03/18 16:12:01 Id de numero 1 ate 60
 >>>>>>> refs/remotes/origin/main
+STATUS: 2023/03/18 18:43:36 Servidor iniciado
+INFO: 2023/03/18 18:45:26 Database Recarregada
+GET: 2023/03/18 18:45:26 Id de numero 1 ate 60
+GET: 2023/03/18 18:45:52 Id de numero 1 ate 60
+GET: 2023/03/18 18:50:27 Id de numero 10
+GET: 2023/03/18 18:50:31 Id de numero 12
+GET: 2023/03/18 18:51:18 Id de numero 61 ate 120
+GET: 2023/03/18 18:51:34 Id de numero 121 ate 180
+GET: 2023/03/18 18:52:03 Id de numero 165
+PUT: 2023/03/18 18:52:17 Id de numero 165 atualizado
+GET: 2023/03/18 18:52:17 Id de numero 1 ate 60
+GET: 2023/03/18 18:52:25 Id de numero 5
+INFO: 2023/03/18 18:52:36 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/18 18:52:36 Id de numero 1 ate 60
+GET: 2023/03/18 18:52:42 Id de numero 20
+GET: 2023/03/18 18:52:46 Id de numero 25
+GET: 2023/03/18 18:53:11 Id de numero 54
+GET: 2023/03/18 18:53:20 Id de numero 55
+GET: 2023/03/18 18:53:34 Id de numero 54
+GET: 2023/03/18 18:53:54 Id de numero 841 ate 890
+GET: 2023/03/18 18:53:58 Id de numero 850
+GET: 2023/03/18 18:54:07 Id de numero 890
+GET: 2023/03/18 18:57:46 Id de numero 1 ate 60
+STATUS: 2023/03/18 19:01:42 Servidor desligado
+STATUS: 2023/03/18 20:50:43 Servidor iniciado
+GET: 2023/03/18 20:50:50 Id de numero 1 ate 60
+GET: 2023/03/18 20:51:00 Id de numero 12
+PUT: 2023/03/18 20:51:29 Id de numero 12 atualizado
+GET: 2023/03/18 20:51:29 Id de numero 1 ate 60
+GET: 2023/03/18 20:51:33 Id de numero 1 ate 60
+GET: 2023/03/18 20:51:35 Id de numero 12
+GET: 2023/03/18 20:51:42 Id de numero 841 ate 890
+GET: 2023/03/18 20:51:45 Id de numero 890
+DELETE: 2023/03/18 20:51:56 Id de numero 846 deletado
+GET: 2023/03/18 20:51:56 Id de numero 1 ate 60
+GET: 2023/03/18 20:52:00 Id de numero 841 ate 890
+INFO: 2023/03/18 20:52:05 Database Ordenada (Intercalacao Comum)
+GET: 2023/03/18 20:52:05 Id de numero 1 ate 60
+GET: 2023/03/18 20:52:53 Id de numero 9
+STATUS: 2023/03/18 20:55:17 Servidor desligado
