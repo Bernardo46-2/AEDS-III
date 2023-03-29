@@ -1,3 +1,4 @@
-./backend/data/*
-./backend/logger/log.txt
-
+./Backend/data/tmp/*
+./Backend/logger/log.txt
+./Backend/my.log
+./Backend/tree.log

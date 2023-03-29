@@ -30,6 +30,13 @@ func IntToBytes(n int32) []byte {
 	return binary.LittleEndian.AppendUint32(buf, uint32(n))
 }
 
+// IntToBytes converte um número int64 em uma slice de bytes
+// usando a ordem Little Endian e retorna a slice resultante.
+func Int64ToBytes(n int64) []byte {
+	var buf []byte
+	return binary.LittleEndian.AppendUint64(buf, uint64(n))
+}
+
 // FloatToBytes converte um número float32 em uma slice de bytes
 // usando a ordem Little Endian e retorna a slice resultante.
 func FloatToBytes(f float32) []byte {
@@ -38,6 +45,16 @@ func FloatToBytes(f float32) []byte {
 	binary.LittleEndian.PutUint32(b, bits)
 
 	return b
+}
+
+// BoolToByte converte um booleano em um byte
+// usando a ordem Little Endian e retorna um byte 0 ou 1.
+func BoolToByte(b bool) byte {
+    if b {
+        return byte(1)
+    } else {
+        return byte(0)
+    }
 }
 
 // RemoveAfterSpace remove tudo depois do primeiro espaço em branco

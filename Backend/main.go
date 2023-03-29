@@ -9,11 +9,11 @@
 package main
 
 import (
-	"bufio"
+	// "bufio"
 	"fmt"
 	"net/http"
-	"os"
-	"strconv"
+	// "os"
+	// "strconv"
 
 	"github.com/Bernardo46-2/AEDS-III/dataManager"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
@@ -22,17 +22,21 @@ import (
 )
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Println("1 - Hashing Dinamico")
-	fmt.Println("2 - Importar CSV")
-	fmt.Println("9 - Ligar Servidor")
-	scanner.Scan()
-	opcao, _ := strconv.Atoi(scanner.Text())
+	// scanner := bufio.NewScanner(os.Stdin)
+	// fmt.Println("1 - Hashing Dinamico")
+	// fmt.Println("2 - Importar CSV")
+	// fmt.Println("3 - B Tree")
+	// fmt.Println("9 - Ligar Servidor")
+	// scanner.Scan()
+	// opcao, _ := strconv.Atoi(scanner.Text())
+    opcao := 3 // remover depois
 	switch opcao {
 	case 1:
 		dataManager.StartHashFile()
 	case 2:
 		dataManager.ImportCSV().CsvToBin()
+    case 3:
+        dataManager.StartBTreeFile()
 	case 9:
 		fmt.Println("Servidor Iniciado")
 		servidor()
