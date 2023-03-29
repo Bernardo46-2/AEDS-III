@@ -328,31 +328,6 @@ func newBucketRecord(registro Registro) BucketRecord {
 
 // ======================================= Crud ======================================== //
 
-// StartHashFile cria um arquivo de hash para a pokedex e por
-// fim printa o conteudo da hash
-func StartHashFile() {
-	// Inicializando controle e hash vazia
-	c, err := inicializarControleLeitura(BIN_FILE)
-	hash := newHash(BUCKETS_FILE, DIRECTORY_FILE, 8)
-
-	// Parsing e inclusao na hash, se acabar o arquivo sera retornado um erro io.EOF
-	for i := 0; i < int(c.TotalRegistros) && err == nil; i++ {
-		err = c.ReadNext()
-		if c.RegistroAtual.Lapide != 1 {
-			r := newBucketRecord(*c.RegistroAtual)
-			hash.add(r)
-		}
-	}
-
-	// Debug
-	hash.PrintHash()
-
-	// Fechando hash e salvando diretorio
-	hash.closeDinamicHash()
-
-	_, _ = loadDinamicHash(DIRECTORY_FILE)
-}
-
 // add adiciona um BucketRecord a estrutura de hash.
 // A função utiliza as variaveis nativas da estrutura DinamicHash para
 // recuperar o arquivo e seus metadados
@@ -406,4 +381,29 @@ func (hash *DinamicHash) add(r BucketRecord) {
 		bucket.Records[bucket.CurrentSize] = r
 		hash.insertIntoBucket(pos, bucket.ActualPower, bucket.CurrentSize+1, bucket.Records)
 	}
+}
+
+// StartHashFile cria um arquivo de hash para a pokedex e por
+// fim printa o conteudo da hash
+func StartHashFile() {
+	// Inicializando controle e hash vazia
+	c, err := inicializarControleLeitura(BIN_FILE)
+	hash := newHash(BUCKETS_FILE, DIRECTORY_FILE, 8)
+
+	// Parsing e inclusao na hash, se acabar o arquivo sera retornado um erro io.EOF
+	for i := 0; i < int(c.TotalRegistros) && err == nil; i++ {
+		err = c.ReadNext()
+		if c.RegistroAtual.Lapide != 1 {
+			r := newBucketRecord(*c.RegistroAtual)
+			hash.add(r)
+		}
+	}
+
+	// Debug
+	hash.PrintHash()
+
+	// Fechando hash e salvando diretorio
+	hash.closeDinamicHash()
+
+	_, _ = loadDinamicHash(DIRECTORY_FILE)
 }
