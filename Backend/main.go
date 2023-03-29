@@ -9,6 +9,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"net/http"
 	"os"
@@ -20,7 +21,22 @@ import (
 )
 
 func main() {
-	switch os.Args[1] {
+	var opcao string
+	if len(os.Args) > 1 {
+		opcao = os.Args[1]
+	} else {
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Println("1 | server")
+		fmt.Println("2 | csv")
+		fmt.Println("3 | hash")
+		fmt.Println("4 | btree")
+		fmt.Print("\n> ")
+		scanner.Scan()
+		opcao = scanner.Text()
+		fmt.Println()
+	}
+
+	switch opcao {
 	case "1", "server":
 		fmt.Println("Servidor Iniciado")
 		servidor()

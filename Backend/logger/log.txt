@@ -902,3 +902,7 @@ INFO: 2023/03/24 21:45:31 Database Ordenada (Intercalacao Por Substituição)
 INFO: 2023/03/24 21:45:39 Database Recarregada
 STATUS: 2023/03/24 21:48:19 Servidor desligado
 >>>>>>> refs/remotes/origin/main
+STATUS: 2023/03/29 11:53:37 Servidor iniciado
+STATUS: 2023/03/29 11:53:40 Servidor desligado
+STATUS: 2023/03/29 11:55:27 Servidor iniciado
+STATUS: 2023/03/29 11:55:29 Servidor desligado
