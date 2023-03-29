@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/Bernardo46-2/AEDS-III/dataManager"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
@@ -30,6 +31,7 @@ func main() {
 		fmt.Println("2 | csv")
 		fmt.Println("3 | hash")
 		fmt.Println("4 | btree")
+		fmt.Println("5 | searchHash")
 		fmt.Print("\n> ")
 		scanner.Scan()
 		opcao = scanner.Text()
@@ -46,6 +48,13 @@ func main() {
 		dataManager.StartHashFile()
 	case "4", "btree":
 		dataManager.StartBTreeFile()
+	case "5", "searchHash":
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Print("\nID: ")
+		scanner.Scan()
+		str := scanner.Text()
+		id, _ := strconv.Atoi(str)
+		fmt.Printf("%+v", dataManager.RecoverRegisterAddress(int64(id)))
 	default:
 		fmt.Println("Opção inválida")
 	}
