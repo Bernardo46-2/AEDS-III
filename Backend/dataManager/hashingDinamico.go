@@ -9,7 +9,7 @@
 // A hash dinâmica é útil em cenários onde o tamanho do conjunto de dados pode variar
 // significativamente e onde o desempenho de pesquisa é crítico.
 //
-// Para começar, adapte a funcao StartHashFile() e newBucketRecord(registro Registro)
+// Para começar, adapte a funcao StartHashFile() e recordToBucketRecord(registro Registro)
 // para receberem o tipo de registro que voce deseja criar a hash.
 // Para alem disso utilize uma função de leitura de arquivo para fazer o import na funcao
 // StartHashFile()
@@ -149,9 +149,9 @@ func loadDinamicHash(directoryPath string) (hash DinamicHash, err error) {
 	return hash, err
 }
 
-// closeDinamicHash salva o arquivo do diretorio com os dados atuais
+// Close salva o arquivo do diretorio com os dados atuais
 // e em seguida fecha os arquivos dependentes abertos
-func (hash *DinamicHash) closeDinamicHash() {
+func (hash *DinamicHash) Close() {
 	hash.directoryFile.Seek(0, io.SeekStart)
 
 	// Dados da hash dinamica
@@ -242,8 +242,8 @@ func StartHashFile() {
 	for i := 0; i < int(c.TotalRegistros) && err == nil; i++ {
 		err = c.ReadNext()
 		if c.RegistroAtual.Lapide != 1 {
-			r := newBucketRecord(*c.RegistroAtual)
-			hash.add(r)
+			r := recordToBucketRecord(*c.RegistroAtual)
+			hash.addRecord(r)
 		}
 	}
 
@@ -251,7 +251,7 @@ func StartHashFile() {
 	hash.PrintHash()
 
 	// Fechando hash e salvando diretorio
-	hash.closeDinamicHash()
+	hash.Close()
 }
 
 // ====================================== Bucket ======================================= //
@@ -284,16 +284,21 @@ func (hash *DinamicHash) initializeNewBucket(numberOfBuckets int) []int64 {
 // readBucket recebe a posição do bucket na hash, realiza o parsing
 // e retorna o bucket formatado
 func (hash *DinamicHash) readBucket(pos int64) Bucket {
-	// Recuperando a posição do arquivo na hash e lendo os dados cruamente
-	hash.bucketFile.Seek(hash.directory.bucketPointer[pos], io.SeekStart)
-	data := make([]byte, hash.bucketSize)
-	hash.bucketFile.Read(data)
 
 	// Parsing dos metadados
 	var ID int64
 	var Address int64
 	var ptr int
 	var bucket Bucket
+
+	if pos < 0 {
+		return bucket
+	}
+
+	// Recuperando a posição do arquivo na hash e lendo os dados cruamente
+	hash.bucketFile.Seek(hash.directory.bucketPointer[pos], io.SeekStart)
+	data := make([]byte, hash.bucketSize)
+	hash.bucketFile.Read(data)
 
 	bucket.Records = make([]BucketRecord, hash.loadFactor)
 	bucket.ActualPower, ptr = utils.BytesToInt64(data, ptr)
@@ -341,25 +346,32 @@ func (hash *DinamicHash) insertIntoBucket(pos int64, power int64, currentSize in
 	binary.Write(hash.bucketFile, binary.LittleEndian, records)
 }
 
-// newBucketRecord transforma um registro de leitura de arquivo
+// recordToBucketRecord transforma um registro de leitura de arquivo
 // em um registro de bucket
-func newBucketRecord(registro Registro) BucketRecord {
+func recordToBucketRecord(registro Registro) BucketRecord {
 	return BucketRecord{
 		ID:      int64(registro.Pokemon.Numero),
 		Address: registro.Endereco,
 	}
 }
 
+func pokemonToBucketRecord(pokemon models.Pokemon, address int64) BucketRecord {
+	return BucketRecord{
+		ID:      int64(pokemon.Numero),
+		Address: address,
+	}
+}
+
 // ======================================= Crud ======================================== //
 
-// add adiciona um BucketRecord a estrutura de hash.
+// addRecord adiciona um BucketRecord a estrutura de hash.
 // A função utiliza as variaveis nativas da estrutura DinamicHash para
 // recuperar o arquivo e seus metadados
 //
 // Caso um bucket de "localPower" == "hashPower" a hash sera aumentada e um novo bucket criado.
 // Caso o "localPower" < "hashPower" um novo bucket sera criado.
 // Por fim se nao estourar apenas insere
-func (hash *DinamicHash) add(r BucketRecord) {
+func (hash *DinamicHash) addRecord(r BucketRecord) {
 	// Recuperar e dar parsing no bucket a ser editado
 	pos := int64(r.ID) % int64(hash.getBucketCount())
 	bucket := hash.readBucket(pos)
@@ -405,6 +417,13 @@ func (hash *DinamicHash) add(r BucketRecord) {
 		bucket.Records[bucket.CurrentSize] = r
 		hash.insertIntoBucket(pos, bucket.ActualPower, bucket.CurrentSize+1, bucket.Records)
 	}
+}
+
+func AddToHash(pokemon models.Pokemon, address int64) {
+	pokeRecord := pokemonToBucketRecord(pokemon, address)
+	hash, _ := loadDinamicHash(DIRECTORY_FILE)
+	hash.addRecord(pokeRecord)
+	hash.Close()
 }
 
 func RecoverRegisterAddress(targetID int64) models.Pokemon {

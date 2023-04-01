@@ -50,11 +50,11 @@ func FloatToBytes(f float32) []byte {
 // BoolToByte converte um booleano em um byte
 // usando a ordem Little Endian e retorna um byte 0 ou 1.
 func BoolToByte(b bool) byte {
-    if b {
-        return byte(1)
-    } else {
-        return byte(0)
-    }
+	if b {
+		return byte(1)
+	} else {
+		return byte(0)
+	}
 }
 
 // RemoveAfterSpace remove tudo depois do primeiro espaço em branco
@@ -149,4 +149,11 @@ func BytesToFloat32(registro []byte, ptr int) (float32, int) {
 	bits := binary.LittleEndian.Uint32(registro[ptr : ptr+size])
 	float := math.Float32frombits(bits)
 	return float, ptr + size
+}
+
+func AbsInt64(x int64) int64 {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
