@@ -79,7 +79,7 @@ func SuccessResponse(codigo int) Response {
 	case 5:
 		msg = "Pokemon deletado com sucesso!"
 	case 6:
-		msg = "CSV importado com sucesso!"
+		msg = "CSV importado! <br>Indice Hash Criado!"
 	case 7:
 		msg = "Intercalacao Balanceada Comum realizada com sucesso!"
 	case 8:

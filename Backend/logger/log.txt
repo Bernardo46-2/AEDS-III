@@ -52,3 +52,11 @@ STATUS: 2023/04/01 18:55:21 Servidor iniciado
 INFO: 2023/04/01 18:55:26 Database Recarregada
 ERROR: 2023/04/01 18:55:35 code: 2, message: Pokemon nao encontrado
 STATUS: 2023/04/01 18:55:45 Servidor desligado
+STATUS: 2023/04/01 19:00:30 Servidor iniciado
+INFO: 2023/04/01 19:00:36 Database Carregada
+Hash Criado
+STATUS: 2023/04/01 19:00:42 Servidor desligado
+STATUS: 2023/04/01 19:01:58 Servidor iniciado
+INFO: 2023/04/01 19:02:04 Database Carregada
+INFO: 2023/04/01 19:02:04 Hash Dinamica Criada
+STATUS: 2023/04/01 19:02:11 Servidor desligado

@@ -259,9 +259,6 @@ func StartHashFile() {
 		}
 	}
 
-	// Debug
-	hash.PrintHash()
-
 	// Fechando hash e salvando diretorio
 	hash.Close()
 }
@@ -334,6 +331,9 @@ func newBucket(actualPower int64, loadFactor int64) Bucket {
 
 // initializeNewBucket inicializa a quantidade de buckets fornecidos no arquivo
 // e retorna um array de enderecos dos buckets inicializados
+//
+// Caso exista alguma posicao marcada como garbage collector, esta sera retornada
+// para nao precisar criar um novo espaço
 func (hash *DinamicHash) initializeNewBucket(numberOfBuckets int) []int64 {
 	bucketAddress := make([]int64, numberOfBuckets)
 	hash.bucketFile.Seek(0, io.SeekEnd)
@@ -434,6 +434,8 @@ func recordToBucketRecord(registro Registro) BucketRecord {
 	}
 }
 
+// pokemonToBucketRecord retorna uma struct de BucketRecord inicializada
+// com os valores fornecidos
 func pokemonToBucketRecord(pokemon models.Pokemon, address int64) BucketRecord {
 	return BucketRecord{
 		ID:      int64(pokemon.Numero),
@@ -441,28 +443,33 @@ func pokemonToBucketRecord(pokemon models.Pokemon, address int64) BucketRecord {
 	}
 }
 
+// newBucketRecord retorna um BucketRecord vazio
 func newBucketRecord() BucketRecord {
 	return BucketRecord{}
 }
 
 // ======================================= Crud ======================================== //
 
+// HashCreate adiciona um novo Pokemon à estrutura de hash dinâmica e salva as alterações no arquivo.
+// Recebe um Pokemon e a posição do registro no arquivo binário.
 func HashCreate(pokemon models.Pokemon, address int64) {
+	// Cria bucket, importa o diretorio, adiciona aos buckets e salva arquivo
 	pokeRecord := pokemonToBucketRecord(pokemon, address)
 	hash, _ := loadDinamicHash(DIRECTORY_FILE)
 	hash.addRecord(pokeRecord)
 	hash.Close()
 }
 
+// HashRead busca um Pokemon no arquivo binário usando a estrutura de hash dinâmica.
+// Retorna o Pokemon encontrado, a posição do registro no arquivo e um erro, se houver.
 func HashRead(targetID int64) (models.Pokemon, int64, error) {
-	c, err := inicializarControleLeitura(BIN_FILE)
-
+	// Carrega o diretorio e o bucket para a memoria primaria
 	hash, _ := loadDinamicHash(DIRECTORY_FILE)
 	pos := targetID % int64(hash.getBucketCount())
 	bucket := hash.readBucket(pos)
 
+	// Recupera o endereço do ID
 	targetPos := int64(-1)
-
 	for i := int64(0); i < bucket.CurrentSize; i++ {
 		if bucket.Records[i].ID == targetID {
 			targetPos = bucket.Records[i].Address
@@ -470,8 +477,11 @@ func HashRead(targetID int64) (models.Pokemon, int64, error) {
 		}
 	}
 
+	// Realiza a leitura no arquivo a partir do endereço
+	c, err := inicializarControleLeitura(BIN_FILE)
 	targetPokemon := c.ReadTarget(targetPos)
 
+	// Trata possiveis erros
 	if targetPos < 0 {
 		err = fmt.Errorf("pokemon nao encontrado")
 	} else if targetPokemon.Numero < 0 {
@@ -481,6 +491,10 @@ func HashRead(targetID int64) (models.Pokemon, int64, error) {
 	return targetPokemon, targetPos, err
 }
 
+// HashDelete remove um Pokémon com base no ID fornecido da estrutura de hash dinâmica
+// e atualiza o arquivo Hash.
+//
+// Retorna um erro se o Pokémon não for encontrado.
 func HashDelete(targetID int64) error {
 	// Recuperar o bucket
 	hash, _ := loadDinamicHash(DIRECTORY_FILE)
@@ -519,21 +533,22 @@ func HashDelete(targetID int64) error {
 		hash.insertIntoBucket(pos, mergedBucket.ActualPower, mergedBucket.CurrentSize, mergedBucket.Records)
 	}
 
+	// Salva o arquivo do diretorio
 	hash.Close()
 
-	hash2, _ := loadDinamicHash(DIRECTORY_FILE)
-	hash2.PrintHash()
-	fmt.Printf("%+v\n", hash2.directory)
 	return nil
 }
 
+// HashUpdate atualiza a localização de um Pokémon na estrutura de hash dinâmica,
+// fornecendo o novo endereço. Retorna um erro se o Pokémon não for encontrado.
 func HashUpdate(pokemon models.Pokemon, newAddress int64) error {
+	// Carrega o diretorio e o bucket para a memoria primaria
 	hash, _ := loadDinamicHash(DIRECTORY_FILE)
 	pos := int64(pokemon.Numero) % int64(hash.getBucketCount())
 	bucket := hash.readBucket(pos)
 
+	// Recupera o endereço do ID
 	targetPos := int64(-1)
-
 	for i := int64(0); i < bucket.CurrentSize; i++ {
 		if bucket.Records[i].ID == int64(pokemon.Numero) {
 			targetPos = i
@@ -541,13 +556,16 @@ func HashUpdate(pokemon models.Pokemon, newAddress int64) error {
 		}
 	}
 
+	// Trata possiveis erros
 	if targetPos < 0 {
 		return fmt.Errorf("pokemon nao encontrado para atualizar")
 	}
 
+	// Atualiza para o novo endereço
 	bucket.Records[targetPos].Address = newAddress
 	hash.insertIntoBucket(pos, bucket.ActualPower, bucket.CurrentSize, bucket.Records)
 
+	// Fecha a hash de maneira segura
 	hash.Close()
 
 	return nil

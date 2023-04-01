@@ -129,13 +129,17 @@ func DeletePokemon(w http.ResponseWriter, r *http.Request) {
 }
 
 // LoadDatabase faz o carregamento do arquivo CSV e o serializa em binario
+//
+// Tambem é criado indices para: Hash
 func LoadDatabase(w http.ResponseWriter, r *http.Request) {
 	// Import
 	dataManager.ImportCSV().CsvToBin()
+	dataManager.StartHashFile()
 
 	// Resposta
 	writeSuccess(w, 6)
-	logger.Println("INFO", "Database Recarregada")
+	logger.Println("INFO", "Database Carregada")
+	logger.Println("INFO", "Hash Dinamica Criada")
 }
 
 // ToKatakana recebe uma string em alfabeto romato, converte para

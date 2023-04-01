@@ -13,7 +13,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strconv"
 
 	"github.com/Bernardo46-2/AEDS-III/dataManager"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
@@ -31,7 +30,6 @@ func main() {
 		fmt.Println("2 | csv")
 		fmt.Println("3 | hash")
 		fmt.Println("4 | btree")
-		fmt.Println("5 | searchHash")
 		fmt.Print("\n> ")
 		scanner.Scan()
 		opcao = scanner.Text()
@@ -48,21 +46,6 @@ func main() {
 		dataManager.StartHashFile()
 	case "4", "btree":
 		dataManager.StartBTreeFile()
-	case "5", "hashSearch":
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Print("\nID: ")
-		scanner.Scan()
-		str := scanner.Text()
-		id, _ := strconv.Atoi(str)
-		pokemon, address, _ := dataManager.HashRead(int64(id))
-		fmt.Printf("Pokemon = %+v\nAddress = %d", pokemon, address)
-	case "6", "hashDelete":
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Print("\nID: ")
-		scanner.Scan()
-		str := scanner.Text()
-		id, _ := strconv.Atoi(str)
-		dataManager.HashDelete(int64(id))
 	default:
 		fmt.Println("Opção inválida")
 	}
@@ -86,9 +69,6 @@ func servidor() {
 	http.HandleFunc("/intercalacaoComum/", middlewares.EnableCORS(handlers.IntercalacaoComum))
 	http.HandleFunc("/intercalacaoVariavel/", middlewares.EnableCORS(handlers.IntercalacaoVariavel))
 	http.HandleFunc("/selecaoPorSubstituicao/", middlewares.EnableCORS(handlers.SelecaoPorSubstituicao))
-
-	// Indexação
-	http.HandleFunc("/criarHashingEstendido/", middlewares.EnableCORS(handlers.CriarHashingEstendido))
 
 	// Inicializa o servidor HTTP na porta 8080 e escreve no log eventuais erros
 	logger.Fatal(http.ListenAndServe(":8080", nil))
