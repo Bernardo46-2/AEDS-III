@@ -48,13 +48,21 @@ func main() {
 		dataManager.StartHashFile()
 	case "4", "btree":
 		dataManager.StartBTreeFile()
-	case "5", "searchHash":
+	case "5", "hashSearch":
 		scanner := bufio.NewScanner(os.Stdin)
 		fmt.Print("\nID: ")
 		scanner.Scan()
 		str := scanner.Text()
 		id, _ := strconv.Atoi(str)
-		fmt.Printf("%+v", dataManager.RecoverRegisterAddress(int64(id)))
+		pokemon, address, _ := dataManager.HashRead(int64(id))
+		fmt.Printf("Pokemon = %+v\nAddress = %d", pokemon, address)
+	case "6", "hashDelete":
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Print("\nID: ")
+		scanner.Scan()
+		str := scanner.Text()
+		id, _ := strconv.Atoi(str)
+		dataManager.HashDelete(int64(id))
 	default:
 		fmt.Println("Opção inválida")
 	}

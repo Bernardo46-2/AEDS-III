@@ -230,18 +230,20 @@ func AlterarNumRegistros(n int32) (err error) {
 // deste pokemon no final do arquivo
 //
 // Por fim atualiza o numero de registros em +1
-func AppendPokemon(pokemon []byte) (err error) {
+func AppendPokemon(pokemon []byte) (address int64, err error) {
+
 	// Abre o arquivo para leitura e append
 	file, err := os.OpenFile(BIN_FILE, os.O_WRONLY|os.O_APPEND, 0644)
+	address, _ = file.Seek(0, io.SeekEnd)
 	if err != nil {
-		return err
+		return
 	}
 	defer file.Close()
 
 	// Tenta fazer a escrita
 	err = binary.Write(file, binary.LittleEndian, pokemon)
 	if err != nil {
-		return err
+		return
 	}
 
 	// Atualiza a quantidade de registros

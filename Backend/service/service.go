@@ -14,6 +14,8 @@ import (
 //
 // Recebe um modelo pokemon e serializa para inserir
 // Por fim retorna o ID do pokemon criado e erro se houver.
+//
+// tambem realiza: HashCreate
 func Create(pokemon models.Pokemon) (int, error) {
 	// Recupera o ultimo ID para gerar o proximo
 	ultimoID := dataManager.GetLastPokemon()
@@ -23,15 +25,16 @@ func Create(pokemon models.Pokemon) (int, error) {
 	// Prepara, serializa e insere
 	pokemon.CalculateSize()
 	pokeBytes := pokemon.ToBytes()
-	err := dataManager.AppendPokemon(pokeBytes)
+	address, err := dataManager.AppendPokemon(pokeBytes)
+	dataManager.HashCreate(pokemon, address)
 
 	return int(ultimoID), err
 }
 
-// Read recebe o ID de um pokemon, procura no banco de dados e
-// o retorna, se nao achar gera um erro
+// Read recebe o ID de um pokemon, procura no banco de dados atraves do
+// indice hash e o retorna, se nao achar gera um erro
 func Read(id int) (models.Pokemon, error) {
-	pokemon, _, err := dataManager.ReadBinToPoke(id)
+	pokemon, _, err := dataManager.HashRead(int64(id))
 	return pokemon, err
 }
 
@@ -50,7 +53,10 @@ func ReadPagesNumber() (numeroPaginas int, err error) {
 // ReadAll retorna um slice de modelos Pokemon a partir de um ID especificado.
 // Se houver a função lê até 60 registros a partir do ID fornecido e adiciona
 // a um slice de Pokemon, retornando o slice e um erro, se houver.
+//
+// A leitura é feita pelo indice hash
 func ReadAll(page int) (pokemon []models.Pokemon, err error) {
+	var tmpPoke models.Pokemon
 	atual := page * 60
 	ultimoID := int(dataManager.GetLastPokemon())
 
@@ -59,9 +65,9 @@ func ReadAll(page int) (pokemon []models.Pokemon, err error) {
 
 	// Recupera 60 ids enquanto houverem
 	for id, i, total := atual+1, 0, 0; total < 60 && id <= ultimoID && i < numRegistros; i++ {
-		tmp, _, _ := dataManager.ReadBinToPoke(id)
-		if tmp.Numero > 0 {
-			pokemon = append(pokemon, tmp)
+		tmpPoke, _, err = dataManager.HashRead(int64(id))
+		if tmpPoke.Numero > 0 {
+			pokemon = append(pokemon, tmpPoke)
 			total++
 		}
 		id++
@@ -72,10 +78,14 @@ func ReadAll(page int) (pokemon []models.Pokemon, err error) {
 // Update atualiza um registro no arquivo binário de acordo com o número do pokemon informado.
 // Recebe uma struct do tipo models.Pokemon a ser atualizada.
 // Retorna um erro caso ocorra algum problema ao atualizar o registro.
+//
+// O update é feito deletando um valor e adicionando outro ao final do arquivo.
+//
+// tambem realiza: HashUpdate
 func Update(pokemon models.Pokemon) (err error) {
 
 	// Recupera a posição do id no arquivo
-	_, pos, err := dataManager.ReadBinToPoke(int(pokemon.Numero))
+	_, pos, err := dataManager.HashRead(int64(pokemon.Numero))
 	if err != nil {
 		return
 	}
@@ -85,18 +95,24 @@ func Update(pokemon models.Pokemon) (err error) {
 	pokeBytes := pokemon.ToBytes()
 
 	// Deleta o antigo e insere o novo registro
-	if err = dataManager.DeletarPokemon(pos); err != nil {
-		return err
+	err = dataManager.DeletarPokemon(pos)
+	if err != nil {
+		return
 	}
 
-	if err = dataManager.AppendPokemon(pokeBytes); err != nil {
-		return err
+	newAddress, err := dataManager.AppendPokemon(pokeBytes)
+	if err != nil {
+		return
 	}
+
+	err = dataManager.HashUpdate(pokemon, newAddress)
 
 	return
 }
 
 // Delete recebe um ID, procura no arquivo e gera a remoçao logica do mesmo
+//
+// tambem realiza: HashDelete
 func Delete(id int) (pokemon models.Pokemon, err error) {
 	// Tenta encontrar a posiçao do pokemon no arquivo binario
 	pokemon, pos, err := dataManager.ReadBinToPoke(id)
@@ -108,6 +124,8 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 	if err = dataManager.DeletarPokemon(pos); err != nil {
 		return
 	}
+
+	dataManager.HashDelete(int64(pokemon.Numero))
 
 	return
 }

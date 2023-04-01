@@ -35,24 +35,24 @@ type BTreeNode struct {
 }
 
 type BTree struct {
-	file         string
-    nodesFile    *os.File
-	root         int64
-	order        int
-    emptyNodes   []int64
+	file       string
+	nodesFile  *os.File
+	root       int64
+	order      int
+	emptyNodes []int64
 }
 
 // ====================================== Key ====================================== //
 
 func newKey(register *Registro) Key {
-	return Key {
+	return Key{
 		id:  int64(register.Pokemon.Numero),
 		ptr: register.Endereco,
 	}
 }
 
 func newEmptyKey() Key {
-	return Key { -1, -1 }
+	return Key{-1, -1}
 }
 
 // ====================================== Node ====================================== //
@@ -133,7 +133,6 @@ func (n *BTreeNode) insert(index int64, left int64, data *Key, right int64, tree
 	return -1, nil, -1
 }
 
-
 // ====================================== B Tree ====================================== //
 
 func NewBTree(order int, dir string) (*BTree, error) {
@@ -141,13 +140,13 @@ func NewBTree(order int, dir string) (*BTree, error) {
 		return nil, errors.New("invalid order")
 	}
 
-    nodesFile, _ := os.Create(dir + BTREE_NODES_FILE)
+	nodesFile, _ := os.Create(dir + BTREE_NODES_FILE)
 	root := newNode(order, 1)
-	tree := &BTree {
-		root: 0,
-		order: order,
-		file: dir + BTREE_FILE,
-        nodesFile: nodesFile,
+	tree := &BTree{
+		root:      0,
+		order:     order,
+		file:      dir + BTREE_FILE,
+		nodesFile: nodesFile,
 	}
 
 	tree.writeNode(root)
@@ -156,36 +155,36 @@ func NewBTree(order int, dir string) (*BTree, error) {
 }
 
 func ReadBTree(dir string) *BTree {
-    file, _ := os.ReadFile(dir + BTREE_FILE)
-    nodesFile, _ := os.Open(dir + BTREE_NODES_FILE)
+	file, _ := os.ReadFile(dir + BTREE_FILE)
+	nodesFile, _ := os.Open(dir + BTREE_NODES_FILE)
 	root, ptr := utils.BytesToInt64(file, 0)
-    order, ptr := utils.BytesToInt64(file, ptr)
-    len, _ := utils.BytesToInt64(file, ptr)
+	order, ptr := utils.BytesToInt64(file, ptr)
+	len, _ := utils.BytesToInt64(file, ptr)
 
-    for i := int64(0); i < len; i++ {
-        // do stuff
-    }
+	for i := int64(0); i < len; i++ {
+		// do stuff
+	}
 
-	return &BTree {
-		root: root,
-		order: int(order),
-		file: dir + BTREE_FILE,
-        nodesFile: nodesFile,
+	return &BTree{
+		root:      root,
+		order:     int(order),
+		file:      dir + BTREE_FILE,
+		nodesFile: nodesFile,
 	}
 }
 
 func (b *BTree) Close() {
 	file, _ := os.Create(b.file)
-    defer file.Close()
-    defer b.nodesFile.Close()
+	defer file.Close()
+	defer b.nodesFile.Close()
 
-    binary.Write(file, binary.LittleEndian, b.root)
-    binary.Write(file, binary.LittleEndian, int64(b.order))
-    binary.Write(file, binary.LittleEndian, int64(len(b.emptyNodes)))
-    
-    for i := 0; i < len(b.emptyNodes); i++ {
-        binary.Write(file, binary.LittleEndian, b.emptyNodes[i])
-    }
+	binary.Write(file, binary.LittleEndian, b.root)
+	binary.Write(file, binary.LittleEndian, int64(b.order))
+	binary.Write(file, binary.LittleEndian, int64(len(b.emptyNodes)))
+
+	for i := 0; i < len(b.emptyNodes); i++ {
+		binary.Write(file, binary.LittleEndian, b.emptyNodes[i])
+	}
 }
 
 func (b *BTree) nodeSize() int64 {
@@ -349,11 +348,10 @@ func StartBTreeFile() {
 
 	// tree.printFile()
 
-    tree := ReadBTree("data/")
-    tree.printFile()
-    defer tree.Close()
+	tree := ReadBTree("data/")
+	tree.printFile()
+	defer tree.Close()
 }
-
 
 // ====================================== Remove ====================================== //
 
@@ -362,37 +360,37 @@ func (n *BTreeNode) easyRemove(node *BTreeNode, id int64) {
 }
 
 func (b *BTree) remove(node *BTreeNode, id int64) {
-    i := int64(0)
-    for i < node.numberOfKeys && node.keys[i].id < id {
-        i++;
-    }
+	i := int64(0)
+	for i < node.numberOfKeys && node.keys[i].id < id {
+		i++
+	}
 
-    if node.keys[i].id == id {
-        
-    } else {
+	if node.keys[i].id == id {
 
-    }
+	} else {
+
+	}
 }
 
 func (b *BTree) removeFromRoot(id int64) *Key {
-    root := b.readNode(b.root);
-    i := int64(0)
-    for i < root.numberOfKeys && root.keys[i].id < id {
-        i++;
-    }
+	root := b.readNode(b.root)
+	i := int64(0)
+	for i < root.numberOfKeys && root.keys[i].id < id {
+		i++
+	}
 
-    if root.keys[i].id == id {
-        
-    } else {
+	if root.keys[i].id == id {
 
-    }
-    
-    return nil
+	} else {
+
+	}
+
+	return nil
 }
 
 func (b *BTree) Remove(id int64) *Key {
-    root := b.readNode(b.root);
-    b.remove(root, id)
-    
-    return nil
+	root := b.readNode(b.root)
+	b.remove(root, id)
+
+	return nil
 }

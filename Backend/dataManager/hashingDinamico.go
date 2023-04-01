@@ -52,6 +52,7 @@ type DinamicHash struct {
 type Directory struct {
 	p             int64   // Nível de profundidade atual.
 	bucketPointer []int64 // Ponteiros para os buckets no arquivo bucketFile.
+	garbage       []int64 // Lista de buckets vazios para reaproveitar
 }
 
 // Bucket representa um bucket na tabela de hash dinâmica.
@@ -86,7 +87,7 @@ func newHash(bucketPath string, directoryPath string, size int64) DinamicHash {
 	}
 	hash := DinamicHash{
 		directory:     d,
-		loadFactor:    size,
+		loadFactor:    size + 1, // para suportar explosao
 		bucketFile:    bucketFile,
 		directoryFile: directoryFile,
 	}
@@ -110,7 +111,7 @@ func newHash(bucketPath string, directoryPath string, size int64) DinamicHash {
 
 // loadDirectory carrega o diretorio da hash para a memoria primaria
 func loadDinamicHash(directoryPath string) (hash DinamicHash, err error) {
-	directoryFile, err := os.Open(directoryPath)
+	directoryFile, err := os.OpenFile(directoryPath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		StartHashFile()
 		err = fmt.Errorf("arquivo hash inexistente, fazendo upload dos registros e criando hash nova")
@@ -131,12 +132,19 @@ func loadDinamicHash(directoryPath string) (hash DinamicHash, err error) {
 	for i := 0; i < int(bucketPointerLen); i++ {
 		bucketPointer[i], ptr = utils.BytesToInt64(buffer, ptr)
 	}
+	bucketGarbageLen, ptr := utils.BytesToInt64(buffer, ptr)
+	bucketGarbage := make([]int64, bucketGarbageLen)
+	for i := 0; i < int(bucketGarbageLen); i++ {
+		bucketGarbage[i], ptr = utils.BytesToInt64(buffer, ptr)
+	}
 
 	// Inicializando as structs
-	bucketFile, _ := os.Open(bucketPath)
+	bucketFile, _ := os.OpenFile(bucketPath, os.O_RDWR|os.O_CREATE, 0644)
+
 	directory := Directory{
 		p:             p,
 		bucketPointer: bucketPointer,
+		garbage:       bucketGarbage,
 	}
 	hash = DinamicHash{
 		directory:     directory,
@@ -165,6 +173,10 @@ func (hash *DinamicHash) Close() {
 	binary.Write(hash.directoryFile, binary.LittleEndian, int64(len(hash.directory.bucketPointer)))
 	for i := 0; i < len(hash.directory.bucketPointer); i++ {
 		binary.Write(hash.directoryFile, binary.LittleEndian, hash.directory.bucketPointer[i])
+	}
+	binary.Write(hash.directoryFile, binary.LittleEndian, int64(len(hash.directory.garbage)))
+	for i := 0; i < len(hash.directory.garbage); i++ {
+		binary.Write(hash.directoryFile, binary.LittleEndian, hash.directory.garbage[i])
 	}
 
 	if err := hash.bucketFile.Close(); err != nil {
@@ -214,7 +226,7 @@ func (hash *DinamicHash) PrintHash() {
 
 			// Itera sobre os valores e printa
 			fmt.Printf("|| [%3d] | %5x  |    %d    |    %d    ||  ", i, hash.directory.bucketPointer[i], bucket.ActualPower, bucket.CurrentSize)
-			for i := 0; i < len(bucket.Records); i++ {
+			for i := 0; i < len(bucket.Records)-1; i++ {
 				if bucket.Records[i].ID != 0 {
 					fmt.Printf("{%3d %5x} ", bucket.Records[i].ID, bucket.Records[i].Address)
 				} else {
@@ -254,6 +266,61 @@ func StartHashFile() {
 	hash.Close()
 }
 
+// addRecord adiciona um BucketRecord a estrutura de hash.
+// A função utiliza as variaveis nativas da estrutura DinamicHash para
+// recuperar o arquivo e seus metadados
+//
+// Caso um bucket de "localPower" == "hashPower" a hash sera aumentada e um novo bucket criado.
+// Caso o "localPower" < "hashPower" um novo bucket sera criado.
+// Por fim se nao estourar apenas insere
+func (hash *DinamicHash) addRecord(r BucketRecord) {
+	// Recuperar e dar parsing no bucket a ser editado
+	pos := int64(r.ID) % int64(hash.getBucketCount())
+	bucket := hash.readBucket(pos)
+
+	// Atualiza o bucket com o novo valor
+	if bucket.CurrentSize == hash.loadFactor-1 {
+		// Se o bucket tiver apenas 1 ponteiro aumentar p em +1, se nao so atualiza o bucket
+		if bucket.ActualPower == hash.directory.p {
+			hash.increasePower()
+		}
+
+		// Criação do novo bucket
+		address := hash.initializeNewBucket(1)
+		newPos := bucket.getBucketPower() + pos
+		if newPos >= int64(hash.getBucketCount()) {
+			newPos = pos
+			pos %= bucket.getBucketPower()
+		}
+		hash.directory.bucketPointer[newPos] = address[0]
+		bucket.ActualPower++
+
+		// Limpeza e reinsercao
+		bucket1 := newBucket(bucket.ActualPower, hash.loadFactor)
+		bucket2 := newBucket(bucket.ActualPower, hash.loadFactor)
+		bucket.Records[bucket.CurrentSize] = r
+		for i, b1, b2 := 0, 0, 0; i < len(bucket.Records); i++ {
+			if bucket.Records[i].ID%bucket.getBucketPower() == pos {
+				bucket1.Records[b1] = bucket.Records[i]
+				bucket1.CurrentSize++
+				b1++
+			} else {
+				bucket2.Records[b2] = bucket.Records[i]
+				bucket2.CurrentSize++
+				b2++
+			}
+		}
+
+		// Gravando bucket atual e novo em arquivo
+		hash.insertIntoBucket(pos, bucket1.ActualPower, bucket1.CurrentSize, bucket1.Records)
+		hash.insertIntoBucket(newPos, bucket2.ActualPower, bucket2.CurrentSize, bucket2.Records)
+	} else {
+		// Apenas insere ao final
+		bucket.Records[bucket.CurrentSize] = r
+		hash.insertIntoBucket(pos, bucket.ActualPower, bucket.CurrentSize+1, bucket.Records)
+	}
+}
+
 // ====================================== Bucket ======================================= //
 
 // newBucket retorna um bucket preparado para ser preenchido
@@ -268,11 +335,23 @@ func newBucket(actualPower int64, loadFactor int64) Bucket {
 // initializeNewBucket inicializa a quantidade de buckets fornecidos no arquivo
 // e retorna um array de enderecos dos buckets inicializados
 func (hash *DinamicHash) initializeNewBucket(numberOfBuckets int) []int64 {
-	hash.bucketFile.Seek(0, io.SeekEnd)
 	bucketAddress := make([]int64, numberOfBuckets)
+	hash.bucketFile.Seek(0, io.SeekEnd)
 
 	for i := 0; i < numberOfBuckets; i++ {
-		bucketAddress[i], _ = hash.bucketFile.Seek(0, io.SeekCurrent)
+		if len(hash.directory.garbage) > 0 {
+			// Reutilizando uma posição do garbage
+			bucketAddress[i] = hash.directory.garbage[0]
+			hash.directory.garbage = hash.directory.garbage[1:]
+
+			// Movendo o cursor do arquivo para a posição reutilizada
+			hash.bucketFile.Seek(bucketAddress[i], io.SeekStart)
+		} else {
+			// Criando um novo espaço no arquivo
+			bucketAddress[i], _ = hash.bucketFile.Seek(0, io.SeekEnd)
+		}
+
+		// Escrevendo os dados no bucket
 		binary.Write(hash.bucketFile, binary.LittleEndian, hash.directory.p)                      // ActualPower
 		binary.Write(hash.bucketFile, binary.LittleEndian, int64(0))                              // CurrentSize
 		binary.Write(hash.bucketFile, binary.LittleEndian, make([]BucketRecord, hash.loadFactor)) // Records
@@ -362,72 +441,21 @@ func pokemonToBucketRecord(pokemon models.Pokemon, address int64) BucketRecord {
 	}
 }
 
-// ======================================= Crud ======================================== //
-
-// addRecord adiciona um BucketRecord a estrutura de hash.
-// A função utiliza as variaveis nativas da estrutura DinamicHash para
-// recuperar o arquivo e seus metadados
-//
-// Caso um bucket de "localPower" == "hashPower" a hash sera aumentada e um novo bucket criado.
-// Caso o "localPower" < "hashPower" um novo bucket sera criado.
-// Por fim se nao estourar apenas insere
-func (hash *DinamicHash) addRecord(r BucketRecord) {
-	// Recuperar e dar parsing no bucket a ser editado
-	pos := int64(r.ID) % int64(hash.getBucketCount())
-	bucket := hash.readBucket(pos)
-
-	// Atualiza o bucket com o novo valor
-	if bucket.CurrentSize == hash.loadFactor-1 {
-		// Se o bucket tiver apenas 1 ponteiro aumentar p em +1, se nao so atualiza o bucket
-		if bucket.ActualPower == hash.directory.p {
-			hash.increasePower()
-		}
-
-		// Criação do novo bucket
-		address := hash.initializeNewBucket(1)
-		newPos := bucket.getBucketPower() + pos
-		if newPos >= int64(hash.getBucketCount()) {
-			newPos = pos
-			pos %= bucket.getBucketPower()
-		}
-		hash.directory.bucketPointer[newPos] = address[0]
-		bucket.ActualPower++
-
-		// Limpeza e reinsercao
-		bucket1 := newBucket(bucket.ActualPower, hash.loadFactor)
-		bucket2 := newBucket(bucket.ActualPower, hash.loadFactor)
-		bucket.Records[bucket.CurrentSize] = r
-		for i, b1, b2 := 0, 0, 0; i < len(bucket.Records); i++ {
-			if bucket.Records[i].ID%bucket.getBucketPower() == pos {
-				bucket1.Records[b1] = bucket.Records[i]
-				bucket1.CurrentSize++
-				b1++
-			} else {
-				bucket2.Records[b2] = bucket.Records[i]
-				bucket2.CurrentSize++
-				b2++
-			}
-		}
-
-		// Gravando bucket atual e novo em arquivo
-		hash.insertIntoBucket(pos, bucket1.ActualPower, bucket1.CurrentSize, bucket1.Records)
-		hash.insertIntoBucket(newPos, bucket2.ActualPower, bucket2.CurrentSize, bucket2.Records)
-	} else {
-		// Apenas insere ao final
-		bucket.Records[bucket.CurrentSize] = r
-		hash.insertIntoBucket(pos, bucket.ActualPower, bucket.CurrentSize+1, bucket.Records)
-	}
+func newBucketRecord() BucketRecord {
+	return BucketRecord{}
 }
 
-func AddToHash(pokemon models.Pokemon, address int64) {
+// ======================================= Crud ======================================== //
+
+func HashCreate(pokemon models.Pokemon, address int64) {
 	pokeRecord := pokemonToBucketRecord(pokemon, address)
 	hash, _ := loadDinamicHash(DIRECTORY_FILE)
 	hash.addRecord(pokeRecord)
 	hash.Close()
 }
 
-func RecoverRegisterAddress(targetID int64) models.Pokemon {
-	c, _ := inicializarControleLeitura(BIN_FILE)
+func HashRead(targetID int64) (models.Pokemon, int64, error) {
+	c, err := inicializarControleLeitura(BIN_FILE)
 
 	hash, _ := loadDinamicHash(DIRECTORY_FILE)
 	pos := targetID % int64(hash.getBucketCount())
@@ -444,5 +472,83 @@ func RecoverRegisterAddress(targetID int64) models.Pokemon {
 
 	targetPokemon := c.ReadTarget(targetPos)
 
-	return targetPokemon
+	if targetPos < 0 {
+		err = fmt.Errorf("pokemon nao encontrado")
+	} else if targetPokemon.Numero < 0 {
+		err = fmt.Errorf("arquivo corrompido")
+	}
+
+	return targetPokemon, targetPos, err
+}
+
+func HashDelete(targetID int64) error {
+	// Recuperar o bucket
+	hash, _ := loadDinamicHash(DIRECTORY_FILE)
+	pos := targetID % int64(hash.getBucketCount())
+	bucket := hash.readBucket(pos)
+
+	// Procurar o registro no bucket
+	targetPos := int64(-1)
+	for i := int64(0); i < bucket.CurrentSize; i++ {
+		if bucket.Records[i].ID == targetID {
+			targetPos = i
+		}
+	}
+	// Se nao achar erro!
+	if targetPos < 0 {
+		return fmt.Errorf("valor nao encontrado")
+	}
+
+	// Remover o registro do bucket
+	bucket.CurrentSize--
+	for i := targetPos; i < int64(len(bucket.Records))-1; i++ {
+		bucket.Records[i] = bucket.Records[i+1]
+	}
+	bucket.Records[len(bucket.Records)-1] = newBucketRecord()
+
+	// Escreve novo bucket em arquivo
+	hash.insertIntoBucket(pos, bucket.ActualPower, bucket.CurrentSize, bucket.Records)
+
+	// Se estiver vazio atualiza o garbage collector
+	if bucket.CurrentSize == 0 {
+		bucket = Bucket{}
+		hash.directory.garbage = append(hash.directory.garbage, hash.directory.bucketPointer[pos])
+		hash.directory.bucketPointer[pos] = hash.directory.bucketPointer[pos>>1]
+		mergedBucket := hash.readBucket(pos)
+		mergedBucket.ActualPower--
+		hash.insertIntoBucket(pos, mergedBucket.ActualPower, mergedBucket.CurrentSize, mergedBucket.Records)
+	}
+
+	hash.Close()
+
+	hash2, _ := loadDinamicHash(DIRECTORY_FILE)
+	hash2.PrintHash()
+	fmt.Printf("%+v\n", hash2.directory)
+	return nil
+}
+
+func HashUpdate(pokemon models.Pokemon, newAddress int64) error {
+	hash, _ := loadDinamicHash(DIRECTORY_FILE)
+	pos := int64(pokemon.Numero) % int64(hash.getBucketCount())
+	bucket := hash.readBucket(pos)
+
+	targetPos := int64(-1)
+
+	for i := int64(0); i < bucket.CurrentSize; i++ {
+		if bucket.Records[i].ID == int64(pokemon.Numero) {
+			targetPos = i
+			i = bucket.CurrentSize
+		}
+	}
+
+	if targetPos < 0 {
+		return fmt.Errorf("pokemon nao encontrado para atualizar")
+	}
+
+	bucket.Records[targetPos].Address = newAddress
+	hash.insertIntoBucket(pos, bucket.ActualPower, bucket.CurrentSize, bucket.Records)
+
+	hash.Close()
+
+	return nil
 }
