@@ -25,6 +25,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
@@ -230,6 +231,29 @@ func (hash *DinamicHash) PrintHash() {
 	fmt.Printf("\n")
 }
 
+// StartHashFile cria um arquivo de hash para a pokedex e por
+// fim printa o conteudo da hash
+func StartHashFile() {
+	// Inicializando controle e hash vazia
+	c, err := inicializarControleLeitura(BIN_FILE)
+	hash := newHash(BUCKETS_FILE, DIRECTORY_FILE, 8)
+
+	// Parsing e inclusao na hash, se acabar o arquivo sera retornado um erro io.EOF
+	for i := 0; i < int(c.TotalRegistros) && err == nil; i++ {
+		err = c.ReadNext()
+		if c.RegistroAtual.Lapide != 1 {
+			r := newBucketRecord(*c.RegistroAtual)
+			hash.add(r)
+		}
+	}
+
+	// Debug
+	hash.PrintHash()
+
+	// Fechando hash e salvando diretorio
+	hash.closeDinamicHash()
+}
+
 // ====================================== Bucket ======================================= //
 
 // newBucket retorna um bucket preparado para ser preenchido
@@ -383,27 +407,23 @@ func (hash *DinamicHash) add(r BucketRecord) {
 	}
 }
 
-// StartHashFile cria um arquivo de hash para a pokedex e por
-// fim printa o conteudo da hash
-func StartHashFile() {
-	// Inicializando controle e hash vazia
-	c, err := inicializarControleLeitura(BIN_FILE)
-	hash := newHash(BUCKETS_FILE, DIRECTORY_FILE, 8)
+func RecoverRegisterAddress(targetID int64) models.Pokemon {
+	c, _ := inicializarControleLeitura(BIN_FILE)
 
-	// Parsing e inclusao na hash, se acabar o arquivo sera retornado um erro io.EOF
-	for i := 0; i < int(c.TotalRegistros) && err == nil; i++ {
-		err = c.ReadNext()
-		if c.RegistroAtual.Lapide != 1 {
-			r := newBucketRecord(*c.RegistroAtual)
-			hash.add(r)
+	hash, _ := loadDinamicHash(DIRECTORY_FILE)
+	pos := targetID % int64(hash.getBucketCount())
+	bucket := hash.readBucket(pos)
+
+	targetPos := int64(-1)
+
+	for i := int64(0); i < bucket.CurrentSize; i++ {
+		if bucket.Records[i].ID == targetID {
+			targetPos = bucket.Records[i].Address
+			i = bucket.CurrentSize
 		}
 	}
 
-	// Debug
-	hash.PrintHash()
+	targetPokemon := c.ReadTarget(targetPos)
 
-	// Fechando hash e salvando diretorio
-	hash.closeDinamicHash()
-
-	_, _ = loadDinamicHash(DIRECTORY_FILE)
+	return targetPokemon
 }
