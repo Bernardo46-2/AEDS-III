@@ -10,11 +10,12 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-const BTREE_FILE string = "data/BTree.dat"
+const BTREE_FILE string = "BTree.dat"
+const BTREE_NODES_FILE string = "BTreeNodes.dat"
 
 // TODO:
-// - remove tree pointer from functions
-// - remove extra indentation on printTree
+// - remove *BTree argument from functions
+// - remove extra indentation on printFile()
 // - create remove function
 // - create find function
 
@@ -34,22 +35,24 @@ type BTreeNode struct {
 }
 
 type BTree struct {
-	file  *os.File
-	root  int64
-	order int
+	file         string
+    nodesFile    *os.File
+	root         int64
+	order        int
+    emptyNodes   []int64
 }
 
 // ====================================== Key ====================================== //
 
 func newKey(register *Registro) Key {
-	return Key{
+	return Key {
 		id:  int64(register.Pokemon.Numero),
 		ptr: register.Endereco,
 	}
 }
 
 func newEmptyKey() Key {
-	return Key{-1, -1}
+	return Key { -1, -1 }
 }
 
 // ====================================== Node ====================================== //
@@ -130,25 +133,59 @@ func (n *BTreeNode) insert(index int64, left int64, data *Key, right int64, tree
 	return -1, nil, -1
 }
 
+
 // ====================================== B Tree ====================================== //
 
-func NewBTree(order int) (*BTree, error) {
+func NewBTree(order int, dir string) (*BTree, error) {
 	if order < 3 {
-		return nil, errors.New("Invalid order")
+		return nil, errors.New("invalid order")
 	}
 
-	file, _ := os.Create(BTREE_FILE)
-	binary.Write(file, binary.LittleEndian, int64(8))
+    nodesFile, _ := os.Create(dir + BTREE_NODES_FILE)
 	root := newNode(order, 1)
-	tree := &BTree{
-		root:  8,
+	tree := &BTree {
+		root: 0,
 		order: order,
-		file:  file,
+		file: dir + BTREE_FILE,
+        nodesFile: nodesFile,
 	}
 
 	tree.writeNode(root)
 
 	return tree, nil
+}
+
+func ReadBTree(dir string) *BTree {
+    file, _ := os.ReadFile(dir + BTREE_FILE)
+    nodesFile, _ := os.Open(dir + BTREE_NODES_FILE)
+	root, ptr := utils.BytesToInt64(file, 0)
+    order, ptr := utils.BytesToInt64(file, ptr)
+    len, _ := utils.BytesToInt64(file, ptr)
+
+    for i := int64(0); i < len; i++ {
+        // do stuff
+    }
+
+	return &BTree {
+		root: root,
+		order: int(order),
+		file: dir + BTREE_FILE,
+        nodesFile: nodesFile,
+	}
+}
+
+func (b *BTree) Close() {
+	file, _ := os.Create(b.file)
+    defer file.Close()
+    defer b.nodesFile.Close()
+
+    binary.Write(file, binary.LittleEndian, b.root)
+    binary.Write(file, binary.LittleEndian, int64(b.order))
+    binary.Write(file, binary.LittleEndian, int64(len(b.emptyNodes)))
+    
+    for i := 0; i < len(b.emptyNodes); i++ {
+        binary.Write(file, binary.LittleEndian, b.emptyNodes[i])
+    }
 }
 
 func (b *BTree) nodeSize() int64 {
@@ -162,9 +199,9 @@ func (b *BTree) nodeSize() int64 {
 }
 
 func (b *BTree) readNode(address int64) *BTreeNode {
-	b.file.Seek(address, io.SeekStart)
+	b.nodesFile.Seek(address, io.SeekStart)
 	buf := make([]byte, b.nodeSize())
-	b.file.Read(buf)
+	b.nodesFile.Read(buf)
 
 	child := make([]int64, b.order+1)
 	keys := make([]Key, b.order)
@@ -192,20 +229,20 @@ func (b *BTree) readNode(address int64) *BTreeNode {
 
 func (b *BTree) writeNode(node *BTreeNode) {
 	if node.address == -1 {
-		node.address, _ = b.file.Seek(0, io.SeekEnd)
+		node.address, _ = b.nodesFile.Seek(0, io.SeekEnd)
 	} else {
-		b.file.Seek(node.address, io.SeekStart)
+		b.nodesFile.Seek(node.address, io.SeekStart)
 	}
 
-	binary.Write(b.file, binary.LittleEndian, node.numberOfKeys)
-	binary.Write(b.file, binary.LittleEndian, node.leaf)
+	binary.Write(b.nodesFile, binary.LittleEndian, node.numberOfKeys)
+	binary.Write(b.nodesFile, binary.LittleEndian, node.leaf)
 
 	for i := 0; i < b.order-1; i++ {
-		binary.Write(b.file, binary.LittleEndian, node.child[i])
-		binary.Write(b.file, binary.LittleEndian, node.keys[i].id)
-		binary.Write(b.file, binary.LittleEndian, node.keys[i].ptr)
+		binary.Write(b.nodesFile, binary.LittleEndian, node.child[i])
+		binary.Write(b.nodesFile, binary.LittleEndian, node.keys[i].id)
+		binary.Write(b.nodesFile, binary.LittleEndian, node.keys[i].ptr)
 	}
-	binary.Write(b.file, binary.LittleEndian, node.child[len(node.child)-2])
+	binary.Write(b.nodesFile, binary.LittleEndian, node.child[len(node.child)-2])
 }
 
 func (b *BTree) insert(node *BTreeNode, data *Key) (int64, *Key, int64) {
@@ -236,36 +273,33 @@ func (b *BTree) Insert(data *Key) {
 		root.keys[0] = *m
 		root.numberOfKeys++
 		b.writeNode(root)
-		b.file.Seek(0, io.SeekStart)
-		binary.Write(b.file, binary.LittleEndian, root.address)
 		b.root = root.address
 	}
 }
 
 func (b *BTree) printFile() {
-	fileEnd, _ := b.file.Seek(0, io.SeekEnd)
-	b.file.Seek(0, io.SeekStart)
+	fileEnd, _ := b.nodesFile.Seek(0, io.SeekEnd)
+	b.nodesFile.Seek(0, io.SeekStart)
 	reader64 := make([]byte, binary.Size(int64(0)))
 
-	b.file.Read(reader64)
-	fileStart, _ := b.file.Seek(0, io.SeekCurrent)
+	fileStart, _ := b.nodesFile.Seek(0, io.SeekStart)
 	numberOfNodes := (fileEnd - fileStart) / b.nodeSize()
-	tmp, _ := utils.BytesToInt64(reader64, 0)
+	tmp := int64(0)
 
-	fmt.Printf("Root Address: %5X\n", tmp)
+	fmt.Printf("Root Address: %5x\n", b.root)
 
 	for i := int64(0); i < numberOfNodes; i++ {
-		currentAddress, _ := b.file.Seek(0, io.SeekCurrent)
+		currentAddress, _ := b.nodesFile.Seek(0, io.SeekCurrent)
 		fmt.Printf("[%5x] || ", currentAddress)
-		b.file.Read(reader64)
+		b.nodesFile.Read(reader64)
 		tmp, _ = utils.BytesToInt64(reader64, 0)
 		fmt.Printf("Size: %1d | ", tmp)
-		b.file.Read(reader64)
+		b.nodesFile.Read(reader64)
 		tmp, _ = utils.BytesToInt64(reader64, 0)
 		fmt.Printf("Leaf: %1d || {", tmp)
 
 		for i := 0; i < b.order-1; i++ {
-			b.file.Read(reader64)
+			b.nodesFile.Read(reader64)
 			tmp, _ = utils.BytesToInt64(reader64, 0)
 
 			if tmp != -1 {
@@ -274,7 +308,7 @@ func (b *BTree) printFile() {
 				fmt.Printf("[     ] ")
 			}
 
-			b.file.Read(reader64)
+			b.nodesFile.Read(reader64)
 			tmp, _ = utils.BytesToInt64(reader64, 0)
 
 			if tmp != -1 {
@@ -283,10 +317,10 @@ func (b *BTree) printFile() {
 				fmt.Printf("    ")
 			}
 
-			b.file.Read(reader64)
+			b.nodesFile.Read(reader64)
 		}
 
-		b.file.Read(reader64)
+		b.nodesFile.Read(reader64)
 		tmp, _ = utils.BytesToInt64(reader64, 0)
 
 		if tmp != -1 {
@@ -301,18 +335,64 @@ func (b *BTree) printFile() {
 // ====================================== Tests ====================================== //
 
 func StartBTreeFile() {
-	order := 8
-	tree, _ := NewBTree(order)
-	reader, err := inicializarControleLeitura(BIN_FILE)
+	// order := 8
+	// tree, _ := NewBTree(order, "data/")
+	// reader, err := inicializarControleLeitura(BIN_FILE)
 
-	for i := 0; i < int(reader.TotalRegistros) && err == nil; i++ {
-		err = reader.ReadNext()
-		if reader.RegistroAtual.Lapide != 1 {
-			r := newKey(reader.RegistroAtual)
-			tree.Insert(&r)
-		}
-	}
+	// for i := 0; i < int(reader.TotalRegistros) && err == nil; i++ {
+	// 	err = reader.ReadNext()
+	// 	if reader.RegistroAtual.Lapide != 1 {
+	// 		r := newKey(reader.RegistroAtual)
+	// 		tree.Insert(&r)
+	// 	}
+	// }
 
-	tree.printFile()
-	// fmt.Printf("%+v\n", tree.readNode(tree.root))
+	// tree.printFile()
+
+    tree := ReadBTree("data/")
+    tree.printFile()
+    defer tree.Close()
+}
+
+
+// ====================================== Remove ====================================== //
+
+func (n *BTreeNode) easyRemove(node *BTreeNode, id int64) {
+
+}
+
+func (b *BTree) remove(node *BTreeNode, id int64) {
+    i := int64(0)
+    for i < node.numberOfKeys && node.keys[i].id < id {
+        i++;
+    }
+
+    if node.keys[i].id == id {
+        
+    } else {
+
+    }
+}
+
+func (b *BTree) removeFromRoot(id int64) *Key {
+    root := b.readNode(b.root);
+    i := int64(0)
+    for i < root.numberOfKeys && root.keys[i].id < id {
+        i++;
+    }
+
+    if root.keys[i].id == id {
+        
+    } else {
+
+    }
+    
+    return nil
+}
+
+func (b *BTree) Remove(id int64) *Key {
+    root := b.readNode(b.root);
+    b.remove(root, id)
+    
+    return nil
 }
