@@ -1,4 +1,4 @@
-/* package btree
+package btree
 
 import (
 	"encoding/binary"
@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
@@ -44,7 +45,7 @@ type BTree struct {
 
 // ====================================== Key ====================================== //
 
-func newKey(register *Registro) Key {
+func newKey(register *binManager.Registro) Key {
 	return Key{
 		id:  int64(register.Pokemon.Numero),
 		ptr: register.Endereco,
@@ -331,12 +332,13 @@ func (b *BTree) printFile() {
 	fmt.Printf("\n\n")
 }
 
+
 // ====================================== Tests ====================================== //
 
 func StartBTreeFile() {
 	// order := 8
 	// tree, _ := NewBTree(order, "data/")
-	// reader, err := inicializarControleLeitura(BIN_FILE)
+	// reader, err := binManager.InicializarControleLeitura(binManager.BIN_FILE)
 
 	// for i := 0; i < int(reader.TotalRegistros) && err == nil; i++ {
 	// 	err = reader.ReadNext()
@@ -394,4 +396,3 @@ func (b *BTree) Remove(id int64) *Key {
 
 	return nil
 }
-*/
