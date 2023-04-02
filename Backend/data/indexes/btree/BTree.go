@@ -76,6 +76,24 @@ func newNode(order int, leaf int64) *BTreeNode {
 	return &node
 }
 
+func (n *BTreeNode) write(file *os.File) {
+    if n.address == -1 {
+        n.address, _ = file.Seek(0, io.SeekEnd)
+    } else {
+		file.Seek(n.address, io.SeekStart)
+	}
+
+	binary.Write(file, binary.LittleEndian, n.numberOfKeys)
+	binary.Write(file, binary.LittleEndian, n.leaf)
+
+	for i := 0; i < len(n.keys)-1; i++ {
+		binary.Write(file, binary.LittleEndian, n.child[i])
+		binary.Write(file, binary.LittleEndian, n.keys[i].id)
+		binary.Write(file, binary.LittleEndian, n.keys[i].ptr)
+	}
+	binary.Write(file, binary.LittleEndian, n.child[len(n.child)-2])
+}
+
 // self: * 2 l 3 r 5 * 9 *
 //
 //	|
@@ -104,8 +122,8 @@ func (n *BTreeNode) split(tree *BTree) (int64, *Key, int64) {
 	carryUp := n.keys[n.numberOfKeys]
 	n.keys[n.numberOfKeys] = newEmptyKey()
 
-	tree.writeNode(n)
-	tree.writeNode(new)
+	n.write(tree.nodesFile)
+	new.write(tree.nodesFile)
 
 	return n.address, &carryUp, new.address
 }
@@ -129,7 +147,7 @@ func (n *BTreeNode) insert(index int64, left int64, data *Key, right int64, tree
 		return n.split(tree)
 	}
 
-	tree.writeNode(n)
+	n.write(tree.nodesFile)
 
 	return -1, nil, -1
 }
@@ -150,14 +168,14 @@ func NewBTree(order int, dir string) (*BTree, error) {
 		nodesFile: nodesFile,
 	}
 
-	tree.writeNode(root)
+	root.write(nodesFile)
 
 	return tree, nil
 }
 
 func ReadBTree(dir string) *BTree {
 	file, _ := os.ReadFile(dir + BTREE_FILE)
-	nodesFile, _ := os.Open(dir + BTREE_NODES_FILE)
+	nodesFile, _ := os.OpenFile(dir + BTREE_NODES_FILE, os.O_RDWR|os.O_CREATE, 0644)
 	root, ptr := utils.BytesToInt64(file, 0)
 	order, ptr := utils.BytesToInt64(file, ptr)
 	len, _ := utils.BytesToInt64(file, ptr)
@@ -176,16 +194,17 @@ func ReadBTree(dir string) *BTree {
 
 func (b *BTree) Close() {
 	file, _ := os.Create(b.file)
-	defer file.Close()
-	defer b.nodesFile.Close()
-
+    
 	binary.Write(file, binary.LittleEndian, b.root)
 	binary.Write(file, binary.LittleEndian, int64(b.order))
 	binary.Write(file, binary.LittleEndian, int64(len(b.emptyNodes)))
-
+    
 	for i := 0; i < len(b.emptyNodes); i++ {
-		binary.Write(file, binary.LittleEndian, b.emptyNodes[i])
+        binary.Write(file, binary.LittleEndian, b.emptyNodes[i])
 	}
+
+    file.Close()
+    b.nodesFile.Close()
 }
 
 func (b *BTree) nodeSize() int64 {
@@ -227,24 +246,6 @@ func (b *BTree) readNode(address int64) *BTreeNode {
 	}
 }
 
-func (b *BTree) writeNode(node *BTreeNode) {
-	if node.address == -1 {
-		node.address, _ = b.nodesFile.Seek(0, io.SeekEnd)
-	} else {
-		b.nodesFile.Seek(node.address, io.SeekStart)
-	}
-
-	binary.Write(b.nodesFile, binary.LittleEndian, node.numberOfKeys)
-	binary.Write(b.nodesFile, binary.LittleEndian, node.leaf)
-
-	for i := 0; i < b.order-1; i++ {
-		binary.Write(b.nodesFile, binary.LittleEndian, node.child[i])
-		binary.Write(b.nodesFile, binary.LittleEndian, node.keys[i].id)
-		binary.Write(b.nodesFile, binary.LittleEndian, node.keys[i].ptr)
-	}
-	binary.Write(b.nodesFile, binary.LittleEndian, node.child[len(node.child)-2])
-}
-
 func (b *BTree) insert(node *BTreeNode, data *Key) (int64, *Key, int64) {
 	l, r := int64(-1), int64(-1)
 	i := int64(0)
@@ -272,7 +273,7 @@ func (b *BTree) Insert(data *Key) {
 		root.child[0], root.child[1] = l, r
 		root.keys[0] = *m
 		root.numberOfKeys++
-		b.writeNode(root)
+		root.write(b.nodesFile)
 		b.root = root.address
 	}
 }
@@ -336,63 +337,100 @@ func (b *BTree) printFile() {
 // ====================================== Tests ====================================== //
 
 func StartBTreeFile() {
-	// order := 8
-	// tree, _ := NewBTree(order, "data/")
-	// reader, err := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+    dir := "./data/files/"
+	order := 8
+	tree, _ := NewBTree(order, dir)
+	reader, err := binManager.InicializarControleLeitura(binManager.BIN_FILE)
 
-	// for i := 0; i < int(reader.TotalRegistros) && err == nil; i++ {
-	// 	err = reader.ReadNext()
-	// 	if reader.RegistroAtual.Lapide != 1 {
-	// 		r := newKey(reader.RegistroAtual)
-	// 		tree.Insert(&r)
-	// 	}
-	// }
+	for i := 0; i < 10 /* int(reader.TotalRegistros) */ && err == nil; i++ {
+		err = reader.ReadNext()
+		if reader.RegistroAtual.Lapide != 1 {
+			r := newKey(reader.RegistroAtual)
+			tree.Insert(&r)
+		}
+	}
 
-	// tree.printFile()
-
-	tree := ReadBTree("data/")
 	tree.printFile()
-	defer tree.Close()
+    tree.Close()
+
+	tree = ReadBTree(dir)
+    
+    fmt.Println("removed:", tree.Remove(7))
+    fmt.Println()
+	tree.printFile()
+    
+	tree.Close()
 }
 
 // ====================================== Remove ====================================== //
 
-func (n *BTreeNode) easyRemove(node *BTreeNode, id int64) {
+func (n *BTreeNode) maxLeft(id int64, file *os.File) *Key {
+    // node := 
+    
+    for n.leaf == 0 {
+        
+    }
 
+    return nil
 }
 
-func (b *BTree) remove(node *BTreeNode, id int64) {
-	i := int64(0)
+func (n *BTreeNode) removeKey(index int64) *Key {
+    k := n.keys[index]
+    
+    for i := index; i < n.numberOfKeys; i++ {
+        n.child[i] = n.child[i + 1]
+        n.keys[i] = n.keys[i + 1]
+    }
+    n.keys[n.numberOfKeys] = newEmptyKey()
+    n.child[n.numberOfKeys] = n.child[n.numberOfKeys + 1]
+    n.child[n.numberOfKeys + 1] = -1
+
+    n.numberOfKeys--
+
+    return &k
+}
+
+func (n *BTreeNode) remove(index int64, tree *BTree) *Key {
+    fmt.Println("n nodes:", n.numberOfKeys - 1)
+    fmt.Println("len:", int64(len(n.keys)))
+    fmt.Println("can remove?:", n.numberOfKeys - 1 >= int64(len(n.keys) / 2))
+
+    var k *Key
+
+    if n.leaf == 1 && n.numberOfKeys - 1 >= int64(len(n.keys) / 2) {
+        k = n.removeKey(index)
+        n.write(tree.nodesFile)
+    } else {
+        
+    }
+
+    return k
+}
+
+func (b *BTree) remove(nodeAddress int64 , id int64) *Key {
+    if nodeAddress == -1 {
+        return nil
+    }
+    
+    var k *Key
+    node := b.readNode(nodeAddress)
+
+    i := int64(0)
 	for i < node.numberOfKeys && node.keys[i].id < id {
 		i++
 	}
 
 	if node.keys[i].id == id {
-
-	} else {
-
-	}
-}
-
-func (b *BTree) removeFromRoot(id int64) *Key {
-	root := b.readNode(b.root)
-	i := int64(0)
-	for i < root.numberOfKeys && root.keys[i].id < id {
-		i++
-	}
-
-	if root.keys[i].id == id {
-
-	} else {
-
-	}
-
-	return nil
+        k = node.remove(i, b)
+    } else if node.keys[i].id < id {
+        k = b.remove(node.child[i], id)
+    } else {
+        k = b.remove(node.child[i + 1], id)
+    }
+    
+    return k
 }
 
 func (b *BTree) Remove(id int64) *Key {
-	root := b.readNode(b.root)
-	b.remove(root, id)
-
-	return nil
+	return b.remove(b.root, id)
 }

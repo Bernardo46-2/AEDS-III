@@ -88,6 +88,7 @@ SelecaoPorSubstituicao.onclick = () => {
 const showAll = document.getElementById('All');
 
 showAll.onclick = () => {
+    window.scrollTo(0, 0);
     fetch('http://localhost:8080/getAll/?page=0')
         .then(response => response.json())
         .then(data => adicionarCards(data))

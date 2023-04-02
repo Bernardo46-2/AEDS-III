@@ -15,7 +15,8 @@ import (
 	"os"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
-	"github.com/Bernardo46-2/AEDS-III/data/indexacao/hashing"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
@@ -46,7 +47,7 @@ func main() {
 	case "3", "hash":
 		hashing.StartHashFile()
 	case "4", "btree":
-		// dataManager.StartBTreeFile()
+		btree.StartBTreeFile()
 	default:
 		fmt.Println("Opção inválida")
 	}

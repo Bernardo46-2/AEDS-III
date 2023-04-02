@@ -7,7 +7,7 @@ import (
 	"math"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
-	"github.com/Bernardo46-2/AEDS-III/data/indexacao/hashing"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
 	"github.com/Bernardo46-2/AEDS-III/models"
 )
 

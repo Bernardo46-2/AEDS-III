@@ -12,9 +12,6 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/models"
 )
 
-// const FILE string = "data/files/pokedex2.csv"
-// const BIN_FILE string = "data/files/pokedex.dat"
-
 // ReadBinToPoke lê um arquivo binário com informações de Pokémons e retorna
 // um Pokémon com o número especificado. Caso o número não seja encontrado,
 // o Pokémon retornado terá seu número igual a -1.
