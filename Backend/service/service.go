@@ -6,7 +6,8 @@ package service
 import (
 	"math"
 
-	"github.com/Bernardo46-2/AEDS-III/dataManager"
+	"github.com/Bernardo46-2/AEDS-III/data/binManager"
+	"github.com/Bernardo46-2/AEDS-III/data/indexacao/hashing"
 	"github.com/Bernardo46-2/AEDS-III/models"
 )
 
@@ -18,15 +19,15 @@ import (
 // tambem realiza: HashCreate
 func Create(pokemon models.Pokemon) (int, error) {
 	// Recupera o ultimo ID para gerar o proximo
-	ultimoID := dataManager.GetLastPokemon()
+	ultimoID := binManager.GetLastPokemon()
 	ultimoID++
 	pokemon.Numero = ultimoID
 
 	// Prepara, serializa e insere
 	pokemon.CalculateSize()
 	pokeBytes := pokemon.ToBytes()
-	address, err := dataManager.AppendPokemon(pokeBytes)
-	dataManager.HashCreate(pokemon, address)
+	address, err := binManager.AppendPokemon(pokeBytes)
+	hashing.HashCreate(pokemon, address)
 
 	return int(ultimoID), err
 }
@@ -34,7 +35,7 @@ func Create(pokemon models.Pokemon) (int, error) {
 // Read recebe o ID de um pokemon, procura no banco de dados atraves do
 // indice hash e o retorna, se nao achar gera um erro
 func Read(id int) (models.Pokemon, error) {
-	pokemon, _, err := dataManager.HashRead(int64(id))
+	pokemon, _, err := hashing.HashRead(int64(id))
 	return pokemon, err
 }
 
@@ -43,7 +44,7 @@ func Read(id int) (models.Pokemon, error) {
 // de navegação entre paginas
 func ReadPagesNumber() (numeroPaginas int, err error) {
 	// Recuperação do numero de registros totais
-	numRegistros, _, _ := dataManager.NumRegistros()
+	numRegistros, _, _ := binManager.NumRegistros()
 
 	// calcula e retorna o total
 	numeroPaginas = int(math.Ceil((float64(numRegistros) / float64(60))))
@@ -58,14 +59,14 @@ func ReadPagesNumber() (numeroPaginas int, err error) {
 func ReadAll(page int) (pokemon []models.Pokemon, err error) {
 	var tmpPoke models.Pokemon
 	atual := page * 60
-	ultimoID := int(dataManager.GetLastPokemon())
+	ultimoID := int(binManager.GetLastPokemon())
 
 	// Recuperação do numero de registros totais
-	numRegistros, _, _ := dataManager.NumRegistros()
+	numRegistros, _, _ := binManager.NumRegistros()
 
 	// Recupera 60 ids enquanto houverem
 	for id, i, total := atual+1, 0, 0; total < 60 && id <= ultimoID && i < numRegistros; i++ {
-		tmpPoke, _, err = dataManager.HashRead(int64(id))
+		tmpPoke, _, err = hashing.HashRead(int64(id))
 		if tmpPoke.Numero > 0 {
 			pokemon = append(pokemon, tmpPoke)
 			total++
@@ -85,7 +86,7 @@ func ReadAll(page int) (pokemon []models.Pokemon, err error) {
 func Update(pokemon models.Pokemon) (err error) {
 
 	// Recupera a posição do id no arquivo
-	_, pos, err := dataManager.HashRead(int64(pokemon.Numero))
+	_, pos, err := hashing.HashRead(int64(pokemon.Numero))
 	if err != nil {
 		return
 	}
@@ -95,17 +96,17 @@ func Update(pokemon models.Pokemon) (err error) {
 	pokeBytes := pokemon.ToBytes()
 
 	// Deleta o antigo e insere o novo registro
-	err = dataManager.DeletarPokemon(pos)
+	err = binManager.DeletarPokemon(pos)
 	if err != nil {
 		return
 	}
 
-	newAddress, err := dataManager.AppendPokemon(pokeBytes)
+	newAddress, err := binManager.AppendPokemon(pokeBytes)
 	if err != nil {
 		return
 	}
 
-	err = dataManager.HashUpdate(pokemon, newAddress)
+	err = hashing.HashUpdate(pokemon, newAddress)
 
 	return
 }
@@ -115,17 +116,17 @@ func Update(pokemon models.Pokemon) (err error) {
 // tambem realiza: HashDelete
 func Delete(id int) (pokemon models.Pokemon, err error) {
 	// Tenta encontrar a posiçao do pokemon no arquivo binario
-	pokemon, pos, err := dataManager.ReadBinToPoke(id)
+	pokemon, pos, err := binManager.ReadBinToPoke(id)
 	if err != nil {
 		return
 	}
 
 	// Efetiva a remoção logica
-	if err = dataManager.DeletarPokemon(pos); err != nil {
+	if err = binManager.DeletarPokemon(pos); err != nil {
 		return
 	}
 
-	dataManager.HashDelete(int64(pokemon.Numero))
+	hashing.HashDelete(int64(pokemon.Numero))
 
 	return
 }

@@ -1,4 +1,4 @@
-package dataManager
+package ordenacao
 
 import (
 	"encoding/binary"
@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"sort"
 
+	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
@@ -42,7 +43,7 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 	defer file.Close()
 
 	// Ler o número total de registros
-	numRegistros, _, _ := NumRegistros()
+	numRegistros, _, _ := binManager.NumRegistros()
 	file.Seek(4, io.SeekStart)
 
 	// Criar os arquivos temporários
@@ -68,7 +69,7 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 			ponteiroAtual := inicioRegistro
 
 			// Pega tamanho do registro e se possui lapide
-			tamanhoRegistro, lapide, _ := tamanhoProxRegistro(file, ponteiroAtual)
+			tamanhoRegistro, lapide, _ := binManager.TamanhoProxRegistro(file, ponteiroAtual)
 
 			// Se nao tem lapide le o registro e salva, se nao pula
 			if lapide != 0 {
@@ -79,14 +80,14 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 				} else {
 					// Se for valido realiza o parse
 					tamBlocoAtual += tamanhoRegistro
-					pokemonAtual, _, _ := readRegistro(file, inicioRegistro)
+					pokemonAtual, _, _ := binManager.ReadRegistro(file, inicioRegistro)
 					pokemonAtual.CalculateSize()
 					pokeSlice = append(pokeSlice, pokemonAtual)
 					j++
 				}
 			} else {
 				// Caso tenha lapide faz uma leitura fazia para pular o registro
-				readRegistro(file, inicioRegistro)
+				binManager.ReadRegistro(file, inicioRegistro)
 				j++
 			}
 		}
@@ -184,8 +185,8 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 		ponteiro2, _ := file2.Seek(0, io.SeekCurrent)
 
 		// Lê os registros
-		pokemon1, _, _ = readRegistro(file1, ponteiro1)
-		pokemon2, _, _ = readRegistro(file2, ponteiro2)
+		pokemon1, _, _ = binManager.ReadRegistro(file1, ponteiro1)
+		pokemon2, _, _ = binManager.ReadRegistro(file2, ponteiro2)
 
 		// Insere o menor ID primeiro
 		if pokemon1.Numero < pokemon2.Numero {
@@ -204,7 +205,7 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 	// Se houver linhas restantes em um dos arquivos, escreve no novo arquivo
 	for i < int(tamFile1) {
 		ponteiro1, _ := file1.Seek(0, io.SeekCurrent)
-		pokemon1, _, err = readRegistro(file1, ponteiro1)
+		pokemon1, _, err = binManager.ReadRegistro(file1, ponteiro1)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -214,7 +215,7 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 	}
 	for j < int(tamFile2) {
 		ponteiro2, _ := file2.Seek(0, io.SeekCurrent)
-		pokemon2, _, err = readRegistro(file2, ponteiro2)
+		pokemon2, _, err = binManager.ReadRegistro(file2, ponteiro2)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -286,7 +287,7 @@ func PrintBin(path string) {
 	for i := 0; i < int(numEntradas); i++ {
 		// Grava a localização do inicio do registro
 		inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
-		pokemonAtual, _, _ := readRegistro(file, inicioRegistro)
+		pokemonAtual, _, _ := binManager.ReadRegistro(file, inicioRegistro)
 		pokeArray = append(pokeArray, pokemonAtual)
 	}
 

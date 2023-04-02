@@ -1,4 +1,4 @@
-package dataManager
+/* package btree
 
 import (
 	"encoding/binary"
@@ -394,3 +394,4 @@ func (b *BTree) Remove(id int64) *Key {
 
 	return nil
 }
+*/

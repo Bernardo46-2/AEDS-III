@@ -1,4 +1,4 @@
-package dataManager
+package ordenacao
 
 import (
 	"encoding/binary"
@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"sort"
 
+	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
@@ -43,7 +44,7 @@ func divideArquivoEmBlocosVariaveis(caminhoEntrada string, tamanhoBloco int64, d
 	defer file.Close()
 
 	// Ler o número total de registros
-	numRegistros, _, _ := NumRegistros()
+	numRegistros, _, _ := binManager.NumRegistros()
 	file.Seek(4, io.SeekStart)
 
 	// Inicializa variaveis
@@ -61,7 +62,7 @@ func divideArquivoEmBlocosVariaveis(caminhoEntrada string, tamanhoBloco int64, d
 			inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
 			ponteiroAtual := inicioRegistro
 			// Pega tamanho do registro e se possui lapide
-			tamanhoRegistro, lapide, _ := tamanhoProxRegistro(file, ponteiroAtual)
+			tamanhoRegistro, lapide, _ := binManager.TamanhoProxRegistro(file, ponteiroAtual)
 
 			// Se nao tem lapide le o registro e salva, se nao pula
 			if lapide != 0 {
@@ -72,14 +73,14 @@ func divideArquivoEmBlocosVariaveis(caminhoEntrada string, tamanhoBloco int64, d
 				} else {
 					// Se for valido realiza o parse
 					tamBlocoAtual += tamanhoRegistro
-					pokemonAtual, _, _ := readRegistro(file, inicioRegistro)
+					pokemonAtual, _, _ := binManager.ReadRegistro(file, inicioRegistro)
 					pokemonAtual.CalculateSize()
 					pokeSlice = append(pokeSlice, pokemonAtual)
 					j++
 				}
 			} else {
 				// Caso tenha lapide faz uma leitura vazia para pular o registro
-				readRegistro(file, inicioRegistro)
+				binManager.ReadRegistro(file, inicioRegistro)
 				j++
 			}
 		}

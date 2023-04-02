@@ -17,7 +17,7 @@
 // Consulte a documentação das funções e tipos individuais para obter exemplos de uso e
 // informações adicionais.
 
-package dataManager
+package hashing
 
 import (
 	"encoding/binary"
@@ -25,12 +25,16 @@ import (
 	"io"
 	"os"
 
+	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-const BUCKETS_FILE string = "data/Hash_Buckets.bin"
-const DIRECTORY_FILE string = "data/Hash_Directory.bin"
+const BUCKETS_FILE string = "data/indexacao/hashing/Hash_Buckets.bin"
+const DIRECTORY_FILE string = "data/indexacao/hashing/Hash_Directory.bin"
+
+const FILE string = binManager.FILE
+const BIN_FILE string = binManager.BIN_FILE
 
 // ====================================== Structs ====================================== //
 
@@ -247,7 +251,7 @@ func (hash *DinamicHash) PrintHash() {
 // fim printa o conteudo da hash
 func StartHashFile() {
 	// Inicializando controle e hash vazia
-	c, err := inicializarControleLeitura(BIN_FILE)
+	c, err := binManager.InicializarControleLeitura(BIN_FILE)
 	hash := newHash(BUCKETS_FILE, DIRECTORY_FILE, 8)
 
 	// Parsing e inclusao na hash, se acabar o arquivo sera retornado um erro io.EOF
@@ -427,7 +431,7 @@ func (hash *DinamicHash) insertIntoBucket(pos int64, power int64, currentSize in
 
 // recordToBucketRecord transforma um registro de leitura de arquivo
 // em um registro de bucket
-func recordToBucketRecord(registro Registro) BucketRecord {
+func recordToBucketRecord(registro binManager.Registro) BucketRecord {
 	return BucketRecord{
 		ID:      int64(registro.Pokemon.Numero),
 		Address: registro.Endereco,
@@ -478,7 +482,7 @@ func HashRead(targetID int64) (models.Pokemon, int64, error) {
 	}
 
 	// Realiza a leitura no arquivo a partir do endereço
-	c, err := inicializarControleLeitura(BIN_FILE)
+	c, err := binManager.InicializarControleLeitura(BIN_FILE)
 	targetPokemon := c.ReadTarget(targetPos)
 
 	// Trata possiveis erros

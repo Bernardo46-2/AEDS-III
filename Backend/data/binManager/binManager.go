@@ -1,7 +1,7 @@
 // O arquivo binManager do pacote dataManager realiza o tratamento do arquivo binario
 // Recebe as requisiçoes a partir do pacote service e termina recuperando ou editando
 // os registros binarios necessarios.
-package dataManager
+package binManager
 
 import (
 	"encoding/binary"
@@ -40,7 +40,7 @@ func ReadBinToPoke(id int) (models.Pokemon, int64, error) {
 		// Grava a localização do inicio do registro
 		inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
 
-		pokemonAtual, inicioRegistro, _ := readRegistro(file, inicioRegistro)
+		pokemonAtual, inicioRegistro, _ := ReadRegistro(file, inicioRegistro)
 
 		// Verifica se o número do Pokémon atual é o procurado
 		if pokemonAtual.Numero == int32(id) {
@@ -53,11 +53,11 @@ func ReadBinToPoke(id int) (models.Pokemon, int64, error) {
 	return models.Pokemon{}, pos, fmt.Errorf("pokemon não encontrado")
 }
 
-// readRegistro recebe um arquivo e o ponto de onde a leitura deve ser iniciada
+// ReadRegistro recebe um arquivo e o ponto de onde a leitura deve ser iniciada
 //
 // Em caso de lapide retorna um objeto pokemon com id -1
 // Em caso de erro gera uma mensagem formatada com o tipo e a linha corrompida
-func readRegistro(file *os.File, inicioRegistro int64) (pokemonAtual models.Pokemon, pos int64, err error) {
+func ReadRegistro(file *os.File, inicioRegistro int64) (pokemonAtual models.Pokemon, pos int64, err error) {
 	// Seta a leitura para a posição determinada
 	pos, err = file.Seek(inicioRegistro, io.SeekStart)
 	pokemonAtual = models.Pokemon{Numero: -1}
@@ -90,9 +90,9 @@ func readRegistro(file *os.File, inicioRegistro int64) (pokemonAtual models.Poke
 	return
 }
 
-// tamanhoProxRegistro recebe um arquivo e uma posição de leitura e retorna
+// TamanhoProxRegistro recebe um arquivo e uma posição de leitura e retorna
 // o tamanho do registro a ser lido e se possivelmente possui lapide
-func tamanhoProxRegistro(file *os.File, ponteiroRegistro int64) (int64, int32, error) {
+func TamanhoProxRegistro(file *os.File, ponteiroRegistro int64) (int64, int32, error) {
 	// Lê e confere a lapide do arquivo
 	var lapide int32
 	if err := binary.Read(file, binary.LittleEndian, &lapide); err != nil {
@@ -270,7 +270,7 @@ func (c *ControleLeitura) Close() error {
 	return c.Arquivo.Close()
 }
 
-func inicializarControleLeitura(nomeArquivo string) (*ControleLeitura, error) {
+func InicializarControleLeitura(nomeArquivo string) (*ControleLeitura, error) {
 	arquivo, err := os.Open(nomeArquivo)
 	if err != nil {
 		return nil, err

@@ -14,7 +14,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Bernardo46-2/AEDS-III/dataManager"
+	"github.com/Bernardo46-2/AEDS-III/data/binManager"
+	"github.com/Bernardo46-2/AEDS-III/data/indexacao/hashing"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
@@ -41,11 +42,11 @@ func main() {
 		fmt.Println("Servidor Iniciado")
 		servidor()
 	case "2", "csv":
-		dataManager.ImportCSV().CsvToBin()
+		binManager.ImportCSV().CsvToBin()
 	case "3", "hash":
-		dataManager.StartHashFile()
+		hashing.StartHashFile()
 	case "4", "btree":
-		dataManager.StartBTreeFile()
+		// dataManager.StartBTreeFile()
 	default:
 		fmt.Println("Opção inválida")
 	}
@@ -66,9 +67,7 @@ func servidor() {
 	http.HandleFunc("/toKatakana/", middlewares.EnableCORS(handlers.ToKatakana))
 
 	// Ordenação externa
-	http.HandleFunc("/intercalacaoComum/", middlewares.EnableCORS(handlers.IntercalacaoComum))
-	http.HandleFunc("/intercalacaoVariavel/", middlewares.EnableCORS(handlers.IntercalacaoVariavel))
-	http.HandleFunc("/selecaoPorSubstituicao/", middlewares.EnableCORS(handlers.SelecaoPorSubstituicao))
+	http.HandleFunc("/ordenacao/", middlewares.EnableCORS(handlers.Ordenacao))
 
 	// Inicializa o servidor HTTP na porta 8080 e escreve no log eventuais erros
 	logger.Fatal(http.ListenAndServe(":8080", nil))

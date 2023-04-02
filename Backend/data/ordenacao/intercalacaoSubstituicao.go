@@ -1,4 +1,4 @@
-package dataManager
+package ordenacao
 
 import (
 	"encoding/binary"
@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
@@ -31,7 +32,7 @@ func IntercalacaoPorSubstituicao() {
 	defer file.Close()
 
 	// Ler o número total de registros
-	numRegistros, _, _ := NumRegistros()
+	numRegistros, _, _ := binManager.NumRegistros()
 	file.Seek(4, io.SeekStart)
 
 	// Criar os arquivos temporários
@@ -41,7 +42,7 @@ func IntercalacaoPorSubstituicao() {
 
 	for i := 0; i < 7 && i < numRegistros; {
 		inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
-		pokemonAtual, _, _ := readRegistro(file, inicioRegistro)
+		pokemonAtual, _, _ := binManager.ReadRegistro(file, inicioRegistro)
 		if pokemonAtual.Numero != -1 {
 			pokeHeap[0] = heapNode{0, pokemonAtual}
 			balanceHeap(pokeHeap, 0)
@@ -62,7 +63,7 @@ func IntercalacaoPorSubstituicao() {
 	for i := 0; i < (numRegistros - 7); i++ {
 		// Guarda a posicao de inicio do registro e verifica sua lapide
 		inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
-		_, lapide, _ := tamanhoProxRegistro(file, inicioRegistro)
+		_, lapide, _ := binManager.TamanhoProxRegistro(file, inicioRegistro)
 		file.Seek(-8, io.SeekCurrent)
 
 		// Se nao possuir lapide lê o registro e adiciona ao heap,
@@ -78,7 +79,7 @@ func IntercalacaoPorSubstituicao() {
 			aumentaNumRegistros(arquivoTemp)
 
 			// adiciona novo valor ao heap, se for menor cria novo arquivo e aumenta o peso
-			pokemonAtual, _, _ := readRegistro(file, inicioRegistro)
+			pokemonAtual, _, _ := binManager.ReadRegistro(file, inicioRegistro)
 			pokemonAtual.CalculateSize()
 			if pokemonAtual.Numero < pokeHeap[0].Pokemon.Numero {
 				peso++
@@ -94,7 +95,7 @@ func IntercalacaoPorSubstituicao() {
 			balanceHeap(pokeHeap, 0)
 		} else {
 			// Realiza uma leitura vazia para descartar o valor
-			readRegistro(file, inicioRegistro)
+			binManager.ReadRegistro(file, inicioRegistro)
 		}
 	}
 

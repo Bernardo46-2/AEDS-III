@@ -1,6 +1,6 @@
 // O pacote handlers faz a ligação entre as requisições http e suas respectivas funções
 // ligando o service para manipulação do banco de dados, ou chamando diretamente as funções
-// de ordenação no DataManager
+// de ordenação no binManager
 // Handlers também realiza o parsing entre JSON e Objeto
 package handlers
 
@@ -10,7 +10,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Bernardo46-2/AEDS-III/dataManager"
+	"github.com/Bernardo46-2/AEDS-III/data/binManager"
+	"github.com/Bernardo46-2/AEDS-III/data/indexacao/hashing"
+	"github.com/Bernardo46-2/AEDS-III/data/ordenacao"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/service"
@@ -133,8 +135,8 @@ func DeletePokemon(w http.ResponseWriter, r *http.Request) {
 // Tambem é criado indices para: Hash
 func LoadDatabase(w http.ResponseWriter, r *http.Request) {
 	// Import
-	dataManager.ImportCSV().CsvToBin()
-	dataManager.StartHashFile()
+	binManager.ImportCSV().CsvToBin()
+	hashing.StartHashFile()
 
 	// Resposta
 	writeSuccess(w, 6)
@@ -156,50 +158,20 @@ func ToKatakana(w http.ResponseWriter, r *http.Request) {
 	writeJson(w, convertedString)
 }
 
-// IntercalacaoComum realiza a ordenação externa do BD através da intercalação balanceada.
-//
-// A função lê buffers do arquivo, ordena internamente, salva em diferentes arquivos e,
-// por fim, os une utilizando mergesort.
-func IntercalacaoComum(w http.ResponseWriter, r *http.Request) {
-	// Ordena
-	dataManager.IntercalacaoBalanceadaComum()
+func Ordenacao(w http.ResponseWriter, r *http.Request) {
+	// Recuperar metodo
+	metodo, _ := strconv.Atoi(r.URL.Query().Get("metodo"))
+
+	ordenacao.SortingFunctions[metodo]()
 
 	// Resposta
 	writeSuccess(w, 7)
 	logger.Println("INFO", "Database Ordenada (Intercalacao Comum)")
 }
 
-// IntercalacaoVariavel realiza a ordenação externa do BD através da intercalação variavel
-//
-// A função lê buffers do arquivo e salva em novos arquivos enquanto estiver ordenado
-// Cria um novo arquivo para cada buffer desalinhado e, por fim, os une utilizando
-// mergesort externo.
-func IntercalacaoVariavel(w http.ResponseWriter, r *http.Request) {
-	// Ordena
-	dataManager.IntercalacaoBalanceadaVariavel()
-
-	// Resposta
-	writeSuccess(w, 8)
-	logger.Println("INFO", "Database Ordenada (Intercalacao Variavel)")
-}
-
-// SelecaoPorSubstituicao realiza a ordenação externa do BD através de um heap minimo
-//
-// A função lê buffers do arquivo e insere em um heap minimo de tamanho fixo,
-// a cada inserção o heap é desmontado em arquivos temporarios e inserido novos registros.
-// Por fim os arquivos sao unidos em mergesort externo
-func SelecaoPorSubstituicao(w http.ResponseWriter, r *http.Request) {
-	// Ordena
-	dataManager.IntercalacaoPorSubstituicao()
-
-	// Resposta
-	writeSuccess(w, 9)
-	logger.Println("INFO", "Database Ordenada (Intercalacao Por Substituição)")
-}
-
 func CriarHashingEstendido(w http.ResponseWriter, r *http.Request) {
 	// Ordena
-	dataManager.StartHashFile()
+	hashing.StartHashFile()
 
 	// Resposta
 	writeSuccess(w, 9)

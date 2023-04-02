@@ -1,7 +1,7 @@
 // O arquivo csvManager do pacote dataManager realiza a população inicial do
 // arquivo binario, fazendo a conversao de um csv cru em dados tratados.
 // E também caso necessario faz a repopulação do binario
-package dataManager
+package binManager
 
 import (
 	"encoding/binary"
@@ -14,8 +14,8 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-const FILE string = "data/pokedex2.csv"
-const BIN_FILE string = "data/pokedex.dat"
+const FILE string = "data/raw/pokedex2.csv"
+const BIN_FILE string = "data/raw/pokedex.dat"
 
 // CSV struct contendo os dados csv
 type CSV struct {
