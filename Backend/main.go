@@ -47,7 +47,9 @@ func main() {
 	case "2", "csv":
 		binManager.ImportCSV().CsvToBin()
 	case "3", "hash":
-		hashing.StartHashFile()
+		controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+		defer controler.Close()
+		hashing.StartHashFile(controler, 8, binManager.BIN_FILE, binManager.BIN_PATH)
 	case "4", "btree":
 		btree.StartBTreeFile()
 	case "5", "indiceInvertido":

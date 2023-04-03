@@ -88,3 +88,57 @@ STATUS: 2023/04/02 22:46:02 Servidor desligado
 STATUS: 2023/04/02 22:46:04 Servidor iniciado
 INFO: 2023/04/02 22:46:10 Database Carregada
 INFO: 2023/04/02 22:46:10 Hash Dinamica Criada
+STATUS: 2023/04/03 12:00:51 Servidor iniciado
+INFO: 2023/04/03 12:03:22 Database Carregada
+INFO: 2023/04/03 12:03:22 Hash Dinamica Criada
+ERROR: 2023/04/03 12:05:58 code: 400, message: Erro ao converter o JSON para Pokemon
+STATUS: 2023/04/03 15:47:23 Servidor desligado
+STATUS: 2023/04/03 16:27:44 Servidor iniciado
+INFO: 2023/04/03 16:27:57 Database Carregada
+INFO: 2023/04/03 16:27:57 Hash Dinamica Criada
+STATUS: 2023/04/03 16:28:05 Servidor desligado
+STATUS: 2023/04/03 16:28:57 Servidor iniciado
+INFO: 2023/04/03 16:29:07 Database Carregada
+INFO: 2023/04/03 16:29:07 Hash Dinamica Criada
+STATUS: 2023/04/03 16:29:18 Servidor desligado
+STATUS: 2023/04/03 16:31:15 Servidor iniciado
+INFO: 2023/04/03 16:31:20 Database Carregada
+INFO: 2023/04/03 16:31:20 Hash Dinamica Criada
+INFO: 2023/04/03 16:31:46 Database Carregada
+INFO: 2023/04/03 16:31:46 Hash Dinamica Criada
+STATUS: 2023/04/03 16:33:01 Servidor desligado
+STATUS: 2023/04/03 16:33:05 Servidor iniciado
+STATUS: 2023/04/03 16:33:53 Servidor desligado
+STATUS: 2023/04/03 16:33:58 Servidor iniciado
+STATUS: 2023/04/03 16:35:06 Servidor desligado
+STATUS: 2023/04/03 16:35:51 Servidor iniciado
+STATUS: 2023/04/03 16:36:02 Servidor desligado
+STATUS: 2023/04/03 16:36:15 Servidor iniciado
+STATUS: 2023/04/03 16:36:24 Servidor desligado
+STATUS: 2023/04/03 16:37:04 Servidor iniciado
+STATUS: 2023/04/03 16:37:12 Servidor desligado
+STATUS: 2023/04/03 16:37:43 Servidor iniciado
+INFO: 2023/04/03 16:37:51 Database Carregada
+INFO: 2023/04/03 16:37:51 Hash Dinamica Criada
+STATUS: 2023/04/03 16:39:19 Servidor desligado
+STATUS: 2023/04/03 16:39:25 Servidor iniciado
+INFO: 2023/04/03 16:39:30 Database Carregada
+INFO: 2023/04/03 16:39:30 Hash Dinamica Criada
+STATUS: 2023/04/03 16:40:21 Servidor desligado
+STATUS: 2023/04/03 16:40:49 Servidor iniciado
+INFO: 2023/04/03 16:40:57 Database Carregada
+INFO: 2023/04/03 16:40:57 Hash Dinamica Criada
+STATUS: 2023/04/03 16:41:19 Servidor desligado
+STATUS: 2023/04/03 16:41:23 Servidor iniciado
+INFO: 2023/04/03 16:41:29 Database Carregada
+INFO: 2023/04/03 16:41:29 Hash Dinamica Criada
+STATUS: 2023/04/03 16:41:38 Servidor desligado
+STATUS: 2023/04/03 16:42:32 Servidor iniciado
+INFO: 2023/04/03 16:42:37 Database Carregada
+INFO: 2023/04/03 16:42:37 Hash Dinamica Criada
+STATUS: 2023/04/03 16:42:45 Servidor desligado
+STATUS: 2023/04/03 16:43:59 Servidor iniciado
+STATUS: 2023/04/03 16:44:44 Servidor desligado
+STATUS: 2023/04/03 16:46:49 Servidor iniciado
+INFO: 2023/04/03 16:47:17 Database Carregada
+INFO: 2023/04/03 16:47:17 Hash Dinamica Criada

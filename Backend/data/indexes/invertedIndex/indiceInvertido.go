@@ -81,7 +81,7 @@ func CreateInvertedIndex(controler *binManager.ControleLeitura, fieldToIndex str
 	invIndex := NewInvertedIndex()
 
 	for {
-		objInterface, isDead, err := controler.ReadNextGeneric()
+		objInterface, isDead, _, err := controler.ReadNextGeneric()
 		if err != nil {
 			break
 		}
