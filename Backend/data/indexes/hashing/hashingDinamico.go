@@ -30,8 +30,8 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-const BUCKETS_FILE string = "data/indexacao/hashing/Hash_Buckets.bin"
-const DIRECTORY_FILE string = "data/indexacao/hashing/Hash_Directory.bin"
+const BUCKETS_FILE string = "data/indexes/hashing/Hash_Buckets.bin"
+const DIRECTORY_FILE string = "data/indexes/hashing/Hash_Directory.bin"
 
 const FILE string = binManager.FILE
 const BIN_FILE string = binManager.BIN_FILE

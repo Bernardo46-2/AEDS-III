@@ -360,3 +360,44 @@ func (c *ControleLeitura) ReadNext() error {
 
 	return nil
 }
+
+func (c *ControleLeitura) ReadNextGeneric() (interface{}, bool, error) {
+	// verificar se todos os registros já foram lidos
+	if c.RegistrosLidos >= c.TotalRegistros {
+		return nil, false, io.EOF // fim do arquivo
+	}
+
+	// ler os dados do registro do arquivo
+	endereco, _ := c.Arquivo.Seek(0, io.SeekCurrent)
+	var lapide int32
+	var tamanho int32
+	var conteudo models.Pokemon
+
+	binary.Read(c.Arquivo, binary.LittleEndian, &lapide)
+	binary.Read(c.Arquivo, binary.LittleEndian, &tamanho)
+	conteudoBytes := make([]byte, tamanho-4)
+	binary.Read(c.Arquivo, binary.LittleEndian, &conteudoBytes)
+
+	// Converte os bytes para uma struct models.Pokemon se nao houver lapide
+	if lapide != 1 {
+		conteudo.ParseBinToPoke(conteudoBytes)
+	} else {
+		conteudo.Numero = -1
+	}
+
+	// atualizar o registro atual e o número de registros lidos
+	registro := &Registro{
+		Lapide:   lapide,
+		Tamanho:  tamanho,
+		Pokemon:  conteudo,
+		Endereco: endereco,
+	}
+	c.RegistroAtual = registro
+	c.RegistrosLidos++
+
+	return registro.Pokemon, c.RegistroAtual.IsDead(), nil
+}
+
+func (r *Registro) IsDead() bool {
+	return r.Lapide == 1
+}

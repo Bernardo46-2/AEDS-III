@@ -12,7 +12,7 @@ import (
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
-	"github.com/Bernardo46-2/AEDS-III/data/sorts"
+	ordenacao "github.com/Bernardo46-2/AEDS-III/data/sorts"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/service"
