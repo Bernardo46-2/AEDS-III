@@ -138,7 +138,7 @@ func LoadDatabase(w http.ResponseWriter, r *http.Request) {
 	binManager.ImportCSV().CsvToBin()
 	controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
 	defer controler.Close()
-	hashing.StartHashFile(controler, 8, binManager.BIN_FILE, binManager.BIN_PATH)
+	hashing.StartHashFile(controler, 8, binManager.BIN_PATH, "hashIndex")
 
 	// Resposta
 	writeSuccess(w, 6)

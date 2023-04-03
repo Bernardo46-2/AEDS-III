@@ -5,8 +5,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-
-	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 )
 
 type Posting struct {
@@ -16,6 +14,10 @@ type Posting struct {
 
 type InvertedIndex struct {
 	Index map[string][]Posting
+}
+
+type Reader interface {
+	ReadNextGeneric() (interface{}, bool, int64, error)
 }
 
 type IndexableObject interface {
@@ -77,7 +79,43 @@ func (ii *InvertedIndex) RemoveDocument(documentID int64) {
 	}
 }
 
-func CreateInvertedIndex(controler *binManager.ControleLeitura, fieldToIndex string) (InvertedIndex, error) {
+func (ii *InvertedIndex) Print() {
+	for word, postings := range ii.Index {
+		fmt.Printf("%s: ", word)
+		for _, posting := range postings {
+			fmt.Printf("(%d,%d) ", posting.DocumentID, posting.Frequency)
+		}
+		fmt.Println()
+	}
+}
+
+func (ii *InvertedIndex) RemoveHighFrequencyTerms(percentageThreshold float64) {
+	percentageThreshold /= 100
+	// 1. Calcule a frequência total de todas as palavras no índice
+	totalFrequency := 0
+	for _, postings := range ii.Index {
+		for _, posting := range postings {
+			totalFrequency += posting.Frequency
+		}
+	}
+
+	// 2. Para cada palavra, calcule sua frequência relativa e verifique se excede o limite
+	for word, postings := range ii.Index {
+		wordFrequency := 0
+		for _, posting := range postings {
+			wordFrequency += posting.Frequency
+		}
+
+		frequencyRatio := float64(wordFrequency) / float64(totalFrequency)
+
+		if frequencyRatio > percentageThreshold {
+			fmt.Printf("Removendo termo '%s' com frequência total %d (frequência relativa: %f)\n", word, wordFrequency, frequencyRatio)
+			delete(ii.Index, word)
+		}
+	}
+}
+
+func CreateInvertedIndex(controler Reader, fieldToIndex string) (InvertedIndex, error) {
 	invIndex := NewInvertedIndex()
 
 	for {
@@ -100,15 +138,8 @@ func CreateInvertedIndex(controler *binManager.ControleLeitura, fieldToIndex str
 		}
 	}
 
-	return invIndex, nil
-}
+	invIndex.RemoveHighFrequencyTerms(0.3)
+	invIndex.Print()
 
-func (idx *InvertedIndex) Print() {
-	for word, postings := range idx.Index {
-		fmt.Printf("%s: ", word)
-		for _, posting := range postings {
-			fmt.Printf("(%d,%d) ", posting.DocumentID, posting.Frequency)
-		}
-		fmt.Println()
-	}
+	return invIndex, nil
 }

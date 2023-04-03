@@ -49,7 +49,7 @@ func main() {
 	case "3", "hash":
 		controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
 		defer controler.Close()
-		hashing.StartHashFile(controler, 8, binManager.BIN_FILE, binManager.BIN_PATH)
+		hashing.StartHashFile(controler, 8, binManager.BIN_PATH, "hashIndex")
 	case "4", "btree":
 		btree.StartBTreeFile()
 	case "5", "indiceInvertido":
@@ -58,12 +58,7 @@ func main() {
 		scanner.Scan()
 		campo := scanner.Text()
 		c, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
-		invIndex, err := invertedIndex.CreateInvertedIndex(c, campo)
-		if err != nil {
-			fmt.Printf("%+v", err)
-		} else {
-			invIndex.Print()
-		}
+		invertedIndex.CreateInvertedIndex(c, campo)
 	default:
 		fmt.Println("Opção inválida")
 	}
