@@ -12,7 +12,7 @@ import (
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
-	"github.com/Bernardo46-2/AEDS-III/data/sorts"
+	ordenacao "github.com/Bernardo46-2/AEDS-III/data/sorts"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/service"
@@ -136,7 +136,9 @@ func DeletePokemon(w http.ResponseWriter, r *http.Request) {
 func LoadDatabase(w http.ResponseWriter, r *http.Request) {
 	// Import
 	binManager.ImportCSV().CsvToBin()
-	hashing.StartHashFile()
+	controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+	defer controler.Close()
+	hashing.StartHashFile(controler, 8, binManager.BIN_PATH, "hashIndex")
 
 	// Resposta
 	writeSuccess(w, 6)
@@ -167,15 +169,6 @@ func Ordenacao(w http.ResponseWriter, r *http.Request) {
 	// Resposta
 	writeSuccess(w, 7)
 	logger.Println("INFO", "Database Ordenada (Intercalacao Comum)")
-}
-
-func CriarHashingEstendido(w http.ResponseWriter, r *http.Request) {
-	// Ordena
-	hashing.StartHashFile()
-
-	// Resposta
-	writeSuccess(w, 9)
-	logger.Println("INFO", "Função Hashing criada")
 }
 
 // writeError recebe um erro de http responde e um id de erro interno,

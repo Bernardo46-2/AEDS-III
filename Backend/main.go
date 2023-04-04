@@ -15,8 +15,9 @@ import (
 	"os"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
-	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
@@ -32,6 +33,7 @@ func main() {
 		fmt.Println("2 | csv")
 		fmt.Println("3 | hash")
 		fmt.Println("4 | btree")
+		fmt.Println("5 | indiceInvertido")
 		fmt.Print("\n> ")
 		scanner.Scan()
 		opcao = scanner.Text()
@@ -45,9 +47,18 @@ func main() {
 	case "2", "csv":
 		binManager.ImportCSV().CsvToBin()
 	case "3", "hash":
-		hashing.StartHashFile()
+		controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+		defer controler.Close()
+		hashing.StartHashFile(controler, 8, binManager.BIN_PATH, "hashIndex")
 	case "4", "btree":
 		btree.StartBTreeFile()
+	case "5", "indiceInvertido":
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Print("campo\n> ")
+		scanner.Scan()
+		campo := scanner.Text()
+		c, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+		invertedIndex.CreateInvertedIndex(c, campo)
 	default:
 		fmt.Println("Opção inválida")
 	}
@@ -56,6 +67,11 @@ func main() {
 func servidor() {
 	// Inicializa o servidor de log
 	logger.LigarServidor()
+
+	// Teste
+	http.HandleFunc("/ping/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "pong")
+	})
 
 	// Crud
 	http.HandleFunc("/getPagesNumber/", middlewares.EnableCORS(handlers.GetPagesNumber))

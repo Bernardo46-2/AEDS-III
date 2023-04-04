@@ -7,6 +7,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 	"unsafe"
 
@@ -288,4 +289,41 @@ func (p *Pokemon) CalculateSize() {
 		p.Size.Altura +
 		p.Size.Peso +
 		p.Size.Descricao + 4 + 1
+}
+
+func (p Pokemon) GetField(fieldName string) string {
+	switch fieldName {
+	case "numero", "id":
+		return fmt.Sprint(p.Numero)
+	case "nome":
+		return p.Nome
+	case "nome_jap":
+		return p.NomeJap
+	case "geracao":
+		return fmt.Sprint(p.Geracao)
+	case "lancamento":
+		return p.Lancamento.Format(time.RFC3339)
+	case "especie":
+		return p.Especie
+	case "lendario":
+		return fmt.Sprint(p.Lendario)
+	case "mitico":
+		return fmt.Sprint(p.Mitico)
+	case "tipo":
+		return strings.Join(p.Tipo, ",")
+	case "atk":
+		return fmt.Sprint(p.Atk)
+	case "def":
+		return fmt.Sprint(p.Def)
+	case "hp":
+		return fmt.Sprint(p.Hp)
+	case "altura":
+		return fmt.Sprint(p.Altura)
+	case "peso":
+		return fmt.Sprint(p.Peso)
+	case "descricao":
+		return p.Descricao
+	default:
+		return ""
+	}
 }

@@ -24,17 +24,14 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
+	"strconv"
 
-	"github.com/Bernardo46-2/AEDS-III/data/binManager"
-	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-const BUCKETS_FILE string = "data/indexacao/hashing/Hash_Buckets.bin"
-const DIRECTORY_FILE string = "data/indexacao/hashing/Hash_Directory.bin"
-
-const FILE string = binManager.FILE
-const BIN_FILE string = binManager.BIN_FILE
+const BUCKETS_FILE string = "Hash_Buckets.bin"
+const DIRECTORY_FILE string = "Hash_Directory.bin"
 
 // ====================================== Structs ====================================== //
 
@@ -73,6 +70,14 @@ type Bucket struct {
 type BucketRecord struct {
 	ID      int64 // ID do registro.
 	Address int64 // Endereço original do registro.
+}
+
+type Reader interface {
+	ReadNextGeneric() (interface{}, bool, int64, error)
+}
+
+type IndexableObject interface {
+	GetField(fieldName string) string
 }
 
 // =================================== Dinamic Hash ==================================== //
@@ -114,11 +119,16 @@ func newHash(bucketPath string, directoryPath string, size int64) DinamicHash {
 }
 
 // loadDirectory carrega o diretorio da hash para a memoria primaria
-func loadDinamicHash(directoryPath string) (hash DinamicHash, err error) {
+//
+// A hash devera ser carregada atraves de um fornecimento de path + nome do identificador unico
+//
+// Exemplo: path (data/files), identifier (hashIndex)
+func LoadDinamicHash(path string, identifier string) (hash DinamicHash, err error) {
+	directoryPath := filepath.Join(path, identifier, DIRECTORY_FILE)
 	directoryFile, err := os.OpenFile(directoryPath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
-		StartHashFile()
-		err = fmt.Errorf("arquivo hash inexistente, fazendo upload dos registros e criando hash nova")
+		fmt.Println(err)
+		return
 	}
 
 	var ptr int
@@ -247,18 +257,40 @@ func (hash *DinamicHash) PrintHash() {
 	fmt.Printf("\n")
 }
 
-// StartHashFile cria um arquivo de hash para a pokedex e por
-// fim printa o conteudo da hash
-func StartHashFile() {
+// StartHashFile cria um arquivo de hash de acordo com a struct passada
+//
+// Esta função recebe um Reader que deve ter implementado a funcao:
+// ReadNextGeneric() (interface{}, bool, int64, error).
+//
+// A interface retornada pela funcao ReadNextGeneric deve possuir:
+// GetField(fieldName string) string.
+// Onde o campo consultado sera "id"
+//
+// Deve ser fornecido um path de onde os arquivos serao colocados e um
+// identificador unico para diferenciar entre possiveis outros arquivos hash
+func StartHashFile(controler Reader, bucketSize int64, path string, identifier string) {
 	// Inicializando controle e hash vazia
-	c, err := binManager.InicializarControleLeitura(BIN_FILE)
-	hash := newHash(BUCKETS_FILE, DIRECTORY_FILE, 8)
+	folderPath := filepath.Join(path, identifier)
+	os.MkdirAll(folderPath, os.ModePerm)
+	bucketPath := filepath.Join(folderPath, BUCKETS_FILE)
+	directoryPath := filepath.Join(folderPath, DIRECTORY_FILE)
+	hash := newHash(bucketPath, directoryPath, bucketSize)
 
 	// Parsing e inclusao na hash, se acabar o arquivo sera retornado um erro io.EOF
-	for i := 0; i < int(c.TotalRegistros) && err == nil; i++ {
-		err = c.ReadNext()
-		if c.RegistroAtual.Lapide != 1 {
-			r := recordToBucketRecord(*c.RegistroAtual)
+	for {
+		objInterface, isDead, address, err := controler.ReadNextGeneric()
+		if err != nil {
+			break
+		}
+
+		obj, ok := objInterface.(IndexableObject)
+		if !ok {
+			fmt.Printf("%+v", objInterface)
+		}
+
+		if !isDead {
+			id, _ := strconv.ParseInt(obj.GetField("id"), 10, 64)
+			r := newBucketRecord(id, address)
 			hash.addRecord(r)
 		}
 	}
@@ -429,51 +461,38 @@ func (hash *DinamicHash) insertIntoBucket(pos int64, power int64, currentSize in
 	binary.Write(hash.bucketFile, binary.LittleEndian, records)
 }
 
-// recordToBucketRecord transforma um registro de leitura de arquivo
-// em um registro de bucket
-func recordToBucketRecord(registro binManager.Registro) BucketRecord {
-	return BucketRecord{
-		ID:      int64(registro.Pokemon.Numero),
-		Address: registro.Endereco,
-	}
-}
-
-// pokemonToBucketRecord retorna uma struct de BucketRecord inicializada
-// com os valores fornecidos
-func pokemonToBucketRecord(pokemon models.Pokemon, address int64) BucketRecord {
-	return BucketRecord{
-		ID:      int64(pokemon.Numero),
-		Address: address,
-	}
-}
-
-// newBucketRecord retorna um BucketRecord vazio
-func newBucketRecord() BucketRecord {
+// emptyBucketRecord retorna um BucketRecord vazio
+func emptyBucketRecord() BucketRecord {
 	return BucketRecord{}
+}
+
+// emptyBucketRecord retorna um BucketRecord preenchido
+func newBucketRecord(id int64, address int64) BucketRecord {
+	return BucketRecord{ID: id, Address: address}
 }
 
 // ======================================= Crud ======================================== //
 
-// HashCreate adiciona um novo Pokemon à estrutura de hash dinâmica e salva as alterações no arquivo.
-// Recebe um Pokemon e a posição do registro no arquivo binário.
-func HashCreate(pokemon models.Pokemon, address int64) {
+// HashCreate adiciona um novo Record à estrutura de hash dinâmica e salva as alterações no arquivo.
+// Recebe um Record e a posição do registro no arquivo binário.
+func HashCreate(id int64, address int64, path string, identifier string) (err error) {
 	// Cria bucket, importa o diretorio, adiciona aos buckets e salva arquivo
-	pokeRecord := pokemonToBucketRecord(pokemon, address)
-	hash, _ := loadDinamicHash(DIRECTORY_FILE)
-	hash.addRecord(pokeRecord)
+	record := newBucketRecord(id, address)
+	hash, err := LoadDinamicHash(path, identifier)
+	hash.addRecord(record)
 	hash.Close()
+	return
 }
 
-// HashRead busca um Pokemon no arquivo binário usando a estrutura de hash dinâmica.
-// Retorna o Pokemon encontrado, a posição do registro no arquivo e um erro, se houver.
-func HashRead(targetID int64) (models.Pokemon, int64, error) {
+// HashRead busca um Record no arquivo binário usando a estrutura de hash dinâmica.
+// Retorna o Record encontrado, a posição do registro no arquivo e um erro, se houver.
+func HashRead(targetID int64, path string, identifier string) (targetPos int64, err error) {
 	// Carrega o diretorio e o bucket para a memoria primaria
-	hash, _ := loadDinamicHash(DIRECTORY_FILE)
+	hash, _ := LoadDinamicHash(path, identifier)
 	pos := targetID % int64(hash.getBucketCount())
 	bucket := hash.readBucket(pos)
 
 	// Recupera o endereço do ID
-	targetPos := int64(-1)
 	for i := int64(0); i < bucket.CurrentSize; i++ {
 		if bucket.Records[i].ID == targetID {
 			targetPos = bucket.Records[i].Address
@@ -481,27 +500,21 @@ func HashRead(targetID int64) (models.Pokemon, int64, error) {
 		}
 	}
 
-	// Realiza a leitura no arquivo a partir do endereço
-	c, err := binManager.InicializarControleLeitura(BIN_FILE)
-	targetPokemon := c.ReadTarget(targetPos)
-
-	// Trata possiveis erros
-	if targetPos < 0 {
-		err = fmt.Errorf("pokemon nao encontrado")
-	} else if targetPokemon.Numero < 0 {
-		err = fmt.Errorf("arquivo corrompido")
+	if targetPos == 0 {
+		err = fmt.Errorf("record not found")
 	}
 
-	return targetPokemon, targetPos, err
+	return targetPos, err
 }
 
-// HashDelete remove um Pokémon com base no ID fornecido da estrutura de hash dinâmica
+// HashDelete remove um Record com base no ID fornecido da estrutura de hash dinâmica
 // e atualiza o arquivo Hash.
 //
-// Retorna um erro se o Pokémon não for encontrado.
-func HashDelete(targetID int64) error {
+// Retorna um erro se o Record não for encontrado.
+func HashDelete(targetID int64, path string, identifier string) error {
 	// Recuperar o bucket
-	hash, _ := loadDinamicHash(DIRECTORY_FILE)
+	hash, _ := LoadDinamicHash(path, identifier)
+	defer hash.Close()
 	pos := targetID % int64(hash.getBucketCount())
 	bucket := hash.readBucket(pos)
 
@@ -514,7 +527,7 @@ func HashDelete(targetID int64) error {
 	}
 	// Se nao achar erro!
 	if targetPos < 0 {
-		return fmt.Errorf("valor nao encontrado")
+		return fmt.Errorf("record not found")
 	}
 
 	// Remover o registro do bucket
@@ -522,7 +535,7 @@ func HashDelete(targetID int64) error {
 	for i := targetPos; i < int64(len(bucket.Records))-1; i++ {
 		bucket.Records[i] = bucket.Records[i+1]
 	}
-	bucket.Records[len(bucket.Records)-1] = newBucketRecord()
+	bucket.Records[len(bucket.Records)-1] = emptyBucketRecord()
 
 	// Escreve novo bucket em arquivo
 	hash.insertIntoBucket(pos, bucket.ActualPower, bucket.CurrentSize, bucket.Records)
@@ -537,24 +550,25 @@ func HashDelete(targetID int64) error {
 		hash.insertIntoBucket(pos, mergedBucket.ActualPower, mergedBucket.CurrentSize, mergedBucket.Records)
 	}
 
-	// Salva o arquivo do diretorio
-	hash.Close()
-
 	return nil
 }
 
 // HashUpdate atualiza a localização de um Pokémon na estrutura de hash dinâmica,
 // fornecendo o novo endereço. Retorna um erro se o Pokémon não for encontrado.
-func HashUpdate(pokemon models.Pokemon, newAddress int64) error {
+func HashUpdate(id int64, newAddress int64, path string, identifier string) error {
 	// Carrega o diretorio e o bucket para a memoria primaria
-	hash, _ := loadDinamicHash(DIRECTORY_FILE)
-	pos := int64(pokemon.Numero) % int64(hash.getBucketCount())
+	hash, err := LoadDinamicHash(path, identifier)
+	if err != nil {
+		return err
+	}
+	defer hash.Close()
+	pos := id % int64(hash.getBucketCount())
 	bucket := hash.readBucket(pos)
 
 	// Recupera o endereço do ID
 	targetPos := int64(-1)
 	for i := int64(0); i < bucket.CurrentSize; i++ {
-		if bucket.Records[i].ID == int64(pokemon.Numero) {
+		if bucket.Records[i].ID == id {
 			targetPos = i
 			i = bucket.CurrentSize
 		}
@@ -562,15 +576,12 @@ func HashUpdate(pokemon models.Pokemon, newAddress int64) error {
 
 	// Trata possiveis erros
 	if targetPos < 0 {
-		return fmt.Errorf("pokemon nao encontrado para atualizar")
+		return fmt.Errorf("record not found")
 	}
 
 	// Atualiza para o novo endereço
 	bucket.Records[targetPos].Address = newAddress
 	hash.insertIntoBucket(pos, bucket.ActualPower, bucket.CurrentSize, bucket.Records)
-
-	// Fecha a hash de maneira segura
-	hash.Close()
 
 	return nil
 }
