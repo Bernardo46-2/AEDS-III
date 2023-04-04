@@ -23,7 +23,7 @@ type CSV struct {
 // um ponteiro para um struct CSV contendo as linhas lidas
 func ImportCSV() *CSV {
 	// Abrir o arquivo CSV
-	file, err := os.Open(FILE)
+	file, err := os.Open(CSV_PATH)
 	if err != nil {
 		panic(fmt.Errorf("erro ao abrir o arquivo: %v", err))
 	}

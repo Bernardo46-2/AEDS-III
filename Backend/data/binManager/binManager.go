@@ -12,8 +12,8 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/models"
 )
 
-const BIN_PATH string = "data/files/"
-const FILE string = "data/files/pokedex2.csv"
+const FILES_PATH string = "data/files/"
+const CSV_PATH string = "data/files/pokedex2.csv"
 const BIN_FILE string = "data/files/pokedex.dat"
 
 // ReadBinToPoke lê um arquivo binário com informações de Pokémons e retorna
@@ -364,7 +364,7 @@ func (c *ControleLeitura) ReadNext() error {
 	return nil
 }
 
-func (c *ControleLeitura) ReadNextGeneric() (interface{}, bool, int64, error) {
+func (c *ControleLeitura) ReadNextGeneric() (any, bool, int64, error) {
 	// verificar se todos os registros já foram lidos
 	if c.RegistrosLidos >= c.TotalRegistros {
 		return nil, false, -1, io.EOF // fim do arquivo

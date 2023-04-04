@@ -27,7 +27,7 @@ func Create(pokemon models.Pokemon) (int, error) {
 	pokemon.CalculateSize()
 	pokeBytes := pokemon.ToBytes()
 	address, err := binManager.AppendPokemon(pokeBytes)
-	hashing.HashCreate(int64(pokemon.Numero), address, binManager.BIN_PATH, "hashIndex")
+	hashing.HashCreate(int64(pokemon.Numero), address, binManager.FILES_PATH, "hashIndex")
 
 	return int(ultimoID), err
 }
@@ -35,7 +35,7 @@ func Create(pokemon models.Pokemon) (int, error) {
 // Read recebe o ID de um pokemon, procura no banco de dados atraves do
 // indice hash e o retorna, se nao achar gera um erro
 func Read(id int) (models.Pokemon, error) {
-	pos, err := hashing.HashRead(int64(id), binManager.BIN_PATH, "hashIndex")
+	pos, err := hashing.HashRead(int64(id), binManager.FILES_PATH, "hashIndex")
 	pokemon := binManager.ReadTargetPokemon(pos)
 	return pokemon, err
 }
@@ -68,7 +68,7 @@ func ReadAll(page int) (pokemon []models.Pokemon, err error) {
 
 	// Recupera 60 ids enquanto houverem
 	for id, i, total := atual+1, 0, 0; total < 60 && id <= ultimoID && i < numRegistros; i++ {
-		pokeAddress, err = hashing.HashRead(int64(id), binManager.BIN_PATH, "hashIndex")
+		pokeAddress, err = hashing.HashRead(int64(id), binManager.FILES_PATH, "hashIndex")
 		tmpPoke = binManager.ReadTargetPokemon(pokeAddress)
 		if tmpPoke.Numero > 0 {
 			pokemon = append(pokemon, tmpPoke)
@@ -89,7 +89,7 @@ func ReadAll(page int) (pokemon []models.Pokemon, err error) {
 func Update(pokemon models.Pokemon) (err error) {
 
 	// Recupera a posição do id no arquivo
-	pos, err := hashing.HashRead(int64(pokemon.Numero), binManager.BIN_PATH, "hashIndex")
+	pos, err := hashing.HashRead(int64(pokemon.Numero), binManager.FILES_PATH, "hashIndex")
 	if err != nil {
 		return
 	}
@@ -109,7 +109,7 @@ func Update(pokemon models.Pokemon) (err error) {
 		return
 	}
 
-	err = hashing.HashUpdate(int64(pokemon.Numero), newAddress, binManager.BIN_PATH, "hashIndex")
+	err = hashing.HashUpdate(int64(pokemon.Numero), newAddress, binManager.FILES_PATH, "hashIndex")
 
 	return
 }
@@ -129,7 +129,7 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 		return
 	}
 
-	hashing.HashDelete(int64(pokemon.Numero), binManager.BIN_PATH, "hashIndex")
+	hashing.HashDelete(int64(pokemon.Numero), binManager.FILES_PATH, "hashIndex")
 
 	return
 }
