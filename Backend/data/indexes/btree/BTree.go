@@ -20,6 +20,26 @@ const BTREE_NODES_FILE string = "BTreeNodes.dat"
 // - create remove function
 // - create find function
 
+// ====================================== Bit-Flags ====================================== //
+
+// Bit-Flags used for removing an element from the B Tree
+const (
+    // Value removed without any complications
+    FLAG1 = 1 << 0
+    
+    // Node has less than 50% ocupation
+    FLAG2 = 1 << 1
+    
+    // Sibling node can't lend key
+    FLAG3 = 1 << 2
+    
+    // Key not found
+    FLAG4 = 1 << 3
+    
+    // Empty node
+    FLAG5 = 1 << 4
+)
+
 // ====================================== Structs ====================================== //
 
 type Key struct {
@@ -218,6 +238,10 @@ func (b *BTree) nodeSize() int64 {
 }
 
 func (b *BTree) readNode(address int64) *BTreeNode {
+    if address == -1 {
+        return nil
+    }
+    
 	b.nodesFile.Seek(address, io.SeekStart)
 	buf := make([]byte, b.nodeSize())
 	b.nodesFile.Read(buf)
@@ -342,7 +366,11 @@ func StartBTreeFile() {
 	tree, _ := NewBTree(order, dir)
 	reader, err := binManager.InicializarControleLeitura(binManager.BIN_FILE)
 
-	for i := 0; i < 10 /* int(reader.TotalRegistros) */ && err == nil; i++ {
+    // n := 10
+    n := 36
+    // n := int(reader.TotalRegistros)
+
+	for i := 0; i < n && err == nil; i++ {
 		err = reader.ReadNext()
 		if reader.RegistroAtual.Lapide != 1 {
 			r := newKey(reader.RegistroAtual)
@@ -355,82 +383,246 @@ func StartBTreeFile() {
 
 	tree = ReadBTree(dir)
     
-    fmt.Println("removed:", tree.Remove(7))
+    fmt.Println("removed:", tree.Remove(4))
     fmt.Println()
 	tree.printFile()
     
 	tree.Close()
 }
 
+
 // ====================================== Remove ====================================== //
 
-func (n *BTreeNode) maxLeft(id int64, file *os.File) *Key {
-    // node := 
-    
-    for n.leaf == 0 {
-        
-    }
+/*
 
-    return nil
+1 case: Leaf
+    remove and return flags
+2 case: Not leaf
+    clone max left 'A'
+    clone key to be removed 'B'
+    call remove function for 'A'
+    call replace function, swap 'B' for 'A'
+
+Flags:
+    1 - ok
+    2 - node len < 50%
+    3 - empty node
+    4 - key not found
+
+Flag actions:
+    1 - just return flag
+    2 - check if sibling can lend key. 
+        if so   - rotate elements
+        if no   - concat 2 siblings and get key from parent
+        finally - check for errors and return flag
+    3 - should happen only on the root. Updates root address
+    4 - cascade back to root
+
+*/
+
+func (n *BTreeNode) canLendKey() bool {
+    return n.numberOfKeys - 1 >= int64(len(n.keys) / 2)
 }
 
-func (n *BTreeNode) removeKey(index int64) *Key {
+func (n *BTreeNode) removeKeyLeaf(index int64) *Key {
+    if index == -1 {
+        index = n.numberOfKeys - 1
+    }
+
     k := n.keys[index]
     
     for i := index; i < n.numberOfKeys; i++ {
         n.child[i] = n.child[i + 1]
         n.keys[i] = n.keys[i + 1]
     }
-    n.keys[n.numberOfKeys] = newEmptyKey()
+    n.keys[n.numberOfKeys - 1] = newEmptyKey()
     n.child[n.numberOfKeys] = n.child[n.numberOfKeys + 1]
-    n.child[n.numberOfKeys + 1] = -1
 
     n.numberOfKeys--
 
     return &k
 }
 
-func (n *BTreeNode) remove(index int64, tree *BTree) *Key {
-    fmt.Println("n nodes:", n.numberOfKeys - 1)
-    fmt.Println("len:", int64(len(n.keys)))
-    fmt.Println("can remove?:", n.numberOfKeys - 1 >= int64(len(n.keys) / 2))
-
-    var k *Key
-
-    if n.leaf == 1 && n.numberOfKeys - 1 >= int64(len(n.keys) / 2) {
-        k = n.removeKey(index)
-        n.write(tree.nodesFile)
-    } else {
-        
+func (n *BTreeNode) removeKeyNonLeaf(index int64) *Key {
+    if index == -1 {
+        index = n.numberOfKeys - 1
     }
 
-    return k
+    return &n.keys[index]
 }
 
-func (b *BTree) remove(nodeAddress int64 , id int64) *Key {
+// receive node and key index
+// go to key left and start iterating
+func (b *BTree) maxLeft(parent *BTreeNode, childIndex int64, k *Key) Key {
+    node := b.readNode(parent.child[childIndex])
+    i := node.numberOfKeys - 1
+    
+    for i > 0 && k.id != node.keys[i].id {
+        i--
+    }
+    node = b.readNode(node.child[i])
+    
+    for node.leaf == 0 {
+        node = b.readNode(node.child[node.numberOfKeys])
+    }
+    
+    return node.keys[node.numberOfKeys - 1]
+}
+
+func (b *BTree) replace(new *Key, old *Key, node *BTreeNode) {
+    i := node.numberOfKeys - 1
+	for i > 0 && node.keys[i].id > old.id {
+		i--
+	}
+
+    if node.keys[i].id == old.id {
+        node.keys[i] = *new
+        node.write(b.nodesFile)
+    } else if old.id < node.keys[i].id {
+        b.replace(new, old, b.readNode(node.child[i]))
+    } else {
+        b.replace(new, old, b.readNode(node.child[i]))
+    }
+}
+
+// remember to set the node as empty and place it in the b.emptyNodes list
+func (b *BTree) borrowFromParent(parent *BTreeNode, sibling *BTreeNode, childIndex int64, left bool) int {
+    flag := 0
+
+    if parent.canLendKey() {
+        flag = FLAG1
+    } else {
+        flag = FLAG2
+    }
+
+    // do stuff
+    
+    return flag
+}
+
+// Function that takes the value from sibling, passes it to 
+// parent and takes the value from parent and replaces the
+// value to be removed from node
+// 
+// parent - parent node that manages all the actions
+// sibling - sibling node to take value from
+// childIndex - where is the child located on parent node
+// left - boolean indicating if sibling is from the left or right
+// 
+// returns - removed element from child node
+func (b *BTree) borrowFromSibling(parent *BTreeNode, sibling *BTreeNode, childIndex int64, left bool) {
+    var k *Key
+    child := b.readNode(childIndex)
+    
+    if left {
+        k = sibling.removeKeyLeaf(-1)
+    } else {
+        k = sibling.removeKeyLeaf(0)
+    }
+    
+    child.keys[child.numberOfKeys] = parent.keys[childIndex]
+    parent.keys[childIndex] = *k
+    
+    parent.write(b.nodesFile)
+    sibling.write(b.nodesFile)
+    child.write(b.nodesFile)
+}
+
+func (b *BTree) tryBorrowKey(parent *BTreeNode, index int64) int {
+    var l, r *BTreeNode
+
+    if index != 0 {
+        l = b.readNode(parent.child[index - 1])
+    }
+    r = b.readNode(parent.child[index + 1])
+
+    if l != nil && l.canLendKey() {
+        b.borrowFromSibling(parent, l, index, true)
+    } else if r != nil && r.canLendKey() {
+        b.borrowFromSibling(parent, r, index, false)
+    } else if l != nil {
+        return b.borrowFromParent(parent, l, index, true)
+    } else if r != nil {
+        return b.borrowFromParent(parent, r, index, false)
+    }
+
+    return FLAG1
+}
+
+// remember to update flag
+func (b *BTree) parseFlag(flag int, parent *BTreeNode, childIndex int64, k *Key) int {
+    // fmt.Println("parseFlag:", flag)
+
+    if FLAG1 & flag != 0 {
+        // do stuff
+    } else if FLAG2 & flag != 0 {
+        flag = b.tryBorrowKey(parent, childIndex)
+    } else if FLAG3 & flag != 0 {
+        maxLeft := b.maxLeft(parent, childIndex, k)
+        _, flag = b.remove(parent.address, maxLeft.id)
+        b.replace(&maxLeft, k, parent)
+    } else if FLAG4 & flag != 0 {
+        // do stuff
+    } else if FLAG5 & flag != 0 {
+        // do stuff
+    }
+
+    return flag
+}
+
+func (b *BTree) removeFromNode(index int64, node *BTreeNode) (*Key, int) {
+    var k *Key
+    flag := 0
+    easyRemove := node.leaf == 1 && node.canLendKey()
+    midRemove := !easyRemove && node.leaf == 1
+    hardRemove := !(midRemove || easyRemove)
+
+    if easyRemove {
+        flag |= FLAG1
+    } else if midRemove {
+        flag |= FLAG2
+    } else if hardRemove {
+        flag |= FLAG3
+    }
+    
+    if node.leaf == 1 {
+        k = node.removeKeyLeaf(index)
+        node.write(b.nodesFile)
+    } else {
+        k = node.removeKeyNonLeaf(index)
+    }
+
+    return k, flag
+}
+
+func (b *BTree) remove(nodeAddress int64 , id int64) (*Key, int) {
     if nodeAddress == -1 {
-        return nil
+        return nil, FLAG4
     }
     
     var k *Key
     node := b.readNode(nodeAddress)
+    flag := 0
 
-    i := int64(0)
-	for i < node.numberOfKeys && node.keys[i].id < id {
-		i++
+    i := node.numberOfKeys - 1
+	for i > 0 && node.keys[i].id > id {
+		i--
 	}
 
 	if node.keys[i].id == id {
-        k = node.remove(i, b)
+        return b.removeFromNode(i, node)
     } else if node.keys[i].id < id {
-        k = b.remove(node.child[i], id)
+        k, flag = b.remove(node.child[i + 1], id)
     } else {
-        k = b.remove(node.child[i + 1], id)
+        k, flag = b.remove(node.child[i], id)
     }
     
-    return k
+    flag = b.parseFlag(flag, node, i, k)
+    
+    return k, flag
 }
 
 func (b *BTree) Remove(id int64) *Key {
-	return b.remove(b.root, id)
+    k, _ := b.remove(b.root, id)
+	return k
 }

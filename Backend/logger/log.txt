@@ -73,3 +73,5 @@ STATUS: 2023/04/02 11:40:51 Servidor iniciado
 INFO: 2023/04/02 12:58:10 Database Carregada
 INFO: 2023/04/02 12:58:10 Hash Dinamica Criada
 STATUS: 2023/04/02 12:58:33 Servidor desligado
+STATUS: 2023/04/04 09:10:57 Servidor iniciado
+STATUS: 2023/04/04 09:11:51 Servidor desligado
