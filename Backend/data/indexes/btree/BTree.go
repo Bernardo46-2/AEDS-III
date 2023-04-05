@@ -510,6 +510,7 @@ func (b *BTree) concatNodes(left *BTreeNode, right *BTreeNode, key *Key) *BTreeN
     left.child[left.numberOfKeys] = right.child[right.numberOfKeys]
 
     left.write(b.nodesFile)
+    right.write(b.nodesFile)
 
     return left
 }
