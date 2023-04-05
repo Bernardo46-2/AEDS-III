@@ -44,23 +44,6 @@ importarDados.onclick = () => {
         });
 }
 
-/* const IntercalacaoComum = document.getElementById('IntercalacaoComum');
-const IntercalacaoVariavel = document.getElementById('IntercalacaoVariavel');
-const SelecaoPorSubstituicao = document.getElementById('SelecaoPorSubstituicao');
-
-IntercalacaoComum.onclick = () => {
-    fetch('http://localhost:8080/intercalacaoComum/')
-        .then(response => response.json())
-        .then(data => {
-            modalAviso(data.mensagem);
-            showAll.onclick();
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error);
-        });
-} */
-
 /*  * * * * * * * * * * * * *
  *
  *  Mostrar Todos
@@ -638,6 +621,7 @@ const ordenar = document.querySelector('#Ordenar');
 const ordenarButtons = document.querySelectorAll('.ordenar-buttons');
 let ordenarAberto = false;
 let ordenarVar3 = ordenar.style.paddingTop;
+let ordenarTransition = ordenar.style.transition;
 
 ordenar.addEventListener('click', function (event) {
     if (event.target === ordenar && !ordenarAberto) {
@@ -673,7 +657,7 @@ ordenar.addEventListener('click', function (event) {
             });
             ordenarAberto = false;
             setTimeout(() => {
-                ordenar.style.transition = "none";
+                ordenar.style.transition = ordenarTransition;
             }, 500);
         }, 150);
         window.setTimeout(() => {
@@ -745,6 +729,7 @@ const index = document.querySelector('#Index');
 const indexButtons = document.querySelectorAll('.index-buttons');
 let indexAberto = false;
 let indexVar3 = index.style.paddingTop;
+let indexTransition = index.style.transition;
 
 index.addEventListener('click', function (event) {
     if (event.target === index && !indexAberto) {
@@ -780,7 +765,7 @@ index.addEventListener('click', function (event) {
             });
             indexAberto = false;
             setTimeout(() => {
-                index.style.transition = "none";
+                index.style.transition = indexTransition;
             }, 500);
         }, 150);
         window.setTimeout(() => {

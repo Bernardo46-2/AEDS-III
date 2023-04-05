@@ -259,3 +259,26 @@ INFO: 2023/04/05 00:33:20 Database Carregada
 INFO: 2023/04/05 00:33:20 Hash Dinamica Criada
 INFO: 2023/04/05 00:52:13 Database Ordenada com sucesso!
 INFO: 2023/04/05 00:52:18 Database Ordenada com sucesso!
+STATUS: 2023/04/05 08:55:19 Servidor iniciado
+INFO: 2023/04/05 09:08:46 Database Carregada
+INFO: 2023/04/05 09:08:46 Hash Dinamica Criada
+INFO: 2023/04/05 09:08:49 Database Carregada
+INFO: 2023/04/05 09:08:49 Hash Dinamica Criada
+INFO: 2023/04/05 09:09:07 Database Carregada
+INFO: 2023/04/05 09:09:07 Hash Dinamica Criada
+STATUS: 2023/04/05 09:18:26 Servidor desligado
+STATUS: 2023/04/05 09:18:53 Servidor iniciado
+INFO: 2023/04/05 09:19:46 Database Carregada
+INFO: 2023/04/05 09:19:46 Hash Dinamica Criada
+STATUS: 2023/04/05 09:19:57 Servidor desligado
+STATUS: 2023/04/05 09:20:08 Servidor iniciado
+INFO: 2023/04/05 09:33:45 Database Carregada
+INFO: 2023/04/05 09:33:45 Hash Dinamica Criada
+STATUS: 2023/04/05 09:35:10 Servidor desligado
+STATUS: 2023/04/05 12:11:00 Servidor iniciado
+INFO: 2023/04/05 12:12:00 Database Ordenada com sucesso!
+INFO: 2023/04/05 12:12:07 Database Ordenada com sucesso!
+INFO: 2023/04/05 12:16:38 Database Carregada
+INFO: 2023/04/05 12:16:38 Hash Dinamica Criada
+INFO: 2023/04/05 12:19:16 Database Ordenada com sucesso!
+INFO: 2023/04/05 12:21:00 Database Ordenada com sucesso!

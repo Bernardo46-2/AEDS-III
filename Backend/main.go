@@ -53,7 +53,7 @@ func main() {
 		defer controler.Close()
 		hashing.StartHashFile(controler, 8, binManager.FILES_PATH, "hashIndex")
 	case "4", "btree":
-		btree.StartBTreeFile()
+		btree.StartBTreeFile(binManager.FILES_PATH)
 	case "5", "criarIndiceInvertido":
 
 	case "6", "lerMultiplosIndiceInvertido":

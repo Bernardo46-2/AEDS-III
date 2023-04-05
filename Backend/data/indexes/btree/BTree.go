@@ -359,15 +359,14 @@ func (b *BTree) printFile() {
 
 // ====================================== Tests ====================================== //
 
-func StartBTreeFile() {
-	dir := "./data/files/"
+func StartBTreeFile(dir string) {
 	order := 8
 	tree, _ := NewBTree(order, dir)
 	reader, err := binManager.InicializarControleLeitura(binManager.BIN_FILE)
 
 	// n := 10
-	n := 32
-	// n := int(reader.TotalRegistros)
+	// n := 32
+	n := int(reader.TotalRegistros)
 
 	for i := 0; i < n && err == nil; i++ {
 		err = reader.ReadNext()
@@ -380,19 +379,19 @@ func StartBTreeFile() {
 	tree.printFile()
 	tree.Close()
 
-	tree = ReadBTree(dir)
+	/* 	tree = ReadBTree(dir)
 
-	fmt.Println("removed:", tree.Remove(8))
-	fmt.Println()
-	tree.printFile()
+	   	fmt.Println("removed:", tree.Remove(8))
+	   	fmt.Println()
+	   	tree.printFile()
 
-	fmt.Println("removed:", tree.Remove(7))
-	tree.printFile()
-	fmt.Println()
+	   	fmt.Println("removed:", tree.Remove(7))
+	   	tree.printFile()
+	   	fmt.Println()
 
-	fmt.Println("removed:", tree.Remove(6))
-	tree.printFile()
-	fmt.Println()
+	   	fmt.Println("removed:", tree.Remove(6))
+	   	tree.printFile()
+	   	fmt.Println() */
 
 	tree.Close()
 }
