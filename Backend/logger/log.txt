@@ -171,3 +171,13 @@ INFO: 2023/04/03 20:00:20 Database Carregada
 INFO: 2023/04/03 20:00:20 Hash Dinamica Criada
 STATUS: 2023/04/03 20:01:28 Servidor desligado
 >>>>>>> refs/remotes/origin/main
+STATUS: 2023/04/04 09:14:16 Servidor iniciado
+ERROR: 2023/04/04 09:14:18 code: 2, message: Pokemon nao encontrado
+ERROR: 2023/04/04 09:14:54 code: 2, message: Pokemon nao encontrado
+INFO: 2023/04/04 09:14:55 Database Carregada
+INFO: 2023/04/04 09:14:55 Hash Dinamica Criada
+STATUS: 2023/04/04 09:19:48 Servidor desligado
+STATUS: 2023/04/04 16:28:55 Servidor iniciado
+INFO: 2023/04/04 16:34:42 Database Carregada
+INFO: 2023/04/04 16:34:42 Hash Dinamica Criada
+STATUS: 2023/04/04 18:34:04 Servidor desligado

@@ -19,6 +19,9 @@ const BTREE_NODES_FILE string = "BTreeNodes.dat"
 // - remove extra indentation on printFile()
 // - create remove function
 // - create find function
+// - change dir concatenation to use os.join
+// - store empty nodes in b.emptyNodes
+// - documentation
 
 // ====================================== Bit-Flags ====================================== //
 
@@ -33,11 +36,8 @@ const (
     // Sibling node can't lend key
     FLAG3 = 1 << 2
     
-    // Key not found
-    FLAG4 = 1 << 3
-    
     // Empty node
-    FLAG5 = 1 << 4
+    FLAG4 = 1 << 3
 )
 
 // ====================================== Structs ====================================== //
@@ -383,9 +383,17 @@ func StartBTreeFile() {
 
 	tree = ReadBTree(dir)
     
-    fmt.Println("removed:", tree.Remove(4))
+    fmt.Println("removed:", tree.Remove(8))
     fmt.Println()
 	tree.printFile()
+    
+    fmt.Println("removed:", tree.Remove(7))
+	tree.printFile()
+    fmt.Println()
+
+    fmt.Println("removed:", tree.Remove(6))
+	tree.printFile()
+    fmt.Println()
     
 	tree.Close()
 }
@@ -451,6 +459,10 @@ func (n *BTreeNode) removeKeyNonLeaf(index int64) *Key {
     return &n.keys[index]
 }
 
+func (n *BTreeNode) findMax() Key {
+    return n.keys[n.numberOfKeys - 1]
+}
+
 // receive node and key index
 // go to key left and start iterating
 func (b *BTree) maxLeft(parent *BTreeNode, childIndex int64, k *Key) Key {
@@ -466,7 +478,7 @@ func (b *BTree) maxLeft(parent *BTreeNode, childIndex int64, k *Key) Key {
         node = b.readNode(node.child[node.numberOfKeys])
     }
     
-    return node.keys[node.numberOfKeys - 1]
+    return node.findMax()
 }
 
 func (b *BTree) replace(new *Key, old *Key, node *BTreeNode) {
@@ -485,22 +497,57 @@ func (b *BTree) replace(new *Key, old *Key, node *BTreeNode) {
     }
 }
 
+func (b *BTree) concatNodes(left *BTreeNode, right *BTreeNode, key *Key) *BTreeNode {
+    left.keys[left.numberOfKeys] = *key
+    left.numberOfKeys++
+
+    for i := int64(0); i < right.numberOfKeys; i++ {
+        left.keys[left.numberOfKeys] = right.keys[i]
+        left.child[left.numberOfKeys] = right.child[i]
+        left.numberOfKeys++
+        right.keys[i] = newEmptyKey()
+    }
+    left.child[left.numberOfKeys] = right.child[right.numberOfKeys]
+
+    left.write(b.nodesFile)
+
+    return left
+}
+
 // remember to set the node as empty and place it in the b.emptyNodes list
 func (b *BTree) borrowFromParent(parent *BTreeNode, sibling *BTreeNode, childIndex int64, left bool) int {
     flag := 0
 
-    if parent.canLendKey() {
+    if parent.numberOfKeys == 1 {
+        flag = FLAG4
+    } else if parent.canLendKey() {
         flag = FLAG1
     } else {
         flag = FLAG2
     }
 
-    // do stuff
+    child := b.readNode(parent.child[childIndex])
+
+    if left {
+        b.concatNodes(sibling, child, &parent.keys[childIndex])
+    } else {
+        b.concatNodes(child, sibling, &parent.keys[childIndex])
+    }
+
+    for i := childIndex; i < parent.numberOfKeys; {
+        parent.keys[i] = parent.keys[i + 1]
+        i++
+        parent.child[i] = parent.child[i + 1]
+    }
+
+    parent.numberOfKeys--
+
+    parent.write(b.nodesFile)
     
     return flag
 }
 
-// Function that takes the value from sibling, passes it to 
+// Function that takes the value from sibling, passes it to
 // parent and takes the value from parent and replaces the
 // value to be removed from node
 // 
@@ -549,22 +596,19 @@ func (b *BTree) tryBorrowKey(parent *BTreeNode, index int64) int {
     return FLAG1
 }
 
-// remember to update flag
 func (b *BTree) parseFlag(flag int, parent *BTreeNode, childIndex int64, k *Key) int {
-    // fmt.Println("parseFlag:", flag)
-
     if FLAG1 & flag != 0 {
-        // do stuff
+        // nothing to see here
     } else if FLAG2 & flag != 0 {
         flag = b.tryBorrowKey(parent, childIndex)
     } else if FLAG3 & flag != 0 {
         maxLeft := b.maxLeft(parent, childIndex, k)
-        _, flag = b.remove(parent.address, maxLeft.id)
+        _, flag, _ = b.remove(parent.address, maxLeft.id)
         b.replace(&maxLeft, k, parent)
     } else if FLAG4 & flag != 0 {
-        // do stuff
-    } else if FLAG5 & flag != 0 {
-        // do stuff
+        root := b.readNode(b.root)
+        b.root = root.child[0]
+        root.write(b.nodesFile)
     }
 
     return flag
@@ -595,9 +639,9 @@ func (b *BTree) removeFromNode(index int64, node *BTreeNode) (*Key, int) {
     return k, flag
 }
 
-func (b *BTree) remove(nodeAddress int64 , id int64) (*Key, int) {
+func (b *BTree) remove(nodeAddress int64 , id int64) (*Key, int, int64) {
     if nodeAddress == -1 {
-        return nil, FLAG4
+        return nil, FLAG1, -1
     }
     
     var k *Key
@@ -610,19 +654,33 @@ func (b *BTree) remove(nodeAddress int64 , id int64) (*Key, int) {
 	}
 
 	if node.keys[i].id == id {
-        return b.removeFromNode(i, node)
+        k, flag = b.removeFromNode(i, node)
+        return k, flag, i
     } else if node.keys[i].id < id {
-        k, flag = b.remove(node.child[i + 1], id)
+        k, flag, _ = b.remove(node.child[i + 1], id)
     } else {
-        k, flag = b.remove(node.child[i], id)
+        k, flag, _ = b.remove(node.child[i], id)
     }
     
     flag = b.parseFlag(flag, node, i, k)
     
-    return k, flag
+    return k, flag, i
 }
 
 func (b *BTree) Remove(id int64) *Key {
-    k, _ := b.remove(b.root, id)
+    k, flag, childIndex := b.remove(b.root, id)
+    
+    if FLAG3 & flag != 0 {
+        root := b.readNode(b.root)
+        node := b.readNode(root.child[childIndex])
+        maxLeft := node.findMax()
+        _, flag, _ = b.remove(root.address, maxLeft.id)
+        b.replace(&maxLeft, k, root)
+    } else if FLAG4 & flag != 0 {
+        root := b.readNode(b.root)
+        b.root = root.child[0]
+        root.write(b.nodesFile)
+    }
+    
 	return k
 }
