@@ -44,7 +44,7 @@ importarCsv.onclick = () => {
         });
 }
 
-const IntercalacaoComum = document.getElementById('IntercalacaoComum');
+/* const IntercalacaoComum = document.getElementById('IntercalacaoComum');
 const IntercalacaoVariavel = document.getElementById('IntercalacaoVariavel');
 const SelecaoPorSubstituicao = document.getElementById('SelecaoPorSubstituicao');
 
@@ -59,25 +59,7 @@ IntercalacaoComum.onclick = () => {
             modalAviso();
             console.log(error);
         });
-}
-
-IntercalacaoVariavel.onclick = () => {
-    fetch('http://localhost:8080/intercalacaoVariavel/')
-        .then(response => response.json())
-        .then(data => {
-            modalAviso(data.mensagem);
-            showAll.onclick();
-        })
-}
-
-SelecaoPorSubstituicao.onclick = () => {
-    fetch('http://localhost:8080/selecaoPorSubstituicao/')
-        .then(response => response.json())
-        .then(data => {
-            modalAviso(data.mensagem);
-            showAll.onclick();
-        })
-}
+} */
 
 /*  * * * * * * * * * * * * *
  *
@@ -133,7 +115,6 @@ let lastClicked = 1;
 let insertDots = true;
 
 function adicionarCards(data) {
-    // console.log(data);
     const cardsHtml = document.getElementById('cards');
     cardsHtml.innerHTML = "";
     for (let i = 0; i < data.length; i++) {
@@ -224,7 +205,6 @@ function carregarDados(id) {
 }
 
 function adicionarDadosModal(data) {
-    console.log(data);
     const editButton = document.querySelector('#edit');
     const saveButton = document.querySelector('#save');
     editButton.hidden = false;
@@ -249,7 +229,7 @@ function adicionarDadosModal(data) {
     <p class="poke-id2">#${data.numero}</p>
     <div class="row justify-content-center">
         <p class="modal-title" id="modalPage">${capt(data.nome)}</p>
-        <p class="modal-title-jap">${data.nome_jap}</p>
+        <p class="modal-title-jap">${data.nomeJap}</p>
         <p class="poke-type">${data.especie}</p>
     </div>
     <div class="row justify-content-center">
@@ -348,7 +328,7 @@ const collectFormData = async () => {
 
     pokemon.numero = number;
     pokemon.nome = pokeName.value;
-    pokemon.nome_jap = await japName.json();
+    pokemon.nomeJap = await japName.json();
     pokemon.especie = pokeEspecies.value;
     pokemon.tipo = [pokeType1.value, pokeType2.value];
     pokemon.peso = +pokeWeight.value;
@@ -416,7 +396,7 @@ function editarDadosModal(data, shouldCreate = false) {
     <p class="poke-id2">${shouldCreate ? "" : "#" + data.numero}</p>
     <div class="row justify-content-center">
     <input class="modal-title-input" type="text" name="nome" id="nome" value="${capt(data.nome)}">
-    <input class="modal-title-jap-input" type="text" name="nome-jap" id="nome-jap" value="${data.nome_jap}">
+    <input class="modal-title-jap-input" type="text" name="nome-jap" id="nome-jap" value="${data.nomeJap}">
     <input class="poke-type-input" type="text" name="tipo-pokemon" id="tipo-pokemon" value="${data.especie}">
     </div>
     <div class="row justify-content-center">
@@ -522,8 +502,8 @@ function editarDadosModal(data, shouldCreate = false) {
     });
 }
 
-const registrar = document.querySelector('#Registrar');
-registrar.addEventListener('click', function () {
+const Create = document.querySelector('#Create');
+Create.addEventListener('click', function () {
     abrirModal(undefined, true, undefined);
 });
 
@@ -649,6 +629,83 @@ document.getElementById('actual-deletar-form').onsubmit = e => {
         });
 };
 
+const myDropdown = document.querySelector('#myDropdown');
+const ordenar = document.querySelector('#Ordenar');
+const ordenarButtons = document.querySelectorAll('.ordenar-buttons, .btn-nome');
+const ordenarSymbol = document.querySelectorAll('symbol');
+let ordenarAberto = false;
+let ordenarVar3 = ordenar.style.paddingTop;
+
+ordenar.addEventListener('click', function (event) {
+    if (event.target === ordenar && !ordenarAberto) {
+        myDropdown.style.height = "230px";
+        myDropdown.style.marginBottom = "15px";
+        ordenar.style.height = "230px";
+        ordenar.style.paddingTop = "15px";
+        ordenarButtons.forEach(element => {
+            element.style.opacity = "1";
+        });
+        ordenarAberto = true;
+    } else if (event.target === ordenar) {
+        myDropdown.style.height = 60 + "px";
+        myDropdown.style.marginBottom = "0px";
+        ordenar.style.height = 45 + "px";
+
+        ordenar.style.paddingTop = ordenarVar3;
+        ordenarButtons.forEach(element => {
+            element.style.opacity = "0";
+        });
+        ordenarAberto = false;
+    }
+})
+
+ordenarButtons.forEach(element => {
+    element.addEventListener('click', function (event) {
+        ordenar.click();
+    });
+});
+
+const ordenar0 = document.querySelector('#Ordenar0');
+const ordenar1 = document.querySelector('#Ordenar1');
+const ordenar2 = document.querySelector('#Ordenar2');
+ordenar0.onclick = () => {
+    fetch('http://localhost:8080/ordenacao/?metodo=0')
+        .then(response => response.json())
+        .then(data => {
+            modalAviso(data.mensagem);
+            showAll.onclick();
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+ordenar1.onclick = () => {
+    fetch('http://localhost:8080/ordenacao/?metodo=1')
+        .then(response => response.json())
+        .then(data => {
+            modalAviso(data.mensagem);
+            showAll.onclick();
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+ordenar2.onclick = () => {
+    fetch('http://localhost:8080/ordenacao/?metodo=2')
+        .then(response => response.json())
+        .then(data => {
+            modalAviso(data.mensagem);
+            showAll.onclick();
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+
+
 function abrirModal(pokemon = "pokebola", editar = false, data) {
     const closeButton = document.getElementById('close');
     const saveButton = document.getElementById('save');
@@ -659,7 +716,7 @@ function abrirModal(pokemon = "pokebola", editar = false, data) {
         data = {
             "numero": 0,
             "nome": "Nome",
-            "nome_jap": "和名",
+            "nomeJap": "和名",
             "geracao": 1,
             "lancamento": "1996-02-27T00:00:00Z",
             "especie": "Especie Pokemon",
@@ -771,4 +828,163 @@ function abrirModal(pokemon = "pokebola", editar = false, data) {
             novoPokemon.remove();
         });
     });
+}
+
+const modalClose = document.querySelector('#close');
+const modalSave = document.querySelector('#save');
+const modal = document.querySelector('#modalPage');
+const meuBotao = document.querySelector('#meu-botao');
+const meuBotao2 = document.querySelector('#meu-botao2');
+const scrollbar = document.querySelector('.scrollbar');
+
+window.addEventListener('resize', function () {
+    const totalHeight = document.documentElement.scrollHeight;
+    const scrollbarHeight = window.innerHeight;
+    const thumbHeight = Math.max(scrollbarHeight * (window.innerHeight / totalHeight), 20);
+    const thumbPosition = (scrollbarHeight - thumbHeight) * (window.scrollY / (totalHeight - window.innerHeight));
+
+    scrollbar.style.height = `${thumbHeight}px`;
+    scrollbar.style.top = `${thumbPosition}px`;
+});
+
+document.addEventListener("scroll", () => {
+    const totalHeight = document.documentElement.scrollHeight;
+    const scrollbarHeight = window.innerHeight;
+    const thumbHeight = Math.max(scrollbarHeight * (window.innerHeight / totalHeight), 20);
+    const thumbPosition = (scrollbarHeight - thumbHeight) * (window.scrollY / (totalHeight - window.innerHeight));
+
+    scrollbar.style.height = `${thumbHeight}px`;
+    scrollbar.style.top = `${thumbPosition}px`;
+});
+
+function getOffset(el) {
+    var rect = el.getBoundingClientRect();
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+    return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
+}
+
+function gerarModalPokemon() {
+    const button = document.querySelectorAll('.card');
+    button.forEach(element => {
+        let click = function () {
+            const deleteButton = document.querySelector('#delete');
+            deleteButton.hidden = false;
+
+            // Obtém a posição atual da barra de rolagem
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            // Cria uma cópia do elemento original
+            let clonedCard = element.cloneNode(true);
+            element.classList.add('originalCard');
+            element.style.opacity = "0";
+            transitionTmp = element.style.transition;
+            element.style.transition = "none";
+            document.body.appendChild(clonedCard);
+
+            // Define as propriedades de posição e tamanho da cópia
+            clonedCard.id = 'clonedCard';
+            clonedCard.style.position = "fixed";
+            clonedCard.style.top = (getOffset(element).top - scrollTop) + "px";
+            clonedCard.style.left = (getOffset(element).left - 10) + "px";
+            clonedCard.style.width = element.offsetWidth + "px";
+            clonedCard.style.height = element.offsetHeight + "px";
+
+            // Define uma transição para a cópia
+            clonedCard.style.transition = "all 0.5s ease-in-out";
+
+            // Redimensiona a cópia para ocupar a tela inteira
+            clonedCard.style.top = "0";
+            clonedCard.style.left = "0";
+            clonedCard.style.width = "100%";
+            clonedCard.style.height = "100%";
+
+            // Remove a classe "card" da cópia e adiciona a classe "card-to-fullscreen"
+            clonedCard.classList.remove("card");
+            clonedCard.classList.add("card-to-fullscreen");
+            clonedCard.classList.add("disabled");
+            const cardTitle = clonedCard.querySelector('.card-title');
+            cardTitle.remove();
+            const cardId = clonedCard.querySelector('.poke-id');
+            cardId.remove();
+            const image = clonedCard.querySelector('.card-img-top');
+            image.style.top = '50%';
+
+            // Obtém todas as classes da variável
+            let classes = clonedCard.className.split(' ');
+            let bgdClass = classes.find(cls => /^bgd-.+-shadow$/.test(cls));
+
+            clonedCard.classList.remove(bgdClass);
+
+            let randomValue = Math.random() * 400 - 150;
+            modal.style.setProperty('--random', randomValue + '%');
+
+            carregarDados(element.id);
+
+            modalClose.addEventListener('click', function destruirClone3() {
+                clonedCard.style.transition = "all 1s ease-in-out";
+                modal.classList.add("slide-out-right");
+                // Adiciona um event listener para a transição
+                modal.addEventListener('transitionend', function onModalTransitionEnd() {
+                    setTimeout(function () {
+                        meuBotao.click();
+                        modal.classList.remove("slide-out-right");
+                    }, 500);
+                    modal.removeEventListener('transitionend', onModalTransitionEnd);
+                });
+
+                clonedCard.style.top = (getOffset(element).top - scrollTop - 5) + "px";
+                clonedCard.style.left = getOffset(element).left - 15 + "px";
+                clonedCard.style.width = element.offsetWidth + "px";
+                clonedCard.style.height = element.offsetHeight + "px";
+                clonedCard.classList.remove('card-to-fullscreen');
+                clonedCard.classList.add('card');
+
+                const div = document.querySelector('.slide-from-left');
+
+                clonedCard.addEventListener("transitionend", () => {
+                    element.classList.remove('originalCard')
+                    element.style.opacity = "1";
+                    element.style.transition = "transitionTmp";
+                    clonedCard.remove();
+                });
+            });
+
+            modalSave.addEventListener('click', function destruirClone4() {
+                clonedCard.style.transition = "all 1s ease-in-out";
+                modal.classList.add("slide-out-right");
+                // Adiciona um event listener para a transição
+                modal.addEventListener('transitionend', function onModalTransitionEnd() {
+                    setTimeout(function () {
+                        meuBotao.click();
+                        modal.classList.remove("slide-out-right");
+                    }, 500);
+                    modal.removeEventListener('transitionend', onModalTransitionEnd);
+                });
+
+                clonedCard.style.top = (getOffset(element).top - scrollTop - 5) + "px";
+                clonedCard.style.left = getOffset(element).left - 15 + "px";
+                clonedCard.style.width = element.offsetWidth + "px";
+                clonedCard.style.height = element.offsetHeight + "px";
+                clonedCard.classList.remove('card-to-fullscreen');
+                clonedCard.classList.add('card');
+
+                const div = document.querySelector('.slide-from-left');
+
+                clonedCard.addEventListener("transitionend", () => {
+                    element.classList.remove('originalCard')
+                    element.style.opacity = "1";
+                    element.style.transition = "transitionTmp";
+                    clonedCard.remove();
+                });
+            });
+        }
+
+
+        element.addEventListener('click', click);
+    });
+}
+
+function capt(str) {
+    return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
 }

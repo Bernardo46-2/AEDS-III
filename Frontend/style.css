@@ -1,6 +1,7 @@
 :root {
     --random: 0;
     --background-dark: #161a1f;
+    --background-transparent-dark: #161a1fd3;
     --background-medium-dark: #2b2e36;
     --background-light-dark: #484e5e;
     --text-secondary: #5a5c5f;
@@ -40,7 +41,7 @@
     --machop-transparent: #755e8c6c;
     --geodude-transparent: #7b7d726c;
     --jolteon-transparent: #fdd8356c;
-    --vaporeon-transparent: #29abe26c;
+    --vaporeon-transparent: #29aae2a1;
     --flareon-transparent: #ff1f1f6c;
     --dragonair-transparent: #7038f86c;
     --zapdos-transparent: #ffd54f6c;
@@ -115,6 +116,44 @@ input[type=number] {
     margin-top: 10px;
 }
 
+#myDropdown {
+    position: relative;
+    height: 60px;
+}
+
+#Ordenar {
+    position: absolute;
+    align-items: baseline;
+    justify-content: center;
+    display: flex;
+    transition: all 0.2s ease-in-out;
+}
+
+symbol {
+    font-size: 0.7em;
+    margin-left: 3px;
+    pointer-events: none;
+}
+
+.ordenar-button-principal {
+    vertical-align: top;
+}
+
+.ordenar-buttons {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    position: absolute;
+    top: 70px !important;
+    background-color: var(--background-transparent-dark) !important;
+    border-radius: 5px !important;
+    width: 90% !important;
+    margin: auto;
+    min-height: 45px;
+    border: 1px solid var(--vaporeon) !important;
+    text-align: center !important;
+    color: var(--vaporeon) !important;
+}
+
 #modal-container {
     position: fixed;
     display: table;
@@ -123,7 +162,7 @@ input[type=number] {
     top: 0;
     left: 0;
     transform: scale(0);
-    z-index: 9999;
+    z-index: 8000;
 }
 
 #modal-container.one {
