@@ -224,3 +224,38 @@ STATUS: 2023/04/04 23:02:35 Servidor iniciado
 INFO: 2023/04/04 23:02:47 Database Ordenada com sucesso!
 INFO: 2023/04/04 23:02:52 Database Carregada
 INFO: 2023/04/04 23:02:52 Hash Dinamica Criada
+STATUS: 2023/04/04 23:43:16 Servidor iniciado
+ERROR: 2023/04/04 23:43:42 code: 2, message: Pokemon nao encontrado
+ERROR: 2023/04/04 23:43:44 code: 2, message: Pokemon nao encontrado
+INFO: 2023/04/04 23:43:45 Database Carregada
+INFO: 2023/04/04 23:43:45 Hash Dinamica Criada
+INFO: 2023/04/04 23:45:03 Database Carregada
+INFO: 2023/04/04 23:45:03 Hash Dinamica Criada
+STATUS: 2023/04/04 23:45:56 Servidor desligado
+STATUS: 2023/04/04 23:45:59 Servidor iniciado
+INFO: 2023/04/04 23:46:03 Database Carregada
+INFO: 2023/04/04 23:46:03 Hash Dinamica Criada
+STATUS: 2023/04/04 23:51:17 Servidor desligado
+STATUS: 2023/04/04 23:51:36 Servidor iniciado
+STATUS: 2023/04/04 23:55:28 Servidor desligado
+STATUS: 2023/04/04 23:58:30 Servidor iniciado
+INFO: 2023/04/05 00:04:46 Database Ordenada com sucesso!
+INFO: 2023/04/05 00:04:51 Database Carregada
+INFO: 2023/04/05 00:04:51 Hash Dinamica Criada
+INFO: 2023/04/05 00:08:34 Database Ordenada com sucesso!
+INFO: 2023/04/05 00:09:04 Database Carregada
+INFO: 2023/04/05 00:09:04 Hash Dinamica Criada
+INFO: 2023/04/05 00:09:51 Database Ordenada com sucesso!
+INFO: 2023/04/05 00:09:55 Database Ordenada com sucesso!
+INFO: 2023/04/05 00:09:59 Database Ordenada com sucesso!
+INFO: 2023/04/05 00:10:07 Database Ordenada com sucesso!
+INFO: 2023/04/05 00:10:47 Database Carregada
+INFO: 2023/04/05 00:10:47 Hash Dinamica Criada
+INFO: 2023/04/05 00:13:14 Database Ordenada com sucesso!
+INFO: 2023/04/05 00:13:41 Database Ordenada com sucesso!
+INFO: 2023/04/05 00:14:07 Database Ordenada com sucesso!
+INFO: 2023/04/05 00:32:41 Database Ordenada com sucesso!
+INFO: 2023/04/05 00:33:20 Database Carregada
+INFO: 2023/04/05 00:33:20 Hash Dinamica Criada
+INFO: 2023/04/05 00:52:13 Database Ordenada com sucesso!
+INFO: 2023/04/05 00:52:18 Database Ordenada com sucesso!

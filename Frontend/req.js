@@ -4,7 +4,7 @@
  *
  * * * * * * * * * * * * * * */
 
-const importarCsv = document.getElementById('ImportarCSV');
+const importarDados = document.getElementById('ImportarDados');
 const modalContainer = document.getElementById('modal-container');
 const deleteBtn = document.getElementById('delete');
 const helpBtn = document.getElementById('Ajuda');
@@ -31,7 +31,7 @@ function modalAviso(mostrar = "Servidor Desligado") {
     }, 1200);
 }
 
-importarCsv.onclick = () => {
+importarDados.onclick = () => {
     fetch('http://localhost:8080/loadDatabase')
         .then(response => response.json())
         .then(data => {
@@ -276,7 +276,7 @@ function adicionarDadosModal(data) {
         <p class="poke-text">${dataFormatada}</p>
         </div>
         <div class="row justify-content-center">
-        <p class="poke-desc">Geração</p>
+        <p class="poke-desc">Generation</p>
         <p class="poke-desc">Lançamento</p>
     </div>
     <div class="row justify-content-center">
@@ -294,11 +294,11 @@ function adicionarDadosModal(data) {
     editButton.onclick = () => editarDadosModal(data, false);
     
     const id = document.querySelector('.poke-id2');
-    const deleteForm = document.getElementById('deletar-form');
+    const deleteForm = document.getElementById('remove-form');
     deleteForm.value = id.innerHTML.substring(1);
     deleteBtn.onclick = () => {
         document.getElementById('close').click();
-        document.getElementById('actual-deletar-form').onsubmit();
+        document.getElementById('actual-remove-form').onsubmit();
     }
 }
 
@@ -442,7 +442,7 @@ function editarDadosModal(data, shouldCreate = false) {
         <input class="poke-text-input col-4" type="text" name="tipo2" id="lancamento" pattern="\d{2}/\d{2}/\d{4}" inputmode="numeric" value="${dataFormatada}">
     </div>
     <div class="row justify-content-center">
-        <p class="poke-desc">Geração</p>
+        <p class="poke-desc">Generation</p>
         <p class="poke-desc">Lançamento</p>
     </div>
     </div>
@@ -512,38 +512,38 @@ Create.addEventListener('click', function () {
  *  Barra Lateral
  *
  * * * * * * * * * * * * * * */
-const pesquisar = document.querySelector('#Pesquisar');
-const pesquisarForm = document.querySelector('#pesquisar-form');
-var pesquisarAberto = false;
-const atualizar = document.querySelector('#Atualizar');
-const atualizarForm = document.querySelector('#atualizar-form');
+const search = document.querySelector('#Search');
+const searchForm = document.querySelector('#search-form');
+var searchAberto = false;
+const update = document.querySelector('#Update');
+const atualizarForm = document.querySelector('#update-form');
 let atualizarAberto = false;
-const deletar = document.querySelector('#Deletar');
-const deletarForm = document.querySelector('#deletar-form');
-let deletarAberto = false;
+const remove = document.querySelector('#Remove');
+const removeForm = document.querySelector('#remove-form');
+let removeAberto = false;
 
-pesquisar.addEventListener('click', function (event) {
-    if (event.target === pesquisar && !pesquisarAberto) {
-        pesquisar.style.height = 100 + "px";
-        pesquisarForm.classList.remove('displayNone');
-        pesquisarForm.classList.remove('btn-Charmander');
-        pesquisarAberto = true;
-    } else if (event.target === pesquisar) {
-        pesquisar.style.height = 45 + "px";
-        pesquisarForm.classList.add('displayNone');
-        pesquisarForm.classList.add('btn-Charmander');
-        pesquisarAberto = false;
+search.addEventListener('click', function (event) {
+    if (event.target === search && !searchAberto) {
+        search.style.height = 100 + "px";
+        searchForm.classList.remove('displayNone');
+        searchForm.classList.remove('btn-Charmander');
+        searchAberto = true;
+    } else if (event.target === search) {
+        search.style.height = 45 + "px";
+        searchForm.classList.add('displayNone');
+        searchForm.classList.add('btn-Charmander');
+        searchAberto = false;
     }
 });
 
-document.getElementById('actual-pesquisar-form').onsubmit = e => {
+document.getElementById('actual-search-form').onsubmit = e => {
     e.preventDefault();
-    pesquisar.style.height = 45 + "px";
-    pesquisarForm.classList.add('displayNone');
-    pesquisarForm.classList.add('btn-Charmander');
-    pesquisarAberto = false;
+    search.style.height = 45 + "px";
+    searchForm.classList.add('displayNone');
+    searchForm.classList.add('btn-Charmander');
+    searchAberto = false;
 
-    fetch('http://localhost:8080/get/?id=' + pesquisarForm.value)
+    fetch('http://localhost:8080/get/?id=' + searchForm.value)
         .then(response => response.json())
         .then(data => {
             if ('mensagem' in data) {
@@ -558,24 +558,24 @@ document.getElementById('actual-pesquisar-form').onsubmit = e => {
         });
 };
 
-atualizar.addEventListener('click', function (event) {
-    if (event.target === atualizar && !atualizarAberto) {
-        atualizar.style.height = 100 + "px";
+update.addEventListener('click', function (event) {
+    if (event.target === update && !atualizarAberto) {
+        update.style.height = 100 + "px";
         atualizarForm.classList.remove('displayNone');
         atualizarForm.classList.remove('btn-Charmander');
         atualizarAberto = true;
-    } else if (event.target === atualizar) {
-        atualizar.style.height = 45 + "px";
+    } else if (event.target === update) {
+        update.style.height = 45 + "px";
         atualizarForm.classList.add('displayNone');
         atualizarForm.classList.add('btn-Charmander');
         atualizarAberto = false;
     }
 })
 
-document.getElementById('actual-atualizar-form').addEventListener('submit', e => {
+document.getElementById('actual-update-form').addEventListener('submit', e => {
     e.preventDefault();
 
-    atualizar.style.height = 45 + "px";
+    update.style.height = 45 + "px";
     atualizarForm.classList.add('displayNone');
     atualizarForm.classList.add('btn-Charmander');
     atualizarAberto = false;
@@ -595,29 +595,29 @@ document.getElementById('actual-atualizar-form').addEventListener('submit', e =>
         });
 });
 
-deletar.addEventListener('click', function (event) {
-    if (event.target === deletar && !deletarAberto) {
-        deletar.style.height = 100 + "px";
-        deletarForm.classList.remove('displayNone');
-        deletarForm.classList.remove('btn-Charmander');
-        deletarAberto = true;
-    } else if (event.target === deletar) {
-        deletar.style.height = 45 + "px";
-        deletarForm.classList.add('displayNone');
-        deletarForm.classList.add('btn-Charmander');
-        deletarAberto = false;
+remove.addEventListener('click', function (event) {
+    if (event.target === remove && !removeAberto) {
+        remove.style.height = 100 + "px";
+        removeForm.classList.remove('displayNone');
+        removeForm.classList.remove('btn-Charmander');
+        removeAberto = true;
+    } else if (event.target === remove) {
+        remove.style.height = 45 + "px";
+        removeForm.classList.add('displayNone');
+        removeForm.classList.add('btn-Charmander');
+        removeAberto = false;
     }
 })
 
-document.getElementById('actual-deletar-form').onsubmit = e => {
+document.getElementById('actual-remove-form').onsubmit = e => {
     if(e !== undefined) e.preventDefault();
 
-    deletar.style.height = 45 + "px";
-    deletarForm.classList.add('displayNone');
-    deletarForm.classList.add('btn-Charmander');
-    deletarAberto = false;
+    remove.style.height = 45 + "px";
+    removeForm.classList.add('displayNone');
+    removeForm.classList.add('btn-Charmander');
+    removeAberto = false;
 
-    fetch('http://localhost:8080/delete/?id=' + deletarForm.value)
+    fetch('http://localhost:8080/delete/?id=' + removeForm.value)
         .then(response => response.json())
         .then(data => {
             modalAviso(data.mensagem);
@@ -629,37 +629,70 @@ document.getElementById('actual-deletar-form').onsubmit = e => {
         });
 };
 
-const myDropdown = document.querySelector('#myDropdown');
+
+
+/* ------------------------------ METODOS DE ORDENAÇAO ------------------------------ */
+
+const ordenarDropdown = document.querySelector('#ordenarDropdown');
 const ordenar = document.querySelector('#Ordenar');
-const ordenarButtons = document.querySelectorAll('.ordenar-buttons, .btn-nome');
-const ordenarSymbol = document.querySelectorAll('symbol');
+const ordenarButtons = document.querySelectorAll('.ordenar-buttons');
 let ordenarAberto = false;
 let ordenarVar3 = ordenar.style.paddingTop;
 
 ordenar.addEventListener('click', function (event) {
     if (event.target === ordenar && !ordenarAberto) {
-        myDropdown.style.height = "230px";
-        myDropdown.style.marginBottom = "15px";
+        ordenar.style.transition = "all 0.4s ease-in-out";
+        ordenarDropdown.style.transition = "all 0.4s ease-in-out";
+        ordenarDropdown.style.height = "230px";
+        ordenarDropdown.style.marginBottom = "15px";
         ordenar.style.height = "230px";
         ordenar.style.paddingTop = "15px";
-        ordenarButtons.forEach(element => {
-            element.style.opacity = "1";
-        });
         ordenarAberto = true;
+        window.setTimeout(() => {
+            ordenarButtons[0].style.pointerEvents = 'auto';
+            ordenarButtons[0].style.opacity = "1";
+        }, 100);
+        window.setTimeout(() => {
+            ordenarButtons[1].style.pointerEvents = 'auto';
+            ordenarButtons[1].style.opacity = "1";
+        }, 200);
+        window.setTimeout(() => {
+            ordenarButtons[2].style.pointerEvents = 'auto';
+            ordenarButtons[2].style.opacity = "1";
+        }, 300);
     } else if (event.target === ordenar) {
-        myDropdown.style.height = 60 + "px";
-        myDropdown.style.marginBottom = "0px";
-        ordenar.style.height = 45 + "px";
+        setTimeout(() => {
+            ordenarDropdown.style.height = 60 + "px";
+            ordenarDropdown.style.marginBottom = "0px";
+            ordenar.style.height = 45 + "px";
 
-        ordenar.style.paddingTop = ordenarVar3;
-        ordenarButtons.forEach(element => {
-            element.style.opacity = "0";
-        });
-        ordenarAberto = false;
+            ordenar.style.paddingTop = ordenarVar3;
+            ordenarButtons.forEach(element => {
+                element.style.pointerEvents = 'none';
+                element.style.opacity = "0";
+            });
+            ordenarAberto = false;
+            setTimeout(() => {
+                ordenar.style.transition = "none";
+            }, 500);
+        }, 150);
+        window.setTimeout(() => {
+            ordenarButtons[2].style.pointerEvents = 'auto';
+            ordenarButtons[2].style.opacity = "0";
+        }, 0);
+        window.setTimeout(() => {
+            ordenarButtons[1].style.pointerEvents = 'auto';
+            ordenarButtons[1].style.opacity = "0";
+        }, 50);
+        window.setTimeout(() => {
+            ordenarButtons[0].style.pointerEvents = 'auto';
+            ordenarButtons[0].style.opacity = "0";
+        }, 175);
     }
 })
 
 ordenarButtons.forEach(element => {
+    element.style.transition = "all 0.3s ease-in-out";
     element.addEventListener('click', function (event) {
         ordenar.click();
     });
@@ -705,6 +738,114 @@ ordenar2.onclick = () => {
         });
 }
 
+/* ------------------------------ ESCOLHA DE INDEXACAO ------------------------------ */
+
+const indexDropdown = document.querySelector('#indexDropdown');
+const index = document.querySelector('#Index');
+const indexButtons = document.querySelectorAll('.index-buttons');
+let indexAberto = false;
+let indexVar3 = index.style.paddingTop;
+
+index.addEventListener('click', function (event) {
+    if (event.target === index && !indexAberto) {
+        index.style.transition = "all 0.4s ease-in-out";
+        indexDropdown.style.transition = "all 0.4s ease-in-out";
+        indexDropdown.style.height = "230px";
+        indexDropdown.style.marginBottom = "15px";
+        index.style.height = "230px";
+        index.style.paddingTop = "15px";
+        indexAberto = true;
+        window.setTimeout(() => {
+            indexButtons[0].style.pointerEvents = 'auto';
+            indexButtons[0].style.opacity = "1";
+        }, 100);
+        window.setTimeout(() => {
+            indexButtons[1].style.pointerEvents = 'auto';
+            indexButtons[1].style.opacity = "1";
+        }, 200);
+        window.setTimeout(() => {
+            indexButtons[2].style.pointerEvents = 'auto';
+            indexButtons[2].style.opacity = "1";
+        }, 300);
+    } else if (event.target === index) {
+        setTimeout(() => {
+            indexDropdown.style.height = 60 + "px";
+            indexDropdown.style.marginBottom = "0px";
+            index.style.height = 45 + "px";
+
+            index.style.paddingTop = indexVar3;
+            indexButtons.forEach(element => {
+                element.style.pointerEvents = 'none';
+                element.style.opacity = "0";
+            });
+            indexAberto = false;
+            setTimeout(() => {
+                index.style.transition = "none";
+            }, 500);
+        }, 150);
+        window.setTimeout(() => {
+            indexButtons[2].style.pointerEvents = 'auto';
+            indexButtons[2].style.opacity = "0";
+        }, 0);
+        window.setTimeout(() => {
+            indexButtons[1].style.pointerEvents = 'auto';
+            indexButtons[1].style.opacity = "0";
+        }, 50);
+        window.setTimeout(() => {
+            indexButtons[0].style.pointerEvents = 'auto';
+            indexButtons[0].style.opacity = "0";
+        }, 175);
+    }
+})
+
+indexButtons.forEach(element => {
+    element.style.transition = "all 0.3s ease-in-out";
+    element.addEventListener('click', function (event) {
+        index.click();
+    });
+});
+
+const index0 = document.querySelector('#Index0');
+const index1 = document.querySelector('#Index1');
+const index2 = document.querySelector('#Index2');
+index0.onclick = () => {
+    fetch('http://localhost:8080/indexacao/?metodo=0')
+        .then(response => response.json())
+        .then(data => {
+            modalAviso(data.mensagem);
+            showAll.onclick();
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+index1.onclick = () => {
+    fetch('http://localhost:8080/indexacao/?metodo=1')
+        .then(response => response.json())
+        .then(data => {
+            modalAviso(data.mensagem);
+            showAll.onclick();
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+index2.onclick = () => {
+    fetch('http://localhost:8080/indexacao/?metodo=2')
+        .then(response => response.json())
+        .then(data => {
+            modalAviso(data.mensagem);
+            showAll.onclick();
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+
+/* ------------------------------ ... ------------------------------ */
 
 function abrirModal(pokemon = "pokebola", editar = false, data) {
     const closeButton = document.getElementById('close');

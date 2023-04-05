@@ -12,7 +12,8 @@
     --squirtle: #3399ff;
     --eevee: #c5b358;
     --umbreon: #191a1b;
-    --gengar: #605c78;
+    --gengar: #c760d4;
+    --gengar2: #f0baf7;
     --jigglypuff: #f9bbc1;
     --psyduck: #f4c430;
     --magikarp: #ff7f00;
@@ -21,6 +22,7 @@
     --geodude: #7b7d72;
     --jolteon: #fdd835;
     --vaporeon: #29abe2;
+    --vaporeon2: #9ed8ff;
     --flareon: #ff1f1f;
     --dragonair: #7038f8;
     --zapdos: #ffd54f;
@@ -33,7 +35,7 @@
     --squirtle-transparent: #3399ff6c;
     --eevee-transparent: #c5b3586c;
     --umbreon-transparent: #191a1b6c;
-    --gengar-transparent: #605c786c;
+    --gengar-transparent: #c760d46c;
     --jigglypuff-transparent: #f9bbc16c;
     --psyduck-transparent: #f4c4306c;
     --magikarp-transparent: #ff7f006c;
@@ -51,7 +53,7 @@
     --pikachu-escuro: #ccad2e;
     --flareon-escuro: #b40c0c;
     --bulbasaur-escuro: #648f38;
-    --gengar-escuro: #3e3a57;
+    --gengar-escuro: #58375c;
     --Normal: #a8a878;
     --Fire: #f08030;
     --Water: #6890f0;
@@ -108,7 +110,7 @@ input[type=number] {
     margin-top: 10px;
 }
 
-.delete-in-button {
+.remove-in-button {
     background-color: var(--background-dark) !important;
     border: none !important;
     color: white !important;
@@ -116,17 +118,18 @@ input[type=number] {
     margin-top: 10px;
 }
 
-#myDropdown {
+#ordenarDropdown,
+#indexDropdown {
     position: relative;
     height: 60px;
 }
 
-#Ordenar {
+#Ordenar,
+#Index {
     position: absolute;
     align-items: baseline;
     justify-content: center;
     display: flex;
-    transition: all 0.2s ease-in-out;
 }
 
 symbol {
@@ -135,13 +138,16 @@ symbol {
     pointer-events: none;
 }
 
-.ordenar-button-principal {
+.ordenar-button-principal,
+.index-button-principal {
     vertical-align: top;
 }
 
-.ordenar-buttons {
+.ordenar-buttons,
+.index-buttons {
+    pointer-events: none;
     opacity: 0;
-    transition: opacity 0.2s ease-in-out;
+    transition: opacity 0.4s ease-in-out;
     position: absolute;
     top: 70px !important;
     background-color: var(--background-transparent-dark) !important;
@@ -733,7 +739,7 @@ textarea {
 }
 
 .scrollbar2::-webkit-scrollbar-thumb {
-    border-radius: 10px;
+    border-radius: 0px;
     background-color: var(--background-light-dark);
     box-shadow: 0px 0px 10px 10px var(--background-dark);
 }
@@ -1415,6 +1421,34 @@ body::-webkit-scrollbar {
     transition-duration: 0.8s;
 }
 
+.btn-Vaporeon2 {
+    color: var(--vaporeon) !important;
+    border: 1px solid var(--vaporeon-transparent) !important;
+}
+
+.btn-Vaporeon2:hover,
+.btn-Vaporeon2:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--vaporeon2) !important;
+    box-shadow: 0 0 10px var(--vaporeon-transparent),
+        0 0 40px var(--vaporeon-transparent), 0 0 80px var(--vaporeon-transparent);
+    transition-duration: 0.4s;
+}
+
+.btn-Gengar2 {
+    color: var(--gengar) !important;
+    border: 1px solid var(--gengar-transparent) !important;
+}
+
+.btn-Gengar2:hover,
+.btn-Gengar2:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--gengar2) !important;
+    box-shadow: 0 0 10px var(--gengar-transparent),
+        0 0 40px var(--gengar-transparent), 0 0 80px var(--gengar-transparent);
+    transition-duration: 0.4s;
+}
+
 .btn-Flareon {
     color: var(--flareon) !important;
     border: 1px solid var(--flareon-transparent) !important;
@@ -1535,10 +1569,25 @@ body {
     position: relative;
 }
 
-.sidebar {
+.imagemLateral {
     position: sticky;
     top: 0;
-    height: 100vh;
+}
+
+.sidebar {
+    position: fixed;
+    height: calc(100vh - 110px);
+    margin-top: calc((100vw / 18) + 20px);
+    width: calc(100vw / 6);
+    top: 0;
+    background-color: var(--sidebar-color);
+}
+
+.sidebar2 {
+    position: fixed;
+    height: 110px;
+    width: calc(100vw / 6);
+    bottom: 0px;
     background-color: var(--sidebar-color);
 }
 
