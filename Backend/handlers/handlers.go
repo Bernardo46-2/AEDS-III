@@ -12,7 +12,8 @@ import (
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
-	ordenacao "github.com/Bernardo46-2/AEDS-III/data/sorts"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
+	"github.com/Bernardo46-2/AEDS-III/data/sorts"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/service"
@@ -134,11 +135,11 @@ func DeletePokemon(w http.ResponseWriter, r *http.Request) {
 //
 // Tambem é criado indices para: Hash
 func LoadDatabase(w http.ResponseWriter, r *http.Request) {
-	// Import
+	// CSV
 	binManager.ImportCSV().CsvToBin()
-	controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
-	defer controler.Close()
-	hashing.StartHashFile(controler, 8, binManager.FILES_PATH, "hashIndex")
+
+	// Reconstruir Indices
+	reconstruirIndices()
 
 	// Resposta
 	writeSuccess(w, 6)
@@ -164,11 +165,14 @@ func Ordenacao(w http.ResponseWriter, r *http.Request) {
 	// Recuperar metodo
 	metodo, _ := strconv.Atoi(r.URL.Query().Get("metodo"))
 
-	ordenacao.SortingFunctions[metodo]()
+	sorts.SortingFunctions[metodo]()
+
+	// Reconstruir Indices
+	reconstruirIndices()
 
 	// Resposta
 	writeSuccess(w, 7)
-	logger.Println("INFO", "Database Ordenada (Intercalacao Comum)")
+	logger.Println("INFO", "Database Ordenada com sucesso!")
 }
 
 // writeError recebe um erro de http responde e um id de erro interno,
@@ -215,4 +219,23 @@ func writeJson(w http.ResponseWriter, v any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(jsonData)
+}
+
+func reconstruirIndices() {
+	// Hashing
+	controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+	defer controler.Close()
+	hashing.StartHashFile(controler, 8, binManager.FILES_PATH, "hashIndex")
+
+	// Indice Invertido
+	controler.Reset()
+	invertedIndex.New(controler, "nome", binManager.FILES_PATH, 0)
+	controler.Reset()
+	invertedIndex.New(controler, "nomeJap", binManager.FILES_PATH, 0)
+	controler.Reset()
+	invertedIndex.New(controler, "especie", binManager.FILES_PATH, 0.8)
+	controler.Reset()
+	invertedIndex.New(controler, "tipo", binManager.FILES_PATH, 0)
+	controler.Reset()
+	invertedIndex.New(controler, "descricao", binManager.FILES_PATH, 0.8)
 }

@@ -6,6 +6,7 @@ package models
 import (
 	"encoding/binary"
 	"fmt"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -28,7 +29,7 @@ type PokemonID struct {
 type Pokemon struct {
 	Numero     int32     `json:"numero"`
 	Nome       string    `json:"nome,omitempty"`
-	NomeJap    string    `json:"nome_jap,omitempty"`
+	NomeJap    string    `json:"nomeJap,omitempty"`
 	Geracao    int32     `json:"geracao"`
 	Lancamento time.Time `json:"lancamento"`
 	Especie    string    `json:"especie"`
@@ -292,12 +293,13 @@ func (p *Pokemon) CalculateSize() {
 }
 
 func (p Pokemon) GetField(fieldName string) string {
-	switch fieldName {
+	field := strings.ToLower(fieldName)
+	switch field {
 	case "numero", "id":
 		return fmt.Sprint(p.Numero)
 	case "nome":
 		return p.Nome
-	case "nome_jap":
+	case "nomejap":
 		return p.NomeJap
 	case "geracao":
 		return fmt.Sprint(p.Geracao)
@@ -326,4 +328,20 @@ func (p Pokemon) GetField(fieldName string) string {
 	default:
 		return ""
 	}
+}
+
+func PokemonStringFields() []string {
+	obj := Pokemon{}
+	var fieldNames []string
+	v := reflect.ValueOf(obj)
+	t := v.Type()
+
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Field(i)
+		if field.Kind() == reflect.String || (field.Kind() == reflect.Slice && field.Type().Elem().Kind() == reflect.String) {
+			fieldNames = append(fieldNames, t.Field(i).Name)
+		}
+	}
+
+	return fieldNames
 }

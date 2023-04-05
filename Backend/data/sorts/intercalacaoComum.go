@@ -1,4 +1,4 @@
-package ordenacao
+package sorts
 
 import (
 	"encoding/binary"
@@ -13,7 +13,7 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-const TMP_DIR_PATH string = "data/tmp/"
+const TMP_DIR_PATH string = "data/files/tmp/"
 
 // IntercalacaoBalanceadaComum executa a ordenação externa do banco de dados binario.
 // A função cria arquivos temporários de tamanho especificado, realiza a ordenação externa
@@ -72,7 +72,7 @@ func divideArquivoEmBlocos(caminhoEntrada string, tamanhoBloco int64, dirTemp st
 			tamanhoRegistro, lapide, _ := binManager.TamanhoProxRegistro(file, ponteiroAtual)
 
 			// Se nao tem lapide le o registro e salva, se nao pula
-			if lapide != 0 {
+			if lapide == 0 {
 				// Se nao couber no bloco finaliza e da append, se nao le e adiciona ao slice atual
 				if tamBlocoAtual+tamanhoRegistro > tamanhoBloco {
 					file.Seek(-8, io.SeekCurrent)
@@ -162,7 +162,8 @@ func intercala(arquivo1, arquivo2 string) (string, error) {
 	defer file2.Close()
 
 	// Cria um novo arquivo temporário para escrita
-	novoArquivo, _ := os.Create("data/tmp/tmp.bin")
+	filepath := filepath.Join(TMP_DIR_PATH, "tmp.bin")
+	novoArquivo, _ := os.Create(filepath)
 	defer novoArquivo.Close()
 
 	// Lê a primeira linha contendo o tamanho de cada arquivo
@@ -304,6 +305,7 @@ func RemoveFile(filePath string) error {
 	// Tenta remover o arquivo no caminho especificado
 	err := os.Remove(filePath)
 	if err != nil {
+		fmt.Println(err)
 		return fmt.Errorf("erro ao remover arquivo: %v", err)
 	}
 	return nil
