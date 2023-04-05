@@ -395,6 +395,10 @@ func StartBTreeFile() {
 	tree.printFile()
     fmt.Println()
     
+    fmt.Println("removed:", tree.Remove(33))
+	tree.printFile()
+    fmt.Println()
+    
 	tree.Close()
 }
 
@@ -506,8 +510,10 @@ func (b *BTree) concatNodes(left *BTreeNode, right *BTreeNode, key *Key) *BTreeN
         left.child[left.numberOfKeys] = right.child[i]
         left.numberOfKeys++
         right.keys[i] = newEmptyKey()
+        right.child[i] = -1
     }
     left.child[left.numberOfKeys] = right.child[right.numberOfKeys]
+    right.child[right.numberOfKeys] = -1
 
     left.write(b.nodesFile)
     right.write(b.nodesFile)
