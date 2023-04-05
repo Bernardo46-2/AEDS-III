@@ -8,22 +8,6 @@ func Search(query string) []string {
 	return nil
 }
 
-// TODO: Esta função carrega um índice invertido previamente salvo
-// de um arquivo.
-func LoadIndexFromFile(filename string) error {
-	return nil
-}
-
-// TODO: Esta função salva o índice invertido atual em um arquivo.
-func SaveIndexToFile(filename string) error {
-	return nil
-}
-
-// TODO: Esta função aceita um mapa de IDs de documentos para o
-// conteúdo do documento e cria um índice invertido a partir deles.
-func CreateInvertedIndex(documents map[string]string) {
-}
-
 // TODO: Esta função aceita uma consulta de pesquisa e uma lista de
 // IDs de documentos, e retorna a lista ordenada com base em algum
 // critério de relevância, como a frequência dos termos da consulta

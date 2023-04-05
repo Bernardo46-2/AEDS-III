@@ -73,7 +73,7 @@ type BucketRecord struct {
 }
 
 type Reader interface {
-	ReadNextGeneric() (interface{}, bool, int64, error)
+	ReadNextGeneric() (any, bool, int64, error)
 }
 
 type IndexableObject interface {
@@ -260,7 +260,7 @@ func (hash *DinamicHash) PrintHash() {
 // StartHashFile cria um arquivo de hash de acordo com a struct passada
 //
 // Esta função recebe um Reader que deve ter implementado a funcao:
-// ReadNextGeneric() (interface{}, bool, int64, error).
+// ReadNextGeneric() (any, bool, int64, error).
 //
 // A interface retornada pela funcao ReadNextGeneric deve possuir:
 // GetField(fieldName string) string.

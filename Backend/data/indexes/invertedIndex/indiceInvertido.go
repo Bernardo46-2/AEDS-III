@@ -1,8 +1,12 @@
 package invertedIndex
 
 import (
+	"encoding/gob"
 	"fmt"
+	"os"
+	"path/filepath"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -17,7 +21,7 @@ type InvertedIndex struct {
 }
 
 type Reader interface {
-	ReadNextGeneric() (interface{}, bool, int64, error)
+	ReadNextGeneric() (any, bool, int64, error)
 }
 
 type IndexableObject interface {
@@ -109,13 +113,54 @@ func (ii *InvertedIndex) RemoveHighFrequencyTerms(percentageThreshold float64) {
 		frequencyRatio := float64(wordFrequency) / float64(totalFrequency)
 
 		if frequencyRatio > percentageThreshold {
-			fmt.Printf("Removendo termo '%s' com frequência total %d (frequência relativa: %f)\n", word, wordFrequency, frequencyRatio)
+			// fmt.Printf("Removendo termo '%s' com frequência total %d (frequência relativa: %f)\n", word, wordFrequency, frequencyRatio)
 			delete(ii.Index, word)
 		}
 	}
 }
 
-func CreateInvertedIndex(controler Reader, fieldToIndex string) (InvertedIndex, error) {
+func (ii *InvertedIndex) writeFile(path string, field string) error {
+	filePath := filepath.Join(path, "invertedIndex")
+	os.MkdirAll(filePath, 0755)
+	fieldPath := filepath.Join(filePath, field+".bin")
+	file, err := os.Create(fieldPath)
+	if err != nil {
+		return fmt.Errorf("error creating file: %s", err)
+	}
+	defer file.Close()
+
+	enc := gob.NewEncoder(file)
+	err = enc.Encode(ii)
+	if err != nil {
+		return fmt.Errorf("error encoding: %s", err)
+	}
+
+	return nil
+}
+
+func readFile(field string, path string) *InvertedIndex {
+	fieldPath := filepath.Join(path, "invertedIndex", field+".bin")
+	file, err := os.Open(fieldPath)
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		return nil
+	}
+	defer file.Close()
+
+	var invIndex InvertedIndex
+	dec := gob.NewDecoder(file)
+	err = dec.Decode(&invIndex)
+	if err != nil {
+		fmt.Println("Error decoding:", err)
+		return nil
+	}
+
+	return &invIndex
+}
+
+// ======================================= Crud ======================================== //
+
+func New(controler Reader, fieldToIndex string, path string) error {
 	invIndex := NewInvertedIndex()
 
 	for {
@@ -126,8 +171,7 @@ func CreateInvertedIndex(controler Reader, fieldToIndex string) (InvertedIndex, 
 
 		obj, ok := objInterface.(IndexableObject)
 		if !ok {
-			fmt.Printf("%+v", objInterface)
-			return NewInvertedIndex(), fmt.Errorf("failed to convert object to IndexableObject")
+			return fmt.Errorf("failed to convert object to IndexableObject\n%+v", objInterface)
 		}
 
 		if !isDead {
@@ -139,7 +183,49 @@ func CreateInvertedIndex(controler Reader, fieldToIndex string) (InvertedIndex, 
 	}
 
 	invIndex.RemoveHighFrequencyTerms(0.3)
-	invIndex.Print()
 
-	return invIndex, nil
+	return invIndex.writeFile(path, fieldToIndex)
+}
+
+func Read(path string, field string, keys ...string) (documentIDs []int64) {
+	invIndex := readFile(field, path)
+
+	rawKeys := strings.Join(keys, " ")
+	token := Tokenize(rawKeys)
+
+	// Armazenar a soma das frequências para cada DocumentID
+	frequencies := make(map[int64]int)
+
+	for _, key := range token {
+		postings, found := invIndex.Index[key]
+		if found {
+			for _, posting := range postings {
+				frequencies[posting.DocumentID] += posting.Frequency
+			}
+		}
+	}
+
+	// Criar um slice de DocumentFrequency e preencher com DocumentID e soma das frequências
+	type DocumentFrequency struct {
+		DocumentID int64
+		Frequency  int
+	}
+
+	docFrequencies := make([]DocumentFrequency, 0, len(frequencies))
+	for id, freq := range frequencies {
+		docFrequencies = append(docFrequencies, DocumentFrequency{DocumentID: id, Frequency: freq})
+	}
+
+	// Ordenar o slice de DocumentFrequency por frequência em ordem decrescente
+	sort.Slice(docFrequencies, func(i, j int) bool {
+		return docFrequencies[i].Frequency > docFrequencies[j].Frequency
+	})
+
+	// Extrair apenas os IDs dos documentos e retornar
+	documentIDs = make([]int64, len(docFrequencies))
+	for i, docFreq := range docFrequencies {
+		documentIDs[i] = docFreq.DocumentID
+	}
+
+	return documentIDs
 }
