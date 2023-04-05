@@ -1,4 +1,4 @@
-package ordenacao
+package sorts
 
 import (
 	"encoding/binary"
@@ -65,7 +65,7 @@ func divideArquivoEmBlocosVariaveis(caminhoEntrada string, tamanhoBloco int64, d
 			tamanhoRegistro, lapide, _ := binManager.TamanhoProxRegistro(file, ponteiroAtual)
 
 			// Se nao tem lapide le o registro e salva, se nao pula
-			if lapide != 0 {
+			if lapide == 0 {
 				// Se nao couber no bloco finaliza e da append, se nao le e adiciona ao slice atual
 				if tamBlocoAtual+tamanhoRegistro > tamanhoBloco {
 					file.Seek(-8, io.SeekCurrent)

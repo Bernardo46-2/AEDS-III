@@ -401,6 +401,12 @@ func (c *ControleLeitura) ReadNextGeneric() (any, bool, int64, error) {
 	return registro.Pokemon, c.RegistroAtual.IsDead(), c.RegistroAtual.Endereco, nil
 }
 
+func (c *ControleLeitura) Reset() {
+	c.Arquivo.Seek(4, io.SeekStart)
+	c.RegistrosLidos = 0
+	c.RegistroAtual = nil
+}
+
 func (r *Registro) IsDead() bool {
 	return r.Lapide == 1
 }

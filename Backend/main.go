@@ -53,40 +53,51 @@ func main() {
 		defer controler.Close()
 		hashing.StartHashFile(controler, 8, binManager.FILES_PATH, "hashIndex")
 	case "4", "btree":
-		btree.StartBTreeFile()
+		btree.StartBTreeFile(binManager.FILES_PATH)
 	case "5", "criarIndiceInvertido":
-		c1, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
-		invertedIndex.New(c1, "nome", binManager.FILES_PATH)
-		c1.Close()
-		c2, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
-		invertedIndex.New(c2, "nome_jap", binManager.FILES_PATH)
-		c2.Close()
-		c3, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
-		invertedIndex.New(c3, "especie", binManager.FILES_PATH)
-		c3.Close()
-		c4, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
-		invertedIndex.New(c4, "tipo", binManager.FILES_PATH)
-		c4.Close()
-		c5, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
-		invertedIndex.New(c5, "descricao", binManager.FILES_PATH)
-		c5.Close()
+
 	case "6", "lerMultiplosIndiceInvertido":
 		var strs []string
+		var line string
 		scanner := bufio.NewScanner(os.Stdin)
-		for scanner.Scan() {
-			line := scanner.Text()
-			if line == "exit" {
-				break
-			}
-			words := strings.Fields(line)
-			strs = append(strs, words...)
-		}
 
-		ids := invertedIndex.Read(binManager.FILES_PATH, "descricao", strs...)
-		for i := 0; i < len(ids); i++ {
-			pokeAddress, _ := hashing.HashRead(ids[i], binManager.FILES_PATH, "hashIndex")
+		fmt.Printf("nome\n>")
+		scanner.Scan()
+		line = scanner.Text()
+		strs = strings.Fields(line)
+		nome := invertedIndex.Read(binManager.FILES_PATH, "nome", strs...)
+
+		fmt.Printf("nomeJap\n>")
+		scanner.Scan()
+		line = scanner.Text()
+		strs = strings.Fields(line)
+
+		nomeJap := invertedIndex.Read(binManager.FILES_PATH, "nomeJap", strs...)
+
+		fmt.Printf("especie\n>")
+		scanner.Scan()
+		line = scanner.Text()
+		strs = strings.Fields(line)
+		especie := invertedIndex.Read(binManager.FILES_PATH, "especie", strs...)
+
+		fmt.Printf("tipo\n>")
+		scanner.Scan()
+		line = scanner.Text()
+		strs = strings.Fields(line)
+		tipo := invertedIndex.Read(binManager.FILES_PATH, "tipo", strs...)
+
+		fmt.Printf("descricao\n>")
+		scanner.Scan()
+		line = scanner.Text()
+		strs = strings.Fields(line)
+		descricao := invertedIndex.Read(binManager.FILES_PATH, "descricao", strs...)
+
+		scoredDocuments := invertedIndex.Merge(nome, nomeJap, especie, tipo, descricao)
+
+		for _, scoredDocument := range scoredDocuments {
+			pokeAddress, _ := hashing.HashRead(scoredDocument.DocumentID, binManager.FILES_PATH, "hashIndex")
 			tmpPoke := binManager.ReadTargetPokemon(pokeAddress)
-			fmt.Printf("ID = %3d | Nome = %s | descricao = %s\n", tmpPoke.Numero, tmpPoke.Nome, tmpPoke.Descricao)
+			fmt.Printf("ID = %3d  |  Nome = %30s  |  compatibilidade = %d\n", tmpPoke.Numero, tmpPoke.Nome, scoredDocument.Score)
 		}
 	default:
 		fmt.Println("Opção inválida")

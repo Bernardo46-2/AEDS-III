@@ -1,4 +1,4 @@
-package ordenacao
+package sorts
 
 import (
 	"encoding/binary"
@@ -40,7 +40,8 @@ func IntercalacaoPorSubstituicao() {
 	pokeHeap := make([]heapNode, 7)
 	os.Mkdir(TMP_DIR_PATH, 0755)
 
-	for i := 0; i < 7 && i < numRegistros; {
+	var lidos int
+	for i := 0; i < 7 && i < numRegistros; lidos++ {
 		inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
 		pokemonAtual, _, _ := binManager.ReadRegistro(file, inicioRegistro)
 		if pokemonAtual.Numero != -1 {
@@ -58,9 +59,8 @@ func IntercalacaoPorSubstituicao() {
 	// Reserva o espaço de contagem de registros
 	binary.Write(arquivoTemp, binary.LittleEndian, utils.IntToBytes(int32(0)))
 
-	// Inicializa o heap com 7 elementos
 	peso := 0
-	for i := 0; i < (numRegistros - 7); i++ {
+	for i := 0; i < (numRegistros - lidos); i++ {
 		// Guarda a posicao de inicio do registro e verifica sua lapide
 		inicioRegistro, _ := file.Seek(0, io.SeekCurrent)
 		_, lapide, _ := binManager.TamanhoProxRegistro(file, inicioRegistro)
@@ -68,7 +68,7 @@ func IntercalacaoPorSubstituicao() {
 
 		// Se nao possuir lapide lê o registro e adiciona ao heap,
 		// depois retira do tipo do heap e adiciona ao arquivo
-		if lapide != 0 {
+		if lapide == 0 {
 			// pega a cabeca do heap
 			pokeTmp := pokeHeap[0].Pokemon
 			pokeTmp.CalculateSize()

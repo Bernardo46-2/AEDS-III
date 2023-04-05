@@ -18,44 +18,55 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-2 p-0 bgd-dark pre-sidebar sidebar-shadow" id="sidebar">
-                <div class="sidebar">
+                <div class="imagemLateral">
                     <img class="logo" src="imagens/pngegg.png" alt="Descrição da imagem">
+                </div>
+                <div class="sidebar scrollbar2">
                     <button id="meu-botao3" data-bs-toggle="modal" data-bs-target="#modalPage" hidden>Botão Oculto</button>
-                    <button type="button" class="btn btn-primary btn-Pikachu btn-sidebar" id="All"><span></span><span></span><span></span><span></span>Gotta Catch 'Em All!</button>
-                    <button type="button" class="btn btn-primary btn-Bulbasaur btn-sidebar" id="Registrar"><span></span><span></span><span></span><span></span>Registrar</button>
-                    <form id="actual-pesquisar-form">
-                        <button type="button" class="btn btn-primary btn-Charmander btn-sidebar" id="Pesquisar"><span></span><span></span><span></span><span></span>Pesquisar
-                            <input type="number" class="displayNone search-in-button form-control" id="pesquisar-form"/>
+                    <button type="button" class="btn btn-Pikachu btn-sidebar" id="All"><span></span><span></span><span></span><span></span>Gotta Catch 'Em All!</button>
+                    <button type="button" class="btn btn-Bulbasaur btn-sidebar" id="Create"><span></span><span></span><span></span><span></span>Registrar</button>
+                    <form id="actual-search-form">
+                        <button type="button" class="btn btn-Charmander btn-sidebar" id="Search"><span></span><span></span><span></span><span></span>Pesquisar
+                            <input type="number" class="displayNone search-in-button form-control" id="search-form"/>
                         </button>
                     </form>
-                    <form id="actual-atualizar-form">
-                        <button type="button" class="btn btn-primary btn-Squirtle btn-sidebar" id="Atualizar"><span></span><span></span><span></span><span></span>Atualizar
-                            <input type="number" class="displayNone update-in-button form-control" id="atualizar-form"/>
+                    <form id="actual-update-form">
+                        <button type="button" class="btn btn-Squirtle btn-sidebar" id="Update"><span></span><span></span><span></span><span></span>Atualizar
+                            <input type="number" class="displayNone update-in-button form-control" id="update-form"/>
                         </button>
                     </form>
-                    <form id="actual-deletar-form">
-                        <button type="button" class="btn btn-primary btn-Eevee btn-sidebar" id="Deletar"><span></span><span></span><span></span><span></span>Deletar
-                            <input type="number" class="displayNone delete-in-button form-control" id="deletar-form"/>
+                    <form id="actual-remove-form">
+                        <button type="button" class="btn btn-Eevee btn-sidebar" id="Remove"><span></span><span></span><span></span><span></span>Deletar
+                            <input type="number" class="displayNone remove-in-button form-control" id="remove-form"/>
                         </button>
                     </form>
-                    <button type="button" class="btn btn-primary btn-Jigglypuff btn-sidebar" id="IntercalacaoComum"><span></span><span></span><span></span><span></span>Intercalacao Comum</button>
-                    <button type="button" class="btn btn-primary btn-Psyduck btn-sidebar" id="IntercalacaoVariavel"><span></span><span></span><span></span><span></span>Intercalacao Variavel</button>
-                    <button type="button" class="btn btn-primary btn-Magikarp btn-sidebar" id="SelecaoPorSubstituicao"><span></span><span></span><span></span><span></span>Selecao Por Substituicao</button>
-                    <button type="button" class="btn btn-primary btn-Geodude btn-sidebar" id="ImportarCSV"><span></span><span></span><span></span><span></span>Importar CSV</button>
-                    <button type="button" class="btn btn-primary btn-Gengar btn-sidebar" id="Ajuda"><span></span><span></span><span></span><span></span>Ajuda</button>
-                    <!-- <button type="button" class="btn btn-primary btn-Gengar btn-sidebar" id="Arvore B"><span></span><span></span><span></span><span></span>Arvore B</button> -->
-                    <!-- <button type="button" class="btn btn-primary btn-Gengar btn-sidebar" id="Arvore B+"><span></span><span></span><span></span><span></span>Arvore B+</button> -->
-                    <!-- <button type="button" class="btn btn-primary btn-Gengar btn-sidebar" id="Arvore B*"><span></span><span></span><span></span><span></span>Arvore B*</button> -->
-                    <button type="button" class="btn btn-primary btn-Vaporeon btn-sidebar" id="Hash_dinamica"><span></span><span></span><span></span><span></span>Hash dinamica</button>
-                    <!--<button type="button" class="btn btn-primary btn-Abra btn-sidebar"><span></span><span></span><span></span><span></span>Abra</button>-->
-                    <!--<button type="button" class="btn btn-primary btn-Machop btn-sidebar"><span></span><span></span><span></span><span></span>Machop</button>-->
-                    <!--<button type="button" class="btn btn-primary btn-Jolteon btn-sidebar"><span></span><span></span><span></span><span></span>Jolteon</button>-->
-                    <!--<button type="button" class="btn btn-primary btn-Vaporeon btn-sidebar"><span></span><span></span><span></span><span></span>Vaporeon</button>-->
-                    <div class="bottom-section bgd-dark">
-                        <div class="divisoria"></div>
-                        <p>Marcos Lommez</p>
-                        <p>Bernardo Marques</p>
+                    <div id="ordenarDropdown">
+                        <button id="Ordenar" class="btn btn-Vaporeon ordenar-button-principal btn-sidebar" type="button"><span></span><span></span><span></span><span></span>
+                        Ordenação <symbol>▼</symbol>
+                        </button>
+                        <button type="button" class="dropdown-item ordenar-buttons btn-Vaporeon2 btn btn-dropdown" id="Ordenar0"><span></span><span></span><span></span><span></span>Comum</button>
+                        <button type="button" class="dropdown-item ordenar-buttons btn-Vaporeon2 btn btn-dropdown" id="Ordenar1"><span></span><span></span><span></span><span></span>Variavel</button>
+                        <button type="button" class="dropdown-item ordenar-buttons btn-Vaporeon2 btn btn-dropdown" id="Ordenar2"><span></span><span></span><span></span><span></span>Substituição</button>
                     </div>
+                    <div id="indexDropdown">
+                        <button id="Index" class="btn btn-Gengar index-button-principal btn-sidebar" type="button"><span></span><span></span><span></span><span></span>
+                        Indexação <symbol>▼</symbol>
+                        </button>
+                        <button type="button" class="dropdown-item index-buttons btn-Gengar2 btn btn-dropdown" id="Index0"><span></span><span></span><span></span><span></span>Sequencial</button>
+                        <button type="button" class="dropdown-item index-buttons btn-Gengar2 btn btn-dropdown" id="Index1"><span></span><span></span><span></span><span></span>Hashing</button>
+                        <button type="button" class="dropdown-item index-buttons btn-Gengar2 btn btn-dropdown" id="Index2"><span></span><span></span><span></span><span></span>Arvore B</button>
+                    </div>
+                    <button type="button" class="btn btn-Abra btn-sidebar" id="ImportarDados"><span></span><span></span><span></span><span></span>Carregar Dados</button>
+                    <button type="button" class="btn btn-Gengar btn-sidebar" id="Ajuda"><span></span><span></span><span></span><span></span>Extras</button>
+                    <!--<button type="button" class="btn btn-Abra btn-sidebar">Abra</button>-->
+                    <!--<button type="button" class="btn btn-Machop btn-sidebar">Machop</button>-->
+                    <!--<button type="button" class="btn btn-Jolteon btn-sidebar">Jolteon</button>-->
+                    <!--<button type="button" class="btn btn-Vaporeon btn-sidebar">Vaporeon</button>-->
+                </div>
+                <div class="bottom-section bgd-dark sidebar2">
+                    <div class="divisoria"></div>
+                    <p>Marcos Lommez</p>
+                    <p>Bernardo Marques</p>
                 </div>
             </div>
 
@@ -95,7 +106,6 @@
         </div>
     </div>
 
-    <script src="./app.js"></script>
     <script src="./req.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </body>

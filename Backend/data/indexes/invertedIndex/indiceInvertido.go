@@ -17,7 +17,19 @@ type Posting struct {
 }
 
 type InvertedIndex struct {
-	Index map[string][]Posting
+	Index           map[string][]Posting
+	removeThreshold float64
+}
+
+type ScoredDocument struct {
+	DocumentID int64
+	Score      int
+}
+
+type Element struct {
+	Value     int64
+	Frequency int
+	Order     []int
 }
 
 type Reader interface {
@@ -30,7 +42,8 @@ type IndexableObject interface {
 
 func NewInvertedIndex() InvertedIndex {
 	return InvertedIndex{
-		Index: make(map[string][]Posting),
+		Index:           make(map[string][]Posting),
+		removeThreshold: 0,
 	}
 }
 
@@ -94,6 +107,9 @@ func (ii *InvertedIndex) Print() {
 }
 
 func (ii *InvertedIndex) RemoveHighFrequencyTerms(percentageThreshold float64) {
+	if percentageThreshold == 0 {
+		return
+	}
 	percentageThreshold /= 100
 	// 1. Calcule a frequência total de todas as palavras no índice
 	totalFrequency := 0
@@ -160,7 +176,7 @@ func readFile(field string, path string) *InvertedIndex {
 
 // ======================================= Crud ======================================== //
 
-func New(controler Reader, fieldToIndex string, path string) error {
+func New(controler Reader, fieldToIndex string, path string, removeFrequency float64) error {
 	invIndex := NewInvertedIndex()
 
 	for {
@@ -182,12 +198,65 @@ func New(controler Reader, fieldToIndex string, path string) error {
 		}
 	}
 
-	invIndex.RemoveHighFrequencyTerms(0.3)
+	invIndex.removeThreshold = removeFrequency
+	invIndex.RemoveHighFrequencyTerms(removeFrequency)
 
 	return invIndex.writeFile(path, fieldToIndex)
 }
 
-func Read(path string, field string, keys ...string) (documentIDs []int64) {
+func Merge(scoredDocumentsLists ...[]ScoredDocument) []ScoredDocument {
+	scoreMap := make(map[int64]int)
+
+	// Soma os scores dos documentos em todas as listas
+	for _, scoredDocuments := range scoredDocumentsLists {
+		for _, scoredDocument := range scoredDocuments {
+			scoreMap[scoredDocument.DocumentID] += scoredDocument.Score
+		}
+	}
+
+	// Cria um slice com os documentos e seus scores acumulados
+	mergedScoredDocuments := make([]ScoredDocument, 0, len(scoreMap))
+	for documentID, score := range scoreMap {
+		mergedScoredDocuments = append(mergedScoredDocuments, ScoredDocument{DocumentID: documentID, Score: score})
+	}
+
+	// Ordena o slice de acordo com a pontuação em ordem decrescente
+	sort.Slice(mergedScoredDocuments, func(i, j int) bool {
+		return mergedScoredDocuments[i].Score > mergedScoredDocuments[j].Score
+	})
+
+	return mergedScoredDocuments
+}
+
+func Create(myObj any, path string, fields ...string) error {
+	obj, ok := myObj.(IndexableObject)
+	if !ok {
+		return fmt.Errorf("failed to convert object to IndexableObject")
+	}
+
+	id, _ := strconv.ParseInt(obj.GetField("id"), 10, 64)
+
+	for _, field := range fields {
+		// Ler o índice invertido atual do arquivo
+		invIndex := readFile(field, path)
+
+		// Adicionar o novo documento ao índice invertido
+		content := obj.GetField(field)
+		words := Tokenize(content)
+		invIndex.AddDocument(id, words)
+
+		// Escrever o índice invertido atualizado de volta ao arquivo
+		err := invIndex.writeFile(path, field)
+		if err != nil {
+			fmt.Printf("error creating field '%s': %v", field, err)
+			return fmt.Errorf("error creating field '%s': %v", field, err)
+		}
+	}
+
+	return nil
+}
+
+func Read(path string, field string, keys ...string) (scoredDocuments []ScoredDocument) {
 	invIndex := readFile(field, path)
 
 	rawKeys := strings.Join(keys, " ")
@@ -205,27 +274,62 @@ func Read(path string, field string, keys ...string) (documentIDs []int64) {
 		}
 	}
 
-	// Criar um slice de DocumentFrequency e preencher com DocumentID e soma das frequências
-	type DocumentFrequency struct {
-		DocumentID int64
-		Frequency  int
-	}
-
-	docFrequencies := make([]DocumentFrequency, 0, len(frequencies))
+	// Criar um slice de ScoredDocument e preencher com DocumentID e soma das frequências
+	scoredDocuments = make([]ScoredDocument, 0, len(frequencies))
 	for id, freq := range frequencies {
-		docFrequencies = append(docFrequencies, DocumentFrequency{DocumentID: id, Frequency: freq})
+		scoredDocuments = append(scoredDocuments, ScoredDocument{DocumentID: id, Score: freq})
 	}
 
-	// Ordenar o slice de DocumentFrequency por frequência em ordem decrescente
-	sort.Slice(docFrequencies, func(i, j int) bool {
-		return docFrequencies[i].Frequency > docFrequencies[j].Frequency
+	// Ordenar o slice de ScoredDocument por score em ordem decrescente
+	sort.Slice(scoredDocuments, func(i, j int) bool {
+		return scoredDocuments[i].Score > scoredDocuments[j].Score
 	})
 
-	// Extrair apenas os IDs dos documentos e retornar
-	documentIDs = make([]int64, len(docFrequencies))
-	for i, docFreq := range docFrequencies {
-		documentIDs[i] = docFreq.DocumentID
+	return scoredDocuments
+}
+
+func Update(obj IndexableObject, path string, fields ...string) error {
+	id, _ := strconv.ParseInt(obj.GetField("id"), 10, 64)
+
+	for _, field := range fields {
+		// Ler o índice invertido atual do arquivo
+		invIndex := readFile(field, path)
+
+		// Remover o documento existente do índice invertido
+		invIndex.RemoveDocument(id)
+
+		// Tokenizar o novo conteúdo do campo e adicionar o novo documento ao índice invertido
+		content := obj.GetField(field)
+		words := Tokenize(content)
+		invIndex.AddDocument(id, words)
+
+		// Escrever o índice invertido atualizado de volta ao arquivo
+		invIndex.RemoveHighFrequencyTerms(invIndex.removeThreshold)
+		err := invIndex.writeFile(path, field)
+		if err != nil {
+			return fmt.Errorf("error updating field '%s': %v", field, err)
+		}
 	}
 
-	return documentIDs
+	return nil
+}
+
+func Delete(obj IndexableObject, path string, fields ...string) error {
+	id, _ := strconv.ParseInt(obj.GetField("id"), 10, 64)
+
+	for _, field := range fields {
+		// Ler o índice invertido atual do arquivo
+		invIndex := readFile(field, path)
+
+		// Remover o documento existente do índice invertido
+		invIndex.RemoveDocument(id)
+
+		// Escrever o índice invertido atualizado de volta ao arquivo
+		err := invIndex.writeFile(path, field)
+		if err != nil {
+			return fmt.Errorf("error deleting field '%s': %v", field, err)
+		}
+	}
+
+	return nil
 }

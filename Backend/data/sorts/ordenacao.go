@@ -1,4 +1,4 @@
-package ordenacao
+package sorts
 
 import "github.com/Bernardo46-2/AEDS-III/data/binManager"
 
@@ -10,5 +10,5 @@ type SortFunc func()
 var SortingFunctions = []SortFunc{
 	IntercalacaoBalanceadaComum,
 	IntercalacaoBalanceadaVariavel,
-	IntercalacaoBalanceadaVariavel,
+	IntercalacaoPorSubstituicao,
 }
