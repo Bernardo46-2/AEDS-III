@@ -547,16 +547,6 @@ func (b *BTree) borrowFromParent(parent *BTreeNode, sibling *BTreeNode, childInd
     return flag
 }
 
-// Function that takes the value from sibling, passes it to
-// parent and takes the value from parent and replaces the
-// value to be removed from node
-// 
-// parent - parent node that manages all the actions
-// sibling - sibling node to take value from
-// childIndex - where is the child located on parent node
-// left - boolean indicating if sibling is from the left or right
-// 
-// returns - removed element from child node
 func (b *BTree) borrowFromSibling(parent *BTreeNode, sibling *BTreeNode, childIndex int64, left bool) {
     var k *Key
     child := b.readNode(childIndex)
@@ -670,12 +660,17 @@ func (b *BTree) remove(nodeAddress int64 , id int64) (*Key, int, int64) {
 func (b *BTree) Remove(id int64) *Key {
     k, flag, childIndex := b.remove(b.root, id)
     
-    if FLAG3 & flag != 0 {
+    if FLAG2 & flag != 0 {
+        root := b.readNode(b.root)
+        b.tryBorrowKey(root, childIndex)
+        root.write(b.nodesFile)
+    } else if FLAG3 & flag != 0 {
         root := b.readNode(b.root)
         node := b.readNode(root.child[childIndex])
         maxLeft := node.findMax()
-        _, flag, _ = b.remove(root.address, maxLeft.id)
+        b.remove(root.address, maxLeft.id)
         b.replace(&maxLeft, k, root)
+        root.write(b.nodesFile)
     } else if FLAG4 & flag != 0 {
         root := b.readNode(b.root)
         b.root = root.child[0]
