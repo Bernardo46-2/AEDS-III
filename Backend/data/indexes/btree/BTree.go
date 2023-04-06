@@ -27,17 +27,17 @@ const BTREE_NODES_FILE string = "BTreeNodes.dat"
 
 // Bit-Flags used for removing an element from the B Tree
 const (
-    // Value removed without any complications
-    FLAG1 = 1 << 0
-    
-    // Node has less than 50% ocupation
-    FLAG2 = 1 << 1
-    
-    // Sibling node can't lend key
-    FLAG3 = 1 << 2
-    
-    // Empty node
-    FLAG4 = 1 << 3
+	// Value removed without any complications
+	FLAG1 = 1 << 0
+
+	// Node has less than 50% ocupation
+	FLAG2 = 1 << 1
+
+	// Sibling node can't lend key
+	FLAG3 = 1 << 2
+
+	// Empty node
+	FLAG4 = 1 << 3
 )
 
 // ====================================== Structs ====================================== //
@@ -97,9 +97,9 @@ func newNode(order int, leaf int64) *BTreeNode {
 }
 
 func (n *BTreeNode) write(file *os.File) {
-    if n.address == -1 {
-        n.address, _ = file.Seek(0, io.SeekEnd)
-    } else {
+	if n.address == -1 {
+		n.address, _ = file.Seek(0, io.SeekEnd)
+	} else {
 		file.Seek(n.address, io.SeekStart)
 	}
 
@@ -195,7 +195,7 @@ func NewBTree(order int, dir string) (*BTree, error) {
 
 func ReadBTree(dir string) *BTree {
 	file, _ := os.ReadFile(dir + BTREE_FILE)
-	nodesFile, _ := os.OpenFile(dir + BTREE_NODES_FILE, os.O_RDWR|os.O_CREATE, 0644)
+	nodesFile, _ := os.OpenFile(dir+BTREE_NODES_FILE, os.O_RDWR|os.O_CREATE, 0644)
 	root, ptr := utils.BytesToInt64(file, 0)
 	order, ptr := utils.BytesToInt64(file, ptr)
 	len, _ := utils.BytesToInt64(file, ptr)
@@ -214,17 +214,17 @@ func ReadBTree(dir string) *BTree {
 
 func (b *BTree) Close() {
 	file, _ := os.Create(b.file)
-    
+
 	binary.Write(file, binary.LittleEndian, b.root)
 	binary.Write(file, binary.LittleEndian, int64(b.order))
 	binary.Write(file, binary.LittleEndian, int64(len(b.emptyNodes)))
-    
+
 	for i := 0; i < len(b.emptyNodes); i++ {
-        binary.Write(file, binary.LittleEndian, b.emptyNodes[i])
+		binary.Write(file, binary.LittleEndian, b.emptyNodes[i])
 	}
 
-    file.Close()
-    b.nodesFile.Close()
+	file.Close()
+	b.nodesFile.Close()
 }
 
 func (b *BTree) nodeSize() int64 {
@@ -238,10 +238,10 @@ func (b *BTree) nodeSize() int64 {
 }
 
 func (b *BTree) readNode(address int64) *BTreeNode {
-    if address == -1 {
-        return nil
-    }
-    
+	if address == -1 {
+		return nil
+	}
+
 	b.nodesFile.Seek(address, io.SeekStart)
 	buf := make([]byte, b.nodeSize())
 	b.nodesFile.Read(buf)
@@ -357,17 +357,16 @@ func (b *BTree) printFile() {
 	fmt.Printf("\n\n")
 }
 
-
 // ====================================== Tests ====================================== //
 
 func StartBTreeFile() {
-    dir := "./data/files/btree/"
+	dir := "./data/files/btree/"
 	order := 8
 	tree, _ := NewBTree(order, dir)
 	reader, err := binManager.InicializarControleLeitura(binManager.BIN_FILE)
 
-    // n := 50
-    n := int(reader.TotalRegistros)
+	// n := 300
+	n := int(reader.TotalRegistros)
 
 	for i := 0; i < n && err == nil; i++ {
 		err = reader.ReadNext()
@@ -378,18 +377,17 @@ func StartBTreeFile() {
 	}
 
 	// tree.printFile()
-    tree.Close()
-    
+	tree.Close()
+
 	tree = ReadBTree(dir)
-    
-    for i := 1; i <= n - 10; i++ {
-        fmt.Println(tree.Remove(int64(i)))
-    }
-    
-    tree.printFile()
+
+	for i := 1; i <= n-10; i++ {
+		fmt.Println(tree.Remove(int64(i)))
+	}
+
+	tree.printFile()
 	tree.Close()
 }
-
 
 // ====================================== Remove ====================================== //
 
@@ -411,7 +409,7 @@ Flags:
 
 Flag actions:
     1 - just return flag
-    2 - check if sibling can lend key. 
+    2 - check if sibling can lend key.
         if so   - rotate elements
         if no   - concat 2 siblings and get key from parent
         finally - check for errors and return flag
@@ -421,246 +419,248 @@ Flag actions:
 */
 
 func (n *BTreeNode) canLendKey() bool {
-    return n.numberOfKeys - 1 >= int64(len(n.keys) / 2)
+	return n.numberOfKeys >= int64(len(n.keys)/2)
 }
 
 func (n *BTreeNode) removeKeyLeaf(index int64) (*Key, int64) {
-    if index == -1 {
-        index = n.numberOfKeys - 1
-    }
+	if index == -1 {
+		index = n.numberOfKeys - 1
+	}
 
-    k := n.keys[index]
-    leftChild := n.child[index]
-    
-    for i := index; i < n.numberOfKeys; i++ {
-        n.child[i] = n.child[i + 1]
-        n.keys[i] = n.keys[i + 1]
-    }
-    n.keys[n.numberOfKeys - 1] = newEmptyKey()
-    n.child[n.numberOfKeys] = n.child[n.numberOfKeys + 1]
+	k := n.keys[index]
+	leftChild := n.child[index]
 
-    n.numberOfKeys--
+	for i := index; i < n.numberOfKeys; i++ {
+		n.child[i] = n.child[i+1]
+		n.keys[i] = n.keys[i+1]
+	}
+	n.keys[n.numberOfKeys-1] = newEmptyKey()
+	n.child[n.numberOfKeys] = n.child[n.numberOfKeys+1]
 
-    return &k, leftChild
+	n.numberOfKeys--
+
+	return &k, leftChild
 }
 
 func (n *BTreeNode) removeKeyNonLeaf(index int64) *Key {
-    if index == -1 {
-        index = n.numberOfKeys - 1
-    }
+	if index == -1 {
+		index = n.numberOfKeys - 1
+	}
 
-    return &n.keys[index]
+	return &n.keys[index]
 }
 
 func (n *BTreeNode) findMax() Key {
-    return n.keys[n.numberOfKeys - 1]
+	return n.keys[n.numberOfKeys-1]
 }
 
 // receive node and key index
 // go to key left and start iterating
 func (b *BTree) maxLeft(node *BTreeNode, index int64, k *Key) Key {
-    node = b.readNode(node.child[index])
-    
-    for node.leaf == 0 {
-        node = b.readNode(node.child[node.numberOfKeys])
-    }
-    
-    return node.findMax()
+	node = b.readNode(node.child[index])
+
+	for node.leaf == 0 {
+		node = b.readNode(node.child[node.numberOfKeys])
+	}
+
+	return node.findMax()
 }
 
 func (b *BTree) replace(new *Key, old *Key, node *BTreeNode) {
-    i := node.numberOfKeys - 1
+	i := node.numberOfKeys - 1
 	for i > 0 && node.keys[i].id > old.id {
 		i--
 	}
 
-    if node.keys[i].id == old.id {
-        node.keys[i] = *new
-        node.write(b.nodesFile)
-    } else if old.id < node.keys[i].id {
-        b.replace(new, old, b.readNode(node.child[i]))
-    } else {
-        b.replace(new, old, b.readNode(node.child[i]))
-    }
+	if node.keys[i].id == old.id {
+		node.keys[i] = *new
+		node.write(b.nodesFile)
+	} else if old.id < node.keys[i].id {
+		b.replace(new, old, b.readNode(node.child[i]))
+	} else {
+		b.replace(new, old, b.readNode(node.child[i]))
+	}
 }
 
 func (b *BTree) concatNodes(left *BTreeNode, right *BTreeNode, key *Key) *BTreeNode {
-    left.keys[left.numberOfKeys] = *key
-    left.numberOfKeys++
+	left.keys[left.numberOfKeys] = *key
+	left.numberOfKeys++
+	for i := int64(0); i < right.numberOfKeys; i++ {
+		left.keys[left.numberOfKeys] = right.keys[i]
+		left.child[left.numberOfKeys] = right.child[i]
+		left.numberOfKeys++
+		right.keys[i] = newEmptyKey()
+		right.child[i] = -1
+	}
+	left.child[left.numberOfKeys] = right.child[right.numberOfKeys]
+	right.child[right.numberOfKeys] = -1
+	right.numberOfKeys = 0
 
-    for i := int64(0); i < right.numberOfKeys; i++ {
-        left.keys[left.numberOfKeys] = right.keys[i]
-        left.child[left.numberOfKeys] = right.child[i]
-        left.numberOfKeys++
-        right.keys[i] = newEmptyKey()
-        right.child[i] = -1
-    }
-    left.child[left.numberOfKeys] = right.child[right.numberOfKeys]
-    right.child[right.numberOfKeys] = -1
+	left.write(b.nodesFile)
+	right.write(b.nodesFile)
 
-    left.write(b.nodesFile)
-    right.write(b.nodesFile)
-
-    return left
+	return left
 }
 
 // remember to set the node as empty and place it in the b.emptyNodes list
 func (b *BTree) borrowFromParent(node *BTreeNode, l *BTreeNode, r *BTreeNode, keyIndex int64) int {
-    flag := 0
+	flag := 0
 
-    if node.numberOfKeys == 1 {
-        flag = FLAG4
-    } else if node.canLendKey() {
-        flag = FLAG1
-    } else {
-        flag = FLAG2
-    }
+	if node.numberOfKeys == 1 {
+		flag = FLAG4
+	} else if node.canLendKey() {
+		flag = FLAG1
+	} else {
+		flag = FLAG2
+	}
 
-    b.concatNodes(l, r, &node.keys[keyIndex])
+	b.concatNodes(l, r, &node.keys[keyIndex])
 
-    for i := keyIndex; i < node.numberOfKeys; {
-        node.keys[i] = node.keys[i + 1]
-        i++
-        node.child[i] = node.child[i + 1]
-    }
+	for i := keyIndex; i < node.numberOfKeys; {
+		node.keys[i] = node.keys[i+1]
+		i++
+		node.child[i] = node.child[i+1]
+	}
 
-    node.numberOfKeys--
-    node.write(b.nodesFile)
-    
-    return flag
+	node.numberOfKeys--
+	node.write(b.nodesFile)
+
+	return flag
 }
 
 func (b *BTree) borrowFromSibling(parent *BTreeNode, left *BTreeNode, right *BTreeNode, index int64) {
-    k, child := right.removeKeyLeaf(0)
-    
-    left.keys[left.numberOfKeys] = parent.keys[index]
-    left.numberOfKeys++
-    left.child[left.numberOfKeys] = child
+	k, child := right.removeKeyLeaf(0)
 
-    parent.keys[index] = *k
-    
-    parent.write(b.nodesFile)
-    left.write(b.nodesFile)
-    right.write(b.nodesFile)
+	left.keys[left.numberOfKeys] = parent.keys[index]
+	left.numberOfKeys++
+	left.child[left.numberOfKeys] = child
+
+	parent.keys[index] = *k
+
+	parent.write(b.nodesFile)
+	left.write(b.nodesFile)
+	right.write(b.nodesFile)
 }
 
 func (b *BTree) tryBorrowKey(node *BTreeNode, index int64) int {
-    var l, r, lefter *BTreeNode
+	var l, r, lefter *BTreeNode
 
-    l = b.readNode(node.child[index])
-    r = b.readNode(node.child[index + 1])
+	l = b.readNode(node.child[index])
+	r = b.readNode(node.child[index+1])
 
-    if index != 0 {
-        lefter = b.readNode(node.child[index - 1])
-    }
+	if index != 0 {
+		lefter = b.readNode(node.child[index-1])
+	}
 
-    if r.canLendKey() {
-        b.borrowFromSibling(node, l, r, index)
-    } else if lefter != nil && lefter.canLendKey() {
-        b.borrowFromSibling(node, lefter, l, index)
-    } else {
-        return b.borrowFromParent(node, l, r, index)
-    }
+	if r.canLendKey() {
+		b.borrowFromSibling(node, l, r, index)
+	} else if lefter != nil && lefter.canLendKey() {
+		b.borrowFromSibling(node, lefter, l, index)
+	} else {
+		return b.borrowFromParent(node, l, r, index)
+	}
 
-    return FLAG1
+	return FLAG1
 }
 
 func (b *BTree) parseFlag(flag int, node *BTreeNode, index int64, k *Key) int {
-    if FLAG1 & flag != 0 {
-        // nothing to see here
-    } else if FLAG2 & flag != 0 {
-        flag = b.tryBorrowKey(node, index)
-    } else if FLAG3 & flag != 0 {
-        maxLeft := b.maxLeft(node, index, k)
-        _, flag, _ = b.remove(node.address, maxLeft.id)
-        b.replace(&maxLeft, k, node)
-    }
+	if FLAG1&flag != 0 {
+		// nothing to see here
+	} else if FLAG2&flag != 0 {
+		flag = b.tryBorrowKey(node, index)
+	} else if FLAG3&flag != 0 {
+		maxLeft := b.maxLeft(node, index, k)
+		_, flag, _ = b.remove(node.address, maxLeft.id)
+		b.replace(&maxLeft, k, node)
+	}
 
-    return flag
+	return flag
 }
 
 func (b *BTree) removeFromNode(index int64, node *BTreeNode) (*Key, int) {
-    var k *Key
-    flag := 0
-    easyRemove := node.leaf == 1 && node.canLendKey()
-    midRemove := !easyRemove && node.leaf == 1
-    hardRemove := !(midRemove || easyRemove)
+	var k *Key
+	flag := 0
+	easyRemove := node.leaf == 1 && node.canLendKey()
+	midRemove := !easyRemove && node.leaf == 1
+	hardRemove := !(midRemove || easyRemove)
 
-    if easyRemove {
-        flag |= FLAG1
-    } else if midRemove {
-        flag |= FLAG2
-    } else if hardRemove {
-        flag |= FLAG3
-    }
-    
-    if node.leaf == 1 {
-        k, _ = node.removeKeyLeaf(index)
-        node.write(b.nodesFile)
-    } else {
-        k = node.removeKeyNonLeaf(index)
-    }
+	if easyRemove {
+		flag |= FLAG1
+	} else if midRemove {
+		flag |= FLAG2
+	} else if hardRemove {
+		flag |= FLAG3
+	}
 
-    return k, flag
+	if node.leaf == 1 {
+		k, _ = node.removeKeyLeaf(index)
+		node.write(b.nodesFile)
+	} else {
+		k = node.removeKeyNonLeaf(index)
+	}
+
+	return k, flag
 }
 
-func (b *BTree) remove(address int64 , id int64) (*Key, int, int64) {
-    if address == -1 {
-        return nil, FLAG1, -1
-    }
-    
-    var k *Key
-    node := b.readNode(address)
-    flag := 0
+func (b *BTree) remove(address int64, id int64) (*Key, int, int64) {
+	if address == -1 {
+		return nil, FLAG1, -1
+	}
 
-    i := node.numberOfKeys - 1
+	var k *Key
+	node := b.readNode(address)
+	flag := 0
+
+	i := node.numberOfKeys - 1
 	for i > 0 && node.keys[i].id > id {
 		i--
 	}
 
 	if node.keys[i].id == id {
-        k, flag = b.removeFromNode(i, node)
+		k, flag = b.removeFromNode(i, node)
 
-        if node.leaf == 1 {
-            return k, flag, i
-        }
+		if node.leaf == 1 {
+			return k, flag, i
+		}
 
-        maxLeft := b.maxLeft(node, i, k)
-        _, flag, _ = b.remove(address, maxLeft.id)
-        
-        node = b.readNode(node.address)
-        b.replace(&maxLeft, k, node)
-        node = b.readNode(node.address)
+		maxLeft := b.maxLeft(node, i, k)
+		_, flag, _ = b.remove(address, maxLeft.id)
 
-        return k, flag, i
-    } else if node.keys[i].id < id {
-        k, flag, _ = b.remove(node.child[i + 1], id)
-    } else {
-        k, flag, _ = b.remove(node.child[i], id)
-    }
+		node = b.readNode(node.address)
+		b.replace(&maxLeft, k, node)
 
-    flag = b.parseFlag(flag, node, i, k)
-    
-    return k, flag, i
+		return k, flag, i
+	} else if node.keys[i].id < id {
+		k, flag, _ = b.remove(node.child[i+1], id)
+	} else {
+		k, flag, _ = b.remove(node.child[i], id)
+	}
+
+	flag = b.parseFlag(flag, node, i, k)
+
+	return k, flag, i
 }
 
 func (b *BTree) Remove(id int64) *Key {
-    k, flag, index := b.remove(b.root, id)
-    var root *BTreeNode
+	k, flag, index := b.remove(b.root, id)
+	var root *BTreeNode
 
-    if FLAG3 & flag != 0 {
-        root = b.readNode(b.root)
-        node := b.readNode(root.child[index])
-        maxLeft := node.findMax()
-        b.remove(root.address, maxLeft.id)
-        root = b.readNode(b.root)
-        b.replace(&maxLeft, k, root)
-    } else if FLAG4 & flag != 0 {
-        root = b.readNode(b.root)
-        b.root = root.child[0]
-        root = b.readNode(b.root)
-        root.write(b.nodesFile)
-    }
+	if FLAG3&flag != 0 {
+		root = b.readNode(b.root)
+		node := b.readNode(root.child[index])
+		maxLeft := node.findMax()
+		b.remove(root.address, maxLeft.id)
+		root = b.readNode(b.root)
+		b.replace(&maxLeft, k, root)
+	} else if FLAG4&flag != 0 {
+		root = b.readNode(b.root)
+		tmp := root.child[0]
+		root.child[0] = -1
+		root.write(b.nodesFile)
+		b.root = tmp
+		root = b.readNode(b.root)
+		root.write(b.nodesFile)
+	}
 
 	return k
 }

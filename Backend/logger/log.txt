@@ -290,3 +290,4 @@ ERROR: 2023/04/05 14:01:26 code: 2, message: Pokemon nao encontrado
 INFO: 2023/04/05 14:01:29 Database Carregada
 INFO: 2023/04/05 14:01:29 Hash Dinamica Criada
 STATUS: 2023/04/05 14:01:48 Servidor desligado
+STATUS: 2023/04/06 00:54:20 Servidor desligado
