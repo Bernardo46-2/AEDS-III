@@ -282,3 +282,11 @@ INFO: 2023/04/05 12:16:38 Database Carregada
 INFO: 2023/04/05 12:16:38 Hash Dinamica Criada
 INFO: 2023/04/05 12:19:16 Database Ordenada com sucesso!
 INFO: 2023/04/05 12:21:00 Database Ordenada com sucesso!
+STATUS: 2023/04/05 14:00:57 Servidor iniciado
+ERROR: 2023/04/05 14:01:05 code: 2, message: Pokemon nao encontrado
+ERROR: 2023/04/05 14:01:14 code: 2, message: Pokemon nao encontrado
+ERROR: 2023/04/05 14:01:22 code: 2, message: Pokemon nao encontrado
+ERROR: 2023/04/05 14:01:26 code: 2, message: Pokemon nao encontrado
+INFO: 2023/04/05 14:01:29 Database Carregada
+INFO: 2023/04/05 14:01:29 Hash Dinamica Criada
+STATUS: 2023/04/05 14:01:48 Servidor desligado
