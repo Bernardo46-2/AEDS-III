@@ -4,13 +4,16 @@
 package service
 
 import (
+	"errors"
 	"fmt"
+	"io"
 	"math"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
 	"github.com/Bernardo46-2/AEDS-III/models"
+	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
 // ReadPagesNumber retorna o numero de paginas disponiveis para a
@@ -25,30 +28,39 @@ func ReadPagesNumber() (numeroPaginas int, err error) {
 	return
 }
 
-// ReadAll retorna um slice de modelos Pokemon a partir de um ID especificado.
-// Se houver a função lê até 60 registros a partir do ID fornecido e adiciona
-// a um slice de Pokemon, retornando o slice e um erro, se houver.
-//
-// A leitura é feita pelo indice hash
-func ReadAll(page int) (pokemon []models.Pokemon, err error) {
-	var tmpPoke models.Pokemon
-	var pokeAddress int64
-	atual := page * 60
-	ultimoID := int(binManager.GetLastPokemon())
+func GetIdList() (ids []int32, err error) {
+	c, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+	defer c.Close()
 
-	// Recuperação do numero de registros totais
-	numRegistros, _, _ := binManager.NumRegistros()
-
-	// Recupera 60 ids enquanto houverem
-	for id, i, total := atual+1, 0, 0; total < 60 && id <= ultimoID && i < numRegistros; i++ {
-		pokeAddress, err = hashing.HashRead(int64(id), binManager.FILES_PATH, "hashIndex")
-		tmpPoke = binManager.ReadTargetPokemon(pokeAddress)
-		if tmpPoke.Numero > 0 {
-			pokemon = append(pokemon, tmpPoke)
-			total++
+	for {
+		err = c.ReadNext()
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				err = nil
+				break
+			}
 		}
-		id++
+		if !c.RegistroAtual.IsDead() {
+			ids = append(ids, c.RegistroAtual.Pokemon.Numero)
+		}
 	}
+
+	utils.InsertionSort(ids)
+
+	return
+}
+
+func GetList(idList []int64) (pokeList []models.Pokemon, err error) {
+	c, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+	defer c.Close()
+
+	for _, id := range idList {
+		pos, err := hashing.HashRead(id, binManager.FILES_PATH, "hashIndex")
+		if err == nil {
+			pokeList = append(pokeList, c.ReadTarget(pos))
+		}
+	}
+
 	return
 }
 

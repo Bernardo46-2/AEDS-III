@@ -300,7 +300,35 @@ func InicializarControleLeitura(nomeArquivo string) (*ControleLeitura, error) {
 
 func ReadTargetPokemon(targetPos int64) models.Pokemon {
 	c, _ := InicializarControleLeitura(BIN_FILE)
+	defer c.Close()
 
+	targetPokemon := models.Pokemon{Numero: -1}
+	limiteArquivo, _ := c.Arquivo.Seek(0, io.SeekEnd)
+	if targetPos == 0 || targetPos >= limiteArquivo {
+		return targetPokemon
+	}
+
+	c.Arquivo.Seek(targetPos, io.SeekStart)
+	var lapide int32
+	var tamanho int32
+	var conteudo models.Pokemon
+
+	binary.Read(c.Arquivo, binary.LittleEndian, &lapide)
+	binary.Read(c.Arquivo, binary.LittleEndian, &tamanho)
+	conteudoBytes := make([]byte, tamanho-4)
+	binary.Read(c.Arquivo, binary.LittleEndian, &conteudoBytes)
+
+	// Converte os bytes para uma struct models.Pokemon se nao houver lapide
+	if lapide != 1 {
+		conteudo.ParseBinToPoke(conteudoBytes)
+	} else {
+		conteudo.Numero = -1
+	}
+
+	return conteudo
+}
+
+func (c *ControleLeitura) ReadTarget(targetPos int64) models.Pokemon {
 	targetPokemon := models.Pokemon{Numero: -1}
 	limiteArquivo, _ := c.Arquivo.Seek(0, io.SeekEnd)
 	if targetPos == 0 || targetPos >= limiteArquivo {

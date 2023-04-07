@@ -115,7 +115,8 @@ func servidor() {
 
 	// Crud
 	http.HandleFunc("/getPagesNumber/", middlewares.EnableCORS(handlers.GetPagesNumber))
-	http.HandleFunc("/getAll/", middlewares.EnableCORS(handlers.GetAllPokemon))
+	http.HandleFunc("/getIdList", middlewares.EnableCORS(handlers.GetIdList))
+	http.HandleFunc("/getList/", middlewares.EnableCORS(handlers.GetList))
 	http.HandleFunc("/get/", middlewares.EnableCORS(handlers.GetPokemon))
 	http.HandleFunc("/post/", middlewares.EnableCORS(handlers.PostPokemon))
 	http.HandleFunc("/put/", middlewares.EnableCORS(handlers.PutPokemon))

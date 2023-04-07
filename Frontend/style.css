@@ -1560,6 +1560,7 @@ html {
 }
 
 body {
+    background-color: var(--background-medium-dark) !important;
     font-family: Arial, sans-serif;
     margin: 0px !important;
     padding: 0px !important;
@@ -1569,18 +1570,12 @@ body {
     position: relative;
 }
 
-.imagemLateral {
-    position: sticky;
-    top: 0;
-}
-
 .sidebar {
     position: fixed;
     height: calc(100vh - 110px);
-    margin-top: calc((100vw / 18) + 20px);
     width: calc(100vw / 6);
     top: 0;
-    background-color: var(--sidebar-color);
+    background-color: var(--background-dark) !important;
 }
 
 .sidebar2 {
@@ -1588,7 +1583,7 @@ body {
     height: 110px;
     width: calc(100vw / 6);
     bottom: 0px;
-    background-color: var(--sidebar-color);
+    background-color: var(--background-dark);
 }
 
 .sidebar-shadow {

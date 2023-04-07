@@ -1,78 +1,6 @@
-/*  * * * * * * * * * * * * *
- *
- *  Import CSV
- *
- * * * * * * * * * * * * * * */
+/* ------------------------------------- UTILS ------------------------------------- */
 
-const importarDados = document.getElementById('ImportarDados');
 const modalContainer = document.getElementById('modal-container');
-const deleteBtn = document.getElementById('delete');
-const helpBtn = document.getElementById('Ajuda');
-
-helpBtn.onclick = () => {
-    modalAviso("Por favor me dê um emprego (╥﹏╥)");
-}
-
-function modalAviso(mostrar = "Servidor Desligado") {
-    const mensagem = document.getElementById("mensagem-modal");
-    mensagem.innerHTML = mostrar;
-
-    modalContainer.classList.remove('out');
-    modalContainer.classList.add('one');
-
-    setTimeout(function () {
-        modalContainer.classList.add('out');
-    }, 3000);
-
-    setTimeout(function () {
-        modalContainer.addEventListener('click', () => {
-            modalContainer.classList.add('out');
-        });
-    }, 1200);
-}
-
-importarDados.onclick = () => {
-    fetch('http://localhost:8080/loadDatabase')
-        .then(response => response.json())
-        .then(data => {
-            modalAviso(data.mensagem);
-            showAll.onclick();
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
-}
-
-/*  * * * * * * * * * * * * *
- *
- *  Mostrar Todos
- *
- * * * * * * * * * * * * * * */
-
-const showAll = document.getElementById('All');
-
-showAll.onclick = () => {
-    window.scrollTo(0, 0);
-    fetch('http://localhost:8080/getAll/?page=0')
-        .then(response => response.json())
-        .then(data => adicionarCards(data))
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
-}
-
-window.onload = function () {
-    fetch('http://localhost:8080/getAll/?page=0')
-        .then(response => response.json())
-        .then(data => adicionarCards(data))
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
-};
-
 const classes = {
     'Normal': 'bgd-Normal',
     'Fire': 'bgd-Fire',
@@ -94,10 +22,133 @@ const classes = {
     'Fairy': 'bgd-Fairy'
 };
 
+function capt(str) {
+    return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
+}
+
+function modalAviso(mostrar = "Servidor Desligado") {
+    const mensagem = document.getElementById("mensagem-modal");
+    mensagem.innerHTML = mostrar;
+
+    modalContainer.classList.remove('out');
+    modalContainer.classList.add('one');
+
+    setTimeout(function () {
+        modalContainer.classList.add('out');
+    }, 3000);
+
+    setTimeout(function () {
+        modalContainer.addEventListener('click', () => {
+            modalContainer.classList.add('out');
+        });
+    }, 1200);
+}
+
+/* ----------------------------------- SIDEBAR ----------------------------------- */
+
+const importarDados = document.getElementById('ImportarDados');
+const helpBtn = document.getElementById('Ajuda');
+
+importarDados.onclick = () => {
+    fetch('http://localhost:8080/loadDatabase')
+        .then(response => response.json())
+        .then(data => {
+            modalAviso(data.mensagem);
+            showAll.onclick();
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+
+helpBtn.onclick = () => {
+    modalAviso("Por favor me dê um emprego (╥﹏╥)");
+}
+
+/* ------------------------------------ CARD'S ------------------------------------ */
+
+const showAll = document.getElementById('All');
 let lastClicked = 1;
 let insertDots = true;
 
+// adicionarCards(data)
+
+function paginarIds(ids) {
+    const pageSize = 60;
+    const pages = Math.ceil(ids.length / pageSize);
+
+    const groups = Array.from({ length: pages }, (_, i) =>
+        ids.slice(i * pageSize, (i + 1) * pageSize)
+    );
+
+    const object = {
+        pages,
+        groups
+    };
+
+    sessionStorage.setItem('idList', JSON.stringify(object));
+
+    return object;
+}
+
+showAll.onclick = () => {
+    recuperarIds();
+    recuperarCards(0)
+}
+
+function recuperarIds() {
+    fetch('http://localhost:8080/getIdList')
+    .then(response => response.json())
+    .then(data => {
+        paginarIds(data); 
+    })
+    .catch(error => {
+        modalAviso();
+        console.log(error)
+    });
+}
+
+function recuperarCards(pos) {
+    const idList = JSON.parse(sessionStorage.getItem('idList'));
+    const ids = idList.groups[pos];
+    fetch('http://localhost:8080/getList/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ids)
+    })
+        .then(response => response.json())
+        .then(data => adicionarCards(data))
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+
+function recuperarCardsIds(ids) {
+    fetch('http://localhost:8080/getList/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ids)
+    })
+        .then(response => response.json())
+        .then(data => adicionarCards(data))
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+
+window.onload = function () {
+    showAll.click()
+};
+
 function adicionarCards(data) {
+    window.scrollTo(0, 0);
     const cardsHtml = document.getElementById('cards');
     cardsHtml.innerHTML = "";
     for (let i = 0; i < data.length; i++) {
@@ -114,250 +165,70 @@ function adicionarCards(data) {
 
         cardsHtml.innerHTML += pokemonCard;
     }
-
-    fetch('http://localhost:8080/getPagesNumber/')
-        .then(response => response.json())
-        .then(data => {
-            const numPaginas = +data;
-            const novaDiv = document.createElement('div');
-            novaDiv.classList.add('row');
-            novaDiv.classList.add('justify-content-center');
-            /* cardsHtml.innerHTML += `<div class="row justify-content-center">`;*/
-            for (let index = 1; index <= numPaginas; index++) {
-                if(index == 1 || index == numPaginas || (index >= lastClicked - 2 && index <= lastClicked + 2)) {
-                    const novoElemento = document.createElement('button');
-                    novoElemento.type = 'button';
-                    novoElemento.classList.add('btn');
-                    novoElemento.classList.add('btn-Psyduck-mostrarMais');
-                    novoElemento.id = 'mostrarMais' + index;
-                    novoElemento.innerHTML = index;
-                    novaDiv.appendChild(novoElemento);
-            
-                    novoElemento.onclick = () => {
-                        lastClicked = index;
-                        fetch(`http://localhost:8080/getAll/?page=${index - 1}`)
-                            .then(response => response.json())
-                            .then(data => adicionarCards(data))
-                            .catch(error => {
-                                modalAviso();
-                                console.log(error);
-                            });
-
-                        window.scrollTo(0, 0);
-                        insertDots = true;
-                    };
-
-                    if(index == lastClicked) insertDots = true;
-                } else if(insertDots) {
-                    const dots = document.createElement('button');
-                    dots.innerHTML = '...';
-                    dots.classList.add('btn');
-                    dots.classList.add('btn-Psyduck-mostrarMais');
-                    novaDiv.appendChild(dots);
-                    insertDots = false;
-                }
-            }
-
-            cardsHtml.appendChild(novaDiv);
-            const btn = document.getElementById(`mostrarMais${lastClicked}`);
-            btn.classList.add('active');
-            btn.classList.remove('btn-Psyduck-mostrarMais');
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error);
-        });
-
+    gerarPaginacao()
     gerarModalPokemon();
 }
 
-/*  * * * * * * * * * * * * *
- *
- *  Mostrar Dados
- *
- * * * * * * * * * * * * * * */
+function gerarPaginacao() {
+    const idList = JSON.parse(sessionStorage.getItem('idList'));
+    const cardsHtml = document.getElementById('cards');
+    const numPaginas = idList.pages;
 
-function carregarDados(id) {
-    fetch('http://localhost:8080/get/?id=' + id)
-        .then(response => response.json())
-        .then(data => adicionarDadosModal(data))
-        .catch(error => {
-            modalAviso(error);
-            console.log(error);
-        });
-}
+    const novaDiv = document.createElement('div');
+    novaDiv.classList.add('row');
+    novaDiv.classList.add('justify-content-center');
 
-function adicionarDadosModal(data) {
-    const editButton = document.querySelector('#edit');
-    const saveButton = document.querySelector('#save');
-    editButton.hidden = false;
-    saveButton.hidden = true;
+    for (let index = 1; index <= numPaginas; index++) {
+        if (index == 1 || index == numPaginas || (index >= lastClicked - 2 && index <= lastClicked + 2)) {
+            const novoElemento = document.createElement('button');
+            novoElemento.type = 'button';
+            novoElemento.classList.add('btn');
+            novoElemento.classList.add('btn-Psyduck-mostrarMais');
+            novoElemento.id = 'mostrarMais' + index;
+            novoElemento.innerHTML = index;
+            novaDiv.appendChild(novoElemento);
 
-    const conteudoPokemon = document.getElementById('conteudoPokemon');
+            novoElemento.onclick = () => {
+                lastClicked = index;
+                sessionStorage.setItem("actualPage", JSON.stringify(index));
+                recuperarCards(index - 1);
+                insertDots = true;
+            };
 
-    if (data.tipo.length < 2) {
-        data.tipo.push('Null');
-    }
-
-    const dateObj = new Date(data.lancamento);
-    const dia = dateObj.getDate().toString().padStart(2, '0');
-    const mes = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-    const ano = dateObj.getFullYear().toString();
-    const dataFormatada = `${dia}/${mes}/${ano}`;
-
-    let lendario = data.lendario ? 'lendario-y' : 'lendario-n';
-    let mitico = data.mitico ? 'mitico-y' : 'mitico-n';
-
-    let modalContent = `
-    <p class="poke-id2">#${data.numero}</p>
-    <div class="row justify-content-center">
-        <p class="modal-title" id="modalPage">${capt(data.nome)}</p>
-        <p class="modal-title-jap">${data.nomeJap}</p>
-        <p class="poke-type">${data.especie}</p>
-    </div>
-    <div class="row justify-content-center">
-        <p class="tipo-pokemon bgd-${data.tipo[0]} col-4">${data.tipo[0]}</p>
-        <p class="tipo-pokemon bgd-${data.tipo[1]} col-4">${data.tipo[1]}</p>
-    </div>
-    <div class="row justify-content-center">
-        <p class="poke-text">${data.peso} KG</p>
-        <p class="poke-text">${data.altura} M</p>
-        </div>
-        <div class="row justify-content-center">
-        <p class="poke-desc">Peso</p>
-        <p class="poke-desc">Altura</p>
-    </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <p class="base-stats">Base Stats</p>
-            <div class="row linha-status justify-content-center">
-                <p class="col-2 allign-text">HP</p>
-                <div class="col-10 progress poke-bars">
-                    <div class="progress-bar bgd-bulbasaur" role="progressbar" style="width: ${Math.min(data.hp / 2, 200)}%" aria-valuenow="${data.hp}" aria-valuemin="0" aria-valuemax="300"></div>
-                </div>
-                <p class="col-2 allign-text2">${data.hp}</p>
-            </div>
-            <div class="row linha-status justify-content-center">
-                <p class="col-2 allign-text">ATK</p>
-                <div class="col-10 progress poke-bars">
-                    <div class="progress-bar bgd-charmander" role="progressbar" style="width: ${Math.min(data.atk / 2, 200)}%" aria-valuenow="${data.atk}" aria-valuemin="0" aria-valuemax="300"></div>
-                </div>
-                <p class="col-2 allign-text2">${data.atk}</p>
-            </div>
-            <div class="row linha-status justify-content-center">
-                <p class="col-2 allign-text">DEF</p>
-                <div class="col-10 progress poke-bars">
-                    <div class="progress-bar bgd-squirtle" role="progressbar" style="width: ${Math.min(data.def / 2, 200)}%" aria-valuenow="${data.def}" aria-valuemin="0" aria-valuemax="300"></div>
-                </div>
-                <p class="col-2 allign-text2">${data.def}</p>
-            </div>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <p class="poke-text">${data.geracao}ª</p>
-        <p class="poke-text">${dataFormatada}</p>
-        </div>
-        <div class="row justify-content-center">
-        <p class="poke-desc">Generation</p>
-        <p class="poke-desc">Lançamento</p>
-    </div>
-    <div class="row justify-content-center">
-        <p class="poke-rare ${lendario} col-4">Lendario</p>
-        <p class="poke-rare ${mitico} col-4">Mitico</p>
-    </div>
-    <div class="row justify-content-center">
-        <p class="poke-descricao-titulo">descrição:</p>
-        <p class="poke-descricao">${data.descricao}</p>
-    </div>
-
-    `;
-
-    conteudoPokemon.innerHTML = modalContent;
-    editButton.onclick = () => editarDadosModal(data, false);
-    
-    const id = document.querySelector('.poke-id2');
-    const deleteForm = document.getElementById('remove-form');
-    deleteForm.value = id.innerHTML.substring(1);
-    deleteBtn.onclick = () => {
-        document.getElementById('close').click();
-        document.getElementById('actual-remove-form').onsubmit();
-    }
-}
-
-const collectFormData = async () => {
-    const pokemon = {};
-
-    const pokeNumber = document.querySelector('.poke-id2');
-    const pokeName = document.getElementById('nome');
-    const pokeNameJap = document.getElementById('nome-jap');
-    const pokeEspecies = document.getElementById('tipo-pokemon');
-    const pokeType1 = document.getElementById('tipo1');
-    const pokeType2 = document.getElementById('tipo2');
-    const pokeWeight = document.getElementById('peso');
-    const pokeHeight = document.getElementById('altura');
-    const pokeHP = document.getElementById('--bulbasaur');
-    const pokeAtk = document.getElementById('--charmander');
-    const pokeDef = document.getElementById('--squirtle');
-    const pokeGen = document.getElementById('geracao');
-    const pokeRelease = document.getElementById('lancamento');
-    const pokeLegendary = document.getElementById('lendario');
-    const pokeMitic = document.getElementById('mitico');
-    const pokeDescription = document.getElementById('descricao-pokemon');
-
-    const japName = await fetch(`http://localhost:8080/toKatakana/?stringToConvert=${pokeNameJap.value}`);
-    let number = pokeNumber.innerText;
-    number = number == '' ? 1000 : +number.substring(1);
-
-    pokemon.numero = number;
-    pokemon.nome = pokeName.value;
-    pokemon.nomeJap = await japName.json();
-    pokemon.especie = pokeEspecies.value;
-    pokemon.tipo = [pokeType1.value, pokeType2.value];
-    pokemon.peso = +pokeWeight.value;
-    pokemon.altura = +pokeHeight.value;
-    pokemon.hp = +pokeHP.value;
-    pokemon.atk = +pokeAtk.value;
-    pokemon.def = +pokeDef.value;
-    pokemon.geracao = +pokeGen.value;
-    const dateFields = pokeRelease.value.split('/');
-    pokemon.lancamento = dateFields[2] + '-' + dateFields[1] + '-' + dateFields[0] + 'T00:00:00Z';
-    pokemon.lendario = pokeLegendary.classList.contains('lendario-y');
-    pokemon.mitico = pokeMitic.classList.contains('mitico-y');
-    pokemon.descricao = pokeDescription.value;
-
-    console.log(pokemon)
-
-    return pokemon;
-}
-
-document.querySelector('#save').onclick = async () => {
-    const pokemon = await collectFormData();
-    const method = pokemon.numero == 1000 ? 'post' : 'put';
-
-    fetch(`http://localhost:8080/${method}/`, {
-        method: 'POST',
-        body: JSON.stringify(pokemon),
-        headers: {
-            'Content-Type': 'application/json'
+            if (index == lastClicked) insertDots = true;
+        } else if (insertDots) {
+            const dots = document.createElement('button');
+            dots.innerHTML = '...';
+            dots.classList.add('btn');
+            dots.classList.add('btn-Psyduck-mostrarMais');
+            novaDiv.appendChild(dots);
+            insertDots = false;
         }
-    })
-        .then(res => res.json())
-        .then(data => {
-            modalAviso(data.hasOwnProperty('mensagem')?data.mensagem:"Pokemon registrado com o id: " + data.id);
-            showAll.onclick();
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
+    }
+
+    cardsHtml.appendChild(novaDiv);
+    const btn = document.getElementById(`mostrarMais${lastClicked}`);
+    btn.classList.add('active');
+    btn.classList.remove('btn-Psyduck-mostrarMais');
 }
 
-/*  * * * * * * * * * * * * *
- *
- *  Editar Dados
- *
- * * * * * * * * * * * * * * */
+function retrieveCardsByPage() {
+    const actualPage = JSON.parse(sessionStorage.getItem('actualPage'));
+    fetch('http://localhost:8080/getIdList')
+    .then(response => response.json())
+    .then(data => {
+        object = paginarIds(data); 
+        console.log(actualPage-1);
+        console.log(object.groups[actualPage-1]);
+        recuperarCardsIds(object.groups[actualPage-1]);
+    })
+    .catch(error => {
+        modalAviso();
+        console.log(error)
+    });
+}
+
+/* ------------------------------------ UPDATE ------------------------------------ */
 
 function editarDadosModal(data, shouldCreate = false) {
     const editButton = document.querySelector('#edit');
@@ -490,20 +361,11 @@ Create.addEventListener('click', function () {
     abrirModal(undefined, true, undefined);
 });
 
-/*  * * * * * * * * * * * * *
- *
- *  Barra Lateral
- *
- * * * * * * * * * * * * * * */
+/* ------------------------------------ SEARCH ------------------------------------ */
+
 const search = document.querySelector('#Search');
 const searchForm = document.querySelector('#search-form');
 var searchAberto = false;
-const update = document.querySelector('#Update');
-const atualizarForm = document.querySelector('#update-form');
-let atualizarAberto = false;
-const remove = document.querySelector('#Remove');
-const removeForm = document.querySelector('#remove-form');
-let removeAberto = false;
 
 search.addEventListener('click', function (event) {
     if (event.target === search && !searchAberto) {
@@ -541,87 +403,17 @@ document.getElementById('actual-search-form').onsubmit = e => {
         });
 };
 
-update.addEventListener('click', function (event) {
-    if (event.target === update && !atualizarAberto) {
-        update.style.height = 100 + "px";
-        atualizarForm.classList.remove('displayNone');
-        atualizarForm.classList.remove('btn-Charmander');
-        atualizarAberto = true;
-    } else if (event.target === update) {
-        update.style.height = 45 + "px";
-        atualizarForm.classList.add('displayNone');
-        atualizarForm.classList.add('btn-Charmander');
-        atualizarAberto = false;
-    }
-})
-
-document.getElementById('actual-update-form').addEventListener('submit', e => {
-    e.preventDefault();
-
-    update.style.height = 45 + "px";
-    atualizarForm.classList.add('displayNone');
-    atualizarForm.classList.add('btn-Charmander');
-    atualizarAberto = false;
-
-    fetch('http://localhost:8080/get/?id=' + atualizarForm.value)
-        .then(response => response.json())
-        .then(data => {
-            if ('mensagem' in data) {
-                modalAviso("Pokemon inexistente");
-            } else {
-                abrirModal(data.nome, true, data);
-            }
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
-});
-
-remove.addEventListener('click', function (event) {
-    if (event.target === remove && !removeAberto) {
-        remove.style.height = 100 + "px";
-        removeForm.classList.remove('displayNone');
-        removeForm.classList.remove('btn-Charmander');
-        removeAberto = true;
-    } else if (event.target === remove) {
-        remove.style.height = 45 + "px";
-        removeForm.classList.add('displayNone');
-        removeForm.classList.add('btn-Charmander');
-        removeAberto = false;
-    }
-})
-
-document.getElementById('actual-remove-form').onsubmit = e => {
-    if(e !== undefined) e.preventDefault();
-
-    remove.style.height = 45 + "px";
-    removeForm.classList.add('displayNone');
-    removeForm.classList.add('btn-Charmander');
-    removeAberto = false;
-
-    fetch('http://localhost:8080/delete/?id=' + removeForm.value)
-        .then(response => response.json())
-        .then(data => {
-            modalAviso(data.mensagem);
-            showAll.click();
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
-};
-
-
-
 /* ------------------------------ METODOS DE ORDENAÇAO ------------------------------ */
 
-const ordenarDropdown = document.querySelector('#ordenarDropdown');
 const ordenar = document.querySelector('#Ordenar');
+const ordenarDropdown = document.querySelector('#ordenarDropdown');
 const ordenarButtons = document.querySelectorAll('.ordenar-buttons');
+const ordenar0 = document.querySelector('#Ordenar0');
+const ordenar1 = document.querySelector('#Ordenar1');
+const ordenar2 = document.querySelector('#Ordenar2');
+const ordenarTransition = ordenar.style.transition;
+const ordenarVar3 = ordenar.style.paddingTop;
 let ordenarAberto = false;
-let ordenarVar3 = ordenar.style.paddingTop;
-let ordenarTransition = ordenar.style.transition;
 
 ordenar.addEventListener('click', function (event) {
     if (event.target === ordenar && !ordenarAberto) {
@@ -682,9 +474,7 @@ ordenarButtons.forEach(element => {
     });
 });
 
-const ordenar0 = document.querySelector('#Ordenar0');
-const ordenar1 = document.querySelector('#Ordenar1');
-const ordenar2 = document.querySelector('#Ordenar2');
+
 ordenar0.onclick = () => {
     fetch('http://localhost:8080/ordenacao/?metodo=0')
         .then(response => response.json())
@@ -724,12 +514,15 @@ ordenar2.onclick = () => {
 
 /* ------------------------------ ESCOLHA DE INDEXACAO ------------------------------ */
 
-const indexDropdown = document.querySelector('#indexDropdown');
 const index = document.querySelector('#Index');
+const indexDropdown = document.querySelector('#indexDropdown');
 const indexButtons = document.querySelectorAll('.index-buttons');
+const index0 = document.querySelector('#Index0');
+const index1 = document.querySelector('#Index1');
+const index2 = document.querySelector('#Index2');
+const indexTransition = index.style.transition;
+const indexVar3 = index.style.paddingTop;
 let indexAberto = false;
-let indexVar3 = index.style.paddingTop;
-let indexTransition = index.style.transition;
 
 index.addEventListener('click', function (event) {
     if (event.target === index && !indexAberto) {
@@ -790,9 +583,6 @@ indexButtons.forEach(element => {
     });
 });
 
-const index0 = document.querySelector('#Index0');
-const index1 = document.querySelector('#Index1');
-const index2 = document.querySelector('#Index2');
 index0.onclick = () => {
     fetch('http://localhost:8080/indexacao/?metodo=0')
         .then(response => response.json())
@@ -830,7 +620,15 @@ index2.onclick = () => {
         });
 }
 
-/* ------------------------------ ... ------------------------------ */
+/* ------------------------------------- MODAIS ------------------------------------- */
+
+const modalClose = document.querySelector('#close');
+const modalSave = document.querySelector('#save');
+const modal = document.querySelector('#modalPage');
+const meuBotao = document.querySelector('#meu-botao');
+const meuBotao2 = document.querySelector('#meu-botao2');
+const deleteBtn = document.getElementById('delete');
+
 
 function abrirModal(pokemon = "pokebola", editar = false, data) {
     const closeButton = document.getElementById('close');
@@ -956,40 +754,6 @@ function abrirModal(pokemon = "pokebola", editar = false, data) {
     });
 }
 
-const modalClose = document.querySelector('#close');
-const modalSave = document.querySelector('#save');
-const modal = document.querySelector('#modalPage');
-const meuBotao = document.querySelector('#meu-botao');
-const meuBotao2 = document.querySelector('#meu-botao2');
-const scrollbar = document.querySelector('.scrollbar');
-
-window.addEventListener('resize', function () {
-    const totalHeight = document.documentElement.scrollHeight;
-    const scrollbarHeight = window.innerHeight;
-    const thumbHeight = Math.max(scrollbarHeight * (window.innerHeight / totalHeight), 20);
-    const thumbPosition = (scrollbarHeight - thumbHeight) * (window.scrollY / (totalHeight - window.innerHeight));
-
-    scrollbar.style.height = `${thumbHeight}px`;
-    scrollbar.style.top = `${thumbPosition}px`;
-});
-
-document.addEventListener("scroll", () => {
-    const totalHeight = document.documentElement.scrollHeight;
-    const scrollbarHeight = window.innerHeight;
-    const thumbHeight = Math.max(scrollbarHeight * (window.innerHeight / totalHeight), 20);
-    const thumbPosition = (scrollbarHeight - thumbHeight) * (window.scrollY / (totalHeight - window.innerHeight));
-
-    scrollbar.style.height = `${thumbHeight}px`;
-    scrollbar.style.top = `${thumbPosition}px`;
-});
-
-function getOffset(el) {
-    var rect = el.getBoundingClientRect();
-    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-    return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
-}
-
 function gerarModalPokemon() {
     const button = document.querySelectorAll('.card');
     button.forEach(element => {
@@ -1071,7 +835,9 @@ function gerarModalPokemon() {
                 clonedCard.addEventListener("transitionend", () => {
                     element.classList.remove('originalCard')
                     element.style.opacity = "1";
-                    element.style.transition = "transitionTmp";
+                    setTimeout(function () {
+                        element.style.transition = transitionTmp;
+                    }, 500);
                     clonedCard.remove();
                 });
             });
@@ -1100,7 +866,9 @@ function gerarModalPokemon() {
                 clonedCard.addEventListener("transitionend", () => {
                     element.classList.remove('originalCard')
                     element.style.opacity = "1";
-                    element.style.transition = "transitionTmp";
+                    setTimeout(function () {
+                        element.style.transition = transitionTmp;
+                    }, 500);
                     clonedCard.remove();
                 });
             });
@@ -1111,6 +879,215 @@ function gerarModalPokemon() {
     });
 }
 
-function capt(str) {
-    return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
+function adicionarDadosModal(data) {
+    const editButton = document.querySelector('#edit');
+    const saveButton = document.querySelector('#save');
+    editButton.hidden = false;
+    saveButton.hidden = true;
+
+    const conteudoPokemon = document.getElementById('conteudoPokemon');
+
+    if (data.tipo.length < 2) {
+        data.tipo.push('Null');
+    }
+
+    const dateObj = new Date(data.lancamento);
+    const dia = dateObj.getDate().toString().padStart(2, '0');
+    const mes = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+    const ano = dateObj.getFullYear().toString();
+    const dataFormatada = `${dia}/${mes}/${ano}`;
+
+    let lendario = data.lendario ? 'lendario-y' : 'lendario-n';
+    let mitico = data.mitico ? 'mitico-y' : 'mitico-n';
+
+    let modalContent = `
+    <p class="poke-id2">#${data.numero}</p>
+    <div class="row justify-content-center">
+        <p class="modal-title" id="modalPage">${capt(data.nome)}</p>
+        <p class="modal-title-jap">${data.nomeJap}</p>
+        <p class="poke-type">${data.especie}</p>
+    </div>
+    <div class="row justify-content-center">
+        <p class="tipo-pokemon bgd-${data.tipo[0]} col-4">${data.tipo[0]}</p>
+        <p class="tipo-pokemon bgd-${data.tipo[1]} col-4">${data.tipo[1]}</p>
+    </div>
+    <div class="row justify-content-center">
+        <p class="poke-text">${data.peso} KG</p>
+        <p class="poke-text">${data.altura} M</p>
+        </div>
+        <div class="row justify-content-center">
+        <p class="poke-desc">Peso</p>
+        <p class="poke-desc">Altura</p>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <p class="base-stats">Base Stats</p>
+            <div class="row linha-status justify-content-center">
+                <p class="col-2 allign-text">HP</p>
+                <div class="col-10 progress poke-bars">
+                    <div class="progress-bar bgd-bulbasaur" role="progressbar" style="width: ${Math.min(data.hp / 2, 200)}%" aria-valuenow="${data.hp}" aria-valuemin="0" aria-valuemax="300"></div>
+                </div>
+                <p class="col-2 allign-text2">${data.hp}</p>
+            </div>
+            <div class="row linha-status justify-content-center">
+                <p class="col-2 allign-text">ATK</p>
+                <div class="col-10 progress poke-bars">
+                    <div class="progress-bar bgd-charmander" role="progressbar" style="width: ${Math.min(data.atk / 2, 200)}%" aria-valuenow="${data.atk}" aria-valuemin="0" aria-valuemax="300"></div>
+                </div>
+                <p class="col-2 allign-text2">${data.atk}</p>
+            </div>
+            <div class="row linha-status justify-content-center">
+                <p class="col-2 allign-text">DEF</p>
+                <div class="col-10 progress poke-bars">
+                    <div class="progress-bar bgd-squirtle" role="progressbar" style="width: ${Math.min(data.def / 2, 200)}%" aria-valuenow="${data.def}" aria-valuemin="0" aria-valuemax="300"></div>
+                </div>
+                <p class="col-2 allign-text2">${data.def}</p>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <p class="poke-text">${data.geracao}ª</p>
+        <p class="poke-text">${dataFormatada}</p>
+        </div>
+        <div class="row justify-content-center">
+        <p class="poke-desc">Generation</p>
+        <p class="poke-desc">Lançamento</p>
+    </div>
+    <div class="row justify-content-center">
+        <p class="poke-rare ${lendario} col-4">Lendario</p>
+        <p class="poke-rare ${mitico} col-4">Mitico</p>
+    </div>
+    <div class="row justify-content-center">
+        <p class="poke-descricao-titulo">descrição:</p>
+        <p class="poke-descricao">${data.descricao}</p>
+    </div>
+
+    `;
+
+    conteudoPokemon.innerHTML = modalContent;
+    editButton.onclick = () => editarDadosModal(data, false);
+    close = document.getElementById('close');
+    deleteBtn.onclick = () => {
+        close.click();
+        fetch('http://localhost:8080/delete/?id=' + data.numero)
+            .then(response => response.json())
+            .then(data => {
+                modalAviso(data.mensagem);
+                retrieveCardsByPage()
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    };
+}
+
+const collectFormData = async () => {
+    const pokemon = {};
+
+    const pokeNumber = document.querySelector('.poke-id2');
+    const pokeName = document.getElementById('nome');
+    const pokeNameJap = document.getElementById('nome-jap');
+    const pokeEspecies = document.getElementById('tipo-pokemon');
+    const pokeType1 = document.getElementById('tipo1');
+    const pokeType2 = document.getElementById('tipo2');
+    const pokeWeight = document.getElementById('peso');
+    const pokeHeight = document.getElementById('altura');
+    const pokeHP = document.getElementById('--bulbasaur');
+    const pokeAtk = document.getElementById('--charmander');
+    const pokeDef = document.getElementById('--squirtle');
+    const pokeGen = document.getElementById('geracao');
+    const pokeRelease = document.getElementById('lancamento');
+    const pokeLegendary = document.getElementById('lendario');
+    const pokeMitic = document.getElementById('mitico');
+    const pokeDescription = document.getElementById('descricao-pokemon');
+
+    const japName = await fetch(`http://localhost:8080/toKatakana/?stringToConvert=${pokeNameJap.value}`);
+    let number = pokeNumber.innerText;
+    number = number == '' ? 1000 : +number.substring(1);
+
+    pokemon.numero = number;
+    pokemon.nome = pokeName.value;
+    pokemon.nomeJap = await japName.json();
+    pokemon.especie = pokeEspecies.value;
+    pokemon.tipo = [pokeType1.value, pokeType2.value];
+    pokemon.peso = +pokeWeight.value;
+    pokemon.altura = +pokeHeight.value;
+    pokemon.hp = +pokeHP.value;
+    pokemon.atk = +pokeAtk.value;
+    pokemon.def = +pokeDef.value;
+    pokemon.geracao = +pokeGen.value;
+    const dateFields = pokeRelease.value.split('/');
+    pokemon.lancamento = dateFields[2] + '-' + dateFields[1] + '-' + dateFields[0] + 'T00:00:00Z';
+    pokemon.lendario = pokeLegendary.classList.contains('lendario-y');
+    pokemon.mitico = pokeMitic.classList.contains('mitico-y');
+    pokemon.descricao = pokeDescription.value;
+
+    console.log(pokemon)
+
+    return pokemon;
+}
+
+function carregarDados(id) {
+    fetch('http://localhost:8080/get/?id=' + id)
+        .then(response => response.json())
+        .then(data => adicionarDadosModal(data))
+        .catch(error => {
+            modalAviso(error);
+            console.log(error);
+        });
+}
+
+document.querySelector('#save').onclick = async () => {
+    const pokemon = await collectFormData();
+    const method = pokemon.numero == 1000 ? 'post' : 'put';
+
+    fetch(`http://localhost:8080/${method}/`, {
+        method: 'POST',
+        body: JSON.stringify(pokemon),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            modalAviso(data.hasOwnProperty('mensagem') ? data.mensagem : "Pokemon registrado com o id: " + data.id);
+            retrieveCardsByPage()
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+
+/* ----------------------------------- SCROLLBAR ----------------------------------- */
+
+const scrollbar = document.querySelector('.scrollbar');
+
+window.addEventListener('resize', function () {
+    const totalHeight = document.documentElement.scrollHeight;
+    const scrollbarHeight = window.innerHeight;
+    const thumbHeight = Math.max(scrollbarHeight * (window.innerHeight / totalHeight), 20);
+    const thumbPosition = (scrollbarHeight - thumbHeight) * (window.scrollY / (totalHeight - window.innerHeight));
+
+    scrollbar.style.height = `${thumbHeight}px`;
+    scrollbar.style.top = `${thumbPosition}px`;
+});
+
+document.addEventListener("scroll", () => {
+    const totalHeight = document.documentElement.scrollHeight;
+    const scrollbarHeight = window.innerHeight;
+    const thumbHeight = Math.max(scrollbarHeight * (window.innerHeight / totalHeight), 20);
+    const thumbPosition = (scrollbarHeight - thumbHeight) * (window.scrollY / (totalHeight - window.innerHeight));
+
+    scrollbar.style.height = `${thumbHeight}px`;
+    scrollbar.style.top = `${thumbPosition}px`;
+});
+
+function getOffset(el) {
+    var rect = el.getBoundingClientRect();
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+    return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
 }

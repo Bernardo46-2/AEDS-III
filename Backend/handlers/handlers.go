@@ -34,11 +34,9 @@ func GetPagesNumber(w http.ResponseWriter, r *http.Request) {
 	writeJson(w, numeroPaginas)
 }
 
-// GetAllPokemon recupera os 60 pokemons a partir do ID fornecido
-func GetAllPokemon(w http.ResponseWriter, r *http.Request) {
-	// Recuperar ID e ler arquivo
-	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
-	pokemon, err := service.ReadAll(page)
+func GetIdList(w http.ResponseWriter, r *http.Request) {
+	// Recuperar IDs
+	idList, err := service.GetIdList()
 
 	// Resposta
 	if err != nil {
@@ -46,7 +44,26 @@ func GetAllPokemon(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJson(w, pokemon)
+	writeJson(w, idList)
+}
+
+func GetList(w http.ResponseWriter, r *http.Request) {
+	// Recuperando lista de argumentos
+	var list []int64
+	if json.NewDecoder(r.Body).Decode(&list) != nil {
+		writeError(w, http.StatusBadRequest)
+		return
+	}
+
+	pokeList, err := service.GetList(list)
+
+	// Resposta
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, 2)
+		return
+	}
+
+	writeJson(w, pokeList)
 }
 
 // GetPokemon recupera o pokemon pelo ID fornecido

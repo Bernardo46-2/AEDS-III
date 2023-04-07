@@ -291,3 +291,60 @@ INFO: 2023/04/05 14:01:29 Database Carregada
 INFO: 2023/04/05 14:01:29 Hash Dinamica Criada
 STATUS: 2023/04/05 14:01:48 Servidor desligado
 STATUS: 2023/04/06 00:54:20 Servidor desligado
+STATUS: 2023/04/06 14:17:32 Servidor iniciado
+ERROR: 2023/04/06 14:27:39 code: 5, message: Pokemon nao encontrado
+ERROR: 2023/04/06 14:27:47 code: 5, message: Pokemon nao encontrado
+INFO: 2023/04/06 14:31:36 Database Carregada
+INFO: 2023/04/06 14:31:36 Hash Dinamica Criada
+INFO: 2023/04/06 14:34:14 Database Carregada
+INFO: 2023/04/06 14:34:14 Hash Dinamica Criada
+STATUS: 2023/04/06 14:35:46 Servidor desligado
+STATUS: 2023/04/06 14:41:27 Servidor iniciado
+INFO: 2023/04/06 15:01:40 Database Carregada
+INFO: 2023/04/06 15:01:40 Hash Dinamica Criada
+ERROR: 2023/04/06 15:02:42 code: 2, message: Pokemon nao encontrado
+ERROR: 2023/04/06 15:02:47 code: 2, message: Pokemon nao encontrado
+INFO: 2023/04/06 15:02:51 Database Ordenada com sucesso!
+INFO: 2023/04/06 15:11:02 Database Carregada
+INFO: 2023/04/06 15:11:02 Hash Dinamica Criada
+STATUS: 2023/04/06 15:25:27 Servidor desligado
+STATUS: 2023/04/06 15:25:33 Servidor iniciado
+STATUS: 2023/04/06 15:25:59 Servidor desligado
+STATUS: 2023/04/06 15:28:48 Servidor iniciado
+STATUS: 2023/04/06 15:29:16 Servidor desligado
+STATUS: 2023/04/06 15:29:51 Servidor iniciado
+STATUS: 2023/04/06 15:30:34 Servidor desligado
+STATUS: 2023/04/06 15:30:36 Servidor iniciado
+STATUS: 2023/04/06 15:30:48 Servidor desligado
+STATUS: 2023/04/06 15:31:26 Servidor iniciado
+STATUS: 2023/04/06 15:31:32 Servidor desligado
+STATUS: 2023/04/06 15:31:54 Servidor iniciado
+STATUS: 2023/04/06 15:32:04 Servidor desligado
+STATUS: 2023/04/06 15:32:14 Servidor iniciado
+STATUS: 2023/04/06 15:34:43 Servidor desligado
+STATUS: 2023/04/06 15:43:38 Servidor iniciado
+STATUS: 2023/04/06 15:44:32 Servidor desligado
+STATUS: 2023/04/06 15:44:35 Servidor iniciado
+STATUS: 2023/04/06 16:38:56 Servidor desligado
+STATUS: 2023/04/06 16:39:01 Servidor iniciado
+ERROR: 2023/04/06 20:12:03 code: 400, message: Erro ao converter o JSON para Pokemon
+ERROR: 2023/04/06 20:13:53 code: 400, message: Erro ao converter o JSON para Pokemon
+ERROR: 2023/04/06 20:14:59 code: 400, message: Erro ao converter o JSON para Pokemon
+ERROR: 2023/04/06 20:15:52 code: 400, message: Erro ao converter o JSON para Pokemon
+ERROR: 2023/04/06 20:16:40 code: 400, message: Erro ao converter o JSON para Pokemon
+ERROR: 2023/04/06 20:28:31 code: 400, message: Erro ao converter o JSON para Pokemon
+ERROR: 2023/04/06 20:29:23 code: 400, message: Erro ao converter o JSON para Pokemon
+INFO: 2023/04/06 20:54:40 Database Carregada
+INFO: 2023/04/06 20:54:40 Hash Dinamica Criada
+INFO: 2023/04/06 21:19:31 Database Ordenada com sucesso!
+INFO: 2023/04/06 21:19:52 Database Ordenada com sucesso!
+STATUS: 2023/04/06 21:29:00 Servidor desligado
+STATUS: 2023/04/06 21:29:10 Servidor iniciado
+STATUS: 2023/04/06 21:29:29 Servidor desligado
+STATUS: 2023/04/06 21:29:44 Servidor iniciado
+INFO: 2023/04/06 21:30:21 Database Ordenada com sucesso!
+STATUS: 2023/04/06 21:32:38 Servidor desligado
+STATUS: 2023/04/06 21:32:49 Servidor iniciado
+STATUS: 2023/04/06 21:41:20 Servidor desligado
+STATUS: 2023/04/06 21:41:23 Servidor iniciado
+STATUS: 2023/04/07 01:19:30 Servidor desligado
