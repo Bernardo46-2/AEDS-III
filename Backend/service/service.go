@@ -5,9 +5,9 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"math"
+	"time"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
@@ -50,16 +50,47 @@ func GetIdList() (ids []int32, err error) {
 	return
 }
 
-func GetList(idList []int64) (pokeList []models.Pokemon, err error) {
+func GetList(idList []int64, method int) (pokeList []models.Pokemon, duration int64, err error) {
 	c, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
 	defer c.Close()
 
-	for _, id := range idList {
-		pos, err := hashing.HashRead(id, binManager.FILES_PATH, "hashIndex")
-		if err == nil {
-			pokeList = append(pokeList, c.ReadTarget(pos))
+	start := time.Now()
+	switch method {
+	case 0: // Sequencial
+		for _, id := range idList {
+			pokemon, _, _ := binManager.ReadBinToPoke(int(id))
+			pokeList = append(pokeList, pokemon)
+		}
+	case 1, -1: // Hash
+		for _, id := range idList {
+			pos, err := hashing.HashRead(id, binManager.FILES_PATH, "hashIndex")
+			if err == nil {
+				pokeList = append(pokeList, c.ReadTarget(pos))
+			}
+		}
+	case 2: // Arvore B
+		for _, id := range idList {
+			pos, err := hashing.HashRead(id, binManager.FILES_PATH, "hashIndex")
+			if err == nil {
+				pokeList = append(pokeList, c.ReadTarget(pos))
+			}
+		}
+	case 3: // Arvore B+
+		for _, id := range idList {
+			pos, err := hashing.HashRead(id, binManager.FILES_PATH, "hashIndex")
+			if err == nil {
+				pokeList = append(pokeList, c.ReadTarget(pos))
+			}
+		}
+	case 4: // Arvore B*
+		for _, id := range idList {
+			pos, err := hashing.HashRead(id, binManager.FILES_PATH, "hashIndex")
+			if err == nil {
+				pokeList = append(pokeList, c.ReadTarget(pos))
+			}
 		}
 	}
+	duration = time.Since(start).Milliseconds()
 
 	return
 }
@@ -82,7 +113,6 @@ func Create(pokemon models.Pokemon) (int, error) {
 	address, err := binManager.AppendPokemon(pokeBytes)
 
 	// Indice invertido
-	fmt.Printf("%+v", pokemon)
 	invertedIndex.Create(pokemon, binManager.FILES_PATH, models.PokemonStringFields()...)
 
 	// Tabela Hash

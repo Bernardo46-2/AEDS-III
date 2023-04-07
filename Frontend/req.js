@@ -54,7 +54,7 @@ importarDados.onclick = () => {
         .then(response => response.json())
         .then(data => {
             modalAviso(data.mensagem);
-            showAll.onclick();
+            retrieveCardsByPage0();
         })
         .catch(error => {
             modalAviso();
@@ -68,11 +68,44 @@ helpBtn.onclick = () => {
 
 /* ------------------------------------ CARD'S ------------------------------------ */
 
+const tempoDeBusca = document.getElementById("tempoDeBusca");
+const balaozinho = document.getElementById("balaozinho")
+const dragButton = document.getElementById("dragButton");
+const miniModal = document.getElementById("miniModal");
 const showAll = document.getElementById('All');
-let lastClicked = 1;
+let variavelDeControle = false;
 let insertDots = true;
+let lastClicked = 1;
 
-// adicionarCards(data)
+
+const indexMethod = {
+    0: "sequencial",
+    1: "hashing",
+    2: "arvore B",
+    3: "arvoreB+",
+    4: "arvoreB*",
+};
+
+showAll.onclick = () => {
+    fetch('http://localhost:8080/getIdList')
+        .then(response => response.json())
+        .then(data => {
+            paginarIds(data);
+            lastClicked = 1;
+            insertDots = true;
+            sessionStorage.setItem('actualPage', JSON.stringify(1));
+            recuperarCards(0)
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+
+window.onload = function () {
+    showAll.click()
+    sessionStorage.setItem('searchMethod', JSON.stringify(1));
+};
 
 function paginarIds(ids) {
     const pageSize = 60;
@@ -92,27 +125,11 @@ function paginarIds(ids) {
     return object;
 }
 
-showAll.onclick = () => {
-    recuperarIds();
-    recuperarCards(0)
-}
-
-function recuperarIds() {
-    fetch('http://localhost:8080/getIdList')
-    .then(response => response.json())
-    .then(data => {
-        paginarIds(data); 
-    })
-    .catch(error => {
-        modalAviso();
-        console.log(error)
-    });
-}
-
 function recuperarCards(pos) {
     const idList = JSON.parse(sessionStorage.getItem('idList'));
+    const searchMethod = JSON.parse(sessionStorage.getItem('searchMethod'));
     const ids = idList.groups[pos];
-    fetch('http://localhost:8080/getList/', {
+    fetch('http://localhost:8080/getList/?method=' + searchMethod, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -120,7 +137,10 @@ function recuperarCards(pos) {
         body: JSON.stringify(ids)
     })
         .then(response => response.json())
-        .then(data => adicionarCards(data))
+        .then(data => {
+            adicionarCards(data.pokemons);
+            showTime(indexMethod[searchMethod], data.time);
+        })
         .catch(error => {
             modalAviso();
             console.log(error)
@@ -128,7 +148,8 @@ function recuperarCards(pos) {
 }
 
 function recuperarCardsIds(ids) {
-    fetch('http://localhost:8080/getList/', {
+    const searchMethod = JSON.parse(sessionStorage.getItem('searchMethod'));
+    fetch('http://localhost:8080/getList/?method=' + searchMethod, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -136,16 +157,80 @@ function recuperarCardsIds(ids) {
         body: JSON.stringify(ids)
     })
         .then(response => response.json())
-        .then(data => adicionarCards(data))
+        .then(data => {
+            adicionarCards(data.pokemons);
+            showTime(indexMethod[searchMethod], data.time);
+        })
         .catch(error => {
             modalAviso();
             console.log(error)
         });
 }
 
-window.onload = function () {
-    showAll.click()
+function showTime(metodo, tempo) {
+    tempoDeBusca.innerHTML = `Método: <strong>${metodo}</strong><br>Tempo: <strong>${tempo} ms</strong>`;
+    miniModal.classList.add("mostrar");
+
+    if (!variavelDeControle) {
+        setTimeout(() => {
+            miniModal.classList.add("animated");
+            setTimeout(() => {
+                miniModal.classList.remove("animated");
+            }, 2000);
+        }, 2000);
+    }
+
+    const intervalId = setInterval(() => {
+        if (!variavelDeControle) {
+            miniModal.classList.add("animated");
+            setTimeout(() => {
+                miniModal.classList.remove("animated");
+            }, 2000);
+        } else {
+            // Limpe o intervalo quando a variável de controle mudar para true
+            clearInterval(intervalId);
+        }
+    }, 6000);
 };
+
+dragElement(miniModal, dragButton);
+
+function dragElement(element, handle) {
+    let pos1 = 0;
+    let pos3 = 0;
+
+    handle.addEventListener("mousedown", dragMouseDown);
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+
+        pos3 = e.clientX;
+
+        document.addEventListener("mouseup", closeDragElement);
+        document.addEventListener("mousemove", elementDrag);
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+
+        pos1 = pos3 - e.clientX;
+        pos3 = e.clientX;
+
+        let newPosition = element.offsetLeft - pos1;
+        let value = window.innerWidth - newPosition;
+        if (value < 300 && value > 43) {
+            element.style.left = (element.offsetLeft - pos1) + "px";
+        }
+        /* if (newPosition >= -220 && newPosition <= window.innerWidth - element.offsetWidth - 20) { */
+    }
+
+    function closeDragElement() {
+        document.removeEventListener("mouseup", closeDragElement);
+        document.removeEventListener("mousemove", elementDrag);
+    }
+}
 
 function adicionarCards(data) {
     window.scrollTo(0, 0);
@@ -215,18 +300,38 @@ function gerarPaginacao() {
 function retrieveCardsByPage() {
     const actualPage = JSON.parse(sessionStorage.getItem('actualPage'));
     fetch('http://localhost:8080/getIdList')
-    .then(response => response.json())
-    .then(data => {
-        object = paginarIds(data); 
-        console.log(actualPage-1);
-        console.log(object.groups[actualPage-1]);
-        recuperarCardsIds(object.groups[actualPage-1]);
-    })
-    .catch(error => {
-        modalAviso();
-        console.log(error)
-    });
+        .then(response => response.json())
+        .then(data => {
+            recuperarCardsIds(paginarIds(data).groups[actualPage - 1]);
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
 }
+
+function retrieveCardsByPage0() {
+    lastClicked = 1;
+    insertDots = true;
+    sessionStorage.setItem('actualPage', JSON.stringify(1));
+    fetch('http://localhost:8080/getIdList')
+        .then(response => response.json())
+        .then(data => {
+            recuperarCardsIds(paginarIds(data).groups[0]);
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+
+dragButton.addEventListener("mousedown", function () {
+    balaozinho.style.opacity = "0";
+    variavelDeControle = true;
+    setTimeout(() => {
+        balaozinho.style.display = "none";
+    }, 1000); // Aguarde a animação de 1 segundo antes de definir display para "none"
+});
 
 /* ------------------------------------ UPDATE ------------------------------------ */
 
@@ -517,9 +622,7 @@ ordenar2.onclick = () => {
 const index = document.querySelector('#Index');
 const indexDropdown = document.querySelector('#indexDropdown');
 const indexButtons = document.querySelectorAll('.index-buttons');
-const index0 = document.querySelector('#Index0');
-const index1 = document.querySelector('#Index1');
-const index2 = document.querySelector('#Index2');
+const indexChoice = document.querySelectorAll('#Index0, #Index1, #Index2, #Index3, #Index4');
 const indexTransition = index.style.transition;
 const indexVar3 = index.style.paddingTop;
 let indexAberto = false;
@@ -528,23 +631,31 @@ index.addEventListener('click', function (event) {
     if (event.target === index && !indexAberto) {
         index.style.transition = "all 0.4s ease-in-out";
         indexDropdown.style.transition = "all 0.4s ease-in-out";
-        indexDropdown.style.height = "230px";
+        indexDropdown.style.height = "340px";
         indexDropdown.style.marginBottom = "15px";
-        index.style.height = "230px";
+        index.style.height = "340px";
         index.style.paddingTop = "15px";
         indexAberto = true;
         window.setTimeout(() => {
             indexButtons[0].style.pointerEvents = 'auto';
             indexButtons[0].style.opacity = "1";
-        }, 100);
+        }, 75);
         window.setTimeout(() => {
             indexButtons[1].style.pointerEvents = 'auto';
             indexButtons[1].style.opacity = "1";
-        }, 200);
+        }, 150);
         window.setTimeout(() => {
             indexButtons[2].style.pointerEvents = 'auto';
             indexButtons[2].style.opacity = "1";
+        }, 225);
+        window.setTimeout(() => {
+            indexButtons[3].style.pointerEvents = 'auto';
+            indexButtons[3].style.opacity = "1";
         }, 300);
+        window.setTimeout(() => {
+            indexButtons[4].style.pointerEvents = 'auto';
+            indexButtons[4].style.opacity = "1";
+        }, 375);
     } else if (event.target === index) {
         setTimeout(() => {
             indexDropdown.style.height = 60 + "px";
@@ -560,19 +671,27 @@ index.addEventListener('click', function (event) {
             setTimeout(() => {
                 index.style.transition = indexTransition;
             }, 500);
-        }, 150);
+        }, 175);
+        window.setTimeout(() => {
+            indexButtons[4].style.pointerEvents = 'auto';
+            indexButtons[4].style.opacity = "0";
+        }, 0);
+        window.setTimeout(() => {
+            indexButtons[3].style.pointerEvents = 'auto';
+            indexButtons[3].style.opacity = "0";
+        }, 50);
         window.setTimeout(() => {
             indexButtons[2].style.pointerEvents = 'auto';
             indexButtons[2].style.opacity = "0";
-        }, 0);
+        }, 100);
         window.setTimeout(() => {
             indexButtons[1].style.pointerEvents = 'auto';
             indexButtons[1].style.opacity = "0";
-        }, 50);
+        }, 150);
         window.setTimeout(() => {
             indexButtons[0].style.pointerEvents = 'auto';
             indexButtons[0].style.opacity = "0";
-        }, 175);
+        }, 200);
     }
 })
 
@@ -583,43 +702,13 @@ indexButtons.forEach(element => {
     });
 });
 
-index0.onclick = () => {
-    fetch('http://localhost:8080/indexacao/?metodo=0')
-        .then(response => response.json())
-        .then(data => {
-            modalAviso(data.mensagem);
-            showAll.onclick();
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
-}
-index1.onclick = () => {
-    fetch('http://localhost:8080/indexacao/?metodo=1')
-        .then(response => response.json())
-        .then(data => {
-            modalAviso(data.mensagem);
-            showAll.onclick();
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
-}
-index2.onclick = () => {
-    fetch('http://localhost:8080/indexacao/?metodo=2')
-        .then(response => response.json())
-        .then(data => {
-            modalAviso(data.mensagem);
-            showAll.onclick();
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
-}
-
+indexChoice.forEach(element => {
+    element.onclick = () => {
+        const choice = element.id;
+        const lastDigit = parseInt(choice.slice(-1));
+        sessionStorage.setItem('searchMethod', JSON.stringify(lastDigit));
+    }
+});
 /* ------------------------------------- MODAIS ------------------------------------- */
 
 const modalClose = document.querySelector('#close');
@@ -629,6 +718,12 @@ const meuBotao = document.querySelector('#meu-botao');
 const meuBotao2 = document.querySelector('#meu-botao2');
 const deleteBtn = document.getElementById('delete');
 
+function getOffset(el) {
+    var rect = el.getBoundingClientRect();
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+    return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
+}
 
 function abrirModal(pokemon = "pokebola", editar = false, data) {
     const closeButton = document.getElementById('close');
@@ -1024,8 +1119,6 @@ const collectFormData = async () => {
     pokemon.mitico = pokeMitic.classList.contains('mitico-y');
     pokemon.descricao = pokeDescription.value;
 
-    console.log(pokemon)
-
     return pokemon;
 }
 
@@ -1063,7 +1156,9 @@ document.querySelector('#save').onclick = async () => {
 
 /* ----------------------------------- SCROLLBAR ----------------------------------- */
 
-const scrollbar = document.querySelector('.scrollbar');
+const scrollbar = document.querySelector('#scrollbar');
+let isMouseDown = false;
+let startY;
 
 window.addEventListener('resize', function () {
     const totalHeight = document.documentElement.scrollHeight;
@@ -1085,9 +1180,40 @@ document.addEventListener("scroll", () => {
     scrollbar.style.top = `${thumbPosition}px`;
 });
 
-function getOffset(el) {
-    var rect = el.getBoundingClientRect();
-    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-    return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
+let distanceFromTop = 0;
+let thumbHeight = 0
+
+scrollbar.addEventListener("mousedown", (e) => {
+    distanceFromTop = e.clientY - scrollbar.getBoundingClientRect().y;
+    const totalHeight = document.documentElement.scrollHeight;
+    const scrollbarHeight = window.innerHeight;
+    thumbHeight = Math.max(scrollbarHeight * (window.innerHeight / totalHeight), 20);
+});
+
+function handleMouseMove(e) {
+    e.preventDefault();
+    if (!isMouseDown) return;
+
+    const scrollPercentage = ((e.clientY - (distanceFromTop)) / (window.innerHeight - thumbHeight));
+    const scrollPosition = (scrollPercentage * (document.documentElement.scrollHeight - window.innerHeight));
+
+
+    window.scrollTo({
+        top: scrollPosition,
+        behavior: 'instant'
+    });
 }
+
+scrollbar.addEventListener("mousedown", (e) => {
+    isMouseDown = true;
+    scrollbar.classList.add("dragging");
+});
+
+document.addEventListener("mousemove", handleMouseMove);
+
+document.addEventListener("mouseup", () => {
+    if (!isMouseDown) return;
+
+    isMouseDown = false;
+    scrollbar.classList.remove("dragging");
+});

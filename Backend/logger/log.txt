@@ -348,3 +348,68 @@ STATUS: 2023/04/06 21:32:49 Servidor iniciado
 STATUS: 2023/04/06 21:41:20 Servidor desligado
 STATUS: 2023/04/06 21:41:23 Servidor iniciado
 STATUS: 2023/04/07 01:19:30 Servidor desligado
+STATUS: 2023/04/07 01:29:18 Servidor iniciado
+INFO: 2023/04/07 01:30:38 Database Carregada
+INFO: 2023/04/07 01:30:38 Hash Dinamica Criada
+INFO: 2023/04/07 01:30:43 Database Ordenada com sucesso!
+ERROR: 2023/04/07 01:33:33 code: 400, message: Erro ao converter o JSON para Pokemon
+INFO: 2023/04/07 01:35:38 Database Carregada
+INFO: 2023/04/07 01:35:38 Hash Dinamica Criada
+STATUS: 2023/04/07 01:36:38 Servidor desligado
+STATUS: 2023/04/07 01:36:42 Servidor iniciado
+INFO: 2023/04/07 01:37:05 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:37:18 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:37:36 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:38:00 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:39:08 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:40:22 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:40:50 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:41:03 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:41:12 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:41:17 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:41:21 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:41:24 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:41:28 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:41:32 Database Ordenada com sucesso!
+INFO: 2023/04/07 01:41:45 Database Ordenada com sucesso!
+STATUS: 2023/04/07 01:41:53 Servidor desligado
+STATUS: 2023/04/07 01:42:04 Servidor iniciado
+STATUS: 2023/04/07 01:42:22 Servidor desligado
+STATUS: 2023/04/07 01:43:04 Servidor iniciado
+INFO: 2023/04/07 01:43:09 Database Carregada
+INFO: 2023/04/07 01:43:09 Hash Dinamica Criada
+STATUS: 2023/04/07 01:44:12 Servidor desligado
+STATUS: 2023/04/07 01:44:16 Servidor iniciado
+INFO: 2023/04/07 01:44:21 Database Carregada
+INFO: 2023/04/07 01:44:21 Hash Dinamica Criada
+INFO: 2023/04/07 01:44:34 Database Ordenada com sucesso!
+STATUS: 2023/04/07 01:44:54 Servidor desligado
+STATUS: 2023/04/07 01:49:44 Servidor iniciado
+INFO: 2023/04/07 01:59:10 Database Ordenada com sucesso!
+STATUS: 2023/04/07 02:09:53 Servidor desligado
+STATUS: 2023/04/07 02:09:56 Servidor iniciado
+STATUS: 2023/04/07 02:10:51 Servidor desligado
+STATUS: 2023/04/07 02:29:39 Servidor iniciado
+STATUS: 2023/04/07 02:33:28 Servidor desligado
+STATUS: 2023/04/07 02:33:30 Servidor iniciado
+ERROR: 2023/04/07 03:04:50 code: 400, message: Erro ao converter o JSON para Pokemon
+ERROR: 2023/04/07 03:04:52 code: 400, message: Erro ao converter o JSON para Pokemon
+INFO: 2023/04/07 03:05:38 Database Ordenada com sucesso!
+INFO: 2023/04/07 03:12:47 Database Carregada
+INFO: 2023/04/07 03:12:47 Hash Dinamica Criada
+INFO: 2023/04/07 03:13:31 Database Carregada
+INFO: 2023/04/07 03:13:31 Hash Dinamica Criada
+INFO: 2023/04/07 03:14:09 Database Carregada
+INFO: 2023/04/07 03:14:09 Hash Dinamica Criada
+INFO: 2023/04/07 03:16:26 Database Carregada
+INFO: 2023/04/07 03:16:26 Hash Dinamica Criada
+INFO: 2023/04/07 03:16:53 Database Carregada
+INFO: 2023/04/07 03:16:53 Hash Dinamica Criada
+INFO: 2023/04/07 03:17:00 Database Carregada
+INFO: 2023/04/07 03:17:00 Hash Dinamica Criada
+INFO: 2023/04/07 03:17:27 Database Carregada
+INFO: 2023/04/07 03:17:27 Hash Dinamica Criada
+INFO: 2023/04/07 03:34:41 Database Ordenada com sucesso!
+INFO: 2023/04/07 03:35:15 Database Ordenada com sucesso!
+INFO: 2023/04/07 03:35:37 Database Ordenada com sucesso!
+INFO: 2023/04/07 05:37:07 Database Ordenada com sucesso!

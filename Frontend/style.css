@@ -1,7 +1,7 @@
 :root {
     --random: 0;
     --background-dark: #161a1f;
-    --background-transparent-dark: #161a1fd3;
+    --background-transparent-dark: #111418c9;
     --background-medium-dark: #2b2e36;
     --background-light-dark: #484e5e;
     --text-secondary: #5a5c5f;
@@ -34,7 +34,7 @@
     --bulbasaur-transparent: #7ac74c6c;
     --squirtle-transparent: #3399ff6c;
     --eevee-transparent: #c5b3586c;
-    --umbreon-transparent: #191a1b6c;
+    --umbreon-transparent: #15191ee0;
     --gengar-transparent: #c660d460;
     --jigglypuff-transparent: #f9bbc16c;
     --psyduck-transparent: #f4c4306c;
@@ -73,6 +73,92 @@
     --Steel: #b8b8d0;
     --Fairy: #ee99ac;
 }
+
+.mini-modal {
+    font-family: "Tilt Neon", cursive !important;
+    color: var(--bulbasaur) !important;
+    font-size: 1.5em;
+    position: fixed;
+    top: 75px;
+    right: -350px;
+    background-color: #0c0e11e5;
+    color: white;
+    padding: 20px 30px 5px 50px;
+    border-radius: 15px 0px 0px 15px;
+    text-align: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: right 0.7s, opacity 0.7s;
+    box-shadow: 0px 0px 10px #0c0e11d3;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.mini-modal.mostrar {
+    right: 0px;
+    opacity: 1;
+}
+
+.drag-button {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    height: 100%;
+    cursor: ew-resize;
+}
+
+.barra-vertical {
+    font-size: 3em;
+    color: white;
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(10px);
+    }
+
+    40% {
+        transform: translateX(0);
+    }
+
+    60% {
+        transform: translateX(10px);
+    }
+
+    80% {
+        transform: translateX(0);
+    }
+}
+
+.mini-modal.animated {
+    animation: slide 2s ease infinite;
+}
+
+.balaozinho {
+    transition: opacity 1s ease-out;
+    position: absolute;
+    top: 40px;
+    right: 280px;
+    padding: 0px 5px 0px 5px;
+    background-color: #0c0e11e5;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.balaozinho p {
+    margin: 0;
+    font-size: 1em;
+    color: white;
+    font-weight: bold;
+}
+
+
 
 /*  * * * * * * * * * * * * *
  *
@@ -558,6 +644,7 @@ textarea {
     margin: 0px !important;
     opacity: 0;
     transition: transform 0.5s ease-in-out;
+    z-index: 9999;
 }
 
 .modal.show {
@@ -631,7 +718,7 @@ textarea {
     height: 100vh !important;
     border-radius: 0px;
     margin: 0px !important;
-    z-index: 2000;
+    z-index: 4000;
     border-radius: 0px 40px 40px 0px;
 }
 
@@ -748,15 +835,15 @@ body::-webkit-scrollbar {
     display: none;
 }
 
-.scrollbar {
+#scrollbar {
     position: fixed;
-    background-color: var(--background-dark);
+    background-color: var(--background-transparent-dark);
     border-radius: 5px;
     right: 0px;
     width: 10px;
     height: 100px;
     margin: 0px !important;
-    transition: height 0.2s ease-out;
+    z-index: 1050;
 }
 
 /*  * * * * * * * * * * * * *

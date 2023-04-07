@@ -13,8 +13,8 @@ import (
 )
 
 const FILES_PATH string = "data/files/"
-const CSV_PATH string = "data/files/pokedex2.csv"
-const BIN_FILE string = "data/files/pokedex.dat"
+const CSV_PATH string = "data/files/database/pokedex.csv"
+const BIN_FILE string = "data/files/database/pokedex.bin"
 
 // ReadBinToPoke lê um arquivo binário com informações de Pokémons e retorna
 // um Pokémon com o número especificado. Caso o número não seja encontrado,

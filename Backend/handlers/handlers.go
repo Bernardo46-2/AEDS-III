@@ -20,6 +20,11 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
+type retorno struct {
+	Pokemons []models.Pokemon `json:"pokemons"`
+	Time     int64            `json:"time"`
+}
+
 // GetPagesNumber retorna a quantidade de paginas disponiveis
 func GetPagesNumber(w http.ResponseWriter, r *http.Request) {
 	// Recuperar ID e ler arquivo
@@ -48,6 +53,7 @@ func GetIdList(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetList(w http.ResponseWriter, r *http.Request) {
+	method, _ := strconv.Atoi(r.URL.Query().Get("method"))
 	// Recuperando lista de argumentos
 	var list []int64
 	if json.NewDecoder(r.Body).Decode(&list) != nil {
@@ -55,7 +61,7 @@ func GetList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pokeList, err := service.GetList(list)
+	pokeList, time, err := service.GetList(list, method)
 
 	// Resposta
 	if err != nil {
@@ -63,7 +69,12 @@ func GetList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJson(w, pokeList)
+	retorno := retorno{
+		Pokemons: pokeList,
+		Time:     time,
+	}
+
+	writeJson(w, retorno)
 }
 
 // GetPokemon recupera o pokemon pelo ID fornecido

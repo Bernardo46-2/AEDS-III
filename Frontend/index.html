@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <div class="scrollbar"></div>
+    <div id="scrollbar"></div>
     <div class="container-fluid">
         <div class="row">
             <div class="col-2 p-0 bgd-dark pre-sidebar" id="sidebar">
@@ -45,6 +45,8 @@
                         <button type="button" class="dropdown-item index-buttons btn-Gengar2 btn btn-dropdown" id="Index0"><span></span><span></span><span></span><span></span>Sequencial</button>
                         <button type="button" class="dropdown-item index-buttons btn-Gengar2 btn btn-dropdown" id="Index1"><span></span><span></span><span></span><span></span>Hashing</button>
                         <button type="button" class="dropdown-item index-buttons btn-Gengar2 btn btn-dropdown" id="Index2"><span></span><span></span><span></span><span></span>Arvore B</button>
+                        <button type="button" class="dropdown-item index-buttons btn-Gengar2 btn btn-dropdown" id="Index3"><span></span><span></span><span></span><span></span>Arvore B+</button>
+                        <button type="button" class="dropdown-item index-buttons btn-Gengar2 btn btn-dropdown" id="Index4"><span></span><span></span><span></span><span></span>Arvore B*</button>
                     </div>
                     <button type="button" class="btn btn-Abra btn-sidebar" id="ImportarDados"><span></span><span></span><span></span><span></span>Carregar Dados</button>
                     <button type="button" class="btn btn-Gengar btn-sidebar" id="Ajuda"><span></span><span></span><span></span><span></span>Extras</button>
@@ -94,6 +96,14 @@
                 <p id="mensagem-modal"></p>
             </div>
         </div>
+    </div>
+
+    <div id="miniModal" class="mini-modal">
+        <div id="balaozinho" class="balaozinho">
+            <p>arraste -></p>
+        </div>
+        <div id="dragButton" class="drag-button"><span class="barra-vertical">|</span></div>
+        <p id="tempoDeBusca"></p>
     </div>
 
     <script src="./req.js"></script>
