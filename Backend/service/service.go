@@ -229,8 +229,13 @@ func InvertedIndex(id int64, nome string, especie string, tipo string, descricao
 	descricaoScDoc := getFieldScDoc("descricao", descricao)
 	japNameScDoc := getFieldScDoc("nomeJap", japName)
 
-	idScDoc := invertedIndex.NewScoredDocumentSlice(id, 1)
-	scDoc := invertedIndex.Merge(idScDoc, nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc)
+	var scDoc []invertedIndex.ScoredDocument
+	if id != 0 {
+		idScDoc := invertedIndex.NewScoredDocumentSlice(id, 1)
+		scDoc = invertedIndex.Merge(idScDoc, nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc)
+	} else {
+		scDoc = invertedIndex.Merge(nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc)
+	}
 
 	for _, tmp := range scDoc {
 		idList = append(idList, tmp.DocumentID)

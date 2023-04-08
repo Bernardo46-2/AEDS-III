@@ -121,6 +121,8 @@ function paginarIds(ids) {
         groups
     };
 
+    console.log(object);
+
     sessionStorage.setItem('idList', JSON.stringify(object));
 
     return object;
@@ -630,8 +632,11 @@ search.addEventListener('click', function (event) {
             .then(data => {
                 cardsFatherDiv.style.position = fatherDivPosition;
                 modalContainer2.classList.add('out');
-                console.log(data);
-                adicionarCards(data);
+                paginarIds(data);
+                lastClicked = 1;
+                insertDots = true;
+                sessionStorage.setItem('actualPage', JSON.stringify(1));
+                recuperarCards(0)
                 /* showTime(indexMethod[5], data.time); */
             })
             .catch(error => {
