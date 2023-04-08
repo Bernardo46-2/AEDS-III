@@ -10,11 +10,14 @@ import (
 	"time"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
+
+const BTREE_ORDER = 8
 
 // ReadPagesNumber retorna o numero de paginas disponiveis para a
 // exibiçao dos pokemons na tela inicial do site, como um menu
@@ -69,12 +72,14 @@ func GetList(idList []int64, method int) (pokeList []models.Pokemon, duration in
 			}
 		}
 	case 2: // Arvore B
+        btree, _ := btree.ReadBTree(binManager.FILES_PATH)
 		for _, id := range idList {
-			pos, err := hashing.HashRead(id, binManager.FILES_PATH, "hashIndex")
-			if err == nil {
-				pokeList = append(pokeList, c.ReadTarget(pos))
+			pos := btree.Find(id)
+			if pos != nil {
+				pokeList = append(pokeList, c.ReadTarget(pos.Ptr))
 			}
 		}
+        btree.Close()
 	case 3: // Arvore B+
 		for _, id := range idList {
 			pos, err := hashing.HashRead(id, binManager.FILES_PATH, "hashIndex")
@@ -117,6 +122,10 @@ func Create(pokemon models.Pokemon) (int, error) {
 
 	// Tabela Hash
 	hashing.HashCreate(int64(pokemon.Numero), address, binManager.FILES_PATH, "hashIndex")
+
+    // Arvore B
+    btree, _ := btree.NewBTree(BTREE_ORDER, binManager.FILES_PATH)
+    btree.Close()
 
 	return int(ultimoID), err
 }
@@ -165,6 +174,11 @@ func Update(pokemon models.Pokemon) (err error) {
 	// Tabela Hash
 	err = hashing.HashUpdate(int64(pokemon.Numero), newAddress, binManager.FILES_PATH, "hashIndex")
 
+    // Arvore B
+    btree, _ := btree.ReadBTree(binManager.FILES_PATH)
+    btree.Update(int64(pokemon.Numero), newAddress)
+    btree.Close()
+
 	return
 }
 
@@ -190,6 +204,14 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 
 	// Tabela Hash
 	hashing.HashDelete(int64(pokemon.Numero), binManager.FILES_PATH, "hashIndex")
+
+    // Arvore B
+    btree, err := btree.ReadBTree(binManager.FILES_PATH)
+    if err != nil {
+        return
+    }
+    btree.Remove(int64(id))
+    btree.Close()
 
 	return
 }
