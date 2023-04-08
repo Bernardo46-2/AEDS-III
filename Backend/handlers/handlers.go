@@ -284,8 +284,10 @@ func reconstruirIndices() {
 	controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
 	defer controler.Close()
 	hashing.StartHashFile(controler, 8, binManager.FILES_PATH, "hashIndex")
-	btree, _ := btree.NewBTree(8, binManager.FILES_PATH)
-	btree.Close()
+
+    // Arvore B
+    fmt.Println("yo")
+    btree.StartBTreeFile(binManager.FILES_PATH)
 
 	// Indice Invertido
 	controler.Reset()

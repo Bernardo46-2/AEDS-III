@@ -207,20 +207,20 @@ func (n *BTreeNode) max() Key {
 func (n *BTreeNode) find(id int64) (*Key, int64) {
     var k *Key
     address := int64(-1)
-    i := int64(0)
+    i := n.numberOfKeys - 1
     
-    for i < n.numberOfKeys && n.keys[i].Id < id {
-        i++
+    for i > 0 && n.keys[i].Id > id {
+        i--
     }
 
     if n.keys[i].Id == id {
         k = &n.keys[i]
     } else if n.keys[i].Id < id {
-        address = n.child[i]
-    } else {
         address = n.child[i+1]
+    } else {
+        address = n.child[i]
     }
-
+    
     return k, address
 }
 
@@ -649,12 +649,12 @@ func (b *BTree) Find(id int64) *Key {
     var k *Key
     var address int64
     node := b.readNode(b.root)
-
+    
     for node != nil && k == nil {
         k, address = node.find(id)
         node = b.readNode(address)
     }
-
+    
     return k
 }
 
@@ -675,11 +675,7 @@ func (b *BTree) Update(id int64, ptr int64) {
     }
 }
 
-
-// ====================================== Tests ====================================== //
-
-func StartBTreeFile() {
-    dir := "./data/files/btree/"
+func StartBTreeFile(dir string) {
     order := 8
     tree, _ := NewBTree(order, dir)
     reader, err := binManager.InicializarControleLeitura(binManager.BIN_FILE)
@@ -694,16 +690,5 @@ func StartBTreeFile() {
         }
     }
 
-    tree.Close()
-
-    tree, _ = ReadBTree(dir)
-
-    for i := 1; i <= n-10; i++ {
-        fmt.Println(tree.Remove(int64(i)))
-    }
-
-    tree.printFile()
-
-    fmt.Println(tree.Find(884))
     tree.Close()
 }
