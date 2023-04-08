@@ -413,3 +413,8 @@ INFO: 2023/04/07 03:34:41 Database Ordenada com sucesso!
 INFO: 2023/04/07 03:35:15 Database Ordenada com sucesso!
 INFO: 2023/04/07 03:35:37 Database Ordenada com sucesso!
 INFO: 2023/04/07 05:37:07 Database Ordenada com sucesso!
+INFO: 2023/04/07 07:44:51 Database Carregada
+INFO: 2023/04/07 07:44:51 Hash Dinamica Criada
+STATUS: 2023/04/07 20:49:11 Servidor iniciado
+INFO: 2023/04/07 20:49:28 Database Carregada
+INFO: 2023/04/07 20:49:28 Hash Dinamica Criada
