@@ -15,7 +15,7 @@
 
 <body>
     <div id="scrollbar"></div>
-    <div class="container-fluid">
+    <div class="container-fluid" id="cardsFatherDiv">
         <div class="row">
             <div class="col-2 p-0 bgd-dark pre-sidebar" id="sidebar">
                 <div class="sidebar sidebar-shadow">
@@ -25,11 +25,7 @@
                     <button id="meu-botao3" data-bs-toggle="modal" data-bs-target="#modalPage" hidden>Botão Oculto</button>
                     <button type="button" class="btn btn-Pikachu btn-sidebar" id="All"><span></span><span></span><span></span><span></span>Gotta Catch 'Em All!</button>
                     <button type="button" class="btn btn-Bulbasaur btn-sidebar" id="Create"><span></span><span></span><span></span><span></span>Registrar</button>
-                    <form id="actual-search-form">
-                        <button type="button" class="btn btn-Charmander btn-sidebar" id="Search"><span></span><span></span><span></span><span></span>Pesquisar
-                            <input type="number" class="displayNone search-in-button form-control" id="search-form"/>
-                        </button>
-                    </form>
+                    <button type="button" class="btn btn-Charmander btn-sidebar" id="Search"><span></span><span></span><span></span><span></span>Search</button>
                     <div id="ordenarDropdown">
                         <button id="Ordenar" class="btn btn-Vaporeon ordenar-button-principal btn-sidebar" type="button"><span></span><span></span><span></span><span></span>
                         Ordenação <symbol>▼</symbol>
@@ -90,6 +86,14 @@
         </div>
     </div>
 
+    <div id="miniModal" class="mini-modal">
+        <div id="balaozinho" class="balaozinho">
+            <p>arraste -></p>
+        </div>
+        <div id="dragButton" class="drag-button"><span class="barra-vertical">|</span></div>
+        <p id="tempoDeBusca"></p>
+    </div>
+
     <div id="modal-container">
         <div class="modal-background">
             <div class="modal-content-success">
@@ -98,12 +102,14 @@
         </div>
     </div>
 
-    <div id="miniModal" class="mini-modal">
-        <div id="balaozinho" class="balaozinho">
-            <p>arraste -></p>
+    <div id="modal-container2">
+        <div class="modal-background2">
+            <div class="modal-content-success2">
+                <span id="close-search-modal">&times;</span>
+                <p id="mensagem-modal2"></p>
+                <button type="button" id="searchIndex" class="btn btn-eevee-classic btn-modal">Pesquisar</button>
+            </div>
         </div>
-        <div id="dragButton" class="drag-button"><span class="barra-vertical">|</span></div>
-        <p id="tempoDeBusca"></p>
     </div>
 
     <script src="./req.js"></script>

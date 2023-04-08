@@ -8,7 +8,7 @@
     --text-primary: #fffdf0;
     --pikachu: #fdd835;
     --charmander: #f08030;
-    --bulbasaur: #7ac74c;
+    --bulbasaur: #71b649;
     --squirtle: #3399ff;
     --eevee: #c5b358;
     --umbreon: #191a1b;
@@ -50,6 +50,8 @@
     --meowth-transparent: #f1b61c6c;
     --minum-transparent: #e6d5716c;
     --quilava-transparent: #ee81306c;
+    --eevee-escuro: #b3a561;
+    --eevee-escuro2:#706739;
     --pikachu-escuro: #ccad2e;
     --flareon-escuro: #b40c0c;
     --bulbasaur-escuro: #648f38;
@@ -72,6 +74,27 @@
     --Dark: #705848;
     --Steel: #b8b8d0;
     --Fairy: #ee99ac;
+}
+
+#searchIndex {
+    max-width: 500px;
+    min-width: 400px;
+}
+
+#close-search-modal {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    color: #ffffff;
+    font-size: 3em;
+    font-weight: bold;
+}
+
+#close-search-modal:hover,
+#close-search-modal:focus {
+    color: var(--flareon);
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .mini-modal {
@@ -308,6 +331,75 @@ symbol {
     }
 }
 
+#modal-container2 {
+    position: absolute;
+    overflow: scroll;
+    display: table;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    transform: scale(0);
+    z-index: 1049 !important;
+}
+
+#modal-container2.one {
+    transform: scaleY(0.01) scaleX(0);
+    animation: unfoldIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+#modal-container2.one.out {
+    transform: scale(1);
+    animation: unfoldOut 0.5s 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+#modal-container2 .modal-background2 {
+    display: table-cell;
+    background: #000000e8;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.modal-content-success2 {
+    color: #fff;
+    font-family: "Tilt Neon", cursive !important;
+    font-size: 1em;
+}
+
+.modal-search-input {
+    font-family: "Tilt Neon", cursive !important;
+    font-size: 2.5em !important;
+    text-shadow: 1px 1px 3px black;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.911) !important;
+    border-radius: 20px;
+    height: 60px !important;
+    max-width: 400px !important;
+    min-width: 300px !important;
+}
+
+.search-pre-text {
+    font-family: "Tilt Neon", cursive !important;
+    text-align: right;
+    font-size: 2.5em;
+    color: white;
+    white-space: nowrap;
+    max-width: 200px !important;
+}
+
+.search-pos-text {
+    font-family: "Tilt Neon", cursive !important;
+    text-align: left;
+    font-size: 2.5em;
+    color: white;
+    white-space: nowrap;
+    max-width: 200px !important;
+}
+
+.search-identation {
+    margin-top: 30px !important;
+}
+
 /*  * * * * * * * * * * * * *
  *
  *  Dados Pokemon
@@ -468,6 +560,12 @@ symbol {
     padding: 0px !important;
 }
 
+.progress2 {
+    max-width: 400px !important;
+    min-width: 300px !important;
+    padding: 0px !important;
+}
+
 .progress-bar-input {
     -webkit-appearance: none;
     appearance: none;
@@ -480,6 +578,26 @@ symbol {
     -webkit-appearance: none;
     width: 20px;
     height: 20px;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.progress-bar-input2 {
+    border-radius: 15px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    padding-bottom: 5px;
+}
+
+.progress-bar-input2::-webkit-slider-thumb {
+    border-radius: 15px;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 35px;
     background-color: transparent;
     cursor: pointer;
 }
@@ -562,13 +680,28 @@ input[type="text"] {
 
 .poke-descricao-input {
     color: #ffffff;
-    background-color: var(--background-dark);
+    background-color: transparent;
     border: none;
     width: 60% !important;
     text-align: center;
     font-family: "Tilt Neon", cursive !important;
     font-size: 1.7em !important;
     margin-bottom: 18px !important;
+}
+
+.poke-descricao-input2 {
+    color: #ffffff;
+    background-color: rgba(0, 0, 0, 0.911) !important;
+    border: none;
+    border-radius: 15px;
+    max-width: 400px !important;
+    min-width: 300px !important;
+    text-align: center;
+    font-family: "Tilt Neon", cursive !important;
+    font-size: 1.7em !important;
+    margin-bottom: 18px !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 textarea {
@@ -587,11 +720,15 @@ textarea {
 }
 
 .lendario-y {
+    border: solid;
+    border-color: var(--abra);
     background-color: var(--abra);
     text-shadow: 0px 0px 5px white;
 }
 
 .mitico-y {
+    border: solid;
+    border-color: var(--dragonair);
     background-color: var(--dragonair);
     text-shadow: 0px 0px 5px white;
 }
@@ -606,6 +743,45 @@ textarea {
     border: solid;
     color: #ffffff33;
     border-color: var(--dragonair-transparent);
+}
+
+.mit-len-choise {
+    color: #fff;
+    border-radius: 30px;
+    width: 200px !important;
+    text-align: center;
+    font-family: "Tilt Neon", cursive !important;
+    font-size: 2em !important;
+    margin: 5px 10px 25px 10px !important;
+
+}
+
+.lendario2-y {
+    border: solid;
+    border-color: var(--abra);
+    background-color: var(--abra);
+    text-shadow: 0px 0px 5px white;
+}
+
+.mitico2-y {
+    border: solid;
+    border-color: var(--dragonair);
+    background-color: var(--dragonair);
+    text-shadow: 0px 0px 5px white;
+}
+
+.lendario2-n {
+    border: solid;
+    color: #ffffff33;
+    background-color: rgba(0, 0, 0, 0.911);
+    border-color: rgba(0, 0, 0, 0.911);
+}
+
+.mitico2-n {
+    border: solid;
+    color: #ffffff33;
+    background-color: rgba(0, 0, 0, 0.911);
+    border-color: rgba(0, 0, 0, 0.911);
 }
 
 /*  * * * * * * * * * * * * *
@@ -828,7 +1004,6 @@ textarea {
 .scrollbar2::-webkit-scrollbar-thumb {
     border-radius: 0px;
     background-color: var(--background-light-dark);
-    box-shadow: 0px 0px 10px 10px var(--background-dark);
 }
 
 body::-webkit-scrollbar {
@@ -1056,6 +1231,12 @@ body::-webkit-scrollbar {
     transition: 0.5s;
 }
 
+.btn-eevee-classic {
+    background-color: var(--eevee-escuro) !important;
+    color: white !important;
+    transition: 0.5s;
+}
+
 .btn-pikachu-classic:hover {
     background-color: var(--pikachu-escuro) !important;
 }
@@ -1070,6 +1251,10 @@ body::-webkit-scrollbar {
 
 .btn-bulbasaur-classic:hover {
     background-color: var(--bulbasaur-escuro) !important;
+}
+
+.btn-eevee-classic:hover {
+    background-color: var(--eevee-escuro2) !important;
 }
 
 .bgd-pikachu {

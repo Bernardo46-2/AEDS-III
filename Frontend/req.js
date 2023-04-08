@@ -1,6 +1,7 @@
 /* ------------------------------------- UTILS ------------------------------------- */
 
 const modalContainer = document.getElementById('modal-container');
+const mensagem = document.getElementById("mensagem-modal");
 const classes = {
     'Normal': 'bgd-Normal',
     'Fire': 'bgd-Fire',
@@ -27,7 +28,6 @@ function capt(str) {
 }
 
 function modalAviso(mostrar = "Servidor Desligado") {
-    const mensagem = document.getElementById("mensagem-modal");
     mensagem.innerHTML = mostrar;
 
     modalContainer.classList.remove('out');
@@ -79,11 +79,12 @@ let lastClicked = 1;
 
 
 const indexMethod = {
-    0: "sequencial",
-    1: "hashing",
-    2: "arvore B",
-    3: "arvoreB+",
-    4: "arvoreB*",
+    0: "Sequencial",
+    1: "Hashing",
+    2: "Arvore B",
+    3: "ArvoreB+",
+    4: "ArvoreB*",
+    5: "Indice Invertido",
 };
 
 showAll.onclick = () => {
@@ -438,11 +439,9 @@ function editarDadosModal(data, shouldCreate = false) {
         if (!miticoMarca) {
             mitico.classList.remove('mitico-n');
             mitico.classList.add('mitico-y');
-            mitico.classList.add('shadow-effect');
             miticoMarca = true;
         } else {
             mitico.classList.remove('mitico-y');
-            mitico.classList.remove('shadow-effect');
             mitico.classList.add('mitico-n');
             miticoMarca = false;
         }
@@ -468,45 +467,178 @@ Create.addEventListener('click', function () {
 
 /* ------------------------------------ SEARCH ------------------------------------ */
 
+const modalSearchClose = document.getElementById('close-search-modal');
+const modalContainer2 = document.getElementById('modal-container2');
+const searchIndex = document.getElementById('searchIndex');
+const cardsFatherDiv = document.getElementById('cardsFatherDiv');
+const mensagem2 = document.getElementById("mensagem-modal2");
 const search = document.querySelector('#Search');
-const searchForm = document.querySelector('#search-form');
-var searchAberto = false;
 
 search.addEventListener('click', function (event) {
-    if (event.target === search && !searchAberto) {
-        search.style.height = 100 + "px";
-        searchForm.classList.remove('displayNone');
-        searchForm.classList.remove('btn-Charmander');
-        searchAberto = true;
-    } else if (event.target === search) {
-        search.style.height = 45 + "px";
-        searchForm.classList.add('displayNone');
-        searchForm.classList.add('btn-Charmander');
-        searchAberto = false;
-    }
-});
+    fatherDivPosition = cardsFatherDiv.style.position;
+    cardsFatherDiv.style.position = "fixed";
+    modalContainer2.classList.remove('out');
+    modalContainer2.classList.add('one');
+    modalContainer2.style.zIndex = "9999 !important";
 
-document.getElementById('actual-search-form').onsubmit = e => {
-    e.preventDefault();
-    search.style.height = 45 + "px";
-    searchForm.classList.add('displayNone');
-    searchForm.classList.add('btn-Charmander');
-    searchAberto = false;
+    modalSearchClose.addEventListener('click', () => {
+        cardsFatherDiv.style.position = fatherDivPosition;
+        modalContainer2.classList.add('out');
+    });
 
-    fetch('http://localhost:8080/get/?id=' + searchForm.value)
-        .then(response => response.json())
-        .then(data => {
-            if ('mensagem' in data) {
-                modalAviso("Pokemon inexistente");
+    let naoImplementados = `
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Peso: </p>
+        <input class="col-4 modal-search-input" type="text" name="tipo-pokemon" id="tipo-pokemon" placeholder="6">
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Altura: </p>
+        <input class="col-4 modal-search-input" type="text" name="tipo-pokemon" id="tipo-pokemon" placeholder="0.4">
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Geração: </p>
+        <input class="col-4 modal-search-input" type="text" name="tipo-pokemon" id="tipo-pokemon" placeholder="1">
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Data: </p>
+        <input class="col-4 modal-search-input" type="text" name="tipo-pokemon" id="tipo-pokemon" placeholder="26/02/1996">
+    </div>
+
+    <div class="row justify-content-center">
+        <p class="mit-len-choise lendario2-n col-4 pointer" id="lendario2">Lendario</p>
+        <p class="mit-len-choise mitico2-n col-4 pointer" id="mitico2">Mitico</p>
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-2 search-pre-text">Hp:</p>
+        <div class="col-4 progress2">
+            <input class="progress-bar-input2 rangers" type="range" id="--bulbasaur" min="0" max="200" value="35">
+        </div>
+        <p class="search-pos-text" id="--bulbasaur2">35</p>
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-2 search-pre-text">Atk:</p>
+        <div class="col-4 progress2">
+            <input class="progress-bar-input2 rangers" type="range" id="--charmander" min="0" max="200" value="55">
+        </div>
+        <p class="search-pos-text" id="--charmander2">55</p>
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-2 search-pre-text">Def:</p>
+        <div class="col-4 progress2">
+            <input class="progress-bar-input2 rangers" type="range" id="--squirtle" min="0" max="200" value="40">
+        </div>
+        <p class="search-pos-text" id="--squirtle2">40</p>
+    </div>
+    `;
+
+    let modalContent = `
+    <div class="row justify-content-center search-identation">
+        <p class="col-4 search-pre-text">Id: </p>
+        <input class="col-4 modal-search-input" type="text" name="id" id="id" placeholder="25">
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Nome: </p>
+        <input class="col-4 modal-search-input" type="text" name="nome" id="nome" placeholder="Pikachu">
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">名前: </p>
+        <input class="col-4 modal-search-input" type="text" name="jap" id="jap" placeholder="ピカチュウ">
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Especie: </p>
+        <input class="col-4 modal-search-input" type="text" name="especie" id="especie" placeholder="Mouse">
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Tipo: </p>
+        <input class="col-4 modal-search-input" type="text" name="tipo" id="tipo" placeholder="Electric">
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text" style="margin-right:10px; margin-left:-5px">Descrição: </p>
+        <textarea class="poke-descricao-input2 scrollbar2" type="text" name="descricao" id="descricao" placeholder="It occasionally uses an electric shock to recharge a fellow Pikachu that is in a weakened state."></textarea>
+    </div>
+    `;
+
+    mensagem2.innerHTML = modalContent;
+
+    /*     const lendario = document.querySelector('#lendario2');
+        const mitico = document.querySelector('#mitico2');
+        let lendarioMarca = false;
+        let miticoMarca = false;
+    
+        lendario.addEventListener('click', function () {
+            if (!lendarioMarca) {
+                lendario.classList.remove('lendario2-n');
+                lendario.classList.add('lendario2-y');
+                lendarioMarca = true;
             } else {
-                abrirModal(data.nome, false, data)
+                lendario.classList.remove('lendario2-y');
+                lendario.classList.add('lendario2-n');
+                lendarioMarca = false;
             }
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
         });
-};
+    
+        mitico.addEventListener('click', function () {
+            if (!miticoMarca) {
+                mitico.classList.remove('mitico2-n');
+                mitico.classList.add('mitico2-y');
+                miticoMarca = true;
+            } else {
+                mitico.classList.remove('mitico2-y');
+                mitico.classList.add('mitico2-n');
+                miticoMarca = false;
+            }
+        });
+        
+        const rangers = document.querySelectorAll('.rangers');
+        rangers.forEach(range => {
+            const rangeValueDisplay = document.querySelector("#" + range.id + 2);
+            const defaultValue = range.value;
+            range.style.background = `linear-gradient(to right, var(${range.id}) 0%, var(${range.id}) ${defaultValue}%, #000000e8 ${defaultValue}%, #000000e8 100%)`;
+            range.addEventListener('input', () => {
+                const value = range.value / 2;
+                range.style.background = `linear-gradient(to right, var(${range.id}) 0%, var(${range.id}) ${value}%, #000000e8 ${value}%, #000000e8 100%)`;
+                rangeValueDisplay.textContent = Math.floor(value * 2);
+            });
+        }); */
+
+    searchIndex.addEventListener('click', async function (event) {
+        const pokemon = {};
+
+        pokemon.id = document.getElementById('id').value;
+        pokemon.nome = document.getElementById('nome').value;
+        pokemon.especie = document.getElementById('especie').value;
+        pokemon.tipo = document.getElementById('tipo').value;
+        pokemon.descricao = document.getElementById('descricao').value;
+
+        const jap = document.getElementById('jap').value;
+        pokemon.japName = await fetch(`http://localhost:8080/toKatakana/?stringToConvert=${jap.value}`);
+
+
+        fetch('http://localhost:8080/invertedIndex/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                nome: nome,
+                especie: especie,
+                tipo: tipo,
+                descricao: descricao,
+                japName: japName
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                adicionarCards(data.pokemons);
+                showTime(indexMethod[5], data.time);
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    });
+});
 
 /* ------------------------------ METODOS DE ORDENAÇAO ------------------------------ */
 
@@ -1191,7 +1323,6 @@ scrollbar.addEventListener("mousedown", (e) => {
 });
 
 function handleMouseMove(e) {
-    e.preventDefault();
     if (!isMouseDown) return;
 
     const scrollPercentage = ((e.clientY - (distanceFromTop)) / (window.innerHeight - thumbHeight));
@@ -1205,6 +1336,7 @@ function handleMouseMove(e) {
 }
 
 scrollbar.addEventListener("mousedown", (e) => {
+    e.preventDefault();
     isMouseDown = true;
     scrollbar.classList.add("dragging");
 });
