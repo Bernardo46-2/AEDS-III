@@ -121,8 +121,6 @@ function paginarIds(ids) {
         groups
     };
 
-    console.log(object);
-
     sessionStorage.setItem('idList', JSON.stringify(object));
 
     return object;
