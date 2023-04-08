@@ -602,16 +602,14 @@ search.addEventListener('click', function (event) {
         }); */
 
     searchIndex.addEventListener('click', async function (event) {
-        const pokemon = {};
-
-        pokemon.id = document.getElementById('id').value;
-        pokemon.nome = document.getElementById('nome').value;
-        pokemon.especie = document.getElementById('especie').value;
-        pokemon.tipo = document.getElementById('tipo').value;
-        pokemon.descricao = document.getElementById('descricao').value;
+        id = document.getElementById('id').value;
+        nome = document.getElementById('nome').value;
+        especie = document.getElementById('especie').value;
+        tipo = document.getElementById('tipo').value;
+        descricao = document.getElementById('descricao').value;
 
         const jap = document.getElementById('jap').value;
-        pokemon.japName = await fetch(`http://localhost:8080/toKatakana/?stringToConvert=${jap.value}`);
+        japName = await fetch(`http://localhost:8080/toKatakana/?stringToConvert=${jap.value}`);
 
 
         fetch('http://localhost:8080/invertedIndex/', {
