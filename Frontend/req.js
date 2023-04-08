@@ -612,6 +612,10 @@ search.addEventListener('click', function (event) {
         const japResponse = await fetch(`http://localhost:8080/toKatakana/?stringToConvert=${jap.value}`)
         japName = await japResponse.json();
 
+        if (!(id || nome || especie || tipo || descricao || japName)) {
+            
+        }
+
         fetch('http://localhost:8080/invertedIndex/', {
             method: 'POST',
             headers: {
@@ -638,7 +642,7 @@ search.addEventListener('click', function (event) {
                 /* showTime(indexMethod[5], data.time); */
             })
             .catch(error => {
-                modalAviso();
+                modalAviso("Nenhum Pokemon Encontrado");
                 console.log(error)
             });
     });

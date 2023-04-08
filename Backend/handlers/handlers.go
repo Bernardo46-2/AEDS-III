@@ -229,6 +229,10 @@ func InvertedIndex(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, 2)
 		return
 	}
+	if len(idList) == 0 {
+		writeError(w, 2, 2)
+		return
+	}
 
 	writeJson(w, idList)
 }
