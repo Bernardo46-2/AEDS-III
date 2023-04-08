@@ -73,14 +73,14 @@ func GetList(idList []int64, method int) (pokeList []models.Pokemon, duration in
 			}
 		}
 	case 2: // Arvore B
-        btree, _ := btree.ReadBTree(binManager.FILES_PATH)
+		btree, _ := btree.ReadBTree(binManager.FILES_PATH)
 		for _, id := range idList {
 			pos := btree.Find(id)
 			if pos != nil {
 				pokeList = append(pokeList, c.ReadTarget(pos.Ptr))
 			}
 		}
-        btree.Close()
+		btree.Close()
 	case 3: // Arvore B+
 		for _, id := range idList {
 			pos, err := hashing.HashRead(id, binManager.FILES_PATH, "hashIndex")
@@ -176,10 +176,10 @@ func Update(pokemon models.Pokemon) (err error) {
 	// Tabela Hash
 	err = hashing.HashUpdate(int64(pokemon.Numero), newAddress, binManager.FILES_PATH, "hashIndex")
 
-    // Arvore B
-    btree, _ := btree.ReadBTree(binManager.FILES_PATH)
-    btree.Update(int64(pokemon.Numero), newAddress)
-    btree.Close()
+	// Arvore B
+	btree, _ := btree.ReadBTree(binManager.FILES_PATH)
+	btree.Update(int64(pokemon.Numero), newAddress)
+	btree.Close()
 
 	return
 }
@@ -207,19 +207,18 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 	// Tabela Hash
 	hashing.HashDelete(int64(pokemon.Numero), binManager.FILES_PATH, "hashIndex")
 
-    // Arvore B
-    btree, err := btree.ReadBTree(binManager.FILES_PATH)
-    if err != nil {
-        return
-    }
-    btree.Remove(int64(id))
-    btree.Close()
+	// Arvore B
+	btree, err := btree.ReadBTree(binManager.FILES_PATH)
+	if err != nil {
+		return
+	}
+	btree.Remove(int64(id))
+	btree.Close()
 
 	return
 }
 
 func InvertedIndex(id int64, nome string, especie string, tipo string, descricao string, japName string) (idList []int64, err error) {
-
 	getFieldScDoc := func(field, text string) []invertedIndex.ScoredDocument {
 		return invertedIndex.Read(binManager.FILES_PATH, field, strings.Fields(text)...)
 	}
