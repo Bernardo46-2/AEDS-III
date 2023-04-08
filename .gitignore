@@ -1,1 +1,3 @@
-
+Backend/data/files/**/*.dat
+Backend/data/files/**/*.bin
+Backend/**/*.log
