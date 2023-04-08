@@ -609,8 +609,9 @@ search.addEventListener('click', function (event) {
         descricao = document.getElementById('descricao').value;
 
         const jap = document.getElementById('jap').value;
-        japName = await fetch(`http://localhost:8080/toKatakana/?stringToConvert=${jap.value}`);
-
+        const japResponse = await fetch(`http://localhost:8080/toKatakana/?stringToConvert=${jap.value}`)
+        japName = await japResponse.json();
+        console.log(japName);
 
         fetch('http://localhost:8080/invertedIndex/', {
             method: 'POST',
@@ -618,7 +619,7 @@ search.addEventListener('click', function (event) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id: id,
+                id: +id,
                 nome: nome,
                 especie: especie,
                 tipo: tipo,

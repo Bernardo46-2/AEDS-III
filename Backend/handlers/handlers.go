@@ -25,6 +25,15 @@ type retorno struct {
 	Time     int64            `json:"time"`
 }
 
+type InvertedIndexRequest struct {
+	ID        int64  `json:"id"`
+	Nome      string `json:"nome"`
+	Especie   string `json:"especie"`
+	Tipo      string `json:"tipo"`
+	Descricao string `json:"descricao"`
+	JapName   string `json:"japName"`
+}
+
 // GetPagesNumber retorna a quantidade de paginas disponiveis
 func GetPagesNumber(w http.ResponseWriter, r *http.Request) {
 	// Recuperar ID e ler arquivo
@@ -204,15 +213,14 @@ func Ordenacao(w http.ResponseWriter, r *http.Request) {
 }
 
 func InvertedIndex(w http.ResponseWriter, r *http.Request) {
-	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
-	nome := r.URL.Query().Get("nome")
-	especie := r.URL.Query().Get("especie")
-	tipo := r.URL.Query().Get("tipo")
-	descricao := r.URL.Query().Get("descricao")
-	japName := r.URL.Query().Get("japName")
+	var req InvertedIndexRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		println("err: ", err.Error())
+	}
 
 	// Pesquisa os valores no indice
-	idList, err := service.InvertedIndex(int64(id), nome, especie, tipo, descricao, japName)
+	idList, err := service.InvertedIndex(req.ID, req.Nome, req.Especie, req.Tipo, req.Descricao, req.JapName)
 
 	// Resposta
 	if err != nil {
