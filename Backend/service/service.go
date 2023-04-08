@@ -124,9 +124,10 @@ func Create(pokemon models.Pokemon) (int, error) {
 	// Tabela Hash
 	hashing.HashCreate(int64(pokemon.Numero), address, binManager.FILES_PATH, "hashIndex")
 
-	// Arvore B
-	btree, _ := btree.NewBTree(BTREE_ORDER, binManager.FILES_PATH)
-	btree.Close()
+    // Arvore B
+    bTree, _ := btree.ReadBTree(binManager.FILES_PATH)
+    bTree.Insert(&btree.Key{Id: int64(pokemon.Numero), Ptr: address})
+    bTree.Close()
 
 	return int(ultimoID), err
 }
