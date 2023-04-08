@@ -611,7 +611,6 @@ search.addEventListener('click', function (event) {
         const jap = document.getElementById('jap').value;
         const japResponse = await fetch(`http://localhost:8080/toKatakana/?stringToConvert=${jap.value}`)
         japName = await japResponse.json();
-        console.log(japName);
 
         fetch('http://localhost:8080/invertedIndex/', {
             method: 'POST',

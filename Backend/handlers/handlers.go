@@ -183,7 +183,7 @@ func LoadDatabase(w http.ResponseWriter, r *http.Request) {
 	writeSuccess(w, 6)
 	logger.Println("INFO", "Database Carregada")
 	logger.Println("INFO", "Hash Dinamica Criada")
-    logger.Println("INFO", "B Tree Criada")
+	logger.Println("INFO", "B Tree Criada")
 }
 
 // ToKatakana recebe uma string em alfabeto romato, converte para
@@ -284,8 +284,8 @@ func reconstruirIndices() {
 	controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
 	defer controler.Close()
 	hashing.StartHashFile(controler, 8, binManager.FILES_PATH, "hashIndex")
-    btree, _ := btree.NewBTree(8, binManager.FILES_PATH)
-    btree.Close()
+	btree, _ := btree.NewBTree(8, binManager.FILES_PATH)
+	btree.Close()
 
 	// Indice Invertido
 	controler.Reset()
