@@ -630,8 +630,9 @@ search.addEventListener('click', function (event) {
             .then(data => {
                 cardsFatherDiv.style.position = fatherDivPosition;
                 modalContainer2.classList.add('out');
-                adicionarCards(data.pokemons);
-                showTime(indexMethod[5], data.time);
+                console.log(data);
+                adicionarCards(data);
+                /* showTime(indexMethod[5], data.time); */
             })
             .catch(error => {
                 modalAviso();

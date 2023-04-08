@@ -174,6 +174,13 @@ func readFile(field string, path string) *InvertedIndex {
 	return &invIndex
 }
 
+func NewScoredDocumentSlice(id int64, score int) (slice []ScoredDocument) {
+	return append(slice, ScoredDocument{
+		DocumentID: id,
+		Score:      score,
+	})
+}
+
 // ======================================= Crud ======================================== //
 
 func New(controler Reader, fieldToIndex string, path string, removeFrequency float64) error {
