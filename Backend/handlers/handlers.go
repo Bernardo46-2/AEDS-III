@@ -11,6 +11,7 @@ import (
 	"strconv"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
 	"github.com/Bernardo46-2/AEDS-III/data/sorts"
@@ -182,6 +183,7 @@ func LoadDatabase(w http.ResponseWriter, r *http.Request) {
 	writeSuccess(w, 6)
 	logger.Println("INFO", "Database Carregada")
 	logger.Println("INFO", "Hash Dinamica Criada")
+    logger.Println("INFO", "B Tree Criada")
 }
 
 // ToKatakana recebe uma string em alfabeto romato, converte para
@@ -282,6 +284,8 @@ func reconstruirIndices() {
 	controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
 	defer controler.Close()
 	hashing.StartHashFile(controler, 8, binManager.FILES_PATH, "hashIndex")
+    btree, _ := btree.NewBTree(8, binManager.FILES_PATH)
+    btree.Close()
 
 	// Indice Invertido
 	controler.Reset()

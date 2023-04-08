@@ -418,17 +418,16 @@ INFO: 2023/04/07 07:44:51 Hash Dinamica Criada
 STATUS: 2023/04/07 20:49:11 Servidor iniciado
 INFO: 2023/04/07 20:49:28 Database Carregada
 INFO: 2023/04/07 20:49:28 Hash Dinamica Criada
+<<<<<<< HEAD
+STATUS: 2023/04/08 00:50:15 Servidor iniciado
+STATUS: 2023/04/08 00:50:27 Servidor desligado
+STATUS: 2023/04/08 00:50:30 Servidor iniciado
+STATUS: 2023/04/08 01:03:37 Servidor desligado
+STATUS: 2023/04/08 01:03:46 Servidor iniciado
+INFO: 2023/04/08 01:03:52 Database Carregada
+INFO: 2023/04/08 01:03:52 Hash Dinamica Criada
+STATUS: 2023/04/08 01:09:44 Servidor desligado
+=======
 STATUS: 2023/04/08 00:52:00 Servidor desligado
 STATUS: 2023/04/08 00:52:08 Servidor iniciado
 STATUS: 2023/04/08 00:54:54 Servidor desligado
-STATUS: 2023/04/08 00:58:35 Servidor iniciado
-STATUS: 2023/04/08 00:59:00 Servidor desligado
-STATUS: 2023/04/08 00:59:29 Servidor iniciado
-STATUS: 2023/04/08 00:59:52 Servidor desligado
-STATUS: 2023/04/08 01:06:32 Servidor iniciado
-STATUS: 2023/04/08 01:07:42 Servidor desligado
-STATUS: 2023/04/08 01:07:45 Servidor iniciado
-STATUS: 2023/04/08 01:08:26 Servidor desligado
-STATUS: 2023/04/08 01:08:29 Servidor iniciado
-STATUS: 2023/04/08 01:09:01 Servidor desligado
-STATUS: 2023/04/08 01:09:04 Servidor iniciado
