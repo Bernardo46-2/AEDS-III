@@ -123,6 +123,7 @@ func servidor() {
 	http.HandleFunc("/delete/", middlewares.EnableCORS(handlers.DeletePokemon))
 	http.HandleFunc("/loadDatabase", middlewares.EnableCORS(handlers.LoadDatabase))
 	http.HandleFunc("/toKatakana/", middlewares.EnableCORS(handlers.ToKatakana))
+	http.HandleFunc("/invertedIndex/", middlewares.EnableCORS(handlers.InvertedIndex))
 
 	// Ordenação externa
 	http.HandleFunc("/ordenacao/", middlewares.EnableCORS(handlers.Ordenacao))

@@ -205,6 +205,26 @@ func Ordenacao(w http.ResponseWriter, r *http.Request) {
 	logger.Println("INFO", "Database Ordenada com sucesso!")
 }
 
+func InvertedIndex(w http.ResponseWriter, r *http.Request) {
+	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
+	nome := r.URL.Query().Get("nome")
+	especie := r.URL.Query().Get("especie")
+	tipo := r.URL.Query().Get("tipo")
+	descricao := r.URL.Query().Get("descricao")
+	japName := r.URL.Query().Get("japName")
+
+	// Pesquisa os valores no indice
+	idList, err := service.InvertedIndex(int64(id), nome, especie, tipo, descricao, japName)
+
+	// Resposta
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, 2)
+		return
+	}
+
+	writeJson(w, idList)
+}
+
 // writeError recebe um erro de http responde e um id de erro interno,
 // faz o parsing do modelo e gera uma resposta em formato json com o erro fornecido
 func writeError(w http.ResponseWriter, codes ...int) {

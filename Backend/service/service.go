@@ -7,6 +7,7 @@ import (
 	"errors"
 	"io"
 	"math"
+	"strings"
 	"time"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
@@ -212,6 +213,28 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
     }
     btree.Remove(int64(id))
     btree.Close()
+
+	return
+}
+
+func InvertedIndex(id int64, nome string, especie string, tipo string, descricao string, japName string) (idList []int64, err error) {
+
+	getFieldScDoc := func(field, text string) []invertedIndex.ScoredDocument {
+		return invertedIndex.Read(binManager.FILES_PATH, field, strings.Fields(text)...)
+	}
+
+	nomeScDoc := getFieldScDoc("nome", nome)
+	especieScDoc := getFieldScDoc("especie", especie)
+	tipoScDoc := getFieldScDoc("tipo", tipo)
+	descricaoScDoc := getFieldScDoc("descricao", descricao)
+	japNameScDoc := getFieldScDoc("nomeJap", japName)
+
+	idScDoc := invertedIndex.NewScoredDocumentSlice(id, 1)
+	scDoc := invertedIndex.Merge(idScDoc, nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc)
+
+	for _, tmp := range scDoc {
+		idList = append(idList, tmp.DocumentID)
+	}
 
 	return
 }
