@@ -458,3 +458,10 @@ STATUS: 2023/04/08 02:24:14 Servidor iniciado
 INFO: 2023/04/08 02:24:20 Database Carregada
 INFO: 2023/04/08 02:24:20 Hash Dinamica Criada
 INFO: 2023/04/08 02:24:20 B Tree Criada
+STATUS: 2023/04/08 02:24:50 Servidor desligado
+STATUS: 2023/04/08 02:25:51 Servidor iniciado
+INFO: 2023/04/08 02:25:56 Database Carregada
+INFO: 2023/04/08 02:25:56 Hash Dinamica Criada
+INFO: 2023/04/08 02:25:56 B Tree Criada
+STATUS: 2023/04/08 02:26:33 Servidor desligado
+STATUS: 2023/04/08 02:28:47 Servidor iniciado

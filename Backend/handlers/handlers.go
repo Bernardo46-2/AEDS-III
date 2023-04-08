@@ -285,9 +285,8 @@ func reconstruirIndices() {
 	defer controler.Close()
 	hashing.StartHashFile(controler, 8, binManager.FILES_PATH, "hashIndex")
 
-    // Arvore B
-    fmt.Println("yo")
-    btree.StartBTreeFile(binManager.FILES_PATH)
+	// Arvore B
+	btree.StartBTreeFile(binManager.FILES_PATH)
 
 	// Indice Invertido
 	controler.Reset()
