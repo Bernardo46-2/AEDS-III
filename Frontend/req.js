@@ -630,6 +630,8 @@ search.addEventListener('click', function (event) {
         })
             .then(response => response.json())
             .then(data => {
+                cardsFatherDiv.style.position = fatherDivPosition;
+                modalContainer2.classList.add('out');
                 adicionarCards(data.pokemons);
                 showTime(indexMethod[5], data.time);
             })
