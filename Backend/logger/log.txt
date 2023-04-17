@@ -447,5 +447,33 @@ INFO: 2023/04/08 01:30:02 Hash Dinamica Criada
 INFO: 2023/04/08 01:30:02 B Tree Criada
 STATUS: 2023/04/08 01:34:56 Servidor desligado
 STATUS: 2023/04/08 01:36:18 Servidor iniciado
+<<<<<<< HEAD
 STATUS: 2023/04/13 15:35:28 Servidor iniciado
 STATUS: 2023/04/13 15:43:45 Servidor desligado
+=======
+STATUS: 2023/04/08 02:17:07 Servidor iniciado
+INFO: 2023/04/08 02:17:45 Database Carregada
+INFO: 2023/04/08 02:17:45 Hash Dinamica Criada
+INFO: 2023/04/08 02:17:45 B Tree Criada
+STATUS: 2023/04/08 02:19:12 Servidor desligado
+STATUS: 2023/04/08 02:22:19 Servidor iniciado
+STATUS: 2023/04/08 02:24:11 Servidor desligado
+STATUS: 2023/04/08 02:24:14 Servidor iniciado
+INFO: 2023/04/08 02:24:20 Database Carregada
+INFO: 2023/04/08 02:24:20 Hash Dinamica Criada
+INFO: 2023/04/08 02:24:20 B Tree Criada
+STATUS: 2023/04/08 02:24:50 Servidor desligado
+STATUS: 2023/04/08 02:25:51 Servidor iniciado
+INFO: 2023/04/08 02:25:56 Database Carregada
+INFO: 2023/04/08 02:25:56 Hash Dinamica Criada
+INFO: 2023/04/08 02:25:56 B Tree Criada
+STATUS: 2023/04/08 02:26:33 Servidor desligado
+STATUS: 2023/04/08 02:28:47 Servidor iniciado
+INFO: 2023/04/08 02:31:19 Database Carregada
+INFO: 2023/04/08 02:31:19 Hash Dinamica Criada
+INFO: 2023/04/08 02:31:19 B Tree Criada
+STATUS: 2023/04/08 02:32:28 Servidor desligado
+STATUS: 2023/04/08 02:34:00 Servidor iniciado
+STATUS: 2023/04/08 02:34:41 Servidor desligado
+STATUS: 2023/04/08 02:34:43 Servidor iniciado
+>>>>>>> refs/remotes/origin/main

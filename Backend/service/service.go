@@ -66,12 +66,14 @@ func GetList(idList []int64, method int) (pokeList []models.Pokemon, duration in
 			pokeList = append(pokeList, pokemon)
 		}
 	case 1, -1: // Hash
+		hash, _ := hashing.Load(binManager.FILES_PATH, "hashIndex")
 		for _, id := range idList {
-			pos, err := hashing.HashRead(id, binManager.FILES_PATH, "hashIndex")
+			pos, err := hash.Read(id)
 			if err == nil {
 				pokeList = append(pokeList, c.ReadTarget(pos))
 			}
 		}
+		hash.Close()
 	case 2: // Arvore B
 		btree, _ := btree.ReadBTree(binManager.FILES_PATH)
 		for _, id := range idList {
@@ -124,10 +126,10 @@ func Create(pokemon models.Pokemon) (int, error) {
 	// Tabela Hash
 	hashing.HashCreate(int64(pokemon.Numero), address, binManager.FILES_PATH, "hashIndex")
 
-    // Arvore B
-    bTree, _ := btree.ReadBTree(binManager.FILES_PATH)
-    bTree.Insert(&btree.Key{Id: int64(pokemon.Numero), Ptr: address})
-    bTree.Close()
+	// Arvore B
+	bTree, _ := btree.ReadBTree(binManager.FILES_PATH)
+	bTree.Insert(&btree.Key{Id: int64(pokemon.Numero), Ptr: address})
+	bTree.Close()
 
 	return int(ultimoID), err
 }

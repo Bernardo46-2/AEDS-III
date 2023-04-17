@@ -354,6 +354,26 @@ func (hash *DinamicHash) addRecord(r BucketRecord) {
 	}
 }
 
+func (hash *DinamicHash) Read(targetID int64) (targetPos int64, err error) {
+	// Carrega o diretorio e o bucket para a memoria primaria
+	pos := targetID % int64(hash.getBucketCount())
+	bucket := hash.readBucket(pos)
+
+	// Recupera o endereço do ID
+	for i := int64(0); i < bucket.CurrentSize; i++ {
+		if bucket.Records[i].ID == targetID {
+			targetPos = bucket.Records[i].Address
+			i = bucket.CurrentSize
+		}
+	}
+
+	if targetPos == 0 {
+		err = fmt.Errorf("record not found")
+	}
+
+	return targetPos, err
+}
+
 // ====================================== Bucket ======================================= //
 
 // newBucket retorna um bucket preparado para ser preenchido
@@ -584,4 +604,8 @@ func HashUpdate(id int64, newAddress int64, path string, identifier string) erro
 	hash.insertIntoBucket(pos, bucket.ActualPower, bucket.CurrentSize, bucket.Records)
 
 	return nil
+}
+
+func Load(path string, identifier string) (DinamicHash, error) {
+	return LoadDinamicHash(path, identifier)
 }

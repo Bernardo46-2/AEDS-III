@@ -612,6 +612,10 @@ search.addEventListener('click', function (event) {
         const japResponse = await fetch(`http://localhost:8080/toKatakana/?stringToConvert=${jap.value}`)
         japName = await japResponse.json();
 
+        if (!(id || nome || especie || tipo || descricao || japName)) {
+            
+        }
+
         fetch('http://localhost:8080/invertedIndex/', {
             method: 'POST',
             headers: {
@@ -638,7 +642,7 @@ search.addEventListener('click', function (event) {
                 /* showTime(indexMethod[5], data.time); */
             })
             .catch(error => {
-                modalAviso();
+                modalAviso("Nenhum Pokemon Encontrado");
                 console.log(error)
             });
     });
@@ -660,9 +664,9 @@ ordenar.addEventListener('click', function (event) {
     if (event.target === ordenar && !ordenarAberto) {
         ordenar.style.transition = "all 0.4s ease-in-out";
         ordenarDropdown.style.transition = "all 0.4s ease-in-out";
-        ordenarDropdown.style.height = "230px";
+        ordenarDropdown.style.height = "225px";
         ordenarDropdown.style.marginBottom = "15px";
-        ordenar.style.height = "230px";
+        ordenar.style.height = "225px";
         ordenar.style.paddingTop = "15px";
         ordenarAberto = true;
         window.setTimeout(() => {
@@ -692,7 +696,7 @@ ordenar.addEventListener('click', function (event) {
             setTimeout(() => {
                 ordenar.style.transition = ordenarTransition;
             }, 500);
-        }, 150);
+        }, 200);
         window.setTimeout(() => {
             ordenarButtons[2].style.pointerEvents = 'auto';
             ordenarButtons[2].style.opacity = "0";
@@ -700,11 +704,11 @@ ordenar.addEventListener('click', function (event) {
         window.setTimeout(() => {
             ordenarButtons[1].style.pointerEvents = 'auto';
             ordenarButtons[1].style.opacity = "0";
-        }, 50);
+        }, 100);
         window.setTimeout(() => {
             ordenarButtons[0].style.pointerEvents = 'auto';
             ordenarButtons[0].style.opacity = "0";
-        }, 175);
+        }, 200);
     }
 })
 
@@ -758,7 +762,7 @@ ordenar2.onclick = () => {
 const index = document.querySelector('#Index');
 const indexDropdown = document.querySelector('#indexDropdown');
 const indexButtons = document.querySelectorAll('.index-buttons');
-const indexChoice = document.querySelectorAll('#Index0, #Index1, #Index2, #Index3, #Index4');
+const indexChoice = document.querySelectorAll('#Index0, #Index1, #Index2'); // #Index3, #Index4
 const indexTransition = index.style.transition;
 const indexVar3 = index.style.paddingTop;
 let indexAberto = false;
@@ -767,9 +771,9 @@ index.addEventListener('click', function (event) {
     if (event.target === index && !indexAberto) {
         index.style.transition = "all 0.4s ease-in-out";
         indexDropdown.style.transition = "all 0.4s ease-in-out";
-        indexDropdown.style.height = "340px";
+        indexDropdown.style.height = "225px";
         indexDropdown.style.marginBottom = "15px";
-        index.style.height = "340px";
+        index.style.height = "225px";
         index.style.paddingTop = "15px";
         indexAberto = true;
         window.setTimeout(() => {
@@ -784,14 +788,14 @@ index.addEventListener('click', function (event) {
             indexButtons[2].style.pointerEvents = 'auto';
             indexButtons[2].style.opacity = "1";
         }, 225);
-        window.setTimeout(() => {
+        /* window.setTimeout(() => {
             indexButtons[3].style.pointerEvents = 'auto';
             indexButtons[3].style.opacity = "1";
         }, 300);
         window.setTimeout(() => {
             indexButtons[4].style.pointerEvents = 'auto';
             indexButtons[4].style.opacity = "1";
-        }, 375);
+        }, 375); */
     } else if (event.target === index) {
         setTimeout(() => {
             indexDropdown.style.height = 60 + "px";
@@ -807,23 +811,23 @@ index.addEventListener('click', function (event) {
             setTimeout(() => {
                 index.style.transition = indexTransition;
             }, 500);
-        }, 175);
-        window.setTimeout(() => {
+        }, 200);
+/*         window.setTimeout(() => {
             indexButtons[4].style.pointerEvents = 'auto';
             indexButtons[4].style.opacity = "0";
         }, 0);
         window.setTimeout(() => {
             indexButtons[3].style.pointerEvents = 'auto';
             indexButtons[3].style.opacity = "0";
-        }, 50);
+        }, 50); */
         window.setTimeout(() => {
             indexButtons[2].style.pointerEvents = 'auto';
             indexButtons[2].style.opacity = "0";
-        }, 100);
+        }, 0);
         window.setTimeout(() => {
             indexButtons[1].style.pointerEvents = 'auto';
             indexButtons[1].style.opacity = "0";
-        }, 150);
+        }, 100);
         window.setTimeout(() => {
             indexButtons[0].style.pointerEvents = 'auto';
             indexButtons[0].style.opacity = "0";
