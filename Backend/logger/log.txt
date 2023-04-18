@@ -477,3 +477,10 @@ STATUS: 2023/04/08 02:34:00 Servidor iniciado
 STATUS: 2023/04/08 02:34:41 Servidor desligado
 STATUS: 2023/04/08 02:34:43 Servidor iniciado
 >>>>>>> refs/remotes/origin/main
+STATUS: 2023/04/17 13:32:12 Servidor iniciado
+INFO: 2023/04/17 13:32:37 Database Carregada
+INFO: 2023/04/17 13:32:37 Hash Dinamica Criada
+INFO: 2023/04/17 13:32:37 B Tree Criada
+STATUS: 2023/04/17 13:33:17 Servidor desligado
+STATUS: 2023/04/17 14:28:06 Servidor iniciado
+STATUS: 2023/04/17 14:28:29 Servidor desligado

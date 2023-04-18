@@ -17,6 +17,7 @@ import (
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/bplustree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
@@ -36,6 +37,7 @@ func main() {
 		fmt.Println("4 | btree")
 		fmt.Println("5 | criarIndiceInvertido")
 		fmt.Println("6 | lerMultiplosIndiceInvertido")
+		fmt.Println("7 | b+ tree")
 		fmt.Print("\n> ")
 		scanner.Scan()
 		opcao = scanner.Text()
@@ -99,6 +101,8 @@ func main() {
 			tmpPoke := binManager.ReadTargetPokemon(pokeAddress)
 			fmt.Printf("ID = %3d  |  Nome = %30s  |  compatibilidade = %d\n", tmpPoke.Numero, tmpPoke.Nome, scoredDocument.Score)
 		}
+    case "7":
+        bplustree.StartBPlusTreeFile(binManager.FILES_PATH)
 	default:
 		fmt.Println("Opção inválida")
 	}
