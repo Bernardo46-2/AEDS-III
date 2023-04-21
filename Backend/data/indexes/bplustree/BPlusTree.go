@@ -39,7 +39,7 @@ const (
 // ====================================== Structs ====================================== //
 
 type Key struct {
-    Id  int64
+    Id  float64
     Ptr int64
 }
 
@@ -64,13 +64,13 @@ type BPlusTree struct {
 
 func newKey(register *binManager.Registro) Key {
     return Key{
-        Id:  int64(register.Pokemon.Numero),
+        Id:  float64(register.Pokemon.Numero),
         Ptr: register.Endereco,
     }
 }
 
 func newEmptyKey() Key {
-    return Key{NULL, NULL}
+    return Key{float64(NULL), NULL}
 }
 
 // ====================================== Node ====================================== //
@@ -181,7 +181,7 @@ func (n *BPlusTreeNode) insert(index int64, left int64, data *Key, right int64, 
     return NULL, nil, NULL
 }
 
-func (n *BPlusTreeNode) find(id int64) int64 {
+func (n *BPlusTreeNode) find(id float64) int64 {
     i := n.numberOfKeys - 1
     
     for i >= 0 && n.keys[i].Id > id {
@@ -361,7 +361,7 @@ func (b *BPlusTree) readNode(address int64) *BPlusTreeNode {
 
     for i := 0; i < b.order-1; i++ {
         child[i], ptr = utils.BytesToInt64(buf, ptr)
-        keys[i].Id, ptr = utils.BytesToInt64(buf, ptr)
+        keys[i].Id, ptr = utils.BytesToFloat64(buf, ptr)
         keys[i].Ptr, ptr = utils.BytesToInt64(buf, ptr)
     }
     child[len(child)-2], ptr = utils.BytesToInt64(buf, ptr)
@@ -435,19 +435,19 @@ func (b *BPlusTree) printFile() {
 
         for i := 0; i < b.order-1; i++ {
             b.nodesFile.Read(reader64)
-            tmp, _ = utils.BytesToInt64(reader64, 0)
+            tmp, _ := utils.BytesToFloat64(reader64, 0)
 
             if tmp != -1 {
-                fmt.Printf("[%5x] ", tmp)
+                fmt.Printf("[%5f] ", tmp)
             } else {
                 fmt.Printf("[     ] ")
             }
 
             b.nodesFile.Read(reader64)
-            tmp, _ = utils.BytesToInt64(reader64, 0)
+            tmp, _ = utils.BytesToFloat64(reader64, 0)
 
             if tmp != -1 {
-                fmt.Printf("%3d ", tmp)
+                fmt.Printf("%3f ", tmp)
             } else {
                 fmt.Printf("    ")
             }
@@ -456,7 +456,7 @@ func (b *BPlusTree) printFile() {
         }
 
         b.nodesFile.Read(reader64)
-        tmp, _ = utils.BytesToInt64(reader64, 0)
+        tmp, _ := utils.BytesToFloat64(reader64, 0)
 
         if tmp != -1 {
             fmt.Printf("[%4x] ", tmp)
@@ -688,7 +688,7 @@ func (b *BPlusTree) removeFromNode(index int64, node *BPlusTreeNode) (*Key, *Key
     return k, max, flag
 }
 
-func (b *BPlusTree) remove(address int64, id int64) (*Key, *Key, int, int64) {
+func (b *BPlusTree) remove(address int64, id float64) (*Key, *Key, int, int64) {
     if address == NULL {
         return nil, nil, OK, NULL
     }
@@ -716,7 +716,7 @@ func (b *BPlusTree) remove(address int64, id int64) (*Key, *Key, int, int64) {
     return k, kk, flag, i
 }
 
-func (b *BPlusTree) Remove(id int64) *Key {
+func (b *BPlusTree) Remove(id float64) *Key {
     k, kk, flag, _ := b.remove(b.root, id)
 
     root := b.readNode(b.root)
@@ -756,7 +756,7 @@ func StartBPlusTreeFile(dir string) {
     }
 
     for i := 1; i <= n; i++ {
-        tree.Remove(int64(i))
+        tree.Remove(float64(i))
     }
 
     reader.Close()

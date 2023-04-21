@@ -151,6 +151,15 @@ func BytesToFloat32(registro []byte, ptr int) (float32, int) {
 	return float, ptr + size
 }
 
+// BytesToFloat64 converte um slice de bytes contendo uma representação binária de um valor float64
+// para um valor do tipo float64 e move o ponteiro ptr
+func BytesToFloat64(registro []byte, ptr int) (float64, int) {
+	size := 8
+	bits := binary.LittleEndian.Uint64(registro[ptr : ptr+size])
+	float := math.Float64frombits(bits)
+	return float, ptr + size
+}
+
 func AbsInt64(x int64) int64 {
 	if x < 0 {
 		return -x
