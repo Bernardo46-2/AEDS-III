@@ -279,20 +279,23 @@ func MergeSearch(req SearchRequest) (idList []int64, err error) {
 	japNameScDoc := getFieldScDoc("nomeJap", req.JapName)
 
 	ID := getIdsBPTree(req.IDI, req.IDF, "numero")
-	/* 	Geracao := getIdsBPTree(req.GeracaoI, req.GeracaoF, "geracao")
-	   	Lancamento := getIdsBPTree(req.LancamentoI, req.LancamentoF, "lancamento")
-	   	Atk := getIdsBPTree(req.AtkI, req.AtkF, "atk")
-	   	Def := getIdsBPTree(req.DefI, req.DefF, "def")
-	   	Hp := getIdsBPTree(req.HpI, req.HpF, "hp")
-	   	Altura := getIdsBPTree(req.AlturaI, req.AlturaF, "altura")
-	   	Peso := getIdsBPTree(req.PesoI, req.PesoF, "peso") */
+	Geracao := getIdsBPTree(req.GeracaoI, req.GeracaoF, "geracao")
+	Lancamento := getIdsBPTree(req.LancamentoI, req.LancamentoF, "lancamento")
+	Atk := getIdsBPTree(req.AtkI, req.AtkF, "atk")
+	Def := getIdsBPTree(req.DefI, req.DefF, "def")
+	Hp := getIdsBPTree(req.HpI, req.HpF, "hp")
+	Altura := getIdsBPTree(req.AlturaI, req.AlturaF, "altura")
+	Peso := getIdsBPTree(req.PesoI, req.PesoF, "peso")
 
-	scDoc := invertedIndex.Merge(nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc, ID)
+	scDoc := invertedIndex.Merge(nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc, ID, Geracao, Lancamento, Atk, Def, Hp, Altura, Peso)
 
 	for _, tmp := range scDoc {
 		idList = append(idList, tmp.DocumentID)
 	}
 
-	fmt.Println(idList)
+	pokeList, _, _ := GetList(idList, 1)
+	for i, p := range pokeList {
+		fmt.Printf("[%3d] = %25s | %5d | %5d | %15d | %5d | %5d | %5d | %6.2f | %6.2f\n", i, p.Nome, p.Numero, p.Geracao, p.Lancamento.Unix(), p.Atk, p.Def, p.Hp, p.Altura, p.Peso)
+	}
 	return
 }
