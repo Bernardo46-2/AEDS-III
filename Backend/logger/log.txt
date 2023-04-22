@@ -614,3 +614,74 @@ INFO: 2023/04/21 23:06:39 Database Carregada
 INFO: 2023/04/21 23:06:39 Hash Dinamica Criada
 INFO: 2023/04/21 23:06:39 B Tree Criada
 STATUS: 2023/04/21 23:11:11 Servidor desligado
+STATUS: 2023/04/21 23:34:46 Servidor iniciado
+INFO: 2023/04/21 23:34:53 Database Carregada
+INFO: 2023/04/21 23:34:53 Hash Dinamica Criada
+INFO: 2023/04/21 23:34:53 B Tree Criada
+INFO: 2023/04/21 23:37:38 Database Carregada
+INFO: 2023/04/21 23:37:38 Hash Dinamica Criada
+INFO: 2023/04/21 23:37:38 B Tree Criada
+ERROR: 2023/04/21 23:38:03 code: 5, message: Pokemon nao encontrado
+INFO: 2023/04/21 23:38:36 Database Carregada
+INFO: 2023/04/21 23:38:36 Hash Dinamica Criada
+INFO: 2023/04/21 23:38:36 B Tree Criada
+INFO: 2023/04/21 23:46:08 Database Carregada
+INFO: 2023/04/21 23:46:08 Hash Dinamica Criada
+INFO: 2023/04/21 23:46:08 B Tree Criada
+INFO: 2023/04/21 23:46:58 Database Carregada
+INFO: 2023/04/21 23:46:58 Hash Dinamica Criada
+INFO: 2023/04/21 23:46:58 B Tree Criada
+STATUS: 2023/04/21 23:47:47 Servidor desligado
+STATUS: 2023/04/21 23:47:49 Servidor iniciado
+INFO: 2023/04/21 23:47:55 Database Carregada
+INFO: 2023/04/21 23:47:55 Hash Dinamica Criada
+INFO: 2023/04/21 23:47:55 B Tree Criada
+STATUS: 2023/04/21 23:48:19 Servidor desligado
+STATUS: 2023/04/21 23:48:26 Servidor iniciado
+INFO: 2023/04/21 23:48:30 Database Carregada
+INFO: 2023/04/21 23:48:30 Hash Dinamica Criada
+INFO: 2023/04/21 23:48:30 B Tree Criada
+STATUS: 2023/04/21 23:51:06 Servidor desligado
+STATUS: 2023/04/21 23:51:08 Servidor iniciado
+INFO: 2023/04/21 23:51:12 Database Carregada
+INFO: 2023/04/21 23:51:12 Hash Dinamica Criada
+INFO: 2023/04/21 23:51:12 B Tree Criada
+STATUS: 2023/04/21 23:55:05 Servidor desligado
+STATUS: 2023/04/21 23:55:13 Servidor iniciado
+INFO: 2023/04/21 23:55:18 Database Carregada
+INFO: 2023/04/21 23:55:18 Hash Dinamica Criada
+INFO: 2023/04/21 23:55:18 B Tree Criada
+STATUS: 2023/04/21 23:56:17 Servidor desligado
+STATUS: 2023/04/21 23:56:19 Servidor iniciado
+INFO: 2023/04/21 23:56:23 Database Carregada
+INFO: 2023/04/21 23:56:23 Hash Dinamica Criada
+INFO: 2023/04/21 23:56:23 B Tree Criada
+STATUS: 2023/04/21 23:57:41 Servidor desligado
+STATUS: 2023/04/21 23:57:42 Servidor iniciado
+INFO: 2023/04/21 23:57:45 Database Carregada
+INFO: 2023/04/21 23:57:45 Hash Dinamica Criada
+INFO: 2023/04/21 23:57:45 B Tree Criada
+ERROR: 2023/04/21 23:57:51 code: 5, message: Pokemon nao encontrado
+STATUS: 2023/04/21 23:59:25 Servidor desligado
+STATUS: 2023/04/21 23:59:27 Servidor iniciado
+INFO: 2023/04/21 23:59:29 Database Carregada
+INFO: 2023/04/21 23:59:29 Hash Dinamica Criada
+INFO: 2023/04/21 23:59:29 B Tree Criada
+ERROR: 2023/04/21 23:59:36 code: 5, message: Pokemon nao encontrado
+STATUS: 2023/04/22 00:03:51 Servidor desligado
+STATUS: 2023/04/22 00:03:53 Servidor iniciado
+INFO: 2023/04/22 00:03:57 Database Carregada
+INFO: 2023/04/22 00:03:57 Hash Dinamica Criada
+INFO: 2023/04/22 00:03:57 B Tree Criada
+ERROR: 2023/04/22 00:04:08 code: 5, message: Pokemon nao encontrado
+STATUS: 2023/04/22 00:07:28 Servidor desligado
+STATUS: 2023/04/22 00:07:29 Servidor iniciado
+INFO: 2023/04/22 00:07:33 Database Carregada
+INFO: 2023/04/22 00:07:33 Hash Dinamica Criada
+INFO: 2023/04/22 00:07:33 B Tree Criada
+STATUS: 2023/04/22 00:08:43 Servidor desligado
+STATUS: 2023/04/22 00:08:44 Servidor iniciado
+INFO: 2023/04/22 00:08:46 Database Carregada
+INFO: 2023/04/22 00:08:46 Hash Dinamica Criada
+INFO: 2023/04/22 00:08:46 B Tree Criada
+STATUS: 2023/04/22 00:15:05 Servidor desligado

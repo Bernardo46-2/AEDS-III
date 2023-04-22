@@ -452,6 +452,13 @@ func (b *BPlusTree) PrintFile() {
 			}
 
 			b.nodesFile.Read(reader64)
+			i64, _ = utils.BytesToInt64(reader64, 0)
+
+			if i64 != NULL {
+				fmt.Printf("%5x ", i64)
+			} else {
+				fmt.Printf("      ")
+			}
 		}
 
 		b.nodesFile.Read(reader64)
@@ -661,7 +668,7 @@ func (b *BPlusTree) removeFromNode(index int64, node *BPlusTreeNode) (*Key, *Key
 	return k, max, flag
 }
 
-func (b *BPlusTree) remove(address int64, id float64) (*Key, *Key, int, int64) {
+func (b *BPlusTree) remove(address int64, id float64, keyAddress int64) (*Key, *Key, int, int64) {
 	if address == NULL {
 		return nil, nil, OK, NULL
 	}
@@ -675,21 +682,21 @@ func (b *BPlusTree) remove(address int64, id float64) (*Key, *Key, int, int64) {
 		i--
 	}
 
-	if node.leaf == 1 && node.keys[i].Id == id {
+	if node.leaf == 1 && node.keys[i].Id == id && node.keys[i].Ptr == keyAddress {
 		k, kk, flag = b.removeFromNode(i, node)
-	} else if node.keys[i].Id < id {
-		k, kk, flag, _ = b.remove(node.child[i+1], id)
+	} else if node.keys[i].Id <= id {
+		k, kk, flag, _ = b.remove(node.child[i+1], id, keyAddress)
 		flag = b.parseFlag(flag, node, i, k, kk)
 	} else {
-		k, kk, flag, _ = b.remove(node.child[i], id)
+		k, kk, flag, _ = b.remove(node.child[i], id, keyAddress)
 		flag = b.parseFlag(flag, node, i, k, kk)
 	}
 
 	return k, kk, flag, i
 }
 
-func (b *BPlusTree) Remove(id float64) *Key {
-	k, kk, flag, _ := b.remove(b.root, id)
+func (b *BPlusTree) Remove(id float64, address int64) *Key {
+	k, kk, flag, _ := b.remove(b.root, id, address)
 
 	root := b.readNode(b.root)
 
@@ -756,7 +763,7 @@ func Update(old models.Pokemon, new models.Pokemon, pokeAddress int64, path stri
     for _, field := range fields {
         tree, _ := ReadBPlusTree(path, field)
         k := Key{Id: new.GetFieldF64(field), Ptr: pokeAddress}
-        tree.Remove(old.GetFieldF64(field))
+        tree.Remove(old.GetFieldF64(field), pokeAddress)
         tree.Insert(&k)
         tree.Close()
     }
@@ -765,7 +772,17 @@ func Update(old models.Pokemon, new models.Pokemon, pokeAddress int64, path stri
 func Delete(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {
     for _, field := range fields {
         tree, _ := ReadBPlusTree(path, field)
-        tree.Remove(pokemon.GetFieldF64(field))
+        removed := tree.Remove(pokemon.GetFieldF64(field), pokeAddress)
+        if removed == nil {
+            fmt.Println("not found")
+        } else {
+            fmt.Printf("removed: %f | %x\n", removed.Id, removed.Ptr)
+        }
+        
+        fmt.Println(field)
+        tree.PrintFile()
+        fmt.Println()
+
         tree.Close()
     }
 }

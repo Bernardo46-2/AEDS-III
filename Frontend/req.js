@@ -762,7 +762,7 @@ ordenar2.onclick = () => {
 const index = document.querySelector('#Index');
 const indexDropdown = document.querySelector('#indexDropdown');
 const indexButtons = document.querySelectorAll('.index-buttons');
-const indexChoice = document.querySelectorAll('#Index0, #Index1, #Index2'); // #Index3, #Index4
+const indexChoice = document.querySelectorAll('#Index0, #Index1, #Index2, #Index3');
 const indexTransition = index.style.transition;
 const indexVar3 = index.style.paddingTop;
 let indexAberto = false;
@@ -771,9 +771,9 @@ index.addEventListener('click', function (event) {
     if (event.target === index && !indexAberto) {
         index.style.transition = "all 0.4s ease-in-out";
         indexDropdown.style.transition = "all 0.4s ease-in-out";
-        indexDropdown.style.height = "225px";
+        indexDropdown.style.height = "280px";
         indexDropdown.style.marginBottom = "15px";
-        index.style.height = "225px";
+        index.style.height = "280px";
         index.style.paddingTop = "15px";
         indexAberto = true;
         window.setTimeout(() => {
@@ -788,14 +788,10 @@ index.addEventListener('click', function (event) {
             indexButtons[2].style.pointerEvents = 'auto';
             indexButtons[2].style.opacity = "1";
         }, 225);
-        /* window.setTimeout(() => {
+        window.setTimeout(() => {
             indexButtons[3].style.pointerEvents = 'auto';
             indexButtons[3].style.opacity = "1";
         }, 300);
-        window.setTimeout(() => {
-            indexButtons[4].style.pointerEvents = 'auto';
-            indexButtons[4].style.opacity = "1";
-        }, 375); */
     } else if (event.target === index) {
         setTimeout(() => {
             indexDropdown.style.height = 60 + "px";
@@ -812,26 +808,22 @@ index.addEventListener('click', function (event) {
                 index.style.transition = indexTransition;
             }, 500);
         }, 200);
-/*         window.setTimeout(() => {
-            indexButtons[4].style.pointerEvents = 'auto';
-            indexButtons[4].style.opacity = "0";
-        }, 0);
         window.setTimeout(() => {
             indexButtons[3].style.pointerEvents = 'auto';
             indexButtons[3].style.opacity = "0";
-        }, 50); */
+        }, 0);
         window.setTimeout(() => {
             indexButtons[2].style.pointerEvents = 'auto';
             indexButtons[2].style.opacity = "0";
-        }, 0);
+        }, 75);
         window.setTimeout(() => {
             indexButtons[1].style.pointerEvents = 'auto';
             indexButtons[1].style.opacity = "0";
-        }, 100);
+        }, 150);
         window.setTimeout(() => {
             indexButtons[0].style.pointerEvents = 'auto';
             indexButtons[0].style.opacity = "0";
-        }, 200);
+        }, 225);
     }
 })
 
