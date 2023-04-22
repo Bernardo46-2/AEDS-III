@@ -13,11 +13,10 @@ import (
 
 const BTREE_FILE string = "btree/BTree.dat"
 const BTREE_NODES_FILE string = "btree/BTreeNodes.dat"
+const NULL int64 = -1
 
 // TODO:
-// - remove *BTree argument from functions
 // - change dir concatenation to use os.join
-// - documentation
 // - mkdir
 
 // ====================================== Bit-Flags ====================================== //
@@ -39,11 +38,14 @@ const (
 
 // ====================================== Structs ====================================== //
 
+// Key contem os valores que a árvore carrega
 type Key struct {
     Id  int64
     Ptr int64
 }
 
+// BTreeNode é o struct que representa cada nó que
+// está presente na árvore
 type BTreeNode struct {
     address      int64
     numberOfKeys int64
@@ -52,6 +54,7 @@ type BTreeNode struct {
     leaf         int64
 }
 
+// BTree é.. a Árvore B
 type BTree struct {
     file       string
     nodesFile  *os.File
@@ -62,6 +65,7 @@ type BTree struct {
 
 // ====================================== Key ====================================== //
 
+// newKey inicializa uma nova chave a partir de um struct Registro
 func newKey(register *binManager.Registro) Key {
     return Key{
         Id:  int64(register.Pokemon.Numero),
@@ -69,12 +73,15 @@ func newKey(register *binManager.Registro) Key {
     }
 }
 
+// newEmptyKey inicializa uma chave vazia
 func newEmptyKey() Key {
-    return Key{-1, -1}
+    return Key{NULL, NULL}
 }
 
 // ====================================== Node ====================================== //
 
+// newNode inicializa um novo no' vazio, preenchendo os campos com NULL
+// ou com uma chave vazia (vide funcao acima)
 func newNode(order int, leaf int64, address int64) *BTreeNode {
     node := BTreeNode{
         child:        make([]int64, order+1),
@@ -85,16 +92,18 @@ func newNode(order int, leaf int64, address int64) *BTreeNode {
     }
 
     for i := 0; i < order; i++ {
-        node.child[i] = -1
+        node.child[i] = NULL
         node.keys[i] = newEmptyKey()
     }
-    node.child[len(node.child)-1] = -1
+    node.child[len(node.child)-1] = NULL
 
     return &node
 }
 
+// write escreve o no' no arquivo, diretamente no endereco do no',
+// se existente, caso contrario, escreve no final do arquivo
 func (n *BTreeNode) write(file *os.File) {
-    if n.address == -1 {
+    if n.address == NULL {
         n.address, _ = file.Seek(0, io.SeekEnd)
     } else {
         file.Seek(n.address, io.SeekStart)
@@ -129,11 +138,11 @@ func (n *BTreeNode) split(tree *BTree) (int64, *Key, int64) {
         new.keys[i-middle] = n.keys[i]
         new.child[i-middle] = n.child[i]
         n.keys[i] = newEmptyKey()
-        n.child[i] = -1
+        n.child[i] = NULL
         new.numberOfKeys++
     }
     new.child[order-middle] = n.child[len(n.child)-1]
-    n.child[len(n.child)-1] = -1
+    n.child[len(n.child)-1] = NULL
 
     n.numberOfKeys = int64(middle - 1)
     carryUp := n.keys[n.numberOfKeys]
@@ -145,6 +154,8 @@ func (n *BTreeNode) split(tree *BTree) (int64, *Key, int64) {
     return n.address, &carryUp, new.address
 }
 
+// insert insere uma nova chave no no', recebendo a chave a ser inserida
+// e o indice de onde o valor vai ser inserido.
 func (n *BTreeNode) insert(index int64, left int64, data *Key, right int64, tree *BTree) (int64, *Key, int64) {
     if index < 0 || index >= int64(len(n.keys)) {
         panic("B Tree insert error: Invalid index")
@@ -166,15 +177,20 @@ func (n *BTreeNode) insert(index int64, left int64, data *Key, right int64, tree
 
     n.write(tree.nodesFile)
 
-    return -1, nil, -1
+    return NULL, nil, NULL
 }
 
+// canLendKey testa se um no' tem chaves o suficiente para emprestar
+// para o no' irmao, durante a remocao
 func (n *BTreeNode) canLendKey() bool {
     return n.numberOfKeys >= int64(len(n.keys)/2)
 }
 
+// removeKeyLeaf remove um elemento de um no' que for uma folha, retornando
+// o elemento removido e um ponteiro para o filho a esquerda, que sera' usado
+// durante a remocao
 func (n *BTreeNode) removeKeyLeaf(index int64) (*Key, int64) {
-    if index == -1 {
+    if index == NULL {
         index = n.numberOfKeys - 1
     }
 
@@ -193,21 +209,25 @@ func (n *BTreeNode) removeKeyLeaf(index int64) (*Key, int64) {
     return &k, leftChild
 }
 
+// removeKeyNonLeaf remove um elemento de um no' nao folha
 func (n *BTreeNode) removeKeyNonLeaf(index int64) *Key {
-    if index == -1 {
+    if index == NULL {
         index = n.numberOfKeys - 1
     }
 
     return &n.keys[index]
 }
 
+// max retorna o maior elemento presente em um no'
 func (n *BTreeNode) max() Key {
     return n.keys[n.numberOfKeys-1]
 }
 
+// find procura um elemento no no', retornando o elemento, se encontrado,
+// ou um ponteiro para o proximo no' a ser procurado, caso nao encontrado
 func (n *BTreeNode) find(id int64) (*Key, int64) {
     var k *Key
-    address := int64(-1)
+    address := NULL
     i := n.numberOfKeys - 1
     
     for i > 0 && n.keys[i].Id > id {
@@ -225,6 +245,8 @@ func (n *BTreeNode) find(id int64) (*Key, int64) {
     return k, address
 }
 
+// update atualiza o valor de uma chave, pesquisando por ela e 
+// alterando seu valor
 func (n *BTreeNode) update(newKey Key) {
     i := int64(0)
     
@@ -240,13 +262,15 @@ func (n *BTreeNode) update(newKey Key) {
 
 // ====================================== B Tree ====================================== //
 
+// NewBTree inicializa uma arvore vazia, recebendo o endereco do
+// arquivo a ser gravado e a ordem da arvore
 func NewBTree(order int, dir string) (*BTree, error) {
     if order < 3 {
         return nil, errors.New("invalid order")
     }
 
     nodesFile, _ := os.Create(dir + BTREE_NODES_FILE)
-    root := newNode(order, 1, -1)
+    root := newNode(order, 1, NULL)
     tree := &BTree{
         root:      0,
         order:     order,
@@ -259,6 +283,9 @@ func NewBTree(order int, dir string) (*BTree, error) {
     return tree, nil
 }
 
+// ReadBTree lê uma arvore de um arquivo header, extraindo
+// a ordem da arvore, o endereco da raiz, a quantidade de nós 
+// vazios e os endereços dos nós vazios
 func ReadBTree(dir string) (*BTree, error) {
     file, err := os.ReadFile(dir + BTREE_FILE)
     if err != nil {
@@ -283,6 +310,11 @@ func ReadBTree(dir string) (*BTree, error) {
     }, nil
 }
 
+// Close fecha o arquivo da árvore, salvando o endereço da raiz, 
+// a ordem, quantidade de nós vazios e os endereços dos nós vazios
+// (Esta função deve ser chamada para salvar qualquer alteração feita
+// na base de dados. Nao cumprimento disso poderá ocasionar em dados
+// corrompidos)
 func (b *BTree) Close() {
     file, _ := os.Create(b.file)
 
@@ -298,6 +330,8 @@ func (b *BTree) Close() {
     b.nodesFile.Close()
 }
 
+// popEmptyNode busca um endereço de um nó vazio, o remove
+// da lista de nós vazios e por fim o retorna
 func (b *BTree) popEmptyNode() int64 {
     if len(b.emptyNodes) > 0 {
         address := b.emptyNodes[0]
@@ -305,9 +339,11 @@ func (b *BTree) popEmptyNode() int64 {
         return address
     }
 
-    return -1
+    return NULL
 }
 
+// nodeSize calcula o tamanho de um nó em bytes para ser salvo
+// em um arquivo
 func (b *BTree) nodeSize() int64 {
     node := BTreeNode{}
     s := int64(0)
@@ -318,8 +354,9 @@ func (b *BTree) nodeSize() int64 {
     return s
 }
 
+// readNode lê um nó do arquivo dado seu endereço
 func (b *BTree) readNode(address int64) *BTreeNode {
-    if address == -1 {
+    if address == NULL {
         return nil
     }
 
@@ -339,7 +376,7 @@ func (b *BTree) readNode(address int64) *BTreeNode {
         keys[i].Ptr, ptr = utils.BytesToInt64(buf, ptr)
     }
     child[len(child)-2], _ = utils.BytesToInt64(buf, ptr)
-    child[len(child)-1] = -1
+    child[len(child)-1] = NULL
     keys[len(keys)-1] = newEmptyKey()
 
     return &BTreeNode{
@@ -351,8 +388,10 @@ func (b *BTree) readNode(address int64) *BTreeNode {
     }
 }
 
+// insert insere uma chave na árvore e atualiza o arquivo
+// com os nós 
 func (b *BTree) insert(node *BTreeNode, data *Key) (int64, *Key, int64) {
-    l, r := int64(-1), int64(-1)
+    l, r := NULL, NULL
     i := int64(0)
     for i < node.numberOfKeys && data.Id > node.keys[i].Id {
         i++
@@ -370,6 +409,8 @@ func (b *BTree) insert(node *BTreeNode, data *Key) (int64, *Key, int64) {
     return l, data, r
 }
 
+// Insert insere uma chave na árvore e atualiza o arquivo
+// com os nós
 func (b *BTree) Insert(data *Key) {
     l, m, r := b.insert(b.readNode(b.root), data)
 
@@ -383,6 +424,8 @@ func (b *BTree) Insert(data *Key) {
     }
 }
 
+// printFile abre o arquivo com os nós e printa todos eles
+// na ordem que aparecem (ideal para debug)
 func (b *BTree) printFile() {
     fileEnd, _ := b.nodesFile.Seek(0, io.SeekEnd)
     b.nodesFile.Seek(0, io.SeekStart)
@@ -408,7 +451,7 @@ func (b *BTree) printFile() {
             b.nodesFile.Read(reader64)
             tmp, _ = utils.BytesToInt64(reader64, 0)
 
-            if tmp != -1 {
+            if tmp != NULL {
                 fmt.Printf("[%5x] ", tmp)
             } else {
                 fmt.Printf("[     ] ")
@@ -417,7 +460,7 @@ func (b *BTree) printFile() {
             b.nodesFile.Read(reader64)
             tmp, _ = utils.BytesToInt64(reader64, 0)
 
-            if tmp != -1 {
+            if tmp != NULL {
                 fmt.Printf("%3d ", tmp)
             } else {
                 fmt.Printf("    ")
@@ -429,7 +472,7 @@ func (b *BTree) printFile() {
         b.nodesFile.Read(reader64)
         tmp, _ = utils.BytesToInt64(reader64, 0)
 
-        if tmp != -1 {
+        if tmp != NULL {
             fmt.Printf("[%4x] }\n", tmp)
         } else {
             fmt.Printf("[    ] }\n")
@@ -438,6 +481,8 @@ func (b *BTree) printFile() {
     fmt.Printf("\n\n")
 }
 
+// maxLeft procura o maior elemento a esquerda de uma chave,
+// para substituir a chave que está sendo removida
 func (b *BTree) maxLeft(node *BTreeNode, index int64, k *Key) Key {
     node = b.readNode(node.child[index])
 
@@ -448,6 +493,8 @@ func (b *BTree) maxLeft(node *BTreeNode, index int64, k *Key) Key {
     return node.max()
 }
 
+// replace substitui um elemento da árvore por outro, procurando
+// na subárvore inteira abaixo do nó enviado para a função
 func (b *BTree) replace(new *Key, old *Key, node *BTreeNode) {
     i := node.numberOfKeys - 1
     for i > 0 && node.keys[i].Id > old.Id {
@@ -464,6 +511,9 @@ func (b *BTree) replace(new *Key, old *Key, node *BTreeNode) {
     }
 }
 
+// concatNodes junta dois nós que estao com o tamanho pequeno
+// em um novo nó, retornando o nó resultante e enviando o nó
+// perdido para os nós vazios salvos na árvore
 func (b *BTree) concatNodes(left *BTreeNode, right *BTreeNode, key *Key) *BTreeNode {
     left.keys[left.numberOfKeys] = *key
     left.numberOfKeys++
@@ -472,10 +522,10 @@ func (b *BTree) concatNodes(left *BTreeNode, right *BTreeNode, key *Key) *BTreeN
         left.child[left.numberOfKeys] = right.child[i]
         left.numberOfKeys++
         right.keys[i] = newEmptyKey()
-        right.child[i] = -1
+        right.child[i] = NULL
     }
     left.child[left.numberOfKeys] = right.child[right.numberOfKeys]
-    right.child[right.numberOfKeys] = -1
+    right.child[right.numberOfKeys] = NULL
     right.numberOfKeys = 0
 
     left.write(b.nodesFile)
@@ -484,6 +534,10 @@ func (b *BTree) concatNodes(left *BTreeNode, right *BTreeNode, key *Key) *BTreeN
     return left
 }
 
+// borrowFromParent desce um elemento do nó pai que será usado
+// para concatenar os nós filhos durante a remoção, retornando
+// uma flag indicando se ocorreu algum problema durante o
+// processo
 func (b *BTree) borrowFromParent(node *BTreeNode, l *BTreeNode, r *BTreeNode, keyIndex int64) int {
     flag := 0
 
@@ -511,6 +565,9 @@ func (b *BTree) borrowFromParent(node *BTreeNode, l *BTreeNode, r *BTreeNode, ke
     return flag
 }
 
+// borrowFromSibling busca um elemento de um nó irmão, o
+// envia para o nó pai, desce o elemento do pai e envia para
+// o nó que esta com menos de 50% de ocupação
 func (b *BTree) borrowFromSibling(parent *BTreeNode, left *BTreeNode, right *BTreeNode, index int64) {
     k, child := right.removeKeyLeaf(0)
 
@@ -525,6 +582,11 @@ func (b *BTree) borrowFromSibling(parent *BTreeNode, left *BTreeNode, right *BTr
     right.write(b.nodesFile)
 }
 
+// truBorrowKey testa se (durante a remoção) a chave pode 
+// ser emprestada de um nó irmão ou se este vai ficar com
+// menos de 50% de ocupação, se pode, pega a chave do irmão,
+// se nao, pega a chave do pai e concatena os irmãos, retornando
+// uma flag indicando se teve erro no processo
 func (b *BTree) tryBorrowKey(node *BTreeNode, index int64) int {
     var l, r, lefter *BTreeNode
 
@@ -546,6 +608,10 @@ func (b *BTree) tryBorrowKey(node *BTreeNode, index int64) int {
     return FLAG1
 }
 
+// parseFlag resolve qualquer problema que as flags podem
+// indicar que ocorreu, chamando as respectivas funções que 
+// cuidam desses cenários e retornando uma nova flag que 
+// será resolvida no nó anterior na recursão
 func (b *BTree) parseFlag(flag int, node *BTreeNode, index int64, k *Key) int {
     if FLAG1 & flag != 0 {
         // nothing to see here
@@ -560,6 +626,9 @@ func (b *BTree) parseFlag(flag int, node *BTreeNode, index int64, k *Key) int {
     return flag
 }
 
+// removeFromNode remove um elemento que está presente
+// em um nó, retornando a flag correspondente a o que
+// aconteceu durante a remoção
 func (b *BTree) removeFromNode(index int64, node *BTreeNode) (*Key, int) {
     var k *Key
     flag := 0
@@ -585,9 +654,12 @@ func (b *BTree) removeFromNode(index int64, node *BTreeNode) (*Key, int) {
     return k, flag
 }
 
+// remove remove um elemento da árvore e o retorna,
+// ou NULL, caso nao encontrado. Retorna o elemento,
+// uma flag e o indice do elemento removido no nó
 func (b *BTree) remove(address int64, id int64) (*Key, int, int64) {
-    if address == -1 {
-        return nil, FLAG1, -1
+    if address == NULL {
+        return nil, FLAG1, NULL
     }
 
     var k *Key
@@ -624,6 +696,9 @@ func (b *BTree) remove(address int64, id int64) (*Key, int, int64) {
     return k, flag, i
 }
 
+// Remove remove um elemento da árvore, pesquisando
+// recursivamente pelo elemento e por fim retornando-o,
+// ou nil, caso não encontrado
 func (b *BTree) Remove(id int64) *Key {
     k, flag, index := b.remove(b.root, id)
     var root *BTreeNode
@@ -638,7 +713,7 @@ func (b *BTree) Remove(id int64) *Key {
     } else if FLAG4 & flag != 0 {
         root = b.readNode(b.root)
         tmp := root.child[0]
-        root.child[0] = -1
+        root.child[0] = NULL
         root.write(b.nodesFile)
         b.root = tmp
         root = b.readNode(b.root)
@@ -648,6 +723,8 @@ func (b *BTree) Remove(id int64) *Key {
     return k
 }
 
+// Find pesquisa por um elemento presente na árvore
+// e o retorna se encontrado, ou nil, caso contrário
 func (b *BTree) Find(id int64) *Key {
     var k *Key
     var address int64
@@ -661,6 +738,8 @@ func (b *BTree) Find(id int64) *Key {
     return k
 }
 
+// Update atualiza um elemento na árvore, pesquisando-o recursivamente
+// e, se encontrado, atualiza seu valor
 func (b *BTree) Update(id int64, ptr int64) {
     var k *Key
     var address int64
@@ -678,6 +757,10 @@ func (b *BTree) Update(id int64, ptr int64) {
     }
 }
 
+// StartBTreeFile inicializa a Árvore B e insere todos os elementos
+// contidos no arquivo informado na árvore, escrevendo-os em um novo arquivo
+// e escrevendo as informações gerais da arvore (como ordem, endereço da raíz,
+// etc) em outro arquivo
 func StartBTreeFile(dir string) {
     order := 8
     tree, _ := NewBTree(order, dir)
