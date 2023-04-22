@@ -18,6 +18,7 @@ const BTREE_NODES_FILE string = "btree/BTreeNodes.dat"
 // - remove *BTree argument from functions
 // - change dir concatenation to use os.join
 // - documentation
+// - mkdir
 
 // ====================================== Bit-Flags ====================================== //
 

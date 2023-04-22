@@ -402,6 +402,10 @@ func PokeNumbers() []string {
 				fields = append(fields, utils.Decaptalize(fieldType.Name))
 			}
 		}
+
+        if fieldType.Type == reflect.TypeOf(time.Time{}) {
+            fields = append(fields, utils.Decaptalize(fieldType.Name))
+        }
 	}
 
 	return fields

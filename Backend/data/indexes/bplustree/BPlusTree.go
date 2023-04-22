@@ -84,6 +84,14 @@ func newEmptyKey() Key {
 	return Key{float64(NULL), NULL}
 }
 
+func (k *Key) compareTo(other *Key) float64 {
+    diff := k.Id - other.Id
+    if diff == 0 {
+        diff = float64(k.Ptr - other.Ptr)
+    }
+    return diff
+}
+
 // ====================================== Node ====================================== //
 
 func newNode(order int, leaf int64, address int64) *BPlusTreeNode {
@@ -192,12 +200,16 @@ func (n *BPlusTreeNode) insert(index int64, left int64, data *Key, right int64, 
 	return NULL, nil, NULL
 }
 
-func (n *BPlusTreeNode) find(id float64) int64 {
+func (n *BPlusTreeNode) find(k *Key) int64 {
 	i := n.numberOfKeys - 1
 
-	for i >= 0 && n.keys[i].Id > id {
+	for i >= 0 && n.keys[i].compareTo(k) > 0 {
 		i--
 	}
+
+    if n.keys[i].compareTo(k) != 0 {
+        i = -1
+    }
 
 	return i
 }
@@ -381,7 +393,7 @@ func (b *BPlusTree) readNode(address int64) *BPlusTreeNode {
 func (b *BPlusTree) insert(node *BPlusTreeNode, data *Key) (int64, *Key, int64) {
 	l, r := NULL, NULL
 	i := int64(0)
-	for i < node.numberOfKeys && data.Id > node.keys[i].Id {
+	for i < node.numberOfKeys && data.compareTo(&node.keys[i]) > 0 {
 		i++
 	}
 
@@ -596,7 +608,7 @@ func (b *BPlusTree) tryBorrowKey(node *BPlusTreeNode, index int64) int {
 
 	flag := r.getStatus()
 
-	if flag == LEAF|CAN_LEND { // replace
+	if flag == LEAF | CAN_LEND { // replace
 		b.borrowFromLeaf(node, l, r, index)
 	} else if flag == LEAF { // merge
 		b.mergeLeaf(node, l, r, index)
@@ -615,24 +627,27 @@ func (b *BPlusTree) tryBorrowKey(node *BPlusTreeNode, index int64) int {
 	return flag
 }
 
-func (b *BPlusTree) replaceKey(n *BPlusTreeNode, k *Key, kk *Key) (flag int) {
-	if REPLACE&flag != 0 {
-		i := n.find(k.Id)
+func (b *BPlusTree) replaceKey(n *BPlusTreeNode, k *Key, kk *Key, flag int) int {
+    walter := 0
+	if REPLACE & flag != 0 {
+		i := n.find(k)
+        fmt.Println("Found:", i)
+        fmt.Println("Searching:", k)
 		if i != NULL {
 			n.keys[i] = *kk
 			n.write(b.nodesFile)
 		} else {
-			flag = REPLACE
-		}
+            walter = REPLACE
+        }
 	}
 
-	return
+	return walter
 }
 
 func (b *BPlusTree) parseFlag(flag int, node *BPlusTreeNode, index int64, k *Key, kk *Key) int {
-	walter := b.replaceKey(node, k, kk)
+	walter := b.replaceKey(node, k, kk, flag)
 
-	if HELP&flag != 0 {
+	if HELP & flag != 0 {
 		walter |= b.tryBorrowKey(node, index)
 	}
 
@@ -648,7 +663,7 @@ func (b *BPlusTree) removeFromNode(index int64, node *BPlusTreeNode) (*Key, *Key
 	flag := 0
 
 	if index == node.numberOfKeys-1 {
-		flag |= REPLACE
+		flag = REPLACE
 	}
 
 	if node.canLendKey() {
@@ -668,7 +683,7 @@ func (b *BPlusTree) removeFromNode(index int64, node *BPlusTreeNode) (*Key, *Key
 	return k, max, flag
 }
 
-func (b *BPlusTree) remove(address int64, id float64, keyAddress int64) (*Key, *Key, int, int64) {
+func (b *BPlusTree) remove(address int64, old *Key) (*Key, *Key, int, int64) {
 	if address == NULL {
 		return nil, nil, OK, NULL
 	}
@@ -678,33 +693,30 @@ func (b *BPlusTree) remove(address int64, id float64, keyAddress int64) (*Key, *
 	flag := 0
 
 	i := node.numberOfKeys - 1
-	for i > 0 && node.keys[i].Id > id {
+	for i > 0 && node.keys[i].compareTo(old) > 0 {
 		i--
 	}
 
-	if node.leaf == 1 && node.keys[i].Id == id && node.keys[i].Ptr == keyAddress {
+	if node.leaf == 1 && node.keys[i].compareTo(old) == 0 {
 		k, kk, flag = b.removeFromNode(i, node)
-	} else if node.keys[i].Id <= id {
-		k, kk, flag, _ = b.remove(node.child[i+1], id, keyAddress)
+	} else if node.keys[i].compareTo(old) < 0 {
+		k, kk, flag, _ = b.remove(node.child[i+1], old)
 		flag = b.parseFlag(flag, node, i, k, kk)
 	} else {
-		k, kk, flag, _ = b.remove(node.child[i], id, keyAddress)
+		k, kk, flag, _ = b.remove(node.child[i], old)
 		flag = b.parseFlag(flag, node, i, k, kk)
 	}
 
 	return k, kk, flag, i
 }
 
-func (b *BPlusTree) Remove(id float64, address int64) *Key {
-	k, kk, flag, _ := b.remove(b.root, id, address)
-
+func (b *BPlusTree) Remove(old *Key) *Key {
+	k, kk, flag, _ := b.remove(b.root, old)
 	root := b.readNode(b.root)
 
-	if flag&REPLACE != 0 {
-		b.replaceKey(root, k, kk)
-	}
+    b.replaceKey(root, k, kk, flag)
 
-	if flag&EMPTY != 0 {
+	if flag & EMPTY != 0 {
 		if root.child[0] != NULL {
 			b.emptyNodes = append(b.emptyNodes, b.root)
 			b.root = root.child[0]
@@ -750,6 +762,34 @@ func (b *BPlusTree) Find(id float64) *Key {
     return k
 }
 
+func (b *BPlusTree) findNode(id float64) *BPlusTreeNode {
+    node := b.readNode(b.root)
+
+    for i := int64(0); i < node.numberOfKeys && node.leaf == 0; i++ {
+        if node.keys[i].Id >= id {
+            node = b.readNode(node.child[i])
+            i = -1
+        }
+    }
+    
+    return node
+}
+
+func (b *BPlusTree) FindRange(start float64, end float64) ([]int64, error) {
+    if start > end {
+        return nil, errors.New("Invalid Indexes")
+    }
+
+    node := b.findNode(start)
+    fmt.Println(node)
+
+    // for start < end {
+
+    // }
+
+    return nil, nil
+}
+
 func Create(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {
     for _, field := range fields {
         tree, _ := ReadBPlusTree(path, field)
@@ -762,9 +802,10 @@ func Create(pokemon models.Pokemon, pokeAddress int64, path string, fields []str
 func Update(old models.Pokemon, new models.Pokemon, pokeAddress int64, path string, fields []string) {
     for _, field := range fields {
         tree, _ := ReadBPlusTree(path, field)
-        k := Key{Id: new.GetFieldF64(field), Ptr: pokeAddress}
-        tree.Remove(old.GetFieldF64(field), pokeAddress)
-        tree.Insert(&k)
+        k := Key{Id: old.GetFieldF64(field), Ptr: pokeAddress}
+        kk := Key{Id: new.GetFieldF64(field), Ptr: pokeAddress}
+        tree.Remove(&k)
+        tree.Insert(&kk)
         tree.Close()
     }
 }
@@ -772,7 +813,7 @@ func Update(old models.Pokemon, new models.Pokemon, pokeAddress int64, path stri
 func Delete(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {
     for _, field := range fields {
         tree, _ := ReadBPlusTree(path, field)
-        removed := tree.Remove(pokemon.GetFieldF64(field), pokeAddress)
+        removed := tree.Remove(&Key{Id: pokemon.GetFieldF64(field), Ptr: pokeAddress})
         if removed == nil {
             fmt.Println("not found")
         } else {
@@ -787,7 +828,7 @@ func Delete(pokemon models.Pokemon, pokeAddress int64, path string, fields []str
     }
 }
 
-// ====================================== Tests ====================================== //
+// ====================================== Init ====================================== //
 
 func StartBPlusTreeFile(dir string, field string, controler Reader) error {
 	order := 8
@@ -810,7 +851,7 @@ func StartBPlusTreeFile(dir string, field string, controler Reader) error {
 			tree.Insert(&r)
         }
     }
-
+    
 	tree.Close()
     return nil
 }

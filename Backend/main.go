@@ -104,6 +104,11 @@ func main() {
     case "7":
         controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
         bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "altura", controler)
+    
+    case "8":
+        tree, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, "numero")
+        tree.FindRange(260, 500)
+        
 	default:
 		fmt.Println("Opção inválida")
 	}
