@@ -102,7 +102,8 @@ func main() {
 			fmt.Printf("ID = %3d  |  Nome = %30s  |  compatibilidade = %d\n", tmpPoke.Numero, tmpPoke.Nome, scoredDocument.Score)
 		}
     case "7":
-        bplustree.StartBPlusTreeFile(binManager.FILES_PATH)
+        controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+        bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "altura", controler)
 	default:
 		fmt.Println("Opção inválida")
 	}

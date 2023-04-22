@@ -62,6 +62,14 @@ type BPlusTree struct {
 	emptyNodes []int64
 }
 
+type Reader interface {
+	ReadNextGeneric() (any, bool, int64, error)
+}
+
+type IndexableObject interface {
+	GetFieldF64(fieldName string) float64
+}
+
 // ====================================== Key ====================================== //
 
 func newKey(register *binManager.Registro) Key {
@@ -240,14 +248,14 @@ func (n *BPlusTreeNode) getStatus() int {
 
 // ====================================== B+ Tree ====================================== //
 
-func NewBPlusTree(order int, dir string) (*BPlusTree, error) {
+func NewBPlusTree(order int, path string, field string) (*BPlusTree, error) {
 	if order < 3 {
 		return nil, errors.New("invalid order")
 	}
 
-	tree_path := filepath.Join(dir, PATH)
-	tree_nodes := filepath.Join(tree_path, NODES)
-	tree_header := filepath.Join(tree_path, HEADER)
+	tree_path := filepath.Join(path, PATH)
+	tree_nodes := filepath.Join(tree_path, field + "_" + NODES)
+	tree_header := filepath.Join(tree_path, field + "_" + HEADER)
 	os.MkdirAll(tree_path, 0755)
 	nodesFile, _ := os.Create(tree_nodes)
 	root := newNode(order, 1, NULL)
@@ -264,10 +272,10 @@ func NewBPlusTree(order int, dir string) (*BPlusTree, error) {
 	return tree, nil
 }
 
-func ReadBPlusTree(dir string) (*BPlusTree, error) {
+func ReadBPlusTree(dir string, field string) (*BPlusTree, error) {
 	tree_path := filepath.Join(dir, PATH)
-	tree_nodes := filepath.Join(tree_path, NODES)
-	tree_header := filepath.Join(tree_path, HEADER)
+	tree_nodes := filepath.Join(tree_path, field + "_" + NODES)
+	tree_header := filepath.Join(tree_path, field + "_" + HEADER)
 
 	file, err := os.ReadFile(tree_header)
 	if err != nil {
@@ -401,7 +409,7 @@ func (b *BPlusTree) Insert(data *Key) {
 	}
 }
 
-func (b *BPlusTree) printFile() {
+func (b *BPlusTree) PrintFile() {
 	fileEnd, _ := b.nodesFile.Seek(0, io.SeekEnd)
 	b.nodesFile.Seek(0, io.SeekStart)
 	reader64 := make([]byte, binary.Size(int64(0)))
@@ -428,7 +436,7 @@ func (b *BPlusTree) printFile() {
 			i64, _ = utils.BytesToInt64(reader64, 0)
 
 			if i64 != NULL {
-				fmt.Printf("[%5d] ", i64)
+				fmt.Printf("[%5x] ", i64)
 			} else {
 				fmt.Printf("[     ] ")
 			}
@@ -448,7 +456,7 @@ func (b *BPlusTree) printFile() {
 		b.nodesFile.Read(reader64)
 		i64, _ := utils.BytesToInt64(reader64, 0)
 
-		if i64 != -1 {
+		if i64 != NULL {
 			fmt.Printf("[%4x] ", i64)
 		} else {
 			fmt.Printf("[    ] ")
@@ -457,7 +465,7 @@ func (b *BPlusTree) printFile() {
 		b.nodesFile.Read(reader64)
 		i64, _ = utils.BytesToInt64(reader64, 0)
 
-		if i64 != -1 {
+		if i64 != NULL {
 			fmt.Printf("|| Next: %4x }\n", i64)
 		} else {
 			fmt.Printf("|| Next: %4x }\n", NULL)
@@ -701,36 +709,63 @@ func (b *BPlusTree) Remove(id float64) *Key {
 	return k
 }
 
+func (n *BPlusTreeNode) find2(id float64) (*Key, int64) {
+    var k *Key
+    address := NULL
+    i := n.numberOfKeys - 1
+    
+    for i > 0 && n.keys[i].Id > id {
+        i--
+    }
+
+    if n.keys[i].Id == id {
+        k = &n.keys[i]
+    } else if n.keys[i].Id < id {
+        address = n.child[i+1]
+    } else {
+        address = n.child[i]
+    }
+    
+    return k, address
+}
+
+func (b *BPlusTree) Find(id float64) *Key {
+    var k *Key
+    var address int64
+    node := b.readNode(b.root)
+    
+    for node != nil && k == nil {
+        k, address = node.find2(id)
+        node = b.readNode(address)
+    }
+    
+    return k
+}
+
 // ====================================== Tests ====================================== //
 
-func StartBPlusTreeFile(dir string) {
+func StartBPlusTreeFile(dir string, field string, controler Reader) error {
 	order := 8
-	tree, _ := NewBPlusTree(order, dir)
-	reader, err := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+	tree, _ := NewBPlusTree(order, dir, field)
 
-	n := int(reader.TotalRegistros)
-	for i := 0; i < n && err == nil; i++ {
-		err = reader.ReadNext()
-		if reader.RegistroAtual.Lapide != 1 {
-			r := newKey(reader.RegistroAtual)
+    for {
+        objInterface, isDead, address, err := controler.ReadNextGeneric()
+        if err != nil {
+            break
+        }
+        
+        obj, ok := objInterface.(IndexableObject)
+        if !ok {
+            return fmt.Errorf("failed to convert object to IndexableObject\n%+v", objInterface)
+        }
+
+        if !isDead {
+            content := obj.GetFieldF64(field)
+			r := Key{Id: content, Ptr: address}
 			tree.Insert(&r)
-		}
-	}
+        }
+    }
 
-	for i := 1; i <= n; i++ {
-		tree.Remove(float64(i))
-	}
-
-	reader.Close()
-	reader2, err2 := binManager.InicializarControleLeitura(binManager.BIN_FILE)
-	for i := 0; i < n && err2 == nil; i++ {
-		err2 = reader2.ReadNext()
-		if reader2.RegistroAtual.Lapide != 1 {
-			g := newKey(reader2.RegistroAtual)
-			tree.Insert(&g)
-		}
-	}
-
-	tree.printFile()
 	tree.Close()
+    return nil
 }

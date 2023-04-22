@@ -345,3 +345,27 @@ func PokemonStringFields() []string {
 
 	return fieldNames
 }
+
+func (p Pokemon) GetFieldF64(fieldName string) float64 {
+	field := strings.ToLower(fieldName)
+	switch field {
+	case "numero", "id":
+		return float64(p.Numero)
+	case "geracao":
+		return float64(p.Geracao)
+	case "lancamento":
+		return float64(p.Lancamento.Unix())
+	case "atk":
+		return float64(p.Atk)
+	case "def":
+		return float64(p.Def)
+	case "hp":
+		return float64(p.Hp)
+	case "altura":
+		return float64(p.Altura)
+	case "peso":
+		return float64(p.Peso)
+	default:
+		return -1
+	}
+}

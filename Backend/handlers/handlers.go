@@ -11,6 +11,7 @@ import (
 	"strconv"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/bplustree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
@@ -303,4 +304,20 @@ func reconstruirIndices() {
 	invertedIndex.New(controler, "tipo", binManager.FILES_PATH, 0)
 	controler.Reset()
 	invertedIndex.New(controler, "descricao", binManager.FILES_PATH, 0.8)
+    
+	// B+ Tree
+	controler.Reset()
+    bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "geracao", controler)
+	controler.Reset()
+    bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "atk", controler)
+	controler.Reset()
+    bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "def", controler)
+	controler.Reset()
+    bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "hp", controler)
+	controler.Reset()
+    bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "altura", controler)
+	controler.Reset()
+    bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "peso", controler)
+	controler.Reset()
+    bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "lancamento", controler)
 }
