@@ -534,8 +534,8 @@ func (b *BPlusTree) PrintFile() {
 	fmt.Printf("\n\n")
 }
 
-// concatLeaf concatena dois nós em um, dado que estes são folhas,
-// 
+// concatLeaf concatena dois nós em um, dado que estes são folhas
+// e retorna o nó resultante
 func (b *BPlusTree) concatLeaf(left *BPlusTreeNode, right *BPlusTreeNode) *BPlusTreeNode {
 	for i := int64(0); i < right.numberOfKeys; i++ {
 		left.keys[left.numberOfKeys] = right.keys[i]
@@ -558,6 +558,8 @@ func (b *BPlusTree) concatLeaf(left *BPlusTreeNode, right *BPlusTreeNode) *BPlus
 	return left
 }
 
+// mergeLeaf chama a função concatLeaf para concatenar dois nós e 
+// desloca os elementos do pai para comportar 1 elemento a menos
 func (b *BPlusTree) mergeLeaf(node *BPlusTreeNode, l *BPlusTreeNode, r *BPlusTreeNode, keyIndex int64) {
 	b.concatLeaf(l, r)
 
@@ -571,6 +573,9 @@ func (b *BPlusTree) mergeLeaf(node *BPlusTreeNode, l *BPlusTreeNode, r *BPlusTre
 	node.write(b.nodesFile)
 }
 
+// borrowFromLeaf pega um elemento emprestado do nó irmao (folha) 
+// e faz todos os ajustes para passar pro nó com tamanho
+// invalido
 func (b *BPlusTree) borrowFromLeaf(node *BPlusTreeNode, left *BPlusTreeNode, right *BPlusTreeNode, index int64) {
 	k, _ := right.removeKeyLeaf(0)
 
@@ -583,6 +588,8 @@ func (b *BPlusTree) borrowFromLeaf(node *BPlusTreeNode, left *BPlusTreeNode, rig
 	right.write(b.nodesFile)
 }
 
+// borrowFromNonLeaf pega um elemento emprestado do nó irmao (nao folha)
+// e faz todos os ajustes para passar pro nó com tamanho invalido
 func (b *BPlusTree) borrowFromNonLeaf(parent *BPlusTreeNode, left *BPlusTreeNode, right *BPlusTreeNode, index int64) {
 	k, child := right.removeKeyLeaf(0)
 
@@ -597,6 +604,8 @@ func (b *BPlusTree) borrowFromNonLeaf(parent *BPlusTreeNode, left *BPlusTreeNode
 	right.write(b.nodesFile)
 }
 
+// concatNodesOG concatena dois nós não folha e retorna o
+// nó resultante
 func (b *BPlusTree) concatNodesOG(left *BPlusTreeNode, right *BPlusTreeNode, key *Key) *BPlusTreeNode {
 	left.keys[left.numberOfKeys] = *key
 	left.numberOfKeys++
@@ -620,6 +629,7 @@ func (b *BPlusTree) concatNodesOG(left *BPlusTreeNode, right *BPlusTreeNode, key
 	return left
 }
 
+// borrowFromParentOG 
 func (b *BPlusTree) borrowFromParentOG(node *BPlusTreeNode, l *BPlusTreeNode, r *BPlusTreeNode, keyIndex int64) {
 	b.concatNodesOG(l, r, &node.keys[keyIndex])
 
@@ -844,7 +854,7 @@ func (b *BPlusTree) FindRange(start float64, end float64) ([]int64, error) {
 
 	addresses := make([]int64, 0)
 
-	for start < end {
+	for start < end && node != nil {
 		start = node.keys[index].Id
 		addresses = append(addresses, node.keys[index].Ptr)
 
