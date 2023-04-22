@@ -346,27 +346,27 @@ func PokeStrings() []string {
 	return fieldNames
 }
 
-func (p Pokemon) GetFieldF64(fieldName string) float64 {
+func (p Pokemon) GetFieldF64(fieldName string) (float64, int64) {
 	field := strings.ToLower(fieldName)
 	switch field {
 	case "numero", "id":
-		return float64(p.Numero)
+		return float64(p.Numero), int64(p.Numero)
 	case "geracao":
-		return float64(p.Geracao)
+		return float64(p.Geracao), int64(p.Numero)
 	case "lancamento":
-		return float64(p.Lancamento.Unix())
+		return float64(p.Lancamento.Unix()), int64(p.Numero)
 	case "atk":
-		return float64(p.Atk)
+		return float64(p.Atk), int64(p.Numero)
 	case "def":
-		return float64(p.Def)
+		return float64(p.Def), int64(p.Numero)
 	case "hp":
-		return float64(p.Hp)
+		return float64(p.Hp), int64(p.Numero)
 	case "altura":
-		return float64(p.Altura)
+		return float64(p.Altura), int64(p.Numero)
 	case "peso":
-		return float64(p.Peso)
+		return float64(p.Peso), int64(p.Numero)
 	default:
-		return -1
+		return -1, -1
 	}
 }
 
@@ -403,9 +403,9 @@ func PokeNumbers() []string {
 			}
 		}
 
-        if fieldType.Type == reflect.TypeOf(time.Time{}) {
-            fields = append(fields, utils.Decaptalize(fieldType.Name))
-        }
+		if fieldType.Type == reflect.TypeOf(time.Time{}) {
+			fields = append(fields, utils.Decaptalize(fieldType.Name))
+		}
 	}
 
 	return fields

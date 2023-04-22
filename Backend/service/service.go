@@ -21,6 +21,30 @@ import (
 
 const BTREE_ORDER = 8
 
+type SearchRequest struct {
+	Nome        string `json:"nome"`
+	JapName     string `json:"japName"`
+	Especie     string `json:"especie"`
+	Tipo        string `json:"tipo"`
+	Descricao   string `json:"descricao"`
+	IDI         string `json:"idI"`
+	IDF         string `json:"idF"`
+	GeracaoI    string `json:"geracaoI"`
+	GeracaoF    string `json:"geracaoF"`
+	LancamentoI string `json:"lancamentoI"`
+	LancamentoF string `json:"lancamentoF"`
+	AtkI        string `json:"atkI"`
+	AtkF        string `json:"atkF"`
+	DefI        string `json:"defI"`
+	DefF        string `json:"defF"`
+	HpI         string `json:"hpI"`
+	HpF         string `json:"hpF"`
+	AlturaI     string `json:"alturaI"`
+	AlturaF     string `json:"alturaF"`
+	PesoI       string `json:"pesoI"`
+	PesoF       string `json:"pesoF"`
+}
+
 // ReadPagesNumber retorna o numero de paginas disponiveis para a
 // exibiçao dos pokemons na tela inicial do site, como um menu
 // de navegação entre paginas
@@ -127,7 +151,7 @@ func Create(pokemon models.Pokemon) (int, error) {
 	bTree.Close()
 
 	// Arvore B+
-	bplustree.Create(pokemon, address, binManager.FILES_PATH, models.PokeNumbers())
+	bplustree.Create(pokemon, int64(pokemon.Numero), binManager.FILES_PATH, models.PokeNumbers())
 
 	return int(ultimoID), err
 }
@@ -182,7 +206,7 @@ func Update(pokemon models.Pokemon) (err error) {
 	btree.Close()
 
 	// Arvore B+
-	bplustree.Update(old, pokemon, newAddress, binManager.FILES_PATH, models.PokeNumbers())
+	bplustree.Update(old, pokemon, int64(pokemon.Numero), binManager.FILES_PATH, models.PokeNumbers())
 
 	return
 }
@@ -219,29 +243,49 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 	btree.Close()
 
 	// Arvore B+
-	bplustree.Delete(pokemon, pos, binManager.FILES_PATH, models.PokeNumbers())
+	bplustree.Delete(pokemon, int64(pokemon.Numero), binManager.FILES_PATH, models.PokeNumbers())
 
 	return
 }
 
-func InvertedIndex(id int64, nome string, especie string, tipo string, descricao string, japName string) (idList []int64, err error) {
+func MergeSearch(req SearchRequest) (idList []int64, err error) {
 	getFieldScDoc := func(field, text string) []invertedIndex.ScoredDocument {
 		return invertedIndex.Read(binManager.FILES_PATH, field, strings.Fields(text)...)
 	}
 
-	nomeScDoc := getFieldScDoc("nome", nome)
-	especieScDoc := getFieldScDoc("especie", especie)
-	tipoScDoc := getFieldScDoc("tipo", tipo)
-	descricaoScDoc := getFieldScDoc("descricao", descricao)
-	japNameScDoc := getFieldScDoc("nomeJap", japName)
+	/* 	getIdsBPTree := func(start string, end string, field string) []invertedIndex.ScoredDocument {
+		tree, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, field)
+		defer tree.Close()
 
-	var scDoc []invertedIndex.ScoredDocument
-	if id != 0 {
-		idScDoc := invertedIndex.NewScoredDocumentSlice(id, 1)
-		scDoc = invertedIndex.Merge(idScDoc, nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc)
-	} else {
-		scDoc = invertedIndex.Merge(nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc)
-	}
+		startf64, _ := strconv.ParseFloat(start, 64)
+		endf64, _ := strconv.ParseFloat(end, 64)
+		result, _ := tree.FindRange(startf64, endf64)
+		docs := make([]invertedIndex.ScoredDocument, len(result))
+		for i, id := range result {
+			docs[i] = invertedIndex.ScoredDocument{DocumentID: id, Score: 1}
+		}
+		return docs
+	} */
+
+	hash, _ := hashing.Load(binManager.FILES_PATH, "hashIndex")
+	defer hash.Close()
+
+	nomeScDoc := getFieldScDoc("nome", req.Nome)
+	especieScDoc := getFieldScDoc("especie", req.Especie)
+	tipoScDoc := getFieldScDoc("tipo", req.Tipo)
+	descricaoScDoc := getFieldScDoc("descricao", req.Descricao)
+	japNameScDoc := getFieldScDoc("nomeJap", req.JapName)
+
+	/* 	ID := getIdsBPTree(req.IDI, req.IDF, "numero")
+	   	Geracao := getIdsBPTree(req.GeracaoI, req.GeracaoF, "geracao")
+	   	Lancamento := getIdsBPTree(req.LancamentoI, req.LancamentoF, "lancamento")
+	   	Atk := getIdsBPTree(req.AtkI, req.AtkF, "atk")
+	   	Def := getIdsBPTree(req.DefI, req.DefF, "def")
+	   	Hp := getIdsBPTree(req.HpI, req.HpF, "hp")
+	   	Altura := getIdsBPTree(req.AlturaI, req.AlturaF, "altura")
+	   	Peso := getIdsBPTree(req.PesoI, req.PesoF, "peso") */
+
+	scDoc := invertedIndex.Merge(nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc)
 
 	for _, tmp := range scDoc {
 		idList = append(idList, tmp.DocumentID)

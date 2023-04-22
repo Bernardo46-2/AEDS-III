@@ -67,7 +67,7 @@ type Reader interface {
 }
 
 type IndexableObject interface {
-	GetFieldF64(fieldName string) float64
+	GetFieldF64(fieldName string) (float64, int64)
 }
 
 // ====================================== Key ====================================== //
@@ -816,7 +816,8 @@ func (b *BPlusTree) FindRange(start float64, end float64) ([]int64, error) {
 func Create(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {
 	for _, field := range fields {
 		tree, _ := ReadBPlusTree(path, field)
-		k := Key{Id: pokemon.GetFieldF64(field), Ptr: pokeAddress}
+		id, address := pokemon.GetFieldF64(field)
+		k := Key{id, address}
 		tree.Insert(&k)
 		tree.Close()
 	}
@@ -825,8 +826,10 @@ func Create(pokemon models.Pokemon, pokeAddress int64, path string, fields []str
 func Update(old models.Pokemon, new models.Pokemon, pokeAddress int64, path string, fields []string) {
 	for _, field := range fields {
 		tree, _ := ReadBPlusTree(path, field)
-		k := Key{Id: old.GetFieldF64(field), Ptr: pokeAddress}
-		kk := Key{Id: new.GetFieldF64(field), Ptr: pokeAddress}
+		kId, kAddress := old.GetFieldF64(field)
+		kkId, kkAddress := new.GetFieldF64(field)
+		k := Key{kId, kAddress}
+		kk := Key{kkId, kkAddress}
 		tree.Remove(&k)
 		tree.Insert(&kk)
 		tree.Close()
@@ -836,7 +839,8 @@ func Update(old models.Pokemon, new models.Pokemon, pokeAddress int64, path stri
 func Delete(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {
 	for _, field := range fields {
 		tree, _ := ReadBPlusTree(path, field)
-		removed := tree.Remove(&Key{Id: pokemon.GetFieldF64(field), Ptr: pokeAddress})
+		id, address := pokemon.GetFieldF64(field)
+		removed := tree.Remove(&Key{id, address})
 		if removed == nil {
 			fmt.Println("not found")
 		} else {
@@ -858,7 +862,7 @@ func StartBPlusTreeFile(dir string, field string, controler Reader) error {
 	tree, _ := NewBPlusTree(order, dir, field)
 
 	for {
-		objInterface, isDead, address, err := controler.ReadNextGeneric()
+		objInterface, isDead, _, err := controler.ReadNextGeneric()
 		if err != nil {
 			break
 		}
@@ -869,8 +873,8 @@ func StartBPlusTreeFile(dir string, field string, controler Reader) error {
 		}
 
 		if !isDead {
-			content := obj.GetFieldF64(field)
-			r := Key{Id: content, Ptr: address}
+			id, address := obj.GetFieldF64(field)
+			r := Key{id, address}
 			tree.Insert(&r)
 		}
 	}

@@ -27,15 +27,6 @@ type retorno struct {
 	Time     int64            `json:"time"`
 }
 
-type InvertedIndexRequest struct {
-	ID        int64  `json:"id"`
-	Nome      string `json:"nome"`
-	Especie   string `json:"especie"`
-	Tipo      string `json:"tipo"`
-	Descricao string `json:"descricao"`
-	JapName   string `json:"japName"`
-}
-
 // GetPagesNumber retorna a quantidade de paginas disponiveis
 func GetPagesNumber(w http.ResponseWriter, r *http.Request) {
 	// Recuperar ID e ler arquivo
@@ -215,15 +206,15 @@ func Ordenacao(w http.ResponseWriter, r *http.Request) {
 	logger.Println("INFO", "Database Ordenada com sucesso!")
 }
 
-func InvertedIndex(w http.ResponseWriter, r *http.Request) {
-	var req InvertedIndexRequest
+/* func MergeSearch(w http.ResponseWriter, r *http.Request) {
+	var req service.SearchRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		println("err: ", err.Error())
 	}
 
 	// Pesquisa os valores no indice
-	idList, err := service.InvertedIndex(req.ID, req.Nome, req.Especie, req.Tipo, req.Descricao, req.JapName)
+	idList, err := service.MergeSearch(req)
 
 	// Resposta
 	if err != nil {
@@ -236,7 +227,7 @@ func InvertedIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJson(w, idList)
-}
+} */
 
 // writeError recebe um erro de http responde e um id de erro interno,
 // faz o parsing do modelo e gera uma resposta em formato json com o erro fornecido
