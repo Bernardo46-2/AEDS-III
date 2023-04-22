@@ -5,8 +5,10 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"math"
+	"strconv"
 	"strings"
 	"time"
 
@@ -253,7 +255,7 @@ func MergeSearch(req SearchRequest) (idList []int64, err error) {
 		return invertedIndex.Read(binManager.FILES_PATH, field, strings.Fields(text)...)
 	}
 
-	/* 	getIdsBPTree := func(start string, end string, field string) []invertedIndex.ScoredDocument {
+	getIdsBPTree := func(start string, end string, field string) []invertedIndex.ScoredDocument {
 		tree, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, field)
 		defer tree.Close()
 
@@ -265,7 +267,7 @@ func MergeSearch(req SearchRequest) (idList []int64, err error) {
 			docs[i] = invertedIndex.ScoredDocument{DocumentID: id, Score: 1}
 		}
 		return docs
-	} */
+	}
 
 	hash, _ := hashing.Load(binManager.FILES_PATH, "hashIndex")
 	defer hash.Close()
@@ -276,8 +278,8 @@ func MergeSearch(req SearchRequest) (idList []int64, err error) {
 	descricaoScDoc := getFieldScDoc("descricao", req.Descricao)
 	japNameScDoc := getFieldScDoc("nomeJap", req.JapName)
 
-	/* 	ID := getIdsBPTree(req.IDI, req.IDF, "numero")
-	   	Geracao := getIdsBPTree(req.GeracaoI, req.GeracaoF, "geracao")
+	ID := getIdsBPTree(req.IDI, req.IDF, "numero")
+	/* 	Geracao := getIdsBPTree(req.GeracaoI, req.GeracaoF, "geracao")
 	   	Lancamento := getIdsBPTree(req.LancamentoI, req.LancamentoF, "lancamento")
 	   	Atk := getIdsBPTree(req.AtkI, req.AtkF, "atk")
 	   	Def := getIdsBPTree(req.DefI, req.DefF, "def")
@@ -285,11 +287,12 @@ func MergeSearch(req SearchRequest) (idList []int64, err error) {
 	   	Altura := getIdsBPTree(req.AlturaI, req.AlturaF, "altura")
 	   	Peso := getIdsBPTree(req.PesoI, req.PesoF, "peso") */
 
-	scDoc := invertedIndex.Merge(nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc)
+	scDoc := invertedIndex.Merge(nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc, ID)
 
 	for _, tmp := range scDoc {
 		idList = append(idList, tmp.DocumentID)
 	}
 
+	fmt.Println(idList)
 	return
 }

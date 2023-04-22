@@ -206,7 +206,7 @@ func Ordenacao(w http.ResponseWriter, r *http.Request) {
 	logger.Println("INFO", "Database Ordenada com sucesso!")
 }
 
-/* func MergeSearch(w http.ResponseWriter, r *http.Request) {
+func MergeSearch(w http.ResponseWriter, r *http.Request) {
 	var req service.SearchRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
@@ -227,7 +227,7 @@ func Ordenacao(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJson(w, idList)
-} */
+}
 
 // writeError recebe um erro de http responde e um id de erro interno,
 // faz o parsing do modelo e gera uma resposta em formato json com o erro fornecido

@@ -21,6 +21,7 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
+	"github.com/Bernardo46-2/AEDS-III/service"
 )
 
 func main() {
@@ -61,6 +62,31 @@ func main() {
 		tree, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, "numero")
 		tree.FindRange(256, 300)
 		tree.PrintFile()
+	case "9":
+		var req service.SearchRequest
+		req.Nome = ""
+		req.JapName = ""
+		req.Especie = ""
+		req.Tipo = ""
+		req.Descricao = ""
+		req.IDI = "1"
+		req.IDF = "5"
+		req.GeracaoI = ""
+		req.GeracaoF = ""
+		req.LancamentoI = ""
+		req.LancamentoF = ""
+		req.AtkI = ""
+		req.AtkF = ""
+		req.DefI = ""
+		req.DefF = ""
+		req.HpI = ""
+		req.HpF = ""
+		req.AlturaI = ""
+		req.AlturaF = ""
+		req.PesoI = ""
+		req.PesoF = ""
+
+		service.MergeSearch(req)
 	default:
 		fmt.Println("Opção inválida")
 	}
@@ -85,7 +111,7 @@ func servidor() {
 	http.HandleFunc("/delete/", middlewares.EnableCORS(handlers.DeletePokemon))
 	http.HandleFunc("/loadDatabase", middlewares.EnableCORS(handlers.LoadDatabase))
 	http.HandleFunc("/toKatakana/", middlewares.EnableCORS(handlers.ToKatakana))
-	/* http.HandleFunc("/mergeIndex/", middlewares.EnableCORS(handlers.MergeSearch)) */
+	http.HandleFunc("/mergeIndex/", middlewares.EnableCORS(handlers.MergeSearch))
 
 	// Ordenação externa
 	http.HandleFunc("/ordenacao/", middlewares.EnableCORS(handlers.Ordenacao))
