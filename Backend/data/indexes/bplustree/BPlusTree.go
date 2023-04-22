@@ -765,9 +765,18 @@ func (b *BPlusTree) Find(id float64) *Key {
 func (b *BPlusTree) findNode(id float64) *BPlusTreeNode {
     node := b.readNode(b.root)
 
-    for i := int64(0); i < node.numberOfKeys && node.leaf == 0; i++ {
-        if node.keys[i].Id >= id {
-            node = b.readNode(node.child[i])
+    for i := int64(0); node.leaf == 0; i++ {
+        if i < node.numberOfKeys - 1 {
+            if node.keys[i].Id >= id {
+                node = b.readNode(node.child[i])
+                i = -1
+            }
+        } else {
+            if node.keys[i].Id >= id {
+                node = b.readNode(node.child[i])
+            } else {
+                node = b.readNode(node.child[i + 1])
+            }
             i = -1
         }
     }
@@ -781,13 +790,35 @@ func (b *BPlusTree) FindRange(start float64, end float64) ([]int64, error) {
     }
 
     node := b.findNode(start)
+    index := int64(0)
+
+    for node.keys[index].Id < start && index < node.numberOfKeys {
+        index++
+    }
+
+    if index == node.numberOfKeys {
+        return nil, nil
+    }
+
+    addresses := make([]int64, 0)
+
     fmt.Println(node)
+    for start < end {
+        start = node.keys[index].Id
+        addresses = append(addresses, node.keys[index].Ptr)
 
-    // for start < end {
+        if index == node.numberOfKeys - 1 {
+            node = b.readNode(node.next)
+            index = -1
+            fmt.Println(node)
+        }
 
-    // }
+        index++
+    }
 
-    return nil, nil
+    fmt.Println(addresses)
+
+    return addresses, nil
 }
 
 func Create(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {

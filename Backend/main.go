@@ -107,7 +107,8 @@ func main() {
     
     case "8":
         tree, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, "numero")
-        tree.FindRange(260, 500)
+        tree.FindRange(256, 300)
+        tree.PrintFile()
         
 	default:
 		fmt.Println("Opção inválida")
