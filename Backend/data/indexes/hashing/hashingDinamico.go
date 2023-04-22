@@ -86,6 +86,8 @@ type IndexableObject interface {
 // pronta para ser preenchida
 func newHash(bucketPath string, directoryPath string, size int64) DinamicHash {
 	// Inicializa arquivo de hashing
+	fmt.Println(bucketPath)
+	fmt.Println(directoryPath)
 	bucketFile, _ := os.Create(bucketPath)
 	directoryFile, _ := os.Create(directoryPath)
 
