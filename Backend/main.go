@@ -13,13 +13,11 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/bplustree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
-	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
@@ -56,60 +54,13 @@ func main() {
 		hashing.StartHashFile(controler, 8, binManager.FILES_PATH, "hashIndex")
 	case "4", "btree":
 		btree.StartBTreeFile(binManager.FILES_PATH)
-	case "5", "criarIndiceInvertido":
-
-	case "6", "lerMultiplosIndiceInvertido":
-		var strs []string
-		var line string
-		scanner := bufio.NewScanner(os.Stdin)
-
-		fmt.Printf("nome\n>")
-		scanner.Scan()
-		line = scanner.Text()
-		strs = strings.Fields(line)
-		nome := invertedIndex.Read(binManager.FILES_PATH, "nome", strs...)
-
-		fmt.Printf("nomeJap\n>")
-		scanner.Scan()
-		line = scanner.Text()
-		strs = strings.Fields(line)
-
-		nomeJap := invertedIndex.Read(binManager.FILES_PATH, "nomeJap", strs...)
-
-		fmt.Printf("especie\n>")
-		scanner.Scan()
-		line = scanner.Text()
-		strs = strings.Fields(line)
-		especie := invertedIndex.Read(binManager.FILES_PATH, "especie", strs...)
-
-		fmt.Printf("tipo\n>")
-		scanner.Scan()
-		line = scanner.Text()
-		strs = strings.Fields(line)
-		tipo := invertedIndex.Read(binManager.FILES_PATH, "tipo", strs...)
-
-		fmt.Printf("descricao\n>")
-		scanner.Scan()
-		line = scanner.Text()
-		strs = strings.Fields(line)
-		descricao := invertedIndex.Read(binManager.FILES_PATH, "descricao", strs...)
-
-		scoredDocuments := invertedIndex.Merge(nome, nomeJap, especie, tipo, descricao)
-
-		for _, scoredDocument := range scoredDocuments {
-			pokeAddress, _ := hashing.HashRead(scoredDocument.DocumentID, binManager.FILES_PATH, "hashIndex")
-			tmpPoke := binManager.ReadTargetPokemon(pokeAddress)
-			fmt.Printf("ID = %3d  |  Nome = %30s  |  compatibilidade = %d\n", tmpPoke.Numero, tmpPoke.Nome, scoredDocument.Score)
-		}
-    case "7":
-        controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
-        bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "altura", controler)
-    
-    case "8":
-        tree, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, "numero")
-        tree.FindRange(256, 300)
-        tree.PrintFile()
-        
+	case "7":
+		controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+		bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "altura", controler)
+	case "8":
+		tree, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, "numero")
+		tree.FindRange(256, 300)
+		tree.PrintFile()
 	default:
 		fmt.Println("Opção inválida")
 	}

@@ -85,14 +85,14 @@ func GetList(idList []int64, method int) (pokeList []models.Pokemon, duration in
 		}
 		btree.Close()
 	case 3: // Arvore B+
-        bptreeeee, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, "numero")
+		bptreeeee, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, "numero")
 		for _, id := range idList {
 			pos := bptreeeee.Find(float64(id))
 			if err == nil {
 				pokeList = append(pokeList, c.ReadTarget(pos.Ptr))
 			}
 		}
-    }
+	}
 	duration = time.Since(start).Milliseconds()
 
 	return
@@ -126,8 +126,8 @@ func Create(pokemon models.Pokemon) (int, error) {
 	bTree.Insert(&btree.Key{Id: int64(pokemon.Numero), Ptr: address})
 	bTree.Close()
 
-    // Arvore B+
-    bplustree.Create(pokemon, address, binManager.FILES_PATH, models.PokeNumbers())
+	// Arvore B+
+	bplustree.Create(pokemon, address, binManager.FILES_PATH, models.PokeNumbers())
 
 	return int(ultimoID), err
 }
@@ -151,9 +151,9 @@ func Update(pokemon models.Pokemon) (err error) {
 	// Recupera a posição do id no arquivo
 	pos, err := hashing.HashRead(int64(pokemon.Numero), binManager.FILES_PATH, "hashIndex")
 	if err != nil {
-        return
+		return
 	}
-    old := binManager.ReadTargetPokemon(pos)
+	old := binManager.ReadTargetPokemon(pos)
 
 	// Serializa os dados
 	pokemon.CalculateSize()
@@ -181,8 +181,8 @@ func Update(pokemon models.Pokemon) (err error) {
 	btree.Update(int64(pokemon.Numero), newAddress)
 	btree.Close()
 
-    // Arvore B+
-    bplustree.Update(old, pokemon, newAddress, binManager.FILES_PATH, models.PokeNumbers())
+	// Arvore B+
+	bplustree.Update(old, pokemon, newAddress, binManager.FILES_PATH, models.PokeNumbers())
 
 	return
 }
@@ -218,8 +218,8 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 	btree.Remove(int64(id))
 	btree.Close()
 
-    // Arvore B+
-    bplustree.Delete(pokemon, pos, binManager.FILES_PATH, models.PokeNumbers())
+	// Arvore B+
+	bplustree.Delete(pokemon, pos, binManager.FILES_PATH, models.PokeNumbers())
 
 	return
 }

@@ -8,7 +8,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
@@ -73,23 +72,16 @@ type IndexableObject interface {
 
 // ====================================== Key ====================================== //
 
-func newKey(register *binManager.Registro) Key {
-	return Key{
-		Id:  float64(register.Pokemon.Numero),
-		Ptr: register.Endereco,
-	}
-}
-
 func newEmptyKey() Key {
 	return Key{float64(NULL), NULL}
 }
 
 func (k *Key) compareTo(other *Key) float64 {
-    diff := k.Id - other.Id
-    if diff == 0 {
-        diff = float64(k.Ptr - other.Ptr)
-    }
-    return diff
+	diff := k.Id - other.Id
+	if diff == 0 {
+		diff = float64(k.Ptr - other.Ptr)
+	}
+	return diff
 }
 
 // ====================================== Node ====================================== //
@@ -207,9 +199,9 @@ func (n *BPlusTreeNode) find(k *Key) int64 {
 		i--
 	}
 
-    if n.keys[i].compareTo(k) != 0 {
-        i = -1
-    }
+	if n.keys[i].compareTo(k) != 0 {
+		i = -1
+	}
 
 	return i
 }
@@ -267,8 +259,8 @@ func NewBPlusTree(order int, path string, field string) (*BPlusTree, error) {
 	}
 
 	tree_path := filepath.Join(path, PATH)
-	tree_nodes := filepath.Join(tree_path, field + "_" + NODES)
-	tree_header := filepath.Join(tree_path, field + "_" + HEADER)
+	tree_nodes := filepath.Join(tree_path, field+"_"+NODES)
+	tree_header := filepath.Join(tree_path, field+"_"+HEADER)
 	os.MkdirAll(tree_path, 0755)
 	nodesFile, _ := os.Create(tree_nodes)
 	root := newNode(order, 1, NULL)
@@ -287,8 +279,8 @@ func NewBPlusTree(order int, path string, field string) (*BPlusTree, error) {
 
 func ReadBPlusTree(dir string, field string) (*BPlusTree, error) {
 	tree_path := filepath.Join(dir, PATH)
-	tree_nodes := filepath.Join(tree_path, field + "_" + NODES)
-	tree_header := filepath.Join(tree_path, field + "_" + HEADER)
+	tree_nodes := filepath.Join(tree_path, field+"_"+NODES)
+	tree_header := filepath.Join(tree_path, field+"_"+HEADER)
 
 	file, err := os.ReadFile(tree_header)
 	if err != nil {
@@ -608,7 +600,7 @@ func (b *BPlusTree) tryBorrowKey(node *BPlusTreeNode, index int64) int {
 
 	flag := r.getStatus()
 
-	if flag == LEAF | CAN_LEND { // replace
+	if flag == LEAF|CAN_LEND { // replace
 		b.borrowFromLeaf(node, l, r, index)
 	} else if flag == LEAF { // merge
 		b.mergeLeaf(node, l, r, index)
@@ -628,17 +620,17 @@ func (b *BPlusTree) tryBorrowKey(node *BPlusTreeNode, index int64) int {
 }
 
 func (b *BPlusTree) replaceKey(n *BPlusTreeNode, k *Key, kk *Key, flag int) int {
-    walter := 0
-	if REPLACE & flag != 0 {
+	walter := 0
+	if REPLACE&flag != 0 {
 		i := n.find(k)
-        fmt.Println("Found:", i)
-        fmt.Println("Searching:", k)
+		fmt.Println("Found:", i)
+		fmt.Println("Searching:", k)
 		if i != NULL {
 			n.keys[i] = *kk
 			n.write(b.nodesFile)
 		} else {
-            walter = REPLACE
-        }
+			walter = REPLACE
+		}
 	}
 
 	return walter
@@ -647,7 +639,7 @@ func (b *BPlusTree) replaceKey(n *BPlusTreeNode, k *Key, kk *Key, flag int) int 
 func (b *BPlusTree) parseFlag(flag int, node *BPlusTreeNode, index int64, k *Key, kk *Key) int {
 	walter := b.replaceKey(node, k, kk, flag)
 
-	if HELP & flag != 0 {
+	if HELP&flag != 0 {
 		walter |= b.tryBorrowKey(node, index)
 	}
 
@@ -714,9 +706,9 @@ func (b *BPlusTree) Remove(old *Key) *Key {
 	k, kk, flag, _ := b.remove(b.root, old)
 	root := b.readNode(b.root)
 
-    b.replaceKey(root, k, kk, flag)
+	b.replaceKey(root, k, kk, flag)
 
-	if flag & EMPTY != 0 {
+	if flag&EMPTY != 0 {
 		if root.child[0] != NULL {
 			b.emptyNodes = append(b.emptyNodes, b.root)
 			b.root = root.child[0]
@@ -730,133 +722,133 @@ func (b *BPlusTree) Remove(old *Key) *Key {
 }
 
 func (n *BPlusTreeNode) find2(id float64) (*Key, int64) {
-    var k *Key
-    address := NULL
-    i := n.numberOfKeys - 1
-    
-    for i > 0 && n.keys[i].Id > id {
-        i--
-    }
+	var k *Key
+	address := NULL
+	i := n.numberOfKeys - 1
 
-    if n.keys[i].Id == id {
-        k = &n.keys[i]
-    } else if n.keys[i].Id < id {
-        address = n.child[i+1]
-    } else {
-        address = n.child[i]
-    }
-    
-    return k, address
+	for i > 0 && n.keys[i].Id > id {
+		i--
+	}
+
+	if n.keys[i].Id == id {
+		k = &n.keys[i]
+	} else if n.keys[i].Id < id {
+		address = n.child[i+1]
+	} else {
+		address = n.child[i]
+	}
+
+	return k, address
 }
 
 func (b *BPlusTree) Find(id float64) *Key {
-    var k *Key
-    var address int64
-    node := b.readNode(b.root)
-    
-    for node != nil && k == nil {
-        k, address = node.find2(id)
-        node = b.readNode(address)
-    }
-    
-    return k
+	var k *Key
+	var address int64
+	node := b.readNode(b.root)
+
+	for node != nil && k == nil {
+		k, address = node.find2(id)
+		node = b.readNode(address)
+	}
+
+	return k
 }
 
 func (b *BPlusTree) findNode(id float64) *BPlusTreeNode {
-    node := b.readNode(b.root)
+	node := b.readNode(b.root)
 
-    for i := int64(0); node.leaf == 0; i++ {
-        if i < node.numberOfKeys - 1 {
-            if node.keys[i].Id >= id {
-                node = b.readNode(node.child[i])
-                i = -1
-            }
-        } else {
-            if node.keys[i].Id >= id {
-                node = b.readNode(node.child[i])
-            } else {
-                node = b.readNode(node.child[i + 1])
-            }
-            i = -1
-        }
-    }
-    
-    return node
+	for i := int64(0); node.leaf == 0; i++ {
+		if i < node.numberOfKeys-1 {
+			if node.keys[i].Id >= id {
+				node = b.readNode(node.child[i])
+				i = -1
+			}
+		} else {
+			if node.keys[i].Id >= id {
+				node = b.readNode(node.child[i])
+			} else {
+				node = b.readNode(node.child[i+1])
+			}
+			i = -1
+		}
+	}
+
+	return node
 }
 
 func (b *BPlusTree) FindRange(start float64, end float64) ([]int64, error) {
-    if start > end {
-        return nil, errors.New("Invalid Indexes")
-    }
+	if start > end {
+		return nil, errors.New("invalid indexes")
+	}
 
-    node := b.findNode(start)
-    index := int64(0)
+	node := b.findNode(start)
+	index := int64(0)
 
-    for node.keys[index].Id < start && index < node.numberOfKeys {
-        index++
-    }
+	for node.keys[index].Id < start && index < node.numberOfKeys {
+		index++
+	}
 
-    if index == node.numberOfKeys {
-        return nil, nil
-    }
+	if index == node.numberOfKeys {
+		return nil, errors.New("not found")
+	}
 
-    addresses := make([]int64, 0)
+	addresses := make([]int64, 0)
 
-    fmt.Println(node)
-    for start < end {
-        start = node.keys[index].Id
-        addresses = append(addresses, node.keys[index].Ptr)
+	fmt.Println(node)
+	for start < end {
+		start = node.keys[index].Id
+		addresses = append(addresses, node.keys[index].Ptr)
 
-        if index == node.numberOfKeys - 1 {
-            node = b.readNode(node.next)
-            index = -1
-            fmt.Println(node)
-        }
+		if index == node.numberOfKeys-1 {
+			node = b.readNode(node.next)
+			index = -1
+			fmt.Println(node)
+		}
 
-        index++
-    }
+		index++
+	}
 
-    fmt.Println(addresses)
+	fmt.Println(addresses)
 
-    return addresses, nil
+	return addresses, nil
 }
 
 func Create(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {
-    for _, field := range fields {
-        tree, _ := ReadBPlusTree(path, field)
-        k := Key{Id: pokemon.GetFieldF64(field), Ptr: pokeAddress}
-        tree.Insert(&k)
-        tree.Close()
-    }
+	for _, field := range fields {
+		tree, _ := ReadBPlusTree(path, field)
+		k := Key{Id: pokemon.GetFieldF64(field), Ptr: pokeAddress}
+		tree.Insert(&k)
+		tree.Close()
+	}
 }
 
 func Update(old models.Pokemon, new models.Pokemon, pokeAddress int64, path string, fields []string) {
-    for _, field := range fields {
-        tree, _ := ReadBPlusTree(path, field)
-        k := Key{Id: old.GetFieldF64(field), Ptr: pokeAddress}
-        kk := Key{Id: new.GetFieldF64(field), Ptr: pokeAddress}
-        tree.Remove(&k)
-        tree.Insert(&kk)
-        tree.Close()
-    }
+	for _, field := range fields {
+		tree, _ := ReadBPlusTree(path, field)
+		k := Key{Id: old.GetFieldF64(field), Ptr: pokeAddress}
+		kk := Key{Id: new.GetFieldF64(field), Ptr: pokeAddress}
+		tree.Remove(&k)
+		tree.Insert(&kk)
+		tree.Close()
+	}
 }
 
 func Delete(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {
-    for _, field := range fields {
-        tree, _ := ReadBPlusTree(path, field)
-        removed := tree.Remove(&Key{Id: pokemon.GetFieldF64(field), Ptr: pokeAddress})
-        if removed == nil {
-            fmt.Println("not found")
-        } else {
-            fmt.Printf("removed: %f | %x\n", removed.Id, removed.Ptr)
-        }
-        
-        fmt.Println(field)
-        tree.PrintFile()
-        fmt.Println()
+	for _, field := range fields {
+		tree, _ := ReadBPlusTree(path, field)
+		removed := tree.Remove(&Key{Id: pokemon.GetFieldF64(field), Ptr: pokeAddress})
+		if removed == nil {
+			fmt.Println("not found")
+		} else {
+			fmt.Printf("removed: %f | %x\n", removed.Id, removed.Ptr)
+		}
 
-        tree.Close()
-    }
+		fmt.Println(field)
+		tree.PrintFile()
+		fmt.Println()
+
+		tree.Close()
+	}
 }
 
 // ====================================== Init ====================================== //
@@ -865,24 +857,24 @@ func StartBPlusTreeFile(dir string, field string, controler Reader) error {
 	order := 8
 	tree, _ := NewBPlusTree(order, dir, field)
 
-    for {
-        objInterface, isDead, address, err := controler.ReadNextGeneric()
-        if err != nil {
-            break
-        }
-        
-        obj, ok := objInterface.(IndexableObject)
-        if !ok {
-            return fmt.Errorf("failed to convert object to IndexableObject\n%+v", objInterface)
-        }
+	for {
+		objInterface, isDead, address, err := controler.ReadNextGeneric()
+		if err != nil {
+			break
+		}
 
-        if !isDead {
-            content := obj.GetFieldF64(field)
+		obj, ok := objInterface.(IndexableObject)
+		if !ok {
+			return fmt.Errorf("failed to convert object to IndexableObject\n%+v", objInterface)
+		}
+
+		if !isDead {
+			content := obj.GetFieldF64(field)
 			r := Key{Id: content, Ptr: address}
 			tree.Insert(&r)
-        }
-    }
-    
+		}
+	}
+
 	tree.Close()
-    return nil
+	return nil
 }
