@@ -330,7 +330,7 @@ func (p Pokemon) GetField(fieldName string) string {
 	}
 }
 
-func PokemonStringFields() []string {
+func PokeStrings() []string {
 	obj := Pokemon{}
 	var fieldNames []string
 	v := reflect.ValueOf(obj)
@@ -339,7 +339,7 @@ func PokemonStringFields() []string {
 	for i := 0; i < v.NumField(); i++ {
 		field := v.Field(i)
 		if field.Kind() == reflect.String || (field.Kind() == reflect.Slice && field.Type().Elem().Kind() == reflect.String) {
-			fieldNames = append(fieldNames, t.Field(i).Name)
+			fieldNames = append(fieldNames, utils.Decaptalize(t.Field(i).Name))
 		}
 	}
 
@@ -368,4 +368,41 @@ func (p Pokemon) GetFieldF64(fieldName string) float64 {
 	default:
 		return -1
 	}
+}
+
+func PokeNumbers() []string {
+	fields := []string{}
+
+	valueOf := reflect.ValueOf(Pokemon{})
+	typeOf := valueOf.Type()
+
+	for i := 0; i < valueOf.NumField(); i++ {
+		// field := valueOf.Field(i)
+		fieldType := typeOf.Field(i)
+
+		if fieldType.Type.Kind() == reflect.Int || fieldType.Type.Kind() == reflect.Int8 ||
+			fieldType.Type.Kind() == reflect.Int16 || fieldType.Type.Kind() == reflect.Int32 ||
+			fieldType.Type.Kind() == reflect.Int64 {
+			fields = append(fields, utils.Decaptalize(fieldType.Name))
+		}
+
+		if fieldType.Type.Kind() == reflect.Float32 || fieldType.Type.Kind() == reflect.Float64 {
+			fields = append(fields, utils.Decaptalize(fieldType.Name))
+		}
+
+		if fieldType.Type.Kind() == reflect.Slice {
+			sliceElemType := fieldType.Type.Elem()
+			if sliceElemType.Kind() == reflect.Int || sliceElemType.Kind() == reflect.Int8 ||
+				sliceElemType.Kind() == reflect.Int16 || sliceElemType.Kind() == reflect.Int32 ||
+				sliceElemType.Kind() == reflect.Int64 {
+				fields = append(fields, utils.Decaptalize(fieldType.Name))
+			}
+
+			if sliceElemType.Kind() == reflect.Float32 || sliceElemType.Kind() == reflect.Float64 {
+				fields = append(fields, utils.Decaptalize(fieldType.Name))
+			}
+		}
+	}
+
+	return fields
 }

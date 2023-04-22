@@ -16,8 +16,8 @@ import (
 	"strings"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
-	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/bplustree"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
 	"github.com/Bernardo46-2/AEDS-III/handlers"

@@ -307,6 +307,8 @@ func reconstruirIndices() {
     
 	// B+ Tree
 	controler.Reset()
+    bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "numero", controler)
+	controler.Reset()
     bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "geracao", controler)
 	controler.Reset()
     bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "atk", controler)

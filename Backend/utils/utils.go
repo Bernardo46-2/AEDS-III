@@ -178,3 +178,10 @@ func InsertionSort(arr []int32) {
 		arr[j+1] = key
 	}
 }
+
+func Decaptalize(str string) string {
+    if len(str) < 1 {
+        return str
+    }
+    return strings.ToLower(str[0:1]) + str[1:]
+}

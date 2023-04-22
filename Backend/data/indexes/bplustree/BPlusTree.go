@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
+	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
@@ -740,6 +741,33 @@ func (b *BPlusTree) Find(id float64) *Key {
     }
     
     return k
+}
+
+func Create(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {
+    for _, field := range fields {
+        tree, _ := ReadBPlusTree(path, field)
+        k := Key{Id: pokemon.GetFieldF64(field), Ptr: pokeAddress}
+        tree.Insert(&k)
+        tree.Close()
+    }
+}
+
+func Update(old models.Pokemon, new models.Pokemon, pokeAddress int64, path string, fields []string) {
+    for _, field := range fields {
+        tree, _ := ReadBPlusTree(path, field)
+        k := Key{Id: new.GetFieldF64(field), Ptr: pokeAddress}
+        tree.Remove(old.GetFieldF64(field))
+        tree.Insert(&k)
+        tree.Close()
+    }
+}
+
+func Delete(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {
+    for _, field := range fields {
+        tree, _ := ReadBPlusTree(path, field)
+        tree.Remove(pokemon.GetFieldF64(field))
+        tree.Close()
+    }
 }
 
 // ====================================== Tests ====================================== //

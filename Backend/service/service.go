@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/bplustree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
@@ -84,20 +85,14 @@ func GetList(idList []int64, method int) (pokeList []models.Pokemon, duration in
 		}
 		btree.Close()
 	case 3: // Arvore B+
+        bptreeeee, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, "numero")
 		for _, id := range idList {
-			pos, err := hashing.HashRead(id, binManager.FILES_PATH, "hashIndex")
+			pos := bptreeeee.Find(float64(id))
 			if err == nil {
-				pokeList = append(pokeList, c.ReadTarget(pos))
+				pokeList = append(pokeList, c.ReadTarget(pos.Ptr))
 			}
 		}
-	case 4: // Arvore B*
-		for _, id := range idList {
-			pos, err := hashing.HashRead(id, binManager.FILES_PATH, "hashIndex")
-			if err == nil {
-				pokeList = append(pokeList, c.ReadTarget(pos))
-			}
-		}
-	}
+    }
 	duration = time.Since(start).Milliseconds()
 
 	return
@@ -121,7 +116,7 @@ func Create(pokemon models.Pokemon) (int, error) {
 	address, err := binManager.AppendPokemon(pokeBytes)
 
 	// Indice invertido
-	invertedIndex.Create(pokemon, binManager.FILES_PATH, models.PokemonStringFields()...)
+	invertedIndex.Create(pokemon, binManager.FILES_PATH, models.PokeStrings()...)
 
 	// Tabela Hash
 	hashing.HashCreate(int64(pokemon.Numero), address, binManager.FILES_PATH, "hashIndex")
@@ -130,6 +125,9 @@ func Create(pokemon models.Pokemon) (int, error) {
 	bTree, _ := btree.ReadBTree(binManager.FILES_PATH)
 	bTree.Insert(&btree.Key{Id: int64(pokemon.Numero), Ptr: address})
 	bTree.Close()
+
+    // Arvore B+
+    bplustree.Create(pokemon, address, binManager.FILES_PATH, models.PokeNumbers())
 
 	return int(ultimoID), err
 }
@@ -150,12 +148,12 @@ func Read(id int) (models.Pokemon, error) {
 //
 // tambem realiza: HashUpdate
 func Update(pokemon models.Pokemon) (err error) {
-
 	// Recupera a posição do id no arquivo
 	pos, err := hashing.HashRead(int64(pokemon.Numero), binManager.FILES_PATH, "hashIndex")
 	if err != nil {
-		return
+        return
 	}
+    old := binManager.ReadTargetPokemon(pos)
 
 	// Serializa os dados
 	pokemon.CalculateSize()
@@ -173,7 +171,7 @@ func Update(pokemon models.Pokemon) (err error) {
 	}
 
 	// Indice invertido
-	invertedIndex.Update(pokemon, binManager.FILES_PATH, models.PokemonStringFields()...)
+	invertedIndex.Update(pokemon, binManager.FILES_PATH, models.PokeStrings()...)
 
 	// Tabela Hash
 	err = hashing.HashUpdate(int64(pokemon.Numero), newAddress, binManager.FILES_PATH, "hashIndex")
@@ -182,6 +180,9 @@ func Update(pokemon models.Pokemon) (err error) {
 	btree, _ := btree.ReadBTree(binManager.FILES_PATH)
 	btree.Update(int64(pokemon.Numero), newAddress)
 	btree.Close()
+
+    // Arvore B+
+    bplustree.Update(old, pokemon, newAddress, binManager.FILES_PATH, models.PokeNumbers())
 
 	return
 }
@@ -204,7 +205,7 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 	}
 
 	// Indice invertido
-	invertedIndex.Delete(pokemon, binManager.FILES_PATH, models.PokemonStringFields()...)
+	invertedIndex.Delete(pokemon, binManager.FILES_PATH, models.PokeStrings()...)
 
 	// Tabela Hash
 	hashing.HashDelete(int64(pokemon.Numero), binManager.FILES_PATH, "hashIndex")
@@ -216,6 +217,9 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 	}
 	btree.Remove(int64(id))
 	btree.Close()
+
+    // Arvore B+
+    bplustree.Delete(pokemon, pos, binManager.FILES_PATH, models.PokeNumbers())
 
 	return
 }
