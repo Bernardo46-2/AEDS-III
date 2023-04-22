@@ -582,7 +582,7 @@ func (b *BTree) borrowFromSibling(parent *BTreeNode, left *BTreeNode, right *BTr
     right.write(b.nodesFile)
 }
 
-// truBorrowKey testa se (durante a remoção) a chave pode 
+// tryBorrowKey testa se (durante a remoção) a chave pode 
 // ser emprestada de um nó irmão ou se este vai ficar com
 // menos de 50% de ocupação, se pode, pega a chave do irmão,
 // se nao, pega a chave do pai e concatena os irmãos, retornando

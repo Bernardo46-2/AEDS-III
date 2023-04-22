@@ -629,7 +629,8 @@ func (b *BPlusTree) concatNodesOG(left *BPlusTreeNode, right *BPlusTreeNode, key
 	return left
 }
 
-// borrowFromParentOG 
+// borrowFromParentOG pega um valor do pai e usa para concatenar 
+// os dois nós irmãos
 func (b *BPlusTree) borrowFromParentOG(node *BPlusTreeNode, l *BPlusTreeNode, r *BPlusTreeNode, keyIndex int64) {
 	b.concatNodesOG(l, r, &node.keys[keyIndex])
 
@@ -643,6 +644,11 @@ func (b *BPlusTree) borrowFromParentOG(node *BPlusTreeNode, l *BPlusTreeNode, r 
 	node.write(b.nodesFile)
 }
 
+// tryBorrowKey testa se (durante a remoção) a chave pode 
+// ser emprestada de um nó irmão ou se este vai ficar com
+// menos de 50% de ocupação, se pode, pega a chave do irmão,
+// se nao, pega a chave do pai e concatena os irmãos, retornando
+// uma flag indicando se teve erro no processo
 func (b *BPlusTree) tryBorrowKey(node *BPlusTreeNode, index int64) int {
 	var l, r, lefter *BPlusTreeNode
 
@@ -679,6 +685,10 @@ func (b *BPlusTree) tryBorrowKey(node *BPlusTreeNode, index int64) int {
 	return flag
 }
 
+// replaceKey testa se a chave removida tem sua cópia
+// no nó atual e, se sim, substitui ela pela nova
+// chave (usado durante a remoção) e retorna uma nova
+// flag
 func (b *BPlusTree) replaceKey(n *BPlusTreeNode, k *Key, kk *Key, flag int) int {
 	walter := 0
 	if REPLACE&flag != 0 {
@@ -696,6 +706,10 @@ func (b *BPlusTree) replaceKey(n *BPlusTreeNode, k *Key, kk *Key, flag int) int 
 	return walter
 }
 
+// parseFlag resolve qualquer problema que as flags podem
+// indicar que ocorreu, chamando as respectivas funções que 
+// cuidam desses cenários e retornando uma nova flag que 
+// será resolvida no nó anterior na recursão
 func (b *BPlusTree) parseFlag(flag int, node *BPlusTreeNode, index int64, k *Key, kk *Key) int {
 	walter := b.replaceKey(node, k, kk, flag)
 
@@ -710,6 +724,9 @@ func (b *BPlusTree) parseFlag(flag int, node *BPlusTreeNode, index int64, k *Key
 	return walter
 }
 
+// removeFromNode remove um elemento que está presente
+// em um nó, retornando a flag correspondente a o que
+// aconteceu durante a remoção
 func (b *BPlusTree) removeFromNode(index int64, node *BPlusTreeNode) (*Key, *Key, int) {
 	var k *Key
 	flag := 0
@@ -735,6 +752,9 @@ func (b *BPlusTree) removeFromNode(index int64, node *BPlusTreeNode) (*Key, *Key
 	return k, max, flag
 }
 
+// remove remove um elemento da árvore e o retorna,
+// ou NULL, caso nao encontrado. Retorna o elemento,
+// uma flag e o indice do elemento removido no nó
 func (b *BPlusTree) remove(address int64, old *Key) (*Key, *Key, int, int64) {
 	if address == NULL {
 		return nil, nil, OK, NULL
@@ -762,6 +782,9 @@ func (b *BPlusTree) remove(address int64, old *Key) (*Key, *Key, int, int64) {
 	return k, kk, flag, i
 }
 
+// Remove remove um elemento da árvore, pesquisando
+// recursivamente pelo elemento e por fim retornando-o,
+// ou nil, caso não encontrado
 func (b *BPlusTree) Remove(old *Key) *Key {
 	k, kk, flag, _ := b.remove(b.root, old)
 	root := b.readNode(b.root)
@@ -781,6 +804,8 @@ func (b *BPlusTree) Remove(old *Key) *Key {
 	return k
 }
 
+// find2 procura um elemento no no', retornando o elemento, se encontrado,
+// ou um ponteiro para o proximo no' a ser procurado, caso nao encontrado
 func (n *BPlusTreeNode) find2(id float64) (*Key, int64) {
 	var k *Key
 	address := NULL
@@ -801,6 +826,8 @@ func (n *BPlusTreeNode) find2(id float64) (*Key, int64) {
 	return k, address
 }
 
+// Find pesquisa por um elemento presente na árvore
+// e o retorna se encontrado, ou nil, caso contrário
 func (b *BPlusTree) Find(id float64) *Key {
 	var k *Key
 	var address int64
@@ -814,6 +841,9 @@ func (b *BPlusTree) Find(id float64) *Key {
 	return k
 }
 
+// findNode pesquisa na árvore em busca de um nó que tem
+// o elemento procurado e retorna esse nó ou o nó com o proximo
+// elemento ordenadamente
 func (b *BPlusTree) findNode(id float64) *BPlusTreeNode {
 	node := b.readNode(b.root)
 
@@ -836,6 +866,8 @@ func (b *BPlusTree) findNode(id float64) *BPlusTreeNode {
 	return node
 }
 
+// FindRange pesquisa na árvore por todos os valores contidos em um
+// intervalo [a, b) e os retorna
 func (b *BPlusTree) FindRange(start float64, end float64) ([]int64, error) {
 	if start > end {
 		return nil, errors.New("invalid indexes")
@@ -869,6 +901,7 @@ func (b *BPlusTree) FindRange(start float64, end float64) ([]int64, error) {
 	return addresses, nil
 }
 
+// Create insere um elemento na árvore
 func Create(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {
 	for _, field := range fields {
 		tree, _ := ReadBPlusTree(path, field)
@@ -879,6 +912,7 @@ func Create(pokemon models.Pokemon, pokeAddress int64, path string, fields []str
 	}
 }
 
+// Update atualiza um elemento da árvore
 func Update(old models.Pokemon, new models.Pokemon, pokeAddress int64, path string, fields []string) {
 	for _, field := range fields {
 		tree, _ := ReadBPlusTree(path, field)
@@ -892,6 +926,7 @@ func Update(old models.Pokemon, new models.Pokemon, pokeAddress int64, path stri
 	}
 }
 
+// Delete remove um elemento da árvore
 func Delete(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {
 	for _, field := range fields {
 		tree, _ := ReadBPlusTree(path, field)
@@ -904,6 +939,10 @@ func Delete(pokemon models.Pokemon, pokeAddress int64, path string, fields []str
 
 // ====================================== Init ====================================== //
 
+// StartBPlusTreeFile inicializa a Árvore B e insere todos os elementos
+// contidos no arquivo informado na árvore, escrevendo-os em um novo arquivo
+// e escrevendo as informações gerais da arvore (como ordem, endereço da raíz,
+// etc) em outro arquivo
 func StartBPlusTreeFile(dir string, field string, controler Reader) error {
 	order := 8
 	tree, _ := NewBPlusTree(order, dir, field)
