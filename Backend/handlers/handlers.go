@@ -298,6 +298,8 @@ func reconstruirIndices() {
 
 	// B+ Tree
 	controler.Reset()
+	bplustree.StartBPlusTreeFilesSearch(binManager.FILES_PATH, "id", controler)
+	controler.Reset()
 	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "numero", controler)
 	controler.Reset()
 	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "geracao", controler)
@@ -313,4 +315,8 @@ func reconstruirIndices() {
 	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "peso", controler)
 	controler.Reset()
 	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "lancamento", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "lendario", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "mitico", controler)
 }

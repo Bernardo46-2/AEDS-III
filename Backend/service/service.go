@@ -45,6 +45,8 @@ type SearchRequest struct {
 	AlturaF     string `json:"alturaF"`
 	PesoI       string `json:"pesoI"`
 	PesoF       string `json:"pesoF"`
+	Lendario    string `json:"lendario"`
+	Mitico      string `json:"mitico"`
 }
 
 // ReadPagesNumber retorna o numero de paginas disponiveis para a
@@ -111,7 +113,7 @@ func GetList(idList []int64, method int) (pokeList []models.Pokemon, duration in
 		}
 		btree.Close()
 	case 3: // Arvore B+
-		bptreeeee, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, "numero")
+		bptreeeee, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, "id")
 		for _, id := range idList {
 			pos := bptreeeee.Find(float64(id))
 			if err == nil {
@@ -153,6 +155,7 @@ func Create(pokemon models.Pokemon) (int, error) {
 	bTree.Close()
 
 	// Arvore B+
+	bplustree.Create(pokemon, address, binManager.FILES_PATH, []string{"id"})
 	bplustree.Create(pokemon, int64(pokemon.Numero), binManager.FILES_PATH, models.PokeNumbers())
 
 	return int(ultimoID), err
@@ -208,7 +211,8 @@ func Update(pokemon models.Pokemon) (err error) {
 	btree.Close()
 
 	// Arvore B+
-	bplustree.Update(old, pokemon, int64(pokemon.Numero), binManager.FILES_PATH, models.PokeNumbers())
+	bplustree.Update(old, pokemon, pos, newAddress, binManager.FILES_PATH, []string{"id"})
+	bplustree.Update(old, pokemon, int64(old.Numero), int64(pokemon.Numero), binManager.FILES_PATH, models.PokeNumbers())
 
 	return
 }
@@ -245,12 +249,14 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 	btree.Close()
 
 	// Arvore B+
+	bplustree.Delete(pokemon, pos, binManager.FILES_PATH, []string{"id"})
 	bplustree.Delete(pokemon, int64(pokemon.Numero), binManager.FILES_PATH, models.PokeNumbers())
 
 	return
 }
 
 func MergeSearch(req SearchRequest) (idList []int64, err error) {
+	fmt.Println()
 	getFieldScDoc := func(field, text string) []invertedIndex.ScoredDocument {
 		return invertedIndex.Read(binManager.FILES_PATH, field, strings.Fields(text)...)
 	}
@@ -258,7 +264,6 @@ func MergeSearch(req SearchRequest) (idList []int64, err error) {
 	getIdsBPTree := func(start string, end string, field string) []invertedIndex.ScoredDocument {
 		tree, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, field)
 		defer tree.Close()
-
 		startf64, _ := strconv.ParseFloat(start, 64)
 		endf64, _ := strconv.ParseFloat(end, 64)
 		result, _ := tree.FindRange(startf64, endf64)
@@ -271,6 +276,10 @@ func MergeSearch(req SearchRequest) (idList []int64, err error) {
 
 	hash, _ := hashing.Load(binManager.FILES_PATH, "hashIndex")
 	defer hash.Close()
+
+	req.LancamentoI = utils.FormatDate(req.LancamentoI)
+	req.LancamentoF = utils.FormatDate(req.LancamentoF)
+	req.JapName = utils.ToKatakana(req.JapName)
 
 	nomeScDoc := getFieldScDoc("nome", req.Nome)
 	especieScDoc := getFieldScDoc("especie", req.Especie)
@@ -287,15 +296,20 @@ func MergeSearch(req SearchRequest) (idList []int64, err error) {
 	Altura := getIdsBPTree(req.AlturaI, req.AlturaF, "altura")
 	Peso := getIdsBPTree(req.PesoI, req.PesoF, "peso")
 
-	scDoc := invertedIndex.Merge(nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc, ID, Geracao, Lancamento, Atk, Def, Hp, Altura, Peso)
+	var Lendario []invertedIndex.ScoredDocument
+	var Mitico []invertedIndex.ScoredDocument
+	if req.Lendario == "1" {
+		Lendario = getIdsBPTree("1", "2", "lendario")
+	}
+	if req.Mitico == "1" {
+		Mitico = getIdsBPTree("1", "2", "mitico")
+	}
+
+	scDoc := invertedIndex.Merge(nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc, ID, Geracao, Lancamento, Atk, Def, Hp, Altura, Peso, Lendario, Mitico)
 
 	for _, tmp := range scDoc {
 		idList = append(idList, tmp.DocumentID)
 	}
 
-	pokeList, _, _ := GetList(idList, 1)
-	for i, p := range pokeList {
-		fmt.Printf("[%3d] = %25s | %5d | %5d | %15d | %5d | %5d | %5d | %6.2f | %6.2f\n", i, p.Nome, p.Numero, p.Geracao, p.Lancamento.Unix(), p.Atk, p.Def, p.Hp, p.Altura, p.Peso)
-	}
 	return
 }

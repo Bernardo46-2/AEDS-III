@@ -365,6 +365,10 @@ func (p Pokemon) GetFieldF64(fieldName string) (float64, int64) {
 		return float64(p.Altura), int64(p.Numero)
 	case "peso":
 		return float64(p.Peso), int64(p.Numero)
+	case "lendario":
+		return utils.BoolToFloat(p.Lendario), int64(p.Numero)
+	case "mitico":
+		return utils.BoolToFloat(p.Mitico), int64(p.Numero)
 	default:
 		return -1, -1
 	}
@@ -377,7 +381,6 @@ func PokeNumbers() []string {
 	typeOf := valueOf.Type()
 
 	for i := 0; i < valueOf.NumField(); i++ {
-		// field := valueOf.Field(i)
 		fieldType := typeOf.Field(i)
 
 		if fieldType.Type.Kind() == reflect.Int || fieldType.Type.Kind() == reflect.Int8 ||
@@ -404,6 +407,10 @@ func PokeNumbers() []string {
 		}
 
 		if fieldType.Type == reflect.TypeOf(time.Time{}) {
+			fields = append(fields, utils.Decaptalize(fieldType.Name))
+		}
+
+		if fieldType.Type.Kind() == reflect.Bool {
 			fields = append(fields, utils.Decaptalize(fieldType.Name))
 		}
 	}

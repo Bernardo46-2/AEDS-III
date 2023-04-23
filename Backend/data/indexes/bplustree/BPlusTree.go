@@ -206,7 +206,7 @@ func (n *BPlusTreeNode) insert(index int64, left int64, data *Key, right int64, 
 	return NULL, nil, NULL
 }
 
-// find pesquisa no nó pela presença de uma 
+// find pesquisa no nó pela presença de uma
 // chave, retornando o indice onde ela está,
 // ou NULL
 func (n *BPlusTreeNode) find(k *Key) int64 {
@@ -260,7 +260,7 @@ func (n *BPlusTreeNode) max() *Key {
 	return &n.keys[n.numberOfKeys-1]
 }
 
-// getStatus testa se o nó é uma folha e se 
+// getStatus testa se o nó é uma folha e se
 // pode emprestar uma chave e retorna uma flag
 // indicando as duas coisas
 func (n *BPlusTreeNode) getStatus() int {
@@ -307,7 +307,7 @@ func NewBPlusTree(order int, path string, field string) (*BPlusTree, error) {
 }
 
 // ReadBPlusTree lê uma arvore de um arquivo header, extraindo
-// a ordem da arvore, o endereco da raiz, a quantidade de nós 
+// a ordem da arvore, o endereco da raiz, a quantidade de nós
 // vazios e os endereços dos nós vazios
 func ReadBPlusTree(dir string, field string) (*BPlusTree, error) {
 	tree_path := filepath.Join(dir, PATH)
@@ -338,7 +338,7 @@ func ReadBPlusTree(dir string, field string) (*BPlusTree, error) {
 	}, nil
 }
 
-// Close fecha o arquivo da árvore, salvando o endereço da raiz, 
+// Close fecha o arquivo da árvore, salvando o endereço da raiz,
 // a ordem, quantidade de nós vazios e os endereços dos nós vazios
 // (Esta função deve ser chamada para salvar qualquer alteração feita
 // na base de dados. Nao cumprimento disso poderá ocasionar em dados
@@ -425,7 +425,7 @@ func (b *BPlusTree) readNode(address int64) *BPlusTreeNode {
 }
 
 // insert insere uma chave na árvore e atualiza o arquivo
-// com os nós 
+// com os nós
 func (b *BPlusTree) insert(node *BPlusTreeNode, data *Key) (int64, *Key, int64) {
 	l, r := NULL, NULL
 	i := int64(0)
@@ -507,7 +507,7 @@ func (b *BPlusTree) PrintFile() {
 			i64, _ = utils.BytesToInt64(reader64, 0)
 
 			if i64 != NULL {
-				fmt.Printf("%5x ", i64)
+				fmt.Printf("%5d ", i64)
 			} else {
 				fmt.Printf("      ")
 			}
@@ -558,7 +558,7 @@ func (b *BPlusTree) concatLeaf(left *BPlusTreeNode, right *BPlusTreeNode) *BPlus
 	return left
 }
 
-// mergeLeaf chama a função concatLeaf para concatenar dois nós e 
+// mergeLeaf chama a função concatLeaf para concatenar dois nós e
 // desloca os elementos do pai para comportar 1 elemento a menos
 func (b *BPlusTree) mergeLeaf(node *BPlusTreeNode, l *BPlusTreeNode, r *BPlusTreeNode, keyIndex int64) {
 	b.concatLeaf(l, r)
@@ -573,7 +573,7 @@ func (b *BPlusTree) mergeLeaf(node *BPlusTreeNode, l *BPlusTreeNode, r *BPlusTre
 	node.write(b.nodesFile)
 }
 
-// borrowFromLeaf pega um elemento emprestado do nó irmao (folha) 
+// borrowFromLeaf pega um elemento emprestado do nó irmao (folha)
 // e faz todos os ajustes para passar pro nó com tamanho
 // invalido
 func (b *BPlusTree) borrowFromLeaf(node *BPlusTreeNode, left *BPlusTreeNode, right *BPlusTreeNode, index int64) {
@@ -629,7 +629,7 @@ func (b *BPlusTree) concatNodesOG(left *BPlusTreeNode, right *BPlusTreeNode, key
 	return left
 }
 
-// borrowFromParentOG pega um valor do pai e usa para concatenar 
+// borrowFromParentOG pega um valor do pai e usa para concatenar
 // os dois nós irmãos
 func (b *BPlusTree) borrowFromParentOG(node *BPlusTreeNode, l *BPlusTreeNode, r *BPlusTreeNode, keyIndex int64) {
 	b.concatNodesOG(l, r, &node.keys[keyIndex])
@@ -644,7 +644,7 @@ func (b *BPlusTree) borrowFromParentOG(node *BPlusTreeNode, l *BPlusTreeNode, r 
 	node.write(b.nodesFile)
 }
 
-// tryBorrowKey testa se (durante a remoção) a chave pode 
+// tryBorrowKey testa se (durante a remoção) a chave pode
 // ser emprestada de um nó irmão ou se este vai ficar com
 // menos de 50% de ocupação, se pode, pega a chave do irmão,
 // se nao, pega a chave do pai e concatena os irmãos, retornando
@@ -693,8 +693,6 @@ func (b *BPlusTree) replaceKey(n *BPlusTreeNode, k *Key, kk *Key, flag int) int 
 	walter := 0
 	if REPLACE&flag != 0 {
 		i := n.find(k)
-		fmt.Println("Found:", i)
-		fmt.Println("Searching:", k)
 		if i != NULL {
 			n.keys[i] = *kk
 			n.write(b.nodesFile)
@@ -707,8 +705,8 @@ func (b *BPlusTree) replaceKey(n *BPlusTreeNode, k *Key, kk *Key, flag int) int 
 }
 
 // parseFlag resolve qualquer problema que as flags podem
-// indicar que ocorreu, chamando as respectivas funções que 
-// cuidam desses cenários e retornando uma nova flag que 
+// indicar que ocorreu, chamando as respectivas funções que
+// cuidam desses cenários e retornando uma nova flag que
 // será resolvida no nó anterior na recursão
 func (b *BPlusTree) parseFlag(flag int, node *BPlusTreeNode, index int64, k *Key, kk *Key) int {
 	walter := b.replaceKey(node, k, kk, flag)
@@ -869,8 +867,8 @@ func (b *BPlusTree) findNode(id float64) *BPlusTreeNode {
 // FindRange pesquisa na árvore por todos os valores contidos em um
 // intervalo [a, b) e os retorna
 func (b *BPlusTree) FindRange(start float64, end float64) ([]int64, error) {
-	if start > end {
-		return nil, errors.New("invalid indexes")
+	if start > end || end < 1 {
+		return nil, nil
 	}
 
 	node := b.findNode(start)
@@ -886,8 +884,12 @@ func (b *BPlusTree) FindRange(start float64, end float64) ([]int64, error) {
 
 	addresses := make([]int64, 0)
 
-	for start < end && node != nil {
+	for start <= end && node != nil {
+
 		start = node.keys[index].Id
+		if start > end {
+			break
+		}
 		addresses = append(addresses, node.keys[index].Ptr)
 
 		if index == node.numberOfKeys-1 {
@@ -905,19 +907,19 @@ func (b *BPlusTree) FindRange(start float64, end float64) ([]int64, error) {
 func Create(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {
 	for _, field := range fields {
 		tree, _ := ReadBPlusTree(path, field)
-		id, address := pokemon.GetFieldF64(field)
-		k := Key{id, address}
+		id, _ := pokemon.GetFieldF64(field)
+		k := Key{id, pokeAddress}
 		tree.Insert(&k)
 		tree.Close()
 	}
 }
 
 // Update atualiza um elemento da árvore
-func Update(old models.Pokemon, new models.Pokemon, pokeAddress int64, path string, fields []string) {
+func Update(old models.Pokemon, new models.Pokemon, kAddress int64, kkAddress int64, path string, fields []string) {
 	for _, field := range fields {
 		tree, _ := ReadBPlusTree(path, field)
-		kId, kAddress := old.GetFieldF64(field)
-		kkId, kkAddress := new.GetFieldF64(field)
+		kId, _ := old.GetFieldF64(field)
+		kkId, _ := new.GetFieldF64(field)
 		k := Key{kId, kAddress}
 		kk := Key{kkId, kkAddress}
 		tree.Remove(&k)
@@ -927,10 +929,10 @@ func Update(old models.Pokemon, new models.Pokemon, pokeAddress int64, path stri
 }
 
 // Delete remove um elemento da árvore
-func Delete(pokemon models.Pokemon, pokeAddress int64, path string, fields []string) {
+func Delete(pokemon models.Pokemon, address int64, path string, fields []string) {
 	for _, field := range fields {
 		tree, _ := ReadBPlusTree(path, field)
-		id, address := pokemon.GetFieldF64(field)
+		id, _ := pokemon.GetFieldF64(field)
 		tree.Remove(&Key{id, address})
 
 		tree.Close()
@@ -960,6 +962,36 @@ func StartBPlusTreeFile(dir string, field string, controler Reader) error {
 
 		if !isDead {
 			id, address := obj.GetFieldF64(field)
+			r := Key{id, address}
+			tree.Insert(&r)
+		}
+	}
+
+	tree.Close()
+	return nil
+}
+
+// StartBPlusTreeFile inicializa a Árvore B e insere todos os elementos
+// contidos no arquivo informado na árvore, escrevendo-os em um novo arquivo
+// e escrevendo as informações gerais da arvore (como ordem, endereço da raíz,
+// etc) em outro arquivo
+func StartBPlusTreeFilesSearch(dir string, field string, controler Reader) error {
+	order := 8
+	tree, _ := NewBPlusTree(order, dir, field)
+
+	for {
+		objInterface, isDead, address, err := controler.ReadNextGeneric()
+		if err != nil {
+			break
+		}
+
+		obj, ok := objInterface.(IndexableObject)
+		if !ok {
+			return fmt.Errorf("failed to convert object to IndexableObject\n%+v", objInterface)
+		}
+
+		if !isDead {
+			id, _ := obj.GetFieldF64(field)
 			r := Key{id, address}
 			tree.Insert(&r)
 		}

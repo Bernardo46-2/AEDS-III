@@ -822,3 +822,336 @@ INFO: 2023/04/22 17:32:37 Database Carregada
 INFO: 2023/04/22 17:32:37 Hash Dinamica Criada
 INFO: 2023/04/22 17:32:37 B Tree Criada
 STATUS: 2023/04/22 17:32:56 Servidor desligado
+STATUS: 2023/04/22 17:45:32 Servidor iniciado
+INFO: 2023/04/22 17:46:26 Database Carregada
+INFO: 2023/04/22 17:46:26 Hash Dinamica Criada
+INFO: 2023/04/22 17:46:26 B Tree Criada
+STATUS: 2023/04/22 17:48:15 Servidor iniciado
+STATUS: 2023/04/22 17:51:30 Servidor desligado
+STATUS: 2023/04/22 17:51:33 Servidor iniciado
+STATUS: 2023/04/22 17:51:37 Servidor desligado
+STATUS: 2023/04/22 17:54:16 Servidor iniciado
+INFO: 2023/04/22 17:54:24 Database Carregada
+INFO: 2023/04/22 17:54:24 Hash Dinamica Criada
+INFO: 2023/04/22 17:54:24 B Tree Criada
+STATUS: 2023/04/22 17:54:47 Servidor desligado
+STATUS: 2023/04/22 17:55:22 Servidor iniciado
+STATUS: 2023/04/22 18:02:41 Servidor iniciado
+STATUS: 2023/04/22 18:08:24 Servidor desligado
+STATUS: 2023/04/22 18:08:27 Servidor iniciado
+INFO: 2023/04/22 18:08:36 Database Carregada
+INFO: 2023/04/22 18:08:36 Hash Dinamica Criada
+INFO: 2023/04/22 18:08:36 B Tree Criada
+INFO: 2023/04/22 18:08:59 Database Carregada
+INFO: 2023/04/22 18:08:59 Hash Dinamica Criada
+INFO: 2023/04/22 18:08:59 B Tree Criada
+STATUS: 2023/04/22 18:09:31 Servidor desligado
+STATUS: 2023/04/22 18:11:00 Servidor iniciado
+INFO: 2023/04/22 18:11:07 Database Carregada
+INFO: 2023/04/22 18:11:07 Hash Dinamica Criada
+INFO: 2023/04/22 18:11:07 B Tree Criada
+ERROR: 2023/04/22 18:11:32 code: 5, message: Pokemon nao encontrado
+STATUS: 2023/04/22 18:12:02 Servidor desligado
+STATUS: 2023/04/22 18:12:05 Servidor iniciado
+INFO: 2023/04/22 18:12:11 Database Carregada
+INFO: 2023/04/22 18:12:11 Hash Dinamica Criada
+INFO: 2023/04/22 18:12:11 B Tree Criada
+STATUS: 2023/04/22 19:05:11 Servidor desligado
+STATUS: 2023/04/22 19:05:14 Servidor iniciado
+INFO: 2023/04/22 19:05:25 Database Carregada
+INFO: 2023/04/22 19:05:25 Hash Dinamica Criada
+INFO: 2023/04/22 19:05:25 B Tree Criada
+STATUS: 2023/04/22 19:14:09 Servidor iniciado
+INFO: 2023/04/22 19:17:44 Database Carregada
+INFO: 2023/04/22 19:17:44 Hash Dinamica Criada
+INFO: 2023/04/22 19:17:44 B Tree Criada
+STATUS: 2023/04/22 19:18:08 Servidor desligado
+STATUS: 2023/04/22 19:18:19 Servidor iniciado
+INFO: 2023/04/22 19:19:24 Database Carregada
+INFO: 2023/04/22 19:19:24 Hash Dinamica Criada
+INFO: 2023/04/22 19:19:24 B Tree Criada
+STATUS: 2023/04/22 19:20:03 Servidor iniciado
+LISTEN TCP :8080: BIND: ONLY ONE USAGE OF EACH SOCKET ADDRESS (PROTOCOL/NETWORK ADDRESS/PORT) IS NORMALLY PERMITTED.: 2023/04/22 19:20:03 ERROR
+STATUS: 2023/04/22 19:20:20 Servidor iniciado
+INFO: 2023/04/22 19:20:29 Database Carregada
+INFO: 2023/04/22 19:20:29 Hash Dinamica Criada
+INFO: 2023/04/22 19:20:29 B Tree Criada
+STATUS: 2023/04/22 19:21:24 Servidor desligado
+STATUS: 2023/04/22 19:21:57 Servidor iniciado
+INFO: 2023/04/22 19:22:04 Database Carregada
+INFO: 2023/04/22 19:22:04 Hash Dinamica Criada
+INFO: 2023/04/22 19:22:04 B Tree Criada
+STATUS: 2023/04/22 19:24:19 Servidor desligado
+STATUS: 2023/04/22 19:24:26 Servidor iniciado
+INFO: 2023/04/22 19:24:38 Database Carregada
+INFO: 2023/04/22 19:24:38 Hash Dinamica Criada
+INFO: 2023/04/22 19:24:38 B Tree Criada
+STATUS: 2023/04/22 19:25:11 Servidor desligado
+STATUS: 2023/04/22 19:25:14 Servidor iniciado
+STATUS: 2023/04/22 19:26:58 Servidor desligado
+STATUS: 2023/04/22 19:27:01 Servidor iniciado
+STATUS: 2023/04/22 19:30:38 Servidor desligado
+STATUS: 2023/04/22 19:30:40 Servidor iniciado
+STATUS: 2023/04/22 19:43:01 Servidor desligado
+STATUS: 2023/04/22 19:54:53 Servidor iniciado
+INFO: 2023/04/22 19:55:49 Database Carregada
+INFO: 2023/04/22 19:55:49 Hash Dinamica Criada
+INFO: 2023/04/22 19:55:49 B Tree Criada
+INFO: 2023/04/22 19:59:00 Database Carregada
+INFO: 2023/04/22 19:59:00 Hash Dinamica Criada
+INFO: 2023/04/22 19:59:00 B Tree Criada
+STATUS: 2023/04/22 20:02:27 Servidor desligado
+STATUS: 2023/04/22 20:02:33 Servidor iniciado
+STATUS: 2023/04/22 20:03:19 Servidor desligado
+STATUS: 2023/04/22 20:03:23 Servidor iniciado
+STATUS: 2023/04/22 20:04:35 Servidor desligado
+STATUS: 2023/04/22 20:04:40 Servidor iniciado
+STATUS: 2023/04/22 20:05:18 Servidor desligado
+STATUS: 2023/04/22 20:05:32 Servidor iniciado
+INFO: 2023/04/22 20:05:48 Database Carregada
+INFO: 2023/04/22 20:05:48 Hash Dinamica Criada
+INFO: 2023/04/22 20:05:48 B Tree Criada
+STATUS: 2023/04/22 20:06:21 Servidor desligado
+STATUS: 2023/04/22 20:06:24 Servidor iniciado
+STATUS: 2023/04/22 20:07:37 Servidor desligado
+STATUS: 2023/04/22 20:07:48 Servidor iniciado
+STATUS: 2023/04/22 20:10:15 Servidor desligado
+STATUS: 2023/04/22 20:10:44 Servidor iniciado
+INFO: 2023/04/22 20:12:26 Database Carregada
+INFO: 2023/04/22 20:12:26 Hash Dinamica Criada
+INFO: 2023/04/22 20:12:26 B Tree Criada
+INFO: 2023/04/22 20:15:23 Database Carregada
+INFO: 2023/04/22 20:15:23 Hash Dinamica Criada
+INFO: 2023/04/22 20:15:23 B Tree Criada
+INFO: 2023/04/22 20:15:31 Database Carregada
+INFO: 2023/04/22 20:15:31 Hash Dinamica Criada
+INFO: 2023/04/22 20:15:31 B Tree Criada
+INFO: 2023/04/22 20:19:12 Database Ordenada com sucesso!
+ERROR: 2023/04/22 20:24:04 code: 400, message: Erro ao converter o JSON para Pokemon
+INFO: 2023/04/22 20:24:08 Database Carregada
+INFO: 2023/04/22 20:24:08 Hash Dinamica Criada
+INFO: 2023/04/22 20:24:08 B Tree Criada
+STATUS: 2023/04/22 20:26:25 Servidor desligado
+STATUS: 2023/04/22 20:27:37 Servidor iniciado
+INFO: 2023/04/22 20:27:46 Database Carregada
+INFO: 2023/04/22 20:27:46 Hash Dinamica Criada
+INFO: 2023/04/22 20:27:46 B Tree Criada
+STATUS: 2023/04/22 20:28:38 Servidor desligado
+STATUS: 2023/04/22 20:29:25 Servidor iniciado
+STATUS: 2023/04/22 20:30:39 Servidor desligado
+STATUS: 2023/04/22 20:30:46 Servidor iniciado
+INFO: 2023/04/22 20:30:56 Database Carregada
+INFO: 2023/04/22 20:30:56 Hash Dinamica Criada
+INFO: 2023/04/22 20:30:56 B Tree Criada
+STATUS: 2023/04/22 20:31:30 Servidor desligado
+STATUS: 2023/04/22 20:31:35 Servidor iniciado
+INFO: 2023/04/22 20:31:43 Database Carregada
+INFO: 2023/04/22 20:31:43 Hash Dinamica Criada
+INFO: 2023/04/22 20:31:43 B Tree Criada
+STATUS: 2023/04/22 20:33:09 Servidor desligado
+STATUS: 2023/04/22 20:33:28 Servidor iniciado
+INFO: 2023/04/22 20:33:35 Database Carregada
+INFO: 2023/04/22 20:33:35 Hash Dinamica Criada
+INFO: 2023/04/22 20:33:35 B Tree Criada
+STATUS: 2023/04/22 20:41:31 Servidor desligado
+STATUS: 2023/04/22 20:41:34 Servidor iniciado
+INFO: 2023/04/22 20:41:45 Database Carregada
+INFO: 2023/04/22 20:41:45 Hash Dinamica Criada
+INFO: 2023/04/22 20:41:45 B Tree Criada
+INFO: 2023/04/22 20:45:28 Database Carregada
+INFO: 2023/04/22 20:45:28 Hash Dinamica Criada
+INFO: 2023/04/22 20:45:28 B Tree Criada
+STATUS: 2023/04/22 20:57:16 Servidor desligado
+STATUS: 2023/04/22 20:57:19 Servidor iniciado
+STATUS: 2023/04/22 20:57:22 Servidor desligado
+STATUS: 2023/04/22 20:58:01 Servidor iniciado
+STATUS: 2023/04/22 20:58:02 Servidor desligado
+STATUS: 2023/04/22 20:58:09 Servidor iniciado
+INFO: 2023/04/22 20:59:12 Database Carregada
+INFO: 2023/04/22 20:59:12 Hash Dinamica Criada
+INFO: 2023/04/22 20:59:12 B Tree Criada
+STATUS: 2023/04/22 21:00:50 Servidor desligado
+STATUS: 2023/04/22 21:01:25 Servidor iniciado
+INFO: 2023/04/22 21:01:34 Database Carregada
+INFO: 2023/04/22 21:01:34 Hash Dinamica Criada
+INFO: 2023/04/22 21:01:34 B Tree Criada
+STATUS: 2023/04/22 21:03:40 Servidor desligado
+STATUS: 2023/04/22 21:04:43 Servidor iniciado
+INFO: 2023/04/22 21:04:52 Database Carregada
+INFO: 2023/04/22 21:04:52 Hash Dinamica Criada
+INFO: 2023/04/22 21:04:52 B Tree Criada
+STATUS: 2023/04/22 21:05:23 Servidor desligado
+STATUS: 2023/04/22 21:05:48 Servidor iniciado
+STATUS: 2023/04/22 21:06:00 Servidor desligado
+STATUS: 2023/04/22 21:08:15 Servidor iniciado
+INFO: 2023/04/22 21:08:43 Database Carregada
+INFO: 2023/04/22 21:08:43 Hash Dinamica Criada
+INFO: 2023/04/22 21:08:43 B Tree Criada
+STATUS: 2023/04/22 21:08:54 Servidor desligado
+STATUS: 2023/04/22 21:09:03 Servidor iniciado
+STATUS: 2023/04/22 21:13:11 Servidor desligado
+STATUS: 2023/04/22 21:13:15 Servidor iniciado
+INFO: 2023/04/22 21:13:43 Database Carregada
+INFO: 2023/04/22 21:13:43 Hash Dinamica Criada
+INFO: 2023/04/22 21:13:43 B Tree Criada
+STATUS: 2023/04/22 21:13:56 Servidor desligado
+STATUS: 2023/04/22 21:13:59 Servidor iniciado
+STATUS: 2023/04/22 21:14:18 Servidor desligado
+STATUS: 2023/04/22 21:14:20 Servidor iniciado
+STATUS: 2023/04/22 21:14:53 Servidor desligado
+STATUS: 2023/04/22 21:14:56 Servidor iniciado
+INFO: 2023/04/22 21:15:06 Database Carregada
+INFO: 2023/04/22 21:15:06 Hash Dinamica Criada
+INFO: 2023/04/22 21:15:06 B Tree Criada
+STATUS: 2023/04/22 21:15:29 Servidor desligado
+STATUS: 2023/04/22 21:15:40 Servidor iniciado
+INFO: 2023/04/22 21:15:49 Database Carregada
+INFO: 2023/04/22 21:15:49 Hash Dinamica Criada
+INFO: 2023/04/22 21:15:49 B Tree Criada
+INFO: 2023/04/22 21:15:50 Database Carregada
+INFO: 2023/04/22 21:15:50 Hash Dinamica Criada
+INFO: 2023/04/22 21:15:50 B Tree Criada
+STATUS: 2023/04/22 21:17:37 Servidor desligado
+STATUS: 2023/04/22 21:19:07 Servidor iniciado
+INFO: 2023/04/22 21:21:38 Database Carregada
+INFO: 2023/04/22 21:21:38 Hash Dinamica Criada
+INFO: 2023/04/22 21:21:38 B Tree Criada
+STATUS: 2023/04/22 21:22:10 Servidor desligado
+STATUS: 2023/04/22 21:22:32 Servidor iniciado
+INFO: 2023/04/22 21:22:39 Database Carregada
+INFO: 2023/04/22 21:22:39 Hash Dinamica Criada
+INFO: 2023/04/22 21:22:39 B Tree Criada
+STATUS: 2023/04/22 21:22:47 Servidor desligado
+STATUS: 2023/04/22 21:23:08 Servidor iniciado
+INFO: 2023/04/22 21:23:15 Database Carregada
+INFO: 2023/04/22 21:23:15 Hash Dinamica Criada
+INFO: 2023/04/22 21:23:15 B Tree Criada
+STATUS: 2023/04/22 21:24:01 Servidor desligado
+STATUS: 2023/04/22 21:24:03 Servidor iniciado
+STATUS: 2023/04/22 21:24:25 Servidor desligado
+STATUS: 2023/04/22 21:24:28 Servidor iniciado
+STATUS: 2023/04/22 21:24:38 Servidor desligado
+STATUS: 2023/04/22 21:25:23 Servidor iniciado
+STATUS: 2023/04/22 21:25:32 Servidor desligado
+STATUS: 2023/04/22 21:25:48 Servidor iniciado
+STATUS: 2023/04/22 21:26:46 Servidor desligado
+STATUS: 2023/04/22 21:26:54 Servidor iniciado
+INFO: 2023/04/22 21:27:04 Database Carregada
+INFO: 2023/04/22 21:27:04 Hash Dinamica Criada
+INFO: 2023/04/22 21:27:04 B Tree Criada
+STATUS: 2023/04/22 21:27:33 Servidor desligado
+STATUS: 2023/04/22 21:28:33 Servidor iniciado
+STATUS: 2023/04/22 21:28:58 Servidor desligado
+STATUS: 2023/04/22 21:29:07 Servidor iniciado
+STATUS: 2023/04/22 21:29:28 Servidor desligado
+STATUS: 2023/04/22 21:29:57 Servidor iniciado
+STATUS: 2023/04/22 21:40:09 Servidor desligado
+STATUS: 2023/04/22 21:41:56 Servidor iniciado
+INFO: 2023/04/22 21:42:04 Database Carregada
+INFO: 2023/04/22 21:42:04 Hash Dinamica Criada
+INFO: 2023/04/22 21:42:04 B Tree Criada
+STATUS: 2023/04/22 21:45:19 Servidor desligado
+STATUS: 2023/04/22 21:45:50 Servidor iniciado
+STATUS: 2023/04/22 21:46:06 Servidor desligado
+STATUS: 2023/04/22 21:46:09 Servidor iniciado
+STATUS: 2023/04/22 21:46:50 Servidor desligado
+STATUS: 2023/04/22 21:46:53 Servidor iniciado
+STATUS: 2023/04/22 21:47:29 Servidor desligado
+STATUS: 2023/04/22 21:47:32 Servidor iniciado
+STATUS: 2023/04/22 21:48:07 Servidor desligado
+STATUS: 2023/04/22 21:48:10 Servidor iniciado
+STATUS: 2023/04/22 21:48:55 Servidor desligado
+STATUS: 2023/04/22 21:48:59 Servidor iniciado
+STATUS: 2023/04/22 21:49:48 Servidor desligado
+STATUS: 2023/04/22 21:49:51 Servidor iniciado
+STATUS: 2023/04/22 21:50:20 Servidor desligado
+STATUS: 2023/04/22 21:50:23 Servidor iniciado
+STATUS: 2023/04/22 21:51:00 Servidor desligado
+STATUS: 2023/04/22 21:51:05 Servidor iniciado
+STATUS: 2023/04/22 21:51:50 Servidor desligado
+STATUS: 2023/04/22 21:51:54 Servidor iniciado
+STATUS: 2023/04/22 21:52:15 Servidor desligado
+STATUS: 2023/04/22 21:52:18 Servidor iniciado
+STATUS: 2023/04/22 21:53:33 Servidor desligado
+STATUS: 2023/04/22 21:53:36 Servidor iniciado
+STATUS: 2023/04/22 21:53:45 Servidor desligado
+STATUS: 2023/04/22 21:53:54 Servidor iniciado
+STATUS: 2023/04/22 21:54:59 Servidor desligado
+STATUS: 2023/04/22 21:55:03 Servidor iniciado
+STATUS: 2023/04/22 21:55:19 Servidor desligado
+STATUS: 2023/04/22 21:55:23 Servidor iniciado
+STATUS: 2023/04/22 21:57:20 Servidor desligado
+STATUS: 2023/04/22 21:57:44 Servidor iniciado
+STATUS: 2023/04/22 21:58:13 Servidor desligado
+STATUS: 2023/04/22 21:58:36 Servidor iniciado
+STATUS: 2023/04/22 21:59:05 Servidor desligado
+STATUS: 2023/04/22 21:59:08 Servidor iniciado
+STATUS: 2023/04/22 21:59:34 Servidor desligado
+STATUS: 2023/04/22 21:59:37 Servidor iniciado
+STATUS: 2023/04/22 22:00:13 Servidor desligado
+STATUS: 2023/04/22 22:00:17 Servidor iniciado
+STATUS: 2023/04/22 22:01:26 Servidor desligado
+STATUS: 2023/04/22 22:01:29 Servidor iniciado
+STATUS: 2023/04/22 22:01:43 Servidor desligado
+STATUS: 2023/04/22 22:02:00 Servidor iniciado
+STATUS: 2023/04/22 22:02:17 Servidor desligado
+STATUS: 2023/04/22 22:02:20 Servidor iniciado
+STATUS: 2023/04/22 22:02:41 Servidor desligado
+STATUS: 2023/04/22 22:02:48 Servidor iniciado
+STATUS: 2023/04/22 22:04:02 Servidor desligado
+STATUS: 2023/04/22 22:04:05 Servidor iniciado
+STATUS: 2023/04/22 22:04:18 Servidor desligado
+STATUS: 2023/04/22 22:04:21 Servidor iniciado
+INFO: 2023/04/22 22:04:30 Database Carregada
+INFO: 2023/04/22 22:04:30 Hash Dinamica Criada
+INFO: 2023/04/22 22:04:30 B Tree Criada
+STATUS: 2023/04/22 22:04:48 Servidor desligado
+STATUS: 2023/04/22 22:05:49 Servidor iniciado
+STATUS: 2023/04/22 22:06:14 Servidor desligado
+STATUS: 2023/04/22 22:06:17 Servidor iniciado
+STATUS: 2023/04/22 22:06:19 Servidor desligado
+STATUS: 2023/04/22 22:06:48 Servidor iniciado
+STATUS: 2023/04/22 22:07:24 Servidor desligado
+STATUS: 2023/04/22 22:07:27 Servidor iniciado
+STATUS: 2023/04/22 22:07:34 Servidor desligado
+STATUS: 2023/04/22 22:08:11 Servidor iniciado
+STATUS: 2023/04/22 22:08:16 Servidor desligado
+STATUS: 2023/04/22 22:08:34 Servidor iniciado
+STATUS: 2023/04/22 22:09:18 Servidor desligado
+STATUS: 2023/04/22 22:09:21 Servidor iniciado
+INFO: 2023/04/22 22:09:55 Database Carregada
+INFO: 2023/04/22 22:09:55 Hash Dinamica Criada
+INFO: 2023/04/22 22:09:55 B Tree Criada
+STATUS: 2023/04/22 22:09:59 Servidor desligado
+STATUS: 2023/04/22 22:10:27 Servidor iniciado
+STATUS: 2023/04/22 22:10:55 Servidor desligado
+STATUS: 2023/04/22 22:12:11 Servidor iniciado
+STATUS: 2023/04/22 22:12:56 Servidor desligado
+STATUS: 2023/04/22 22:13:00 Servidor iniciado
+STATUS: 2023/04/22 22:13:27 Servidor desligado
+STATUS: 2023/04/22 22:13:40 Servidor iniciado
+STATUS: 2023/04/22 22:14:01 Servidor desligado
+STATUS: 2023/04/22 22:14:35 Servidor iniciado
+STATUS: 2023/04/22 22:15:12 Servidor desligado
+STATUS: 2023/04/22 22:15:26 Servidor iniciado
+STATUS: 2023/04/22 22:15:49 Servidor desligado
+STATUS: 2023/04/22 22:15:52 Servidor iniciado
+STATUS: 2023/04/22 22:16:13 Servidor desligado
+STATUS: 2023/04/22 22:16:16 Servidor iniciado
+STATUS: 2023/04/22 22:16:37 Servidor desligado
+STATUS: 2023/04/22 22:17:16 Servidor iniciado
+STATUS: 2023/04/22 22:18:16 Servidor desligado
+STATUS: 2023/04/22 22:18:19 Servidor iniciado
+STATUS: 2023/04/22 22:19:30 Servidor desligado
+STATUS: 2023/04/22 22:19:33 Servidor iniciado
+STATUS: 2023/04/22 22:20:20 Servidor desligado
+STATUS: 2023/04/22 22:20:23 Servidor iniciado
+STATUS: 2023/04/22 22:21:02 Servidor desligado
+STATUS: 2023/04/22 22:21:05 Servidor iniciado
+STATUS: 2023/04/22 22:21:39 Servidor desligado
+STATUS: 2023/04/22 22:21:42 Servidor iniciado
+STATUS: 2023/04/22 22:22:18 Servidor desligado
+STATUS: 2023/04/22 22:22:42 Servidor iniciado
+INFO: 2023/04/22 22:25:25 Database Carregada
+INFO: 2023/04/22 22:25:25 Hash Dinamica Criada
+INFO: 2023/04/22 22:25:25 B Tree Criada

@@ -180,8 +180,22 @@ func InsertionSort(arr []int32) {
 }
 
 func Decaptalize(str string) string {
-    if len(str) < 1 {
-        return str
-    }
-    return strings.ToLower(str[0:1]) + str[1:]
+	if len(str) < 1 {
+		return str
+	}
+	return strings.ToLower(str[0:1]) + str[1:]
+}
+
+func BoolToFloat(b bool) float64 {
+	if b {
+		return 1.0
+	}
+	return 0.0
+}
+
+func FormatDate(dateStr string) string {
+	date, _ := time.Parse("02/01/2006", dateStr)
+
+	unixTime := date.Unix()
+	return strconv.FormatInt(unixTime, 10)
 }

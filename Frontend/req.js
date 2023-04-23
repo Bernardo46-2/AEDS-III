@@ -481,153 +481,186 @@ search.addEventListener('click', function (event) {
     modalContainer2.classList.add('one');
     modalContainer2.style.zIndex = "9999 !important";
 
-    modalSearchClose.addEventListener('click', () => {
-        cardsFatherDiv.style.position = fatherDivPosition;
-        modalContainer2.classList.add('out');
-    });
-
-    let naoImplementados = `
-    <div class="row justify-content-center">
-        <p class="col-4 search-pre-text">Peso: </p>
-        <input class="col-4 modal-search-input" type="text" name="tipo-pokemon" id="tipo-pokemon" placeholder="6">
-    </div>
-    <div class="row justify-content-center">
-        <p class="col-4 search-pre-text">Altura: </p>
-        <input class="col-4 modal-search-input" type="text" name="tipo-pokemon" id="tipo-pokemon" placeholder="0.4">
-    </div>
-    <div class="row justify-content-center">
-        <p class="col-4 search-pre-text">Geração: </p>
-        <input class="col-4 modal-search-input" type="text" name="tipo-pokemon" id="tipo-pokemon" placeholder="1">
-    </div>
-    <div class="row justify-content-center">
-        <p class="col-4 search-pre-text">Data: </p>
-        <input class="col-4 modal-search-input" type="text" name="tipo-pokemon" id="tipo-pokemon" placeholder="26/02/1996">
-    </div>
-
-    <div class="row justify-content-center">
-        <p class="mit-len-choise lendario2-n col-4 pointer" id="lendario2">Lendario</p>
-        <p class="mit-len-choise mitico2-n col-4 pointer" id="mitico2">Mitico</p>
-    </div>
-    <div class="row justify-content-center">
-        <p class="col-2 search-pre-text">Hp:</p>
-        <div class="col-4 progress2">
-            <input class="progress-bar-input2 rangers" type="range" id="--bulbasaur" min="0" max="200" value="35">
-        </div>
-        <p class="search-pos-text" id="--bulbasaur2">35</p>
-    </div>
-    <div class="row justify-content-center">
-        <p class="col-2 search-pre-text">Atk:</p>
-        <div class="col-4 progress2">
-            <input class="progress-bar-input2 rangers" type="range" id="--charmander" min="0" max="200" value="55">
-        </div>
-        <p class="search-pos-text" id="--charmander2">55</p>
-    </div>
-    <div class="row justify-content-center">
-        <p class="col-2 search-pre-text">Def:</p>
-        <div class="col-4 progress2">
-            <input class="progress-bar-input2 rangers" type="range" id="--squirtle" min="0" max="200" value="40">
-        </div>
-        <p class="search-pos-text" id="--squirtle2">40</p>
-    </div>
-    `;
-
     let modalContent = `
-    <div class="row justify-content-center search-identation">
-        <p class="col-4 search-pre-text">Id: </p>
-        <input class="col-4 modal-search-input" type="text" name="id" id="id" placeholder="25">
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text"> </p>
+        <p class="col-2 modal-search-input4">Descrição</p>
     </div>
+
     <div class="row justify-content-center">
         <p class="col-4 search-pre-text">Nome: </p>
         <input class="col-4 modal-search-input" type="text" name="nome" id="nome" placeholder="Pikachu">
     </div>
     <div class="row justify-content-center">
         <p class="col-4 search-pre-text">名前: </p>
-        <input class="col-4 modal-search-input" type="text" name="jap" id="jap" placeholder="ピカチュウ">
+        <input class="col-4 modal-search-input" type="text" name="jap" id="japName" placeholder="ピカチュウ">
     </div>
     <div class="row justify-content-center">
         <p class="col-4 search-pre-text">Especie: </p>
-        <input class="col-4 modal-search-input" type="text" name="especie" id="especie" placeholder="Mouse">
+        <input class="col-4 modal-search-input" type="text" name="especie" id="especie" placeholder="Mouse, Fox, Weed">
     </div>
     <div class="row justify-content-center">
         <p class="col-4 search-pre-text">Tipo: </p>
-        <input class="col-4 modal-search-input" type="text" name="tipo" id="tipo" placeholder="Electric">
+        <input class="col-4 modal-search-input" type="text" name="tipo" id="tipo" placeholder="Electric, Fire, Poison">
     </div>
     <div class="row justify-content-center">
-        <p class="col-4 search-pre-text" style="margin-right:10px; margin-left:-5px">Descrição: </p>
+        <p class="col-4 search-pre-text" style="margin-right:10px; margin-left:-5px">Sobre: </p>
         <textarea class="poke-descricao-input2 scrollbar2" type="text" name="descricao" id="descricao" placeholder="It occasionally uses an electric shock to recharge a fellow Pikachu that is in a weakened state."></textarea>
+    </div>
+
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text"> </p>
+        <p class="col-2 modal-search-input3 right10">Min</p>
+        <p class="col-2 modal-search-input3">Max</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Id: </p>
+        <input class="col-2 modal-search-input2 right10" type="text" name="tipo-pokemon" id="idI" placeholder="0">
+        <input class="col-2 modal-search-input2" type="text" name="tipo-pokemon" id="idF" placeholder="1000">
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Hp: </p>
+        <input class="col-2 modal-search-input2 right10" type="text" name="tipo-pokemon" id="hpI" placeholder="0">
+        <input class="col-2 modal-search-input2" type="text" name="tipo-pokemon" id="hpF" placeholder="200">
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Atk: </p>
+        <input class="col-2 modal-search-input2 right10" type="text" name="tipo-pokemon" id="atkI" placeholder="0">
+        <input class="col-2 modal-search-input2" type="text" name="tipo-pokemon" id="atkF" placeholder="200">
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Def: </p>
+        <input class="col-2 modal-search-input2 right10" type="text" name="tipo-pokemon" id="defI" placeholder="0">
+        <input class="col-2 modal-search-input2" type="text" name="tipo-pokemon" id="defF" placeholder="200">
+    </div>
+
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Peso: </p>
+        <input class="col-2 modal-search-input2 right10" type="text" name="tipo-pokemon" id="pesoI" placeholder="0.1">
+        <input class="col-2 modal-search-input2" type="text" name="tipo-pokemon" id="pesoF" placeholder="20.0">
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Altura: </p>
+        <input class="col-2 modal-search-input2 right10" type="text" name="tipo-pokemon" id="alturaI" placeholder="0.3">
+        <input class="col-2 modal-search-input2" type="text" name="tipo-pokemon" id="alturaF" placeholder="0.5">
+    </div>
+
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Geração: </p>
+        <input class="col-2 modal-search-input2 right10" type="text" name="tipo-pokemon" id="geracaoI" placeholder="1">
+        <input class="col-2 modal-search-input2" type="text" name="tipo-pokemon" id="geracaoF" placeholder="2">
+    </div>
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Data: </p>
+        <input class="col-2 modal-search-input2 right10" type="text" name="tipo-pokemon" id="LancamentoI" placeholder="26/02/1995">
+        <input class="col-2 modal-search-input2" type="text" name="tipo-pokemon" id="LancamentoF" placeholder="26/02/1997">
+    </div>
+
+    <div class="row justify-content-center">
+        <p class="col-4 search-pre-text">Raridade: </p>
+        <p class="mit-len-choise lendario2-n col-4 pointer" id="lendario2">Lendario</p>
+        <p class="mit-len-choise mitico2-n col-4 pointer" id="mitico2">Mitico</p>
     </div>
     `;
 
     mensagem2.innerHTML = modalContent;
 
-    /*     const lendario = document.querySelector('#lendario2');
-        const mitico = document.querySelector('#mitico2');
-        let lendarioMarca = false;
-        let miticoMarca = false;
-    
-        lendario.addEventListener('click', function () {
-            if (!lendarioMarca) {
-                lendario.classList.remove('lendario2-n');
-                lendario.classList.add('lendario2-y');
-                lendarioMarca = true;
-            } else {
-                lendario.classList.remove('lendario2-y');
-                lendario.classList.add('lendario2-n');
-                lendarioMarca = false;
-            }
-        });
-    
-        mitico.addEventListener('click', function () {
-            if (!miticoMarca) {
-                mitico.classList.remove('mitico2-n');
-                mitico.classList.add('mitico2-y');
-                miticoMarca = true;
-            } else {
-                mitico.classList.remove('mitico2-y');
-                mitico.classList.add('mitico2-n');
-                miticoMarca = false;
-            }
-        });
-        
-        const rangers = document.querySelectorAll('.rangers');
-        rangers.forEach(range => {
-            const rangeValueDisplay = document.querySelector("#" + range.id + 2);
-            const defaultValue = range.value;
-            range.style.background = `linear-gradient(to right, var(${range.id}) 0%, var(${range.id}) ${defaultValue}%, #000000e8 ${defaultValue}%, #000000e8 100%)`;
-            range.addEventListener('input', () => {
-                const value = range.value / 2;
-                range.style.background = `linear-gradient(to right, var(${range.id}) 0%, var(${range.id}) ${value}%, #000000e8 ${value}%, #000000e8 100%)`;
-                rangeValueDisplay.textContent = Math.floor(value * 2);
-            });
-        }); */
+    const lendario = document.querySelector('#lendario2');
+    const mitico = document.querySelector('#mitico2');
+    let lendarioMarca = false;
+    let miticoMarca = false;
 
-    searchIndex.addEventListener('click', async function (event) {
-        id = document.getElementById('id').value;
-        nome = document.getElementById('nome').value;
-        especie = document.getElementById('especie').value;
-        tipo = document.getElementById('tipo').value;
-        descricao = document.getElementById('descricao').value;
-
-        const jap = document.getElementById('jap').value;
-        const japResponse = await fetch(`http://localhost:8080/toKatakana/?stringToConvert=${jap.value}`)
-        japName = await japResponse.json();
-
-        if (!(id || nome || especie || tipo || descricao || japName)) {
-            
+    lendario.addEventListener('click', function () {
+        if (!lendarioMarca) {
+            lendario.classList.remove('lendario2-n');
+            lendario.classList.add('lendario2-y');
+            lendarioMarca = true;
+        } else {
+            lendario.classList.remove('lendario2-y');
+            lendario.classList.add('lendario2-n');
+            lendarioMarca = false;
         }
+    });
 
-        fetch('http://localhost:8080/invertedIndex/', {
+    mitico.addEventListener('click', function () {
+        if (!miticoMarca) {
+            mitico.classList.remove('mitico2-n');
+            mitico.classList.add('mitico2-y');
+            miticoMarca = true;
+        } else {
+            mitico.classList.remove('mitico2-y');
+            mitico.classList.add('mitico2-n');
+            miticoMarca = false;
+        }
+    });
+
+    let a;
+
+    searchIndex.addEventListener('click', async function mergeSearch(event) {
+        a = mergeSearch;
+        const nome = document.getElementById('nome').value;
+        const especie = document.getElementById('especie').value;
+        const tipo = document.getElementById('tipo').value;
+        const descricao = document.getElementById('descricao').value;
+        const idI = document.getElementById('idI').value;
+        let idF = document.getElementById('idF').value;
+        const hpI = document.getElementById('hpI').value;
+        let hpF = document.getElementById('hpF').value;
+        const atkI = document.getElementById('atkI').value;
+        let atkF = document.getElementById('atkF').value;
+        const defI = document.getElementById('defI').value;
+        let defF = document.getElementById('defF').value;
+        const pesoI = document.getElementById('pesoI').value;
+        let pesoF = document.getElementById('pesoF').value;
+        const alturaI = document.getElementById('alturaI').value;
+        let alturaF = document.getElementById('alturaF').value;
+        const geracaoI = document.getElementById('geracaoI').value;
+        let geracaoF = document.getElementById('geracaoF').value;
+        const LancamentoI = document.getElementById('LancamentoI').value;
+        let LancamentoF = document.getElementById('LancamentoF').value;
+        const japName = document.getElementById('japName').value;
+        const lendario = ""+(+lendarioMarca);
+        const mitico = ""+(+miticoMarca);
+
+        idF = (idF.length == 0)?idI:idF;
+        hpF = (hpF.length == 0)?hpI:hpF;
+        atkF = (atkF.length == 0)?atkI:atkF;
+        defF = (defF.length == 0)?defI:defF;
+        pesoF = (pesoF.length == 0)?pesoI:pesoF;
+        alturaF = (alturaF.length == 0)?alturaI:alturaF;
+        geracaoF = (geracaoF.length == 0)?geracaoI:geracaoF;
+        LancamentoF = (LancamentoF.length == 0)?LancamentoI:LancamentoF;
+
+        fetch('http://localhost:8080/mergeSearch/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id: +id,
                 nome: nome,
                 especie: especie,
                 tipo: tipo,
                 descricao: descricao,
-                japName: japName
+                japName: japName,
+                idI: idI,
+                idF: idF,
+                hpI: hpI,
+                hpF: hpF,
+                atkI: atkI,
+                atkF: atkF,
+                defI: defI,
+                defF: defF,
+                pesoI: pesoI,
+                pesoF: pesoF,
+                alturaI: alturaI,
+                alturaF: alturaF,
+                geracaoI: geracaoI,
+                geracaoF: geracaoF,
+                LancamentoI: LancamentoI,
+                LancamentoF: LancamentoF,
+                Lendario: lendario,
+                Mitico: mitico,
             })
         })
             .then(response => response.json())
@@ -639,12 +672,18 @@ search.addEventListener('click', function (event) {
                 insertDots = true;
                 sessionStorage.setItem('actualPage', JSON.stringify(1));
                 recuperarCards(0)
-                /* showTime(indexMethod[5], data.time); */
+                searchIndex.removeEventListener('click', mergeSearch);
             })
             .catch(error => {
                 modalAviso("Nenhum Pokemon Encontrado");
                 console.log(error)
             });
+    });
+    
+    modalSearchClose.addEventListener('click', () => {
+        cardsFatherDiv.style.position = fatherDivPosition;
+        modalContainer2.classList.add('out');
+        searchIndex.removeEventListener('click', a);
     });
 });
 
