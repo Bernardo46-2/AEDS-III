@@ -5,7 +5,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"math"
 	"strconv"
@@ -256,7 +255,6 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 }
 
 func MergeSearch(req SearchRequest) (idList []int64, err error) {
-	fmt.Println()
 	getFieldScDoc := func(field, text string) []invertedIndex.ScoredDocument {
 		return invertedIndex.Read(binManager.FILES_PATH, field, strings.Fields(text)...)
 	}
