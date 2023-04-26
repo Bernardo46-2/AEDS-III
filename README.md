@@ -16,12 +16,12 @@ Além disso, o projeto foi feito com o modelo de uma API para comunicação entr
 ![Tela principal](/Outros/Tela_Inicial.png)
 #### Tela de visualização individual e crud
 ![PokeCard](/Outros/Dados.png)
-#### Tela de respostas do servidor
-![Resposta do servidor](/Outros/Carregamento.png)
 #### Tela de pesquisa
-![Resposta do servidor](/Outros/Carregamento.png)
+![Resposta do servidor](/Outros/Pesquisa.png)
 #### Escolha de Indexação e tempo de pesquisa
 ![Resposta do servidor](/Outros/Indexação.png)
+#### Tela de respostas do servidor
+![Resposta do servidor](/Outros/Carregamento.png)
 
 ## Funcionalidades
 O banco de dados suporta as seguintes funcionalidades:
