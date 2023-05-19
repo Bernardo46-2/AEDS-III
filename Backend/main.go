@@ -54,5 +54,6 @@ func main() {
 		}
 	case "lzw", "2":
 		lzw.Zip("teste.txt")
+		huffman.Zip("teste.txt")
 	}
 }
