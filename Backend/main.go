@@ -13,6 +13,7 @@ import (
 	"os"
 
 	"github.com/Bernardo46-2/AEDS-III/data/compress/huffman"
+	"github.com/Bernardo46-2/AEDS-III/data/compress/lzw"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
@@ -47,5 +48,7 @@ func main() {
 		servidor()
 	case "huffman", "1":
 		huffman.Zip("teste.txt")
+    case "lzw", "2":
+        lzw.Zip("teste.txt")
 	}
 }
