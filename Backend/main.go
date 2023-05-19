@@ -9,6 +9,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 
@@ -47,8 +48,11 @@ func main() {
 	case "server", "0":
 		servidor()
 	case "huffman", "1":
-		huffman.Zip("teste.txt")
-    case "lzw", "2":
-        lzw.Zip("teste.txt")
+		err := huffman.Zip("teste.txt")
+		if err != nil {
+			fmt.Printf("err = %+v\n", err)
+		}
+	case "lzw", "2":
+		lzw.Zip("teste.txt")
 	}
 }

@@ -3,6 +3,8 @@ package huffman
 import (
 	"fmt"
 	"os"
+
+	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
 type TreeNode struct {
@@ -10,8 +12,24 @@ type TreeNode struct {
 	Count int
 	Path  byte
 	PSize int
+	Leaf  bool
 	Left  *TreeNode
 	Right *TreeNode
+}
+
+type ByteMap struct {
+	Path byte
+	Size int
+}
+
+func preOrder(node *TreeNode) {
+	if node != nil {
+		if node.Leaf {
+			fmt.Printf("%8b | %6d | %s \n", node.Char, node.Count, utils.FormatByte(node.Path, node.PSize))
+		}
+		preOrder(node.Left)
+		preOrder(node.Right)
+	}
 }
 
 // getCharMap separa uma Mapa com todos os caracteres existentes
@@ -32,7 +50,7 @@ func getNodeHeap(charMap map[byte]int) *Heap {
 	h := NewHeap()
 
 	for char, count := range charMap {
-		h.insert(&TreeNode{char, count, 0, 0, nil, nil})
+		h.insert(&TreeNode{char, count, 0, 0, true, nil, nil})
 	}
 
 	return h
@@ -43,30 +61,28 @@ func getHuffmanTree(h *Heap) *TreeNode {
 	for len(h.Nodes) >= 2 {
 		a := h.remove()
 		b := h.remove()
-		h.insert(&TreeNode{0, a.Count + b.Count, 0, 0, a, b})
+		h.insert(&TreeNode{0, a.Count + b.Count, 0, 0, false, a, b})
 	}
 
 	return h.Nodes[0]
 }
 
-func encode(node *TreeNode, path byte, pos int) {
+func createCode(node *TreeNode, path byte, pos int) {
 	if node != nil {
 		node.Path = path
 		node.PSize = pos
-		encode(node.Left, path, pos+1)
-		encode(node.Right, path|(1<<pos), pos+1)
+		createCode(node.Left, path<<1, pos+1)
+		createCode(node.Right, (path<<1)|1, pos+1)
 	}
 }
 
-func preOrder(node *TreeNode) {
+func getCodeMap(node *TreeNode, leafMap map[byte]ByteMap) {
 	if node != nil {
-		if node.Char != 0 {
-			fmt.Printf("%1c | %3d | %b \n", node.Char, node.Count, node.Path)
-		} else {
-			fmt.Printf("  | %3d | %b \n", node.Count, node.Path)
+		if node.Leaf {
+			leafMap[node.Char] = ByteMap{node.Path, node.PSize}
 		}
-		preOrder(node.Left)
-		preOrder(node.Right)
+		getCodeMap(node.Left, leafMap)
+		getCodeMap(node.Right, leafMap)
 	}
 }
 
@@ -80,8 +96,9 @@ func Zip(path string) error {
 	charMap := getCharMap(content)
 	nodeHeap := getNodeHeap(charMap)
 	tree := getHuffmanTree(nodeHeap)
-	encode(tree, 0, 0)
-	preOrder(tree)
+	createCode(tree, 0, 0)
+	codeMap := make(map[byte]int)
+	getCodeMap(tree, codeMap)
 
 	return nil
 }

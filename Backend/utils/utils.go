@@ -9,6 +9,7 @@ package utils
 import (
 	"bytes"
 	"encoding/binary"
+	"fmt"
 	"io"
 	"math"
 	"strconv"
@@ -33,8 +34,8 @@ func Uint16ToBytes(n uint16) []byte {
 // IntToBytes converte um número int32 em uma slice de bytes
 // usando a ordem Little Endian e retorna a slice resultante.
 func IntToBytes(n int32) []byte {
-    var buf []byte
-    return binary.LittleEndian.AppendUint32(buf, uint32(n))
+	var buf []byte
+	return binary.LittleEndian.AppendUint32(buf, uint32(n))
 }
 
 // IntToBytes converte um número int64 em uma slice de bytes
@@ -210,4 +211,21 @@ func FormatDate(dateStr string) string {
 
 	unixTime := date.Unix()
 	return strconv.FormatInt(unixTime, 10)
+}
+
+func FormatByte(b byte, size int) string {
+	// Converte o byte em uma string binária
+	binaryStr := fmt.Sprintf("%08b", b)
+
+	// Verifica se o tamanho da string binária é maior que o tamanho desejado
+	if len(binaryStr) > size {
+		// Remove os bits excedentes do início da string binária
+		binaryStr = binaryStr[len(binaryStr)-size:]
+	} else if len(binaryStr) < size {
+		// Adiciona zeros à esquerda para atingir o tamanho desejado
+		padding := strings.Repeat("0", size-len(binaryStr))
+		binaryStr = padding + binaryStr
+	}
+
+	return binaryStr
 }
