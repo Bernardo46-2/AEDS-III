@@ -1,7 +1,7 @@
 package lzw
 
 import (
-	// "os"
+	"os"
 	"fmt"
     "math"
 
@@ -38,13 +38,15 @@ func (d *Dict) push(s string) {
 }
 
 func (d *Dict) get(s string) (uint16, bool) {
-    value, contains := d.dict[s]
-    if contains {
-        value += math.MaxUint8
+    bytes := []byte(s)
+
+    if len(bytes) == 1 {
+        value, _ := utils.BytesToUint16(bytes, 0)
+        return value, true
     } else {
-        value, _ = utils.BytesToUint16([]byte(s), 0)
+        value, contains := d.dict[s]
+        return value + math.MaxUint8, contains
     }
-    return value, contains
 }
 
 // ================================================ LZW ================================================ //
@@ -53,40 +55,38 @@ func zip(dict Dict, content []byte) []byte {
     zipped := make([]byte, 0, len(content))
 
     for i := 0; i < len(content); i++ {
-        j := i+1
-        value, contains := dict.get(string(content[i:j]))
-        fmt.Printf("content[%d:%d]: %+v\n", i, j, content[i:j])
-        fmt.Println("value:", value)
+        var value uint16
+        contains := true
+        var j int
+        size := 0
         
-        for j = i + 2; j <= len(content) && contains; j++ {
-            fmt.Printf("searching content[%d:%d]: %+v\n", i, j, content[i:j])
-            tmp, contains := dict.get(string(content[i:j]))
-            if contains { value = tmp }
-        }
-        
-        if j <= len(content) {
-            dict.push(string(content[i:j]))
+        for j = i + 1; j <= len(content) && contains; j++ {
+            var tmp uint16
+            tmp, contains = dict.get(string(content[i:j]))
+            
+            if contains {
+                size = len(content[i:j])
+                value = tmp
+            } else {
+                dict.push(string(content[i:j]))
+                contains = false
+            }
         }
 
-        if contains {
-            zipped = append(zipped, utils.Uint16ToBytes(value + math.MaxUint8)...)
-        } else if j < len(content) {
-            zipped = append(zipped, content[i])
-        }
+        i += size-1
 
-        fmt.Println("")
+        zipped = append(zipped, utils.Uint16ToBytes(value)...)
     }
 
     return zipped
 }
 
 func Zip(path string) error {
-    // content, err := os.ReadFile(path)
-    // if err != nil {
-    //     return err
-    // }
+    content, err := os.ReadFile(path)
+    if err != nil {
+        return err
+    }
 
-    content := []byte{101, 102, 101, 102}
     dict := initDict()
     fmt.Println(content)
 

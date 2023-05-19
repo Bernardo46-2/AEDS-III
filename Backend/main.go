@@ -49,6 +49,6 @@ func main() {
 	case "huffman", "1":
 		huffman.Zip("teste.txt")
     case "lzw", "2":
-        lzw.Zip("teste.txt")
+        lzw.Zip("data/files/database/pokedex.bin")
 	}
 }
