@@ -51,30 +51,31 @@ func (d *Dict) get(s string) (uint16, bool) {
 
 // ================================================ LZW ================================================ //
 
+func parseValue(dict *Dict, content []byte) (uint16, int) {
+    offset := 0
+    var value uint16
+
+    for j := 1; j <= len(content); j++ {
+        tmp, contains := dict.get(string(content[:j]))
+        
+        if contains {
+            offset = len(content[:j])
+            value = tmp
+        } else {
+            dict.push(string(content[:j]))
+            break
+        }
+    }
+
+    return value, offset
+}
+
 func zip(dict Dict, content []byte) []byte {
     zipped := make([]byte, 0, len(content))
 
     for i := 0; i < len(content); i++ {
-        var value uint16
-        contains := true
-        var j int
-        size := 0
-        
-        for j = i + 1; j <= len(content) && contains; j++ {
-            var tmp uint16
-            tmp, contains = dict.get(string(content[i:j]))
-            
-            if contains {
-                size = len(content[i:j])
-                value = tmp
-            } else {
-                dict.push(string(content[i:j]))
-                contains = false
-            }
-        }
-
-        i += size-1
-
+        value, offset := parseValue(&dict, content[i:])
+        i += offset - 1
         zipped = append(zipped, utils.Uint16ToBytes(value)...)
     }
 
