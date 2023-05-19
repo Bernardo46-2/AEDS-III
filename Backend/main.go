@@ -10,13 +10,15 @@ package main
 
 import (
 	"net/http"
+	"os"
 
+	"github.com/Bernardo46-2/AEDS-III/data/compress/huffman"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
 )
 
-func main() {
+func servidor() {
 	// Inicializa o servidor de log
 	logger.LigarServidor()
 
@@ -37,4 +39,13 @@ func main() {
 
 	// Inicializa o servidor HTTP na porta 8080 e escreve no log eventuais erros
 	logger.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+func main() {
+	switch os.Args[1] {
+	case "server", "0":
+		servidor()
+	case "huffman", "1":
+		huffman.Zip("teste.txt")
+	}
 }
