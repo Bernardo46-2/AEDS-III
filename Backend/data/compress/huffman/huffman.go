@@ -3,8 +3,6 @@ package huffman
 import (
 	"fmt"
 	"os"
-
-	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
 type TreeNode struct {
@@ -20,16 +18,6 @@ type TreeNode struct {
 type ByteMap struct {
 	Path byte
 	Size int
-}
-
-func preOrder(node *TreeNode) {
-	if node != nil {
-		if node.Leaf {
-			fmt.Printf("%8b | %6d | %s \n", node.Char, node.Count, utils.FormatByte(node.Path, node.PSize))
-		}
-		preOrder(node.Left)
-		preOrder(node.Right)
-	}
 }
 
 // getCharMap separa uma Mapa com todos os caracteres existentes
