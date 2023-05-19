@@ -23,11 +23,18 @@ func Atoi32(s string) (int32, error) {
 	return int32(i), err
 }
 
+// UintToBytes converte um número uint16 em uma slice de bytes
+// usando a ordem Little Endian e retorna a slice resultante.
+func Uint16ToBytes(n uint16) []byte {
+	var buf []byte
+	return binary.LittleEndian.AppendUint16(buf, uint16(n))
+}
+
 // IntToBytes converte um número int32 em uma slice de bytes
 // usando a ordem Little Endian e retorna a slice resultante.
 func IntToBytes(n int32) []byte {
-	var buf []byte
-	return binary.LittleEndian.AppendUint32(buf, uint32(n))
+    var buf []byte
+    return binary.LittleEndian.AppendUint32(buf, uint32(n))
 }
 
 // IntToBytes converte um número int64 em uma slice de bytes
@@ -67,6 +74,11 @@ func RemoveAfterSpace(str string) string {
 // BytesToVarSize retorna o tamanho de um campo de tamanho variável e avança o ponteiro
 func BytesToVarSize(registro []byte, ptr int) (int, int) {
 	return int(binary.LittleEndian.Uint32(registro[ptr : ptr+4])), ptr + 4
+}
+
+// BytesToUint16 retorna um inteiro unsigned de 16 bits e avança o ponteiro ptr
+func BytesToUint16(registro []byte, ptr int) (uint16, int) {
+	return binary.LittleEndian.Uint16(registro[ptr : ptr+4]), ptr + 4
 }
 
 // BytesToInt32 retorna um inteiro de 32 bits e avança o ponteiro ptr
