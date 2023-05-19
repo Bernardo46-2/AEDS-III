@@ -5,24 +5,26 @@ import (
 	"os"
 )
 
+// getCharMap separa uma Mapa com todos os caracteres existentes
+// preparando para a criacao do dicionario
+func getCharMap(arr []byte) map[byte]int {
+	charMap := make(map[byte]int)
+
+	for _, b := range arr {
+		charMap[b]++
+	}
+
+	return charMap
+}
+
 func Zip(path string) error {
-	file, err := os.Open(path)
+	content, err := os.ReadFile(path)
 	if err != nil {
 		return fmt.Errorf("erro do tipo: %s", err.Error())
 	}
-	defer file.Close()
 
-	content := make([]byte, 0)
-	buffer := make([]byte, 1024)
-	for {
-		n, err := file.Read(buffer)
-		if err != nil {
-			break
-		}
-		content = append(content, buffer[:n]...)
-	}
-
-	fmt.Println(string(content))
+	charMap := getCharMap(content)
+	fmt.Printf("%+v", charMap)
 
 	return nil
 }
