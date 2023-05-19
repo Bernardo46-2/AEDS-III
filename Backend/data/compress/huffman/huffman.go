@@ -97,7 +97,7 @@ func Zip(path string) error {
 	nodeHeap := getNodeHeap(charMap)
 	tree := getHuffmanTree(nodeHeap)
 	createCode(tree, 0, 0)
-	codeMap := make(map[byte]int)
+	codeMap := make(map[byte]ByteMap)
 	getCodeMap(tree, codeMap)
 
 	return nil
