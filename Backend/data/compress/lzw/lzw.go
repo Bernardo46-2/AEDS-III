@@ -12,32 +12,32 @@ import (
 
 const DICT_MAX_SIZE uint16 = 4096
 
-// ================================================ Dict ================================================ //
+// ================================================ ZipDict ================================================ //
 
-type Dict struct {
+type ZipDict struct {
     dict map[string]uint16
     size uint16
 }
 
-func initDict() Dict {
-    return Dict{
+func initDict() ZipDict {
+    return ZipDict{
         dict: make(map[string]uint16, DICT_MAX_SIZE),
         size: 0,
     }
 }
 
-func (d *Dict) isFull() bool {
+func (d *ZipDict) isFull() bool {
     return d.size == DICT_MAX_SIZE - 1
 }
 
-func (d *Dict) push(s string) {
+func (d *ZipDict) push(s string) {
     if !d.isFull() {
         d.size++
         d.dict[s] = d.size
     }
 }
 
-func (d *Dict) get(s string) (uint16, bool) {
+func (d *ZipDict) get(s string) (uint16, bool) {
     bytes := []byte(s)
 
     if len(bytes) == 1 {
@@ -49,9 +49,36 @@ func (d *Dict) get(s string) (uint16, bool) {
     }
 }
 
+// ================================================ Bit Compress ================================================ //
+
+func compress12bitArray(bytes []uint16) []byte {
+    numBytes := (len(bytes) * 12) / 8
+	if (len(bytes)*12)%8 != 0 {
+		numBytes++
+	}
+    bs := make([]byte, numBytes)
+    
+    offset := 0
+    i := 0
+    for _, b := range bytes {
+        for offset < 12 {
+            bits := (b >> (12 - offset - 8)) & 0xFF
+            bs[i] |= byte(bits)
+            if offset%8 == 4 {
+                i++
+			}
+            offset += 8
+        }
+
+        offset -= 12
+    }
+
+    return bs
+}
+
 // ================================================ LZW ================================================ //
 
-func parseValue(dict *Dict, content []byte) (uint16, int) {
+func parseValue(dict *ZipDict, content []byte) (uint16, int) {
     offset := 0
     var value uint16
 
@@ -70,7 +97,7 @@ func parseValue(dict *Dict, content []byte) (uint16, int) {
     return value, offset
 }
 
-func zip(dict Dict, content []byte) []byte {
+func zip(dict ZipDict, content []byte) []byte {
     zipped := make([]byte, 0, len(content))
 
     for i := 0; i < len(content); i++ {
@@ -93,6 +120,9 @@ func Zip(path string) error {
 
     zipped := zip(dict, content)
     fmt.Println(zipped)
+
+    numbers := []uint16{0x123, 0xABC, 0x789}
+    fmt.Println(compress12bitArray(numbers))
 
     return nil
 }
