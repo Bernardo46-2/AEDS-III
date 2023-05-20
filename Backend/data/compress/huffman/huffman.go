@@ -1,6 +1,7 @@
 package huffman
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 )
@@ -81,12 +82,14 @@ func Zip(path string) error {
 		return fmt.Errorf("erro do tipo: %s", err.Error())
 	}
 
-	charMap := getCharMap(content)
-	nodeHeap := getNodeHeap(charMap)
-	tree := getHuffmanTree(nodeHeap)
-	createCode(tree, 0, 0)
-	codeMap := make(map[byte]ByteMap)
-	getCodeMap(tree, codeMap)
+	charMap := getCharMap(content)    // cria a lista de caracteres e ocorrencia
+	nodeHeap := getNodeHeap(charMap)  // insere a lista em um Heap
+	tree := getHuffmanTree(nodeHeap)  // constroi a arvore de huffman a partir do heap
+	createCode(tree, 0, 0)            // serializa o caminhar da arvore nos nos
+	codeMap := make(map[byte]ByteMap) // cria um mapa para receber a codificacao
+	getCodeMap(tree, codeMap)         // cria o mapa de codificacao a partir da arvore
+	// byteCode := compress(content, codeMap)
 
+	fmt.Printf("%+v", byteCode)
 	return nil
 }
