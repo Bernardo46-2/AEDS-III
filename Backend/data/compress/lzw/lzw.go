@@ -1,35 +1,45 @@
 package lzw
 
 import (
-	"fmt"
+	// "fmt"
 	"math"
 	"os"
+    "encoding/binary"
 
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
 // ================================================ consts ================================================ //
 
+// Maior tamanho possivel do dicionario definido
+// pelo metodo de compressão LZW
 const DICT_MAX_SIZE uint16 = 4096
 
 // ================================================ ZipDict ================================================ //
 
+// ZipDict é o dicionario usado para compactar arquivos usando a tecnica
+// de compressão LZW. Possui um mapa de string e uint16 e uma variavel
+// contando o numero de elementos inseridos no mapa
 type ZipDict struct {
     dict map[string]uint16
     size uint16
 }
 
-func initDict() ZipDict {
+// initZipDict inicializa um dicionario de compactação com seus
+// valores padrões
+func initZipDict() ZipDict {
     return ZipDict{
         dict: make(map[string]uint16, DICT_MAX_SIZE),
         size: 0,
     }
 }
 
+// isFull testa se o dicionario está cheio
 func (d *ZipDict) isFull() bool {
     return d.size == DICT_MAX_SIZE - 1
 }
 
+// push insere um elemento no dicionario
 func (d *ZipDict) push(s string) {
     if !d.isFull() {
         d.size++
@@ -37,6 +47,10 @@ func (d *ZipDict) push(s string) {
     }
 }
 
+// get pesquisa um elemento no dicionario, retornando seu possivel
+// valor e um booleano indicando se o valor foi encontrado ou nao
+// Caso o valor nao for encontrado, o uint16 retornado sera o valor
+// padrao: 0
 func (d *ZipDict) get(s string) (uint16, bool) {
     bytes := []byte(s)
 
@@ -51,33 +65,56 @@ func (d *ZipDict) get(s string) (uint16, bool) {
 
 // ================================================ Bit Compress ================================================ //
 
-func compress12bitArray(bytes []uint16) []byte {
-    numBytes := (len(bytes) * 12) / 8
-	if (len(bytes)*12)%8 != 0 {
-		numBytes++
-	}
-    bs := make([]byte, numBytes)
-    
-    offset := 0
-    i := 0
-    for _, b := range bytes {
-        for offset < 12 {
-            bits := (b >> (12 - offset - 8)) & 0xFF
-            bs[i] |= byte(bits)
-            if offset%8 == 4 {
-                i++
-			}
-            offset += 8
+// compress12bitArray percorre um []uint16 que possui numeros de exclusivamente
+// 12 bits e os concatena com os proximos bits
+// 
+// in:  0000 aaaa aaaa aaaa  0000 bbbb bbbb bbbb  0000 cccc cccc cccc  0000 dddd dddd dddd
+// 
+// out: aaaa aaaa aaaa bbbb  bbbb bbbb cccc cccc  cccc dddd dddd dddd
+func compress12bitArray(bytes []uint16) []uint16 {
+    newLen := len(bytes) * 8 / 12 + 1
+    if len(bytes) * 8 % 12 != 0 {
+        newLen++
+    }
+    result := make([]uint16, newLen)
+    index := 0
+
+    for i := 0; i < len(bytes) - 1 && index < newLen; i++ {
+        if i % 4 == 0 || i % 4 == 3 {
+            result[index] = bytes[i] << 4
+            result[index] |= bytes[i+1] >> 8
+        } else if i % 4 == 1 {
+            result[index] = bytes[i] << 8
+            result[index] |= bytes[i+1] >> 4
+        } else if i % 4 == 2 {
+            result[index] = bytes[i] << 12
+            result[index] |= bytes[i+1]
+            i++
         }
 
-        offset -= 12
+        index++
     }
 
-    return bs
+    return result
 }
 
 // ================================================ LZW ================================================ //
 
+// writeFile escreve todos os bytes de um array de uint16 em
+// um arquivo
+func writeFile(f *os.File, content []uint16) error {
+    for _, b := range content {
+        err := binary.Write(f, binary.LittleEndian, b)
+        if err != nil {
+            return err
+        }
+    }
+    return nil
+}
+
+// parseValue busca o maior valor possivel no dicionario enviado
+// por parametro, eventualmente inserindo um novo valor no dicionario
+// caso ele nao esteja cheio
 func parseValue(dict *ZipDict, content []byte) (uint16, int) {
     offset := 0
     var value uint16
@@ -97,32 +134,36 @@ func parseValue(dict *ZipDict, content []byte) (uint16, int) {
 	return value, offset
 }
 
-func zip(dict ZipDict, content []byte) []byte {
-    zipped := make([]byte, 0, len(content))
+// zip recebe um dicionario e um conteudo em bytes e percorre
+// todo o conteudo pesquisando cada valor encontrado e inserindo
+// novos valores no caminho
+func zip(dict ZipDict, content []byte) []uint16 {
+    zipped := make([]uint16, 0, len(content))
 
 	for i := 0; i < len(content); i++ {
 		value, offset := parseValue(&dict, content[i:])
 		i += offset - 1
-		zipped = append(zipped, utils.Uint16ToBytes(value)...)
+		zipped = append(zipped, value)
 	}
 
 	return zipped
 }
 
+// Zip recebe uma string contendo o caminho do arquivo a ser compactado
+// e o compacta usando o metodo de compressao LZW
 func Zip(path string) error {
+    path = "data/files/database/pokedex.bin"
+
 	content, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
 
-	dict := initDict()
-	fmt.Println(content)
-
+	dict := initZipDict()
     zipped := zip(dict, content)
-    fmt.Println(zipped)
+    zipped = compress12bitArray(zipped)
 
-    numbers := []uint16{0x123, 0xABC, 0x789}
-    fmt.Println(compress12bitArray(numbers))
-
-	return nil
+    f, _ := os.Create("data/files/database/pokedex.lzw")
+    defer f.Close()
+    return writeFile(f, zipped)
 }
