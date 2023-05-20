@@ -1,7 +1,6 @@
 package huffman
 
 import (
-	"bytes"
 	"fmt"
 	"os"
 )
@@ -90,6 +89,6 @@ func Zip(path string) error {
 	getCodeMap(tree, codeMap)         // cria o mapa de codificacao a partir da arvore
 	// byteCode := compress(content, codeMap)
 
-	fmt.Printf("%+v", byteCode)
+	// fmt.Printf("%+v", byteCode)
 	return nil
 }
