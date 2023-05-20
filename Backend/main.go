@@ -52,6 +52,10 @@ func main() {
 		if err != nil {
 			fmt.Printf("err = %+v\n", err)
 		}
+		err = huffman.Unzip("teste.txt.zip")
+		if err != nil {
+			fmt.Printf("err = %+v\n", err)
+		}
 	case "lzw", "2":
 		lzw.Zip("teste.txt")
 	}
