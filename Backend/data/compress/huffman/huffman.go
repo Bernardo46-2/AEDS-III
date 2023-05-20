@@ -1,10 +1,9 @@
 package huffman
 
 import (
+	"bytes"
 	"fmt"
 	"os"
-
-	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
 type TreeNode struct {
@@ -20,16 +19,6 @@ type TreeNode struct {
 type ByteMap struct {
 	Path byte
 	Size int
-}
-
-func preOrder(node *TreeNode) {
-	if node != nil {
-		if node.Leaf {
-			fmt.Printf("%8b | %6d | %s \n", node.Char, node.Count, utils.FormatByte(node.Path, node.PSize))
-		}
-		preOrder(node.Left)
-		preOrder(node.Right)
-	}
 }
 
 // getCharMap separa uma Mapa com todos os caracteres existentes
@@ -93,12 +82,14 @@ func Zip(path string) error {
 		return fmt.Errorf("erro do tipo: %s", err.Error())
 	}
 
-	charMap := getCharMap(content)
-	nodeHeap := getNodeHeap(charMap)
-	tree := getHuffmanTree(nodeHeap)
-	createCode(tree, 0, 0)
-	codeMap := make(map[byte]ByteMap)
-	getCodeMap(tree, codeMap)
+	charMap := getCharMap(content)    // cria a lista de caracteres e ocorrencia
+	nodeHeap := getNodeHeap(charMap)  // insere a lista em um Heap
+	tree := getHuffmanTree(nodeHeap)  // constroi a arvore de huffman a partir do heap
+	createCode(tree, 0, 0)            // serializa o caminhar da arvore nos nos
+	codeMap := make(map[byte]ByteMap) // cria um mapa para receber a codificacao
+	getCodeMap(tree, codeMap)         // cria o mapa de codificacao a partir da arvore
+	// byteCode := compress(content, codeMap)
 
+	fmt.Printf("%+v", byteCode)
 	return nil
 }
