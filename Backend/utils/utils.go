@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -228,4 +229,33 @@ func FormatByte(b byte, size int) string {
 	}
 
 	return binaryStr
+}
+
+func ByteSize(v interface{}) int {
+	var size int
+	value := reflect.ValueOf(v)
+
+	switch value.Kind() {
+	case reflect.Int8, reflect.Uint8:
+		size = 1
+	case reflect.Int16, reflect.Uint16:
+		size = 2
+	case reflect.Int32, reflect.Uint32, reflect.Float32:
+		size = 4
+	case reflect.Int64, reflect.Uint64, reflect.Float64, reflect.Complex64:
+		size = 8
+	case reflect.Complex128:
+		size = 16
+	case reflect.String:
+		size = int(len(v.(string)))
+	case reflect.Slice:
+		size = int(value.Len()) * ByteSize(value.Index(0).Interface())
+	case reflect.Int, reflect.Uint:
+		size = strconv.IntSize / 8
+	default:
+		fmt.Printf("Unhandled kind: %v\n", value.Kind())
+		size = 0
+	}
+
+	return size
 }
