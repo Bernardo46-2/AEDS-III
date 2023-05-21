@@ -23,7 +23,8 @@ const DICT_MAX_SIZE uint16 = 4096
 type Dict struct {
     dict map[string]uint16
     unzipDict map[uint16]string
-    size uint16
+    sizeZip uint16
+    sizeUnzip uint16
 }
 
 // initZipDict inicializa um dicionario de compactação com seus
@@ -32,20 +33,34 @@ func initZipDict() Dict {
     return Dict{
         dict: make(map[string]uint16, DICT_MAX_SIZE),
         unzipDict: make(map[uint16]string, DICT_MAX_SIZE),
-        size: 0,
+        sizeZip: 0,
+        sizeUnzip: 0,
     }
 }
 
-// isFull testa se o dicionario está cheio
-func (d *Dict) isFull() bool {
-    return d.size == DICT_MAX_SIZE - 1
+// isFullZip testa se o dicionario está cheio
+func (d *Dict) isFullZip() bool {
+    return d.sizeZip == DICT_MAX_SIZE - 1
 }
 
-// push insere um elemento no dicionario
-func (d *Dict) push(s string) {
-    if !d.isFull() {
-        d.size++
-        d.dict[s] = d.size
+// isFullUnzip testa se o dicionario está cheio
+func (d *Dict) isFullUnzip() bool {
+    return d.sizeZip == DICT_MAX_SIZE - 1
+}
+
+// pushZip insere um elemento no dicionario
+func (d *Dict) pushZip(s string) {
+    if !d.isFullZip() {
+        d.sizeZip++
+        d.dict[s] = d.sizeZip
+    }
+}
+
+// pushUnzip insere um elemento no dicionario
+func (d* Dict) pushUnzip(s []byte) {
+    if !d.isFullUnzip() {
+        d.sizeUnzip++
+        d.unzipDict[d.sizeUnzip-1] = string(s)
     }
 }
 
@@ -63,6 +78,23 @@ func (d *Dict) get(s string) (uint16, bool) {
         value, contains := d.dict[s]
         return value + math.MaxUint8, contains
     }
+}
+
+// getUnzip pesquisa um elemento no dicionario, retornando seu possivel
+// valor e um booleano indicando se o valor foi encontrado ou nao
+// Se o valor nao for encontrado, o retorno é nil
+func (d *Dict) getUnzip(n uint16) []byte {
+    if n < math.MaxUint8 {
+        return []byte{byte(n)}
+    } else {
+        value, contains := d.unzipDict[n - math.MaxUint8 - 1]
+
+        if contains {
+            return []byte(value)
+        }
+    }
+
+    return nil
 }
 
 // ================================================ Bit Compress ================================================ //
@@ -112,6 +144,9 @@ func compress12bitArray(array []uint16) []uint16 {
     return result
 }
 
+// decompress12bitArray pega um array de uin16, consistindo de numeros de
+// 12 bits compactados e os descompacta retornando um novo array de uint16
+// 
 // in:  aaaa aaaa aaaa bbbb | bbbb bbbb cccc cccc | cccc dddd dddd dddd
 // 
 // out: 0000 aaaa aaaa aaaa | 0000 bbbb bbbb bbbb | 0000 cccc cccc cccc | 0000 dddd dddd dddd
@@ -157,21 +192,42 @@ func writeFile(f *os.File, content []uint16) error {
     return nil
 }
 
-// parseValue busca o maior valor possivel no dicionario enviado
+// unzip recebe um dicionario e um conteudo em bytes e percorre
+// todo o conteudo pesquisando cada valor encontrado e inserindo
+// novos valores no caminho
+func unzip(dict Dict, content []uint16) []byte {
+    unzipped := make([]byte, 0, len(content) * 2)
+    
+    for i := 0; i < len(content) - 1; i++ {
+        value := dict.getUnzip(content[i])
+        next := dict.getUnzip(content[i+1])        
+        unzipped = append(unzipped, value...)
+        if len(next) > 0 {
+            dict.pushUnzip(append(value, next[0]))
+        }
+    }
+    
+    value := dict.getUnzip(content[len(content)-1])
+    unzipped = append(unzipped, value...)
+    
+    return unzipped
+}
+
+// parseValueZip busca o maior valor possivel no dicionario enviado
 // por parametro, eventualmente inserindo um novo valor no dicionario
 // caso ele nao esteja cheio
-func parseValue(dict *Dict, content []byte) (uint16, int) {
-    offset := 0
+func parseValueZip(dict *Dict, content []byte) (uint16, int) {
+    offset := 1
     var value uint16
 
-    for j := 1; j <= len(content); j++ {
-        tmp, contains := dict.get(string(content[:j]))
-
+    for i := 1; i <= len(content); i++ {
+        tmp, contains := dict.get(string(content[:i]))
+        
         if contains {
-            offset = len(content[:j])
+            offset = len(content[:i])
             value = tmp
         } else {
-            dict.push(string(content[:j]))
+            dict.pushZip(string(content[:i]))
             break
         }
     }
@@ -179,64 +235,58 @@ func parseValue(dict *Dict, content []byte) (uint16, int) {
     return value, offset
 }
 
-// TODO
-func unzip(dict Dict, content []byte) []uint16 {
-    return nil
-}
-
 // zip recebe um dicionario e um conteudo em bytes e percorre
 // todo o conteudo pesquisando cada valor encontrado e inserindo
 // novos valores no caminho
 func zip(dict Dict, content []byte) []uint16 {
-    zipped := make([]uint16, 0, int(math.Ceil(float64(len(content))/2)))
+    zipped := make([]uint16, 0, int(math.Ceil(float64(len(content)) / 2)))
+    i := 0
     
-    for i := 0; i < len(content); i++ {
-        value, offset := parseValue(&dict, content[i:])
-        i += offset - 1
+    for i < len(content) {
+        value, offset := parseValueZip(&dict, content[i:])
         zipped = append(zipped, value)
+        i += offset
     }
 
     return zipped
 }
 
-func writeVecToString(f *os.File, array []uint16) {
-    for _, i := range array {
-        f.WriteString(fmt.Sprintf("%d ", i))
-    }
+// bytesToUint16s converte um array de bytes para um array de 
+// uint16
+func bytesToUint16s(bytes []byte) []uint16 {
+	length := len(bytes) / 2
+	result := make([]uint16, length)
+    j := 0
+
+	for i := 0; i < length; i ++ {
+		result[i] = uint16(bytes[j]) | uint16(bytes[j+1]) << 8
+        j += 2
+	}
+
+	return result
 }
 
 // Zip recebe uma string contendo o caminho do arquivo a ser compactado
 // e o compacta usando o metodo de compressao LZW
 func Zip(path string) error {
-    path = "data/files/database/pokedex.bin"
-
     content, err := os.ReadFile(path)
     if err != nil {
         return err
     }
 
-    dict := initZipDict()
+    zipped := zip(initZipDict(), content)
+    // zipped = compress12bitArray(zipped)
 
-    zipped := zip(dict, content)
-    // zipped := zip(dict, content[:12287])
-    // zipped = []uint16{163, 286, 3102, 4106}
-    fmt.Println(zipped)
-    // f, _ := os.Create("test1.log")
-    // writeVecToString(f, zipped)
-    // f.Close()
-    
-    zipped = compress12bitArray(zipped)
-    // f, _ = os.Create("test2.log")
-    // writeVecToString(f, zipped)
-    // f.Close()
-    
-    unzipped := decompress12bitArray(zipped)
-    fmt.Println(unzipped)
-    // f, _ = os.Create("test3.log")
-    // writeVecToString(f, unzipped)
-    // f.Close()
-    f, _ := os.Create("data/files/database/pokedex.bin")
-    writeFile(f, unzipped)
+    f, _ := os.Create(path + ".lzw")
+    writeFile(f, zipped)
+    f.Close()
+
+    content, err = os.ReadFile(path + ".lzw")
+    unzipped := unzip(initZipDict(), bytesToUint16s(content))
+    // unzipped := decompress12bitArray(zipped)
+
+    f, _ = os.Create(path + ".lzw2")
+    f.Write(unzipped)
     f.Close()
 
     return nil
