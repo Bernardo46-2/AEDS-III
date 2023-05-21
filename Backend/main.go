@@ -59,6 +59,6 @@ func main() {
 			fmt.Printf("err = %+v\n", err)
 		}
 	case "lzw", "2":
-		lzw.Zip("teste.txt")
+		lzw.Zip(os.Args[2])
 	}
 }

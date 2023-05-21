@@ -159,7 +159,7 @@ func save(path string, zip []byte, codeMap map[byte]ByteMap, old []byte) error {
 		return fmt.Errorf("erro do tipo: %+v", err)
 	}
 
-	err = os.WriteFile(path+".zip", buf.Bytes(), 0644) // Escreve os dados codificados em um arquivo
+	err = os.WriteFile(utils.ChangeExtension(path, ".huffman"), buf.Bytes(), 0644) // Escreve os dados codificados em um arquivo
 	if err != nil {
 		return fmt.Errorf("erro do tipo: %+v", err)
 	}
@@ -261,7 +261,7 @@ func getUnzip(data []byte, charMap map[ByteMap]byte, limit uint) []byte {
 }
 
 func Unzip(path string, extension string) error {
-	data, codeMap, size, err := read(path + ".zip")
+	data, codeMap, size, err := read(utils.ChangeExtension(path, ".huffman"))
 	if err != nil {
 		return err
 	}
@@ -269,6 +269,6 @@ func Unzip(path string, extension string) error {
 	charMap := invertMap(codeMap)
 	original := getUnzip(data, charMap, size)
 
-	os.WriteFile(utils.ChangeExtension(path, extension), original, 0644) // Escreve os dados codificados em um arquivo
+	os.WriteFile(utils.ChangeExtension(path, "2"+extension), original, 0644) // Escreve os dados codificados em um arquivo
 	return nil
 }
