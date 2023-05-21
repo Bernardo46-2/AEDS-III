@@ -36,8 +36,9 @@ type ByteMap struct {
 // conteudo zipado da arvore mais o mapa de caracteres de
 // huffman
 type Data struct {
-	Map map[byte]ByteMap
-	Zip []byte
+	Map  map[byte]ByteMap
+	Zip  []byte
+	Size uint
 }
 
 // getCharMap separa uma Mapa com todos os caracteres existentes
@@ -120,11 +121,13 @@ func getZip(input []byte, codeMap map[byte]ByteMap, size int) []byte {
 	bitSize := utils.ByteSize(codeMap[input[0]].Path) * 8
 
 	data := make([]byte, (size/8)+1)
+	tmp := 0
 	needle := 0
 	i := 0
 
 	for _, b := range input {
 		code := codeMap[b]
+		tmp += code.Size
 		for code.Size > 0 {
 			data[i] |= byte(code.Path >> (needle + (bitSize - 8)))
 
@@ -141,20 +144,17 @@ func getZip(input []byte, codeMap map[byte]ByteMap, size int) []byte {
 		}
 	}
 
-	loss := size % 8
-	data = append([]byte{byte(loss)}, data...)
-
 	return data
 }
 
 // save escreve os dados zipados e o mapa de huffman em arquivo de maneira
 // serializada com o padrao Go
-func save(path string, zip []byte, codeMap map[byte]ByteMap) error {
+func save(path string, zip []byte, codeMap map[byte]ByteMap, old []byte) error {
 
-	data := Data{codeMap, zip} // Dados a serem codificados
-	buf := new(bytes.Buffer)   // Cria um buffer para armazenar a codificação
-	enc := gob.NewEncoder(buf) // Cria um novo codificador que irá escrever para o buffer
-	err := enc.Encode(data)    // Codifica os dados
+	data := Data{codeMap, zip, uint(len(old))} // Dados a serem codificados
+	buf := new(bytes.Buffer)                   // Cria um buffer para armazenar a codificação
+	enc := gob.NewEncoder(buf)                 // Cria um novo codificador que irá escrever para o buffer
+	err := enc.Encode(data)                    // Codifica os dados
 	if err != nil {
 		return fmt.Errorf("erro do tipo: %+v", err)
 	}
@@ -179,23 +179,23 @@ func Zip(path string) error {
 		return fmt.Errorf("arquivo vazio")
 	}
 
-	charMap := getCharMap(data)        // cria a lista de caracteres e ocorrencia
-	nodeHeap := getNodeHeap(charMap)   // insere a lista em um Heap
-	tree := getHuffmanTree(nodeHeap)   // constroi a arvore de huffman a partir do heap
-	codeMap := getCodeMap(tree)        // serializa a arvore e gera o mapa de compressao
-	size := getSize(codeMap, charMap)  // calcula o tamanho do arquivo comprimido
-	zip := getZip(data, codeMap, size) // transforma o texto em codigo a partir do mapa
-	status := save(path, zip, codeMap) // sobreescreve com o arquivo zipado
+	charMap := getCharMap(data)              // cria a lista de caracteres e ocorrencia
+	nodeHeap := getNodeHeap(charMap)         // insere a lista em um Heap
+	tree := getHuffmanTree(nodeHeap)         // constroi a arvore de huffman a partir do heap
+	codeMap := getCodeMap(tree)              // serializa a arvore e gera o mapa de compressao
+	size := getSize(codeMap, charMap)        // calcula o tamanho do arquivo comprimido
+	zip := getZip(data, codeMap, size)       // transforma o texto em codigo a partir do mapa
+	status := save(path, zip, codeMap, data) // sobreescreve com o arquivo zipado
 
 	return status
 }
 
-func read(path string) ([]byte, map[byte]ByteMap, error) {
+func read(path string) ([]byte, map[byte]ByteMap, uint, error) {
 	content, err := os.ReadFile(path) // abre o arquivo a ser deszipado
 	if err != nil {
-		return nil, nil, fmt.Errorf("erro do tipo: %+v", err)
+		return nil, nil, 0, fmt.Errorf("erro do tipo: %+v", err)
 	} else if len(content) == 0 {
-		return nil, nil, fmt.Errorf("arquivo vazio")
+		return nil, nil, 0, fmt.Errorf("arquivo vazio")
 	}
 
 	// Cria um novo decodificador
@@ -205,10 +205,10 @@ func read(path string) ([]byte, map[byte]ByteMap, error) {
 	var data Data
 	err = dec.Decode(&data)
 	if err != nil {
-		return nil, nil, fmt.Errorf("erro na decodificação: %v", err)
+		return nil, nil, 0, fmt.Errorf("erro na decodificação: %v", err)
 	}
 
-	return data.Zip, data.Map, nil
+	return data.Zip, data.Map, data.Size, nil
 }
 
 func invertMap(codeMap map[byte]ByteMap) map[ByteMap]byte {
@@ -219,51 +219,56 @@ func invertMap(codeMap map[byte]ByteMap) map[ByteMap]byte {
 	return charMap
 }
 
-func getUnzip(data []byte, charMap map[ByteMap]byte, loss uint) []byte {
-	bitSize := utils.ByteSize(ByteMap{0, 0}.Path) * 8
+func getUnzip(data []byte, charMap map[ByteMap]byte, limit uint) []byte {
+	bitSize := uint(utils.ByteSize(ByteMap{0, 0}.Path) * 8)
 	original := make([]byte, 0)
-	var buffer byte
+	load := uint(0)
+	loadPos := uint(1)
 	needle := uint(0)
 	size := 0
-	i := uint(0)
+	shift := uint(0)
 	passage := false
+	i := uint(0)
 
-	for needle < (uint(len(data))*8 - loss) {
+	for i < limit {
 		if !passage {
-			buffer |= (data[needle/8] & (1 << (7 - (needle % 8)))) << i
+			load |= uint(utils.RotateLeft((data[needle/8]&(1<<(7-(needle%8)))), shift)) << (bitSize - (8 * loadPos))
 		} else {
-			buffer |= (data[needle/8] & (1 << (7 - (needle % 8)))) >> i
+			load |= uint(utils.RotateRight((data[needle/8]&(1<<(7-(needle%8)))), shift)) << (bitSize - (8 * loadPos))
 		}
 		size++
 		needle++
-		if val, ok := charMap[ByteMap{uint(buffer) << (bitSize - 8), size}]; ok {
+		if val, ok := charMap[ByteMap{load, size}]; ok {
 			passage = false
 			original = append(original, val)
-			buffer = 0
 			size = 0
-			i = (needle) % 8
+			shift = (needle) % 8
+			load = 0
+			loadPos = 1
+			i++
+		} else {
+			if size%8 == 0 {
+				loadPos++
+			}
 		}
-		if (needle % 8) == 0 {
+		if ((needle % 8) == 0) && !passage {
 			passage = true
-			i = uint(size)
+			shift = uint(size)
 		}
 	}
-	original = original[:len(original)-1]
 
 	return original
 }
 
-func Unzip(path string) error {
-	data, codeMap, err := read(path)
+func Unzip(path string, extension string) error {
+	data, codeMap, size, err := read(path + ".zip")
 	if err != nil {
 		return err
 	}
 
-	loss := uint(data[0])
-	data = data[1:]
 	charMap := invertMap(codeMap)
-	original := getUnzip(data, charMap, loss)
+	original := getUnzip(data, charMap, size)
 
-	os.WriteFile(path+".he", original, 0644) // Escreve os dados codificados em um arquivo
+	os.WriteFile(utils.ChangeExtension(path, extension), original, 0644) // Escreve os dados codificados em um arquivo
 	return nil
 }

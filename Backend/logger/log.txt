@@ -1170,3 +1170,35 @@ INFO: 2023/05/20 18:08:35 Database Carregada
 INFO: 2023/05/20 18:08:35 Hash Dinamica Criada
 INFO: 2023/05/20 18:08:35 B Tree Criada
 STATUS: 2023/05/20 18:09:45 Servidor desligado
+STATUS: 2023/05/21 07:56:46 Servidor iniciado
+STATUS: 2023/05/21 07:56:49 Servidor desligado
+STATUS: 2023/05/21 09:50:24 Servidor iniciado
+INFO: 2023/05/21 09:50:44 Database Carregada
+INFO: 2023/05/21 09:50:44 Hash Dinamica Criada
+INFO: 2023/05/21 09:50:44 B Tree Criada
+INFO: 2023/05/21 09:51:53 Database Carregada
+INFO: 2023/05/21 09:51:53 Hash Dinamica Criada
+INFO: 2023/05/21 09:51:53 B Tree Criada
+STATUS: 2023/05/21 09:52:16 Servidor desligado
+STATUS: 2023/05/21 10:09:33 Servidor iniciado
+INFO: 2023/05/21 10:09:58 Database Carregada
+INFO: 2023/05/21 10:09:58 Hash Dinamica Criada
+INFO: 2023/05/21 10:09:58 B Tree Criada
+STATUS: 2023/05/21 10:10:38 Servidor desligado
+STATUS: 2023/05/21 10:12:45 Servidor iniciado
+STATUS: 2023/05/21 10:12:47 Servidor desligado
+STATUS: 2023/05/21 10:16:15 Servidor iniciado
+INFO: 2023/05/21 10:16:22 Database Carregada
+INFO: 2023/05/21 10:16:22 Hash Dinamica Criada
+INFO: 2023/05/21 10:16:22 B Tree Criada
+STATUS: 2023/05/21 10:16:27 Servidor desligado
+STATUS: 2023/05/21 10:21:45 Servidor iniciado
+INFO: 2023/05/21 10:21:57 Database Carregada
+INFO: 2023/05/21 10:21:57 Hash Dinamica Criada
+INFO: 2023/05/21 10:21:57 B Tree Criada
+INFO: 2023/05/21 10:27:57 Database Carregada
+INFO: 2023/05/21 10:27:57 Hash Dinamica Criada
+INFO: 2023/05/21 10:27:57 B Tree Criada
+STATUS: 2023/05/21 10:41:25 Servidor desligado
+STATUS: 2023/05/21 10:47:25 Servidor iniciado
+STATUS: 2023/05/21 10:47:26 Servidor desligado
