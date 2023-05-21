@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/Bernardo46-2/AEDS-III/data/compress/huffman"
 	"github.com/Bernardo46-2/AEDS-III/data/compress/lzw"
@@ -48,11 +49,12 @@ func main() {
 	case "server", "0":
 		servidor()
 	case "huffman", "1":
-		err := huffman.Zip("teste.txt")
+		err := huffman.Zip(os.Args[2])
+		extension := filepath.Ext(os.Args[2])
 		if err != nil {
 			fmt.Printf("err = %+v\n", err)
 		}
-		err = huffman.Unzip("teste.txt.zip")
+		err = huffman.Unzip(os.Args[2], extension)
 		if err != nil {
 			fmt.Printf("err = %+v\n", err)
 		}

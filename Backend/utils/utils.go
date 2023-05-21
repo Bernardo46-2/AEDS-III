@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
@@ -258,4 +259,25 @@ func ByteSize(v interface{}) int {
 	}
 
 	return size
+}
+
+func RotateLeft(value uint8, n uint) uint8 {
+	return (value << n) | (value >> (8 - n))
+}
+
+func RotateRight(value byte, n uint) byte {
+	return (value >> n) | (value << (8 - n))
+}
+
+func ChangeExtension(filePath, newExtension string) string {
+	// Obter a extensão atual do arquivo
+	ext := filepath.Ext(filePath)
+
+	// Remover a extensão atual do arquivo
+	fileName := filePath[:len(filePath)-len(ext)]
+
+	// Adicionar a nova extensão ao nome do arquivo
+	newFilePath := fmt.Sprintf("%s%s", fileName, newExtension)
+
+	return newFilePath
 }
