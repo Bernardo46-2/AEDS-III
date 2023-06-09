@@ -9,13 +9,13 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"net/http"
 	"os"
-	"path/filepath"
+	// "path/filepath"
 
-	"github.com/Bernardo46-2/AEDS-III/data/compress/huffman"
-	"github.com/Bernardo46-2/AEDS-III/data/compress/lzw"
+	// "github.com/Bernardo46-2/AEDS-III/data/compress/huffman"
+	// "github.com/Bernardo46-2/AEDS-III/data/compress/lzw"
 	"github.com/Bernardo46-2/AEDS-III/data/patternMatching/rabinKarp"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
