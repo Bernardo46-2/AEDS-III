@@ -31,9 +31,9 @@ O banco de dados suporta as seguintes funcionalidades:
 * Ordenação externa com diferentes métodos
 * Indexação em memoria secundaria com Hash, Arvore B e B+
 * Pesquisa com filtragem, ordenação por relevancia e combinação de pesquisas
+* Compactação de arquivo (atraves de comando do servidor)
 
 ** A ser implementado:
-* Compactação de arquivo
 * Casamento de padroes
 * Criptografia
 
