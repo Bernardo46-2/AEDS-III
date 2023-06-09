@@ -1,0 +1,5 @@
+package patternmatching
+
+func test() {
+
+}
