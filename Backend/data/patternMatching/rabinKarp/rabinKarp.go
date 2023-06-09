@@ -1,4 +1,4 @@
-package patternmatching
+package rabinKarp
 
 import (
     "fmt"
