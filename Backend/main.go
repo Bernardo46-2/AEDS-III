@@ -16,6 +16,7 @@ import (
 
 	"github.com/Bernardo46-2/AEDS-III/data/compress/huffman"
 	"github.com/Bernardo46-2/AEDS-III/data/compress/lzw"
+	"github.com/Bernardo46-2/AEDS-III/data/patternMatching/rabinKarp"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
@@ -48,17 +49,7 @@ func main() {
 	switch os.Args[1] {
 	case "server", "0":
 		servidor()
-	case "huffman", "1":
-		err := huffman.Zip(os.Args[2])
-		extension := filepath.Ext(os.Args[2])
-		if err != nil {
-			fmt.Printf("err = %+v\n", err)
-		}
-		err = huffman.Unzip(os.Args[2], extension)
-		if err != nil {
-			fmt.Printf("err = %+v\n", err)
-		}
-	case "lzw", "2":
-		lzw.Zip(os.Args[2])
-	}
+    case "rabin-karp", "1":
+        rabinKarp.Test()
+    }
 }
