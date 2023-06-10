@@ -50,6 +50,10 @@ const importarDados = document.getElementById('ImportarDados');
 const helpBtn = document.getElementById('Ajuda');
 
 importarDados.onclick = () => {
+    sessionStorage.setItem('patternMatchMethod', JSON.stringify(0));
+    sessionStorage.setItem('actualPage', JSON.stringify(0));
+    sessionStorage.setItem('searchMethod', JSON.stringify(1));
+    sessionStorage.setItem('duracao', JSON.stringify(null));
     fetch('http://localhost:8080/loadDatabase')
         .then(response => response.json())
         .then(data => {
@@ -84,7 +88,7 @@ const indexMethod = {
     2: "Arvore B",
     3: "ArvoreB+",
     4: "ArvoreB*",
-    5: "Indice Invertido",
+    5: "Indice Inv.",
     6: "KMP",
     7: "RabinKarp",
 };
@@ -107,7 +111,10 @@ showAll.onclick = () => {
 
 window.onload = function () {
     showAll.click()
+    sessionStorage.setItem('patternMatchMethod', JSON.stringify(0));
+    sessionStorage.setItem('actualPage', JSON.stringify(0));
     sessionStorage.setItem('searchMethod', JSON.stringify(1));
+    sessionStorage.setItem('duracao', JSON.stringify(null));
 };
 
 function paginarIds(ids) {
@@ -131,33 +138,8 @@ function paginarIds(ids) {
 function recuperarCards(pos) {
     const idList = JSON.parse(sessionStorage.getItem('idList'));
     let searchMethod = JSON.parse(sessionStorage.getItem('searchMethod'));
-    let patternMatchMethod = JSON.parse(sessionStorage.getItem('patternMatchMethod'));
-    if (patternMatchMethod == null) {
-        patternMatchMethod = searchMethod
-    } else {
-        patternMatchMethod = +(patternMatchMethod) + 5
-    }
-    const ids = idList.groups[pos];
-    fetch('http://localhost:8080/getList/?method=' + searchMethod, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(ids)
-    })
-        .then(response => response.json())
-        .then(data => {
-            adicionarCards(data.pokemons);
-            showTime(indexMethod[patternMatchMethod], data.time);
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
-}
 
-function recuperarCardsIds(ids) {
-    const searchMethod = JSON.parse(sessionStorage.getItem('searchMethod'));
+    const ids = idList.groups[pos];
     fetch('http://localhost:8080/getList/?method=' + searchMethod, {
         method: 'POST',
         headers: {
@@ -176,8 +158,42 @@ function recuperarCardsIds(ids) {
         });
 }
 
+function recuperarCardsIds(ids) {
+    const searchMethod = JSON.parse(sessionStorage.getItem('searchMethod'));
+    let patternMatchMethod = JSON.parse(sessionStorage.getItem('patternMatchMethod'));
+    if (patternMatchMethod == null || patternMatchMethod == 0) {
+        patternMatchMethod = searchMethod
+    } else {
+        patternMatchMethod = +(patternMatchMethod) + 5
+    }
+    fetch('http://localhost:8080/getList/?method=' + searchMethod, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ids)
+    })
+        .then(response => response.json())
+        .then(data => {
+            adicionarCards(data.pokemons);
+            showTime(indexMethod[patternMatchMethod], data.time);
+        })
+        .catch(error => {
+            modalAviso();
+            console.log(error)
+        });
+}
+
 function showTime(metodo, tempo) {
-    tempoDeBusca.innerHTML = `Método: <strong>${metodo}</strong><br>Tempo: <strong>${tempo} ms</strong>`;
+    let PMethod = indexMethod[(+JSON.parse(sessionStorage.getItem('patternMatchMethod'))+5).toString()];
+    let duracao = JSON.parse(sessionStorage.getItem('duracao'));
+    if (duracao == null) {
+        duracao = "--";
+    } else {
+        duracao += " ms";
+    }
+
+    tempoDeBusca.innerHTML = `${metodo}: <strong>${tempo} ms</strong><br>${PMethod}: <strong>${duracao}</strong>`;
     miniModal.classList.add("mostrar");
 
     if (!variavelDeControle) {
@@ -681,7 +697,8 @@ search.addEventListener('click', function (event) {
             .then(data => {
                 cardsFatherDiv.style.position = fatherDivPosition;
                 modalContainer2.classList.add('out');
-                paginarIds(data);
+                paginarIds(data.ids);
+                sessionStorage.setItem('duracao', JSON.stringify(data.time));
                 lastClicked = 1;
                 insertDots = true;
                 sessionStorage.setItem('actualPage', JSON.stringify(1));

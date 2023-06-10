@@ -257,13 +257,13 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 	return
 }
 
-func MergeSearch(req SearchRequest) (idList []int64, err error) {
+func MergeSearch(req SearchRequest) (idList []int64, duration int64, err error) {
 	getFieldScDoc := func(field, text string) []invertedIndex.ScoredDocument {
 		switch req.PatternMatch {
 		case "1": // KMP
 			return kmp.SearchPokemon(text, field)
-        case "2": // Rabin Karp
-            return rabinKarp.SearchPokemon(text, field)
+		case "2": // Rabin Karp
+			return rabinKarp.SearchPokemon(text, field)
 		default:
 			return invertedIndex.Read(binManager.FILES_PATH, field, strings.Fields(text)...)
 		}
@@ -289,11 +289,13 @@ func MergeSearch(req SearchRequest) (idList []int64, err error) {
 	req.LancamentoF = utils.FormatDate(req.LancamentoF)
 	req.JapName = utils.ToKatakana(req.JapName)
 
+	start := time.Now()
 	nomeScDoc := getFieldScDoc("nome", req.Nome)
 	especieScDoc := getFieldScDoc("especie", req.Especie)
 	tipoScDoc := getFieldScDoc("tipo", req.Tipo)
 	descricaoScDoc := getFieldScDoc("descricao", req.Descricao)
 	japNameScDoc := getFieldScDoc("nomeJap", req.JapName)
+	duration = time.Since(start).Milliseconds()
 
 	ID := getIdsBPTree(req.IDI, req.IDF, "numero")
 	Geracao := getIdsBPTree(req.GeracaoI, req.GeracaoF, "geracao")

@@ -27,6 +27,11 @@ type retorno struct {
 	Time     int64            `json:"time"`
 }
 
+type retornoIndexacao struct {
+	Pokemons []int64 `json:"ids"`
+	Time     int64   `json:"time"`
+}
+
 // GetPagesNumber retorna a quantidade de paginas disponiveis
 func GetPagesNumber(w http.ResponseWriter, r *http.Request) {
 	// Recuperar ID e ler arquivo
@@ -214,7 +219,7 @@ func MergeSearch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Pesquisa os valores no indice
-	idList, err := service.MergeSearch(req)
+	idList, duration, err := service.MergeSearch(req)
 
 	// Resposta
 	if err != nil {
@@ -226,7 +231,7 @@ func MergeSearch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJson(w, idList)
+	writeJson(w, retornoIndexacao{idList, duration})
 }
 
 // writeError recebe um erro de http responde e um id de erro interno,

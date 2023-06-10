@@ -125,7 +125,7 @@
 
 .drag-button {
     position: absolute;
-    top: 0;
+    top: 0px;
     left: 10px;
     height: 100%;
     cursor: ew-resize;
