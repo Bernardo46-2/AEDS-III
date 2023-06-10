@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
 )
 
 const (
@@ -19,13 +20,8 @@ func SearchNext(haystack string, needle string) int {
 	return -1
 }
 
-func SearchString(haystack string, needle string) int {
-	retSlice := kmp(strings.ToLower(haystack), strings.ToLower(needle))
-	if len(retSlice) > 0 {
-		return retSlice[0]
-	}
-
-	return -1
+func SearchString(haystack string, needle string) []int {
+	return kmp(strings.ToLower(haystack), strings.ToLower(needle))
 }
 
 func kmp(haystack string, needle string) []int {
@@ -92,18 +88,18 @@ func preKMP(x string) [PatternSize]int {
 	return kmpNext
 }
 
-func SearchPokemon(search string, field string) []int64 {
+func SearchPokemon(search string, field string) (scoredDocuments []invertedIndex.ScoredDocument) {
 	controller, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
-	target := []int64{}
+	scoredDocuments = make([]invertedIndex.ScoredDocument, 0)
 
 	for err := controller.ReadNext(); err == nil; err = controller.ReadNext() {
 		if !controller.RegistroAtual.IsDead() {
 			needle := SearchString(controller.RegistroAtual.Pokemon.GetField(field), search)
-			if needle != -1 {
-				target = append(target, int64(controller.RegistroAtual.Pokemon.Numero))
+			if len(needle) > 0 {
+				scoredDocuments = append(scoredDocuments, invertedIndex.ScoredDocument{DocumentID: int64(controller.RegistroAtual.Pokemon.Numero), Score: len(needle)})
 			}
 		}
 	}
 
-	return target
+	return scoredDocuments
 }

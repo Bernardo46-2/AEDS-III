@@ -85,6 +85,8 @@ const indexMethod = {
     3: "ArvoreB+",
     4: "ArvoreB*",
     5: "Indice Invertido",
+    6: "KMP",
+    7: "RabinKarp",
 };
 
 showAll.onclick = () => {
@@ -128,7 +130,13 @@ function paginarIds(ids) {
 
 function recuperarCards(pos) {
     const idList = JSON.parse(sessionStorage.getItem('idList'));
-    const searchMethod = JSON.parse(sessionStorage.getItem('searchMethod'));
+    let searchMethod = JSON.parse(sessionStorage.getItem('searchMethod'));
+    let patternMatchMethod = JSON.parse(sessionStorage.getItem('patternMatchMethod'));
+    if (patternMatchMethod == null) {
+        patternMatchMethod = searchMethod
+    } else {
+        patternMatchMethod = +(patternMatchMethod) + 5
+    }
     const ids = idList.groups[pos];
     fetch('http://localhost:8080/getList/?method=' + searchMethod, {
         method: 'POST',
@@ -140,7 +148,7 @@ function recuperarCards(pos) {
         .then(response => response.json())
         .then(data => {
             adicionarCards(data.pokemons);
-            showTime(indexMethod[searchMethod], data.time);
+            showTime(indexMethod[patternMatchMethod], data.time);
         })
         .catch(error => {
             modalAviso();
@@ -632,6 +640,11 @@ search.addEventListener('click', function (event) {
         geracaoF = (geracaoF.length == 0)?geracaoI:geracaoF;
         LancamentoF = (LancamentoF.length == 0)?LancamentoI:LancamentoF;
 
+        let patternMatch = sessionStorage.getItem("patternMatchMethod");
+        if (patternMatch == null) {
+            patternMatch = "0";
+        }
+
         fetch('http://localhost:8080/mergeSearch/', {
             method: 'POST',
             headers: {
@@ -661,6 +674,7 @@ search.addEventListener('click', function (event) {
                 LancamentoF: LancamentoF,
                 Lendario: lendario,
                 Mitico: mitico,
+                patternMatch: patternMatch,
             })
         })
             .then(response => response.json())

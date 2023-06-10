@@ -1207,3 +1207,14 @@ INFO: 2023/06/10 16:58:23 Database Carregada
 INFO: 2023/06/10 16:58:23 Hash Dinamica Criada
 INFO: 2023/06/10 16:58:23 B Tree Criada
 INFO: 2023/06/10 17:16:58 Database Ordenada com sucesso!
+STATUS: 2023/06/10 17:51:38 Servidor desligado
+STATUS: 2023/06/10 17:51:41 Servidor iniciado
+INFO: 2023/06/10 17:51:54 Database Carregada
+INFO: 2023/06/10 17:51:54 Hash Dinamica Criada
+INFO: 2023/06/10 17:51:54 B Tree Criada
+STATUS: 2023/06/10 17:52:42 Servidor desligado
+STATUS: 2023/06/10 17:52:54 Servidor iniciado
+STATUS: 2023/06/10 17:53:44 Servidor desligado
+STATUS: 2023/06/10 17:54:54 Servidor iniciado
+STATUS: 2023/06/10 18:06:03 Servidor desligado
+STATUS: 2023/06/10 18:06:06 Servidor iniciado

@@ -254,6 +254,7 @@ symbol {
 .index-button-principal,
 .casamento-button-principal {
     vertical-align: top;
+    white-space: nowrap;
 }
 
 .ordenar-buttons,

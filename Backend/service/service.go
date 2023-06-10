@@ -16,6 +16,7 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
+	"github.com/Bernardo46-2/AEDS-III/data/patternMatching/kmp"
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
@@ -23,29 +24,30 @@ import (
 const BTREE_ORDER = 8
 
 type SearchRequest struct {
-	Nome        string `json:"nome"`
-	JapName     string `json:"japName"`
-	Especie     string `json:"especie"`
-	Tipo        string `json:"tipo"`
-	Descricao   string `json:"descricao"`
-	IDI         string `json:"idI"`
-	IDF         string `json:"idF"`
-	GeracaoI    string `json:"geracaoI"`
-	GeracaoF    string `json:"geracaoF"`
-	LancamentoI string `json:"lancamentoI"`
-	LancamentoF string `json:"lancamentoF"`
-	AtkI        string `json:"atkI"`
-	AtkF        string `json:"atkF"`
-	DefI        string `json:"defI"`
-	DefF        string `json:"defF"`
-	HpI         string `json:"hpI"`
-	HpF         string `json:"hpF"`
-	AlturaI     string `json:"alturaI"`
-	AlturaF     string `json:"alturaF"`
-	PesoI       string `json:"pesoI"`
-	PesoF       string `json:"pesoF"`
-	Lendario    string `json:"lendario"`
-	Mitico      string `json:"mitico"`
+	Nome         string `json:"nome"`
+	JapName      string `json:"japName"`
+	Especie      string `json:"especie"`
+	Tipo         string `json:"tipo"`
+	Descricao    string `json:"descricao"`
+	IDI          string `json:"idI"`
+	IDF          string `json:"idF"`
+	GeracaoI     string `json:"geracaoI"`
+	GeracaoF     string `json:"geracaoF"`
+	LancamentoI  string `json:"lancamentoI"`
+	LancamentoF  string `json:"lancamentoF"`
+	AtkI         string `json:"atkI"`
+	AtkF         string `json:"atkF"`
+	DefI         string `json:"defI"`
+	DefF         string `json:"defF"`
+	HpI          string `json:"hpI"`
+	HpF          string `json:"hpF"`
+	AlturaI      string `json:"alturaI"`
+	AlturaF      string `json:"alturaF"`
+	PesoI        string `json:"pesoI"`
+	PesoF        string `json:"pesoF"`
+	Lendario     string `json:"lendario"`
+	Mitico       string `json:"mitico"`
+	PatternMatch string `json:"patternMatch"`
 }
 
 // ReadPagesNumber retorna o numero de paginas disponiveis para a
@@ -256,7 +258,12 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 
 func MergeSearch(req SearchRequest) (idList []int64, err error) {
 	getFieldScDoc := func(field, text string) []invertedIndex.ScoredDocument {
-		return invertedIndex.Read(binManager.FILES_PATH, field, strings.Fields(text)...)
+		switch req.PatternMatch {
+		case "1": // kmp
+			return kmp.SearchPokemon(text, field)
+		default:
+			return invertedIndex.Read(binManager.FILES_PATH, field, strings.Fields(text)...)
+		}
 	}
 
 	getIdsBPTree := func(start string, end string, field string) []invertedIndex.ScoredDocument {
