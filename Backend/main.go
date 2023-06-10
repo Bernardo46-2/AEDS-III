@@ -9,6 +9,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 
@@ -17,6 +18,7 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
+	"github.com/Bernardo46-2/AEDS-III/service"
 )
 
 func servidor() {
@@ -49,7 +51,10 @@ func main() {
 	case "rabin-karp", "1":
 		rabinKarp.Test()
 	case "kmp", "2":
-		kmp.Principal()
+		idList := kmp.SearchPokemon("oma", "nome")
+		pokeList, _, _ := service.GetList(idList, 1)
+		for i, p := range pokeList {
+			fmt.Printf("[%d] %s\n", i, p.Nome)
+		}
 	}
-
 }

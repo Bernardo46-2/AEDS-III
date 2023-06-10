@@ -1,14 +1,16 @@
 package kmp
 
 import (
-	"fmt"
+	"strings"
+
+	"github.com/Bernardo46-2/AEDS-III/data/binManager"
 )
 
 const (
 	PatternSize int = 100
 )
 
-func searchNext(haystack string, needle string) int {
+func SearchNext(haystack string, needle string) int {
 	retSlice := kmp(haystack, needle)
 	if len(retSlice) > 0 {
 		return retSlice[len(retSlice)-1]
@@ -17,8 +19,8 @@ func searchNext(haystack string, needle string) int {
 	return -1
 }
 
-func searchString(haystack string, needle string) int {
-	retSlice := kmp(haystack, needle)
+func SearchString(haystack string, needle string) int {
+	retSlice := kmp(strings.ToLower(haystack), strings.ToLower(needle))
 	if len(retSlice) > 0 {
 		return retSlice[0]
 	}
@@ -65,25 +67,6 @@ func kmp(haystack string, needle string) []int {
 	return ret
 }
 
-/* func preMP(x string) [PatternSize]int {
-	var i, j int
-	length := len(x) - 1
-	var mpNext [PatternSize]int
-	i = 0
-	j = -1
-	mpNext[0] = -1
-
-	for i < length {
-		for j > -1 && x[i] != x[j] {
-			j = mpNext[j]
-		}
-		i++
-		j++
-		mpNext[i] = j
-	}
-	return mpNext
-} */
-
 func preKMP(x string) [PatternSize]int {
 	var i, j int
 	length := len(x) - 1
@@ -109,16 +92,18 @@ func preKMP(x string) [PatternSize]int {
 	return kmpNext
 }
 
-func Principal() {
-	fmt.Println("Search First Position String:")
-	fmt.Println(searchString("cocacola", "co"))
-	fmt.Println(searchString("Australia", "lia"))
-	fmt.Println(searchString("cocacola", "cx"))
-	fmt.Println(searchString("AABAACAADAABAABA", "AABA"))
+func SearchPokemon(search string, field string) []int64 {
+	controller, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+	target := []int64{}
 
-	fmt.Println("\nSearch Last Position String:")
-	fmt.Println(searchNext("cocacola", "co"))
-	fmt.Println(searchNext("Australia", "lia"))
-	fmt.Println(searchNext("cocacola", "cx"))
-	fmt.Println(searchNext("AABAACAADAABAABAAABAACAADAABAABA", "AABA"))
+	for err := controller.ReadNext(); err == nil; err = controller.ReadNext() {
+		if !controller.RegistroAtual.IsDead() {
+			needle := SearchString(controller.RegistroAtual.Pokemon.GetField(field), search)
+			if needle != -1 {
+				target = append(target, int64(controller.RegistroAtual.Pokemon.Numero))
+			}
+		}
+	}
+
+	return target
 }
