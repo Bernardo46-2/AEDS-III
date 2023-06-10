@@ -880,6 +880,83 @@ indexChoice.forEach(element => {
         sessionStorage.setItem('searchMethod', JSON.stringify(lastDigit));
     }
 });
+
+/* ------------------------- ESCOLHA DE CASAMENTO DE PADRAO ------------------------- */
+
+const casamento = document.querySelector('#Casamento');
+const casamentoDropdown = document.querySelector('#casamentoDropdown');
+const casamentoButtons = document.querySelectorAll('.casamento-buttons');
+const casamentoChoice = document.querySelectorAll('#Casamento0, #Casamento1, #Casamento2');
+const casamentoTransition = casamento.style.transition;
+const casamentoVar3 = casamento.style.paddingTop;
+let casamentoAberto = false;
+
+casamento.addEventListener('click', function (event) {
+    if (event.target === casamento && !casamentoAberto) {
+        casamento.style.transition = "all 0.4s ease-in-out";
+        casamentoDropdown.style.transition = "all 0.4s ease-in-out";
+        casamentoDropdown.style.height = "225px";
+        casamentoDropdown.style.marginBottom = "15px";
+        casamento.style.height = "225px";
+        casamento.style.paddingTop = "15px";
+        casamentoAberto = true;
+        window.setTimeout(() => {
+            casamentoButtons[0].style.pointerEvents = 'auto';
+            casamentoButtons[0].style.opacity = "1";
+        }, 100);
+        window.setTimeout(() => {
+            casamentoButtons[1].style.pointerEvents = 'auto';
+            casamentoButtons[1].style.opacity = "1";
+        }, 200);
+        window.setTimeout(() => {
+            casamentoButtons[2].style.pointerEvents = 'auto';
+            casamentoButtons[2].style.opacity = "1";
+        }, 300);
+    } else if (event.target === casamento) {
+        setTimeout(() => {
+            casamentoDropdown.style.height = 60 + "px";
+            casamentoDropdown.style.marginBottom = "0px";
+            casamento.style.height = 45 + "px";
+
+            casamento.style.paddingTop = casamentoVar3;
+            casamentoButtons.forEach(element => {
+                element.style.pointerEvents = 'none';
+                element.style.opacity = "0";
+            });
+            casamentoAberto = false;
+            setTimeout(() => {
+                casamento.style.transition = casamentoTransition;
+            }, 500);
+        }, 200);
+        window.setTimeout(() => {
+            casamentoButtons[2].style.pointerEvents = 'auto';
+            casamentoButtons[2].style.opacity = "0";
+        }, 0);
+        window.setTimeout(() => {
+            casamentoButtons[1].style.pointerEvents = 'auto';
+            casamentoButtons[1].style.opacity = "0";
+        }, 100);
+        window.setTimeout(() => {
+            casamentoButtons[0].style.pointerEvents = 'auto';
+            casamentoButtons[0].style.opacity = "0";
+        }, 200);
+    }
+})
+
+casamentoButtons.forEach(element => {
+    element.style.transition = "all 0.3s ease-in-out";
+    element.addEventListener('click', function (event) {
+        casamento.click();
+    });
+});
+
+casamentoChoice.forEach(element => {
+    element.onclick = () => {
+        const choice = element.id;
+        const lastDigit = parseInt(choice.slice(-1));
+        sessionStorage.setItem('patternMatchMethod', JSON.stringify(lastDigit));
+    }
+});
 /* ------------------------------------- MODAIS ------------------------------------- */
 
 const modalClose = document.querySelector('#close');

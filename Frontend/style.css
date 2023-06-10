@@ -25,6 +25,7 @@
     --vaporeon2: #9ed8ff;
     --flareon: #ff1f1f;
     --dragonair: #7038f8;
+    --dragonair2: #a782ff;
     --zapdos: #ffd54f;
     --meowth: #f1b61c;
     --minum: #e6d571;
@@ -228,13 +229,15 @@ input[type=number] {
 }
 
 #ordenarDropdown,
-#indexDropdown {
+#indexDropdown,
+#casamentoDropdown {
     position: relative;
     height: 60px;
 }
 
 #Ordenar,
-#Index {
+#Index,
+#Casamento {
     position: absolute;
     align-items: baseline;
     justify-content: center;
@@ -248,12 +251,14 @@ symbol {
 }
 
 .ordenar-button-principal,
-.index-button-principal {
+.index-button-principal,
+.casamento-button-principal {
     vertical-align: top;
 }
 
 .ordenar-buttons,
-.index-buttons {
+.index-buttons,
+.casamento-buttons {
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.4s ease-in-out;
@@ -1585,6 +1590,20 @@ body::-webkit-scrollbar {
     transition-duration: 0.8s;
 }
 
+.btn-Dragonair {
+    color: var(--dragonair) !important;
+    border: 1px solid var(--dragonair-transparent) !important;
+}
+
+.btn-Dragonair:hover,
+.btn-Dragonair:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--dragonair) !important;
+    box-shadow: 0 0 10px var(--dragonair-transparent),
+        0 0 40px var(--dragonair-transparent), 0 0 80px var(--dragonair-transparent);
+    transition-duration: 0.8s;
+}
+
 .btn-Jigglypuff {
     color: var(--jigglypuff) !important;
     border: 1px solid var(--jigglypuff-transparent) !important;
@@ -1758,6 +1777,20 @@ body::-webkit-scrollbar {
     background-color: var(--gengar2) !important;
     box-shadow: 0 0 10px var(--gengar-transparent),
         0 0 40px var(--gengar-transparent), 0 0 80px var(--gengar-transparent);
+    transition-duration: 0.4s;
+}
+
+.btn-Dragonair2 {
+    color: var(--dragonair) !important;
+    border: 1px solid var(--dragonair-transparent) !important;
+}
+
+.btn-Dragonair2:hover,
+.btn-Dragonair2:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--dragonair2) !important;
+    box-shadow: 0 0 10px var(--dragonair-transparent),
+        0 0 40px var(--dragonair-transparent), 0 0 80px var(--dragonair-transparent);
     transition-duration: 0.4s;
 }
 

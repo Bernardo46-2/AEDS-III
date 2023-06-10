@@ -1202,3 +1202,8 @@ INFO: 2023/05/21 10:27:57 B Tree Criada
 STATUS: 2023/05/21 10:41:25 Servidor desligado
 STATUS: 2023/05/21 10:47:25 Servidor iniciado
 STATUS: 2023/05/21 10:47:26 Servidor desligado
+STATUS: 2023/06/10 16:58:12 Servidor iniciado
+INFO: 2023/06/10 16:58:23 Database Carregada
+INFO: 2023/06/10 16:58:23 Hash Dinamica Criada
+INFO: 2023/06/10 16:58:23 B Tree Criada
+INFO: 2023/06/10 17:16:58 Database Ordenada com sucesso!
