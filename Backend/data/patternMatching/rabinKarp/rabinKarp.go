@@ -11,7 +11,6 @@ const (
 
     // Número primo usado na hash para garantir que os valores 
     // não ficarão grandes demais
-    // Q int = 1_000_000_007
     Q int = 997
 )
 
