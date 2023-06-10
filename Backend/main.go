@@ -9,13 +9,10 @@
 package main
 
 import (
-	// "fmt"
 	"net/http"
 	"os"
-	// "path/filepath"
 
-	// "github.com/Bernardo46-2/AEDS-III/data/compress/huffman"
-	// "github.com/Bernardo46-2/AEDS-III/data/compress/lzw"
+	"github.com/Bernardo46-2/AEDS-III/data/patternMatching/kmp"
 	"github.com/Bernardo46-2/AEDS-III/data/patternMatching/rabinKarp"
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
@@ -49,7 +46,10 @@ func main() {
 	switch os.Args[1] {
 	case "server", "0":
 		servidor()
-    case "rabin-karp", "1":
-        rabinKarp.Test()
-    }
+	case "rabin-karp", "1":
+		rabinKarp.Test()
+	case "kmp", "2":
+		kmp.Principal()
+	}
+
 }

@@ -1,13 +1,13 @@
 package rabinKarp
 
 import (
-    "fmt"
+	"fmt"
 )
 
 func Test() {
-    text := "abcasddef"
-    pattern := "asd"
+	text := "abcasddef"
+	pattern := "asd"
 
-    fmt.Println(text)
-    fmt.Println(pattern)
+	fmt.Println(text)
+	fmt.Println(pattern)
 }
