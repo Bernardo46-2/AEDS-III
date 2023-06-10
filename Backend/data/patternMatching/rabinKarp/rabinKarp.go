@@ -1,8 +1,11 @@
 package rabinKarp
 
 import (
-	"fmt"
 	"math"
+	"strings"
+
+	"github.com/Bernardo46-2/AEDS-III/data/binManager"
+	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
 )
 
 const (
@@ -24,6 +27,9 @@ func hash(str string) (h int) {
 }
 
 func RabinKarp(pattern string, text string) (indexes []int) {
+    pattern = strings.ToLower(pattern)
+    text = strings.ToLower(text)
+
 	pl := len(pattern) // Tamanho do padrão
 	tl := len(text)    // Tamanho do texto
 
@@ -71,9 +77,18 @@ func RabinKarp(pattern string, text string) (indexes []int) {
 	return
 }
 
-func Test() {
-	pattern := "aaba"
-	text := "aabaabbaabaaba"
-	is := RabinKarp(pattern, text)
-	fmt.Println(is)
+func SearchPokemon(search string, field string) (scoredDocuments []invertedIndex.ScoredDocument) {
+	controller, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+	scoredDocuments = make([]invertedIndex.ScoredDocument, 0)
+
+	for err := controller.ReadNext(); err == nil; err = controller.ReadNext() {
+		if !controller.RegistroAtual.IsDead() {
+			needle := RabinKarp(search, controller.RegistroAtual.Pokemon.GetField(field))
+			if len(needle) > 0 {
+				scoredDocuments = append(scoredDocuments, invertedIndex.ScoredDocument{DocumentID: int64(controller.RegistroAtual.Pokemon.Numero), Score: len(needle)})
+			}
+		}
+	}
+
+	return scoredDocuments
 }

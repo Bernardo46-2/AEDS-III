@@ -10,9 +10,7 @@ package main
 
 import (
 	"net/http"
-	"os"
-
-	"github.com/Bernardo46-2/AEDS-III/data/patternMatching/rabinKarp"
+    
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
@@ -42,10 +40,5 @@ func servidor() {
 }
 
 func main() {
-	switch os.Args[1] {
-	case "server", "0":
-		servidor()
-	case "rabin-karp", "1":
-		rabinKarp.Test()
-	}
+	servidor()
 }

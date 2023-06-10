@@ -17,6 +17,7 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
 	"github.com/Bernardo46-2/AEDS-III/data/patternMatching/kmp"
+	"github.com/Bernardo46-2/AEDS-III/data/patternMatching/rabinKarp"
 	"github.com/Bernardo46-2/AEDS-III/models"
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
@@ -259,8 +260,10 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 func MergeSearch(req SearchRequest) (idList []int64, err error) {
 	getFieldScDoc := func(field, text string) []invertedIndex.ScoredDocument {
 		switch req.PatternMatch {
-		case "1": // kmp
+		case "1": // KMP
 			return kmp.SearchPokemon(text, field)
+        case "2": // Rabin Karp
+            return rabinKarp.SearchPokemon(text, field)
 		default:
 			return invertedIndex.Read(binManager.FILES_PATH, field, strings.Fields(text)...)
 		}
