@@ -22,8 +22,6 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-const BTREE_ORDER = 8
-
 type SearchRequest struct {
 	Nome         string `json:"nome"`
 	JapName      string `json:"japName"`
