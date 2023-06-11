@@ -13,18 +13,6 @@ const (
 )
 
 // SearchNext busca a última ocorrência da string de busca (needle) na string de destino (haystack).
-//
-// Parâmetros:
-//
-//	haystack: A string de destino onde a busca será realizada.
-//	needle: A string de busca que será procurada na string de destino.
-//
-// Retorno:
-//
-//	A posição da última ocorrência da string de busca na string de destino. Retorna -1 se a string de busca não for encontrada.
-//
-// A função utiliza o algoritmo KMP para realizar a busca. Se a string de busca for encontrada, retorna a posição da última ocorrência.
-// Se não for encontrada, retorna -1.
 func SearchNext(haystack string, needle string) int {
 	retSlice := kmp(haystack, needle)
 	if len(retSlice) > 0 {
@@ -34,42 +22,34 @@ func SearchNext(haystack string, needle string) int {
 	return -1
 }
 
-// SearchString realiza a busca da string de busca (needle) na string de destino (haystack), ignorando a diferença entre letras maiúsculas e minúsculas.
-//
-// Parâmetros:
-//
-//	haystack: A string de destino onde a busca será realizada.
-//	needle: A string de busca que será procurada na string de destino.
-//
-// Retorno:
-//
-//	Um slice de inteiros contendo as posições de todas as ocorrências da string de busca na string de destino. Retorna um slice vazio se a string de busca não for encontrada.
-//
-// A função utiliza o algoritmo KMP para realizar a busca. Ambas as strings de busca e de destino são convertidas para letras minúsculas antes da busca, para garantir que a busca seja insensível a maiúsculas e minúsculas.
+// SearchString realiza a busca da string de busca (needle) na string de destino (haystack),
+// ignorando a diferença entre letras maiúsculas e minúsculas.
 func SearchString(haystack string, needle string) []int {
 	return kmp(strings.ToLower(haystack), strings.ToLower(needle))
 }
 
 // kmp realiza a busca do algoritmo Knuth-Morris-Pratt (KMP).
 //
-// Parâmetros:
-//
-//	haystack: A string principal onde a busca será realizada.
-//	needle: A string de busca.
-//
-// Retorno:
-//
-//	Um slice de inteiros que contém todas as posições iniciais na string haystack onde a string needle é encontrada.
-//
 // A função primeiro cria a tabela de prefixos para a string needle.
 // Em seguida, passa pelos caracteres da string haystack.
-// Se um caractere na posição atual na string haystack é igual ao caractere na posição atual na string needle,
+// Se um caractere na posição atual na string haystack é igual ao
+// caractere na posição atual na string needle,
 // avança na string haystack e needle.
 //
-// Se os caracteres não são iguais, move a posição atual na string needle para a próxima posição na tabela de prefixos que foi criada anteriormente.
-// Se encontrou uma correspondência para a string needle na string haystack, armazena a posição inicial na string haystack na lista de resultados e
-// move a posição atual na string needle para a próxima posição na tabela de prefixos.
+// Se os caracteres não são iguais, move a posição atual na string needle
+// para a próxima posição na tabela de prefixos que foi criada anteriormente.
+// Se encontrou uma correspondência para a string needle na string haystack,
+// armazena a posição inicial na string haystack na lista de resultados e move a
+// posição atual na string needle para a próxima posição na tabela de prefixos.
+//
+// Exemplo:
+//
+//	haystack: "ABABDABACDABABCABABABABDABACDABABCABAB"
+//	needle: "ABABCABAB"
+//
+//	Saída: [10, 24]
 func kmp(haystack string, needle string) []int {
+	// Criação da maquina de estados com os prefixos
 	next := preKMP(needle)
 	i := 0
 	j := 0
@@ -92,14 +72,16 @@ func kmp(haystack string, needle string) []int {
 
 	// Percorre os caracteres na string haystack
 	for j < n {
-		// Se o caractere atual na haystack não for igual ao da needle, atualiza i para o próximo valor na tabela de prefixos
+		// Se o caractere atual na haystack não for igual ao da needle,
+		// atualiza i para o próximo valor na tabela de prefixos
 		for i > -1 && x[i] != y[j] {
 			i = next[i]
 		}
 		i++
 		j++
 
-		// Se i é maior ou igual ao comprimento da needle, encontramos uma correspondência e a adicionamos ao slice de retorno
+		// Se i é maior ou igual ao comprimento da needle, encontramos
+		// uma correspondência e a adicionamos ao slice de retorno
 		if i >= m {
 			ret = append(ret, j-i)
 			i = next[i]
@@ -112,15 +94,6 @@ func kmp(haystack string, needle string) []int {
 // preKMP realiza o pré-processamento da string de busca e retorna um array que contém
 // a maior borda própria de cada prefixo da string de busca. Esta tabela será usada
 // pelo algoritmo KMP para pular as comparações de caracteres que já foram comparados.
-//
-// Parâmetros:
-//
-//	x: A string de busca.
-//
-// Retorno:
-//
-//	Um array de tamanho PatternSize que contém a maior borda própria de cada prefixo
-//	da string de busca.
 //
 // A função inicializa i e j com 0 e -1 respectivamente e define o primeiro valor de
 // kmpNext como -1. A variável i é o índice para percorrer os caracteres na string de busca,
