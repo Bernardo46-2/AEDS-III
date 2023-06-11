@@ -18,7 +18,7 @@ Além disso, o projeto foi feito com o modelo de uma API para comunicação entr
 ![PokeCard](/Outros/Dados.png)
 #### Tela de pesquisa
 ![Resposta do servidor](/Outros/Pesquisa.png)
-#### Escolha de Indexação e tempo de pesquisa
+#### Escolha de Indexação, pattern matching e tempo de pesquisa
 ![Resposta do servidor](/Outros/Indexação.png)
 #### Tela de respostas do servidor
 ![Resposta do servidor](/Outros/Carregamento.png)
@@ -31,10 +31,10 @@ O banco de dados suporta as seguintes funcionalidades:
 * Ordenação externa com diferentes métodos
 * Indexação em memoria secundaria com Hash, Arvore B e B+
 * Pesquisa com filtragem, ordenação por relevancia e combinação de pesquisas
+* Casamento de padroes para pesquisa personalizada
 * Compactação de arquivo (atraves de comando do servidor)
 
 ** A ser implementado:
-* Casamento de padroes
 * Criptografia
 
 ## Tecnologias utilizadas
