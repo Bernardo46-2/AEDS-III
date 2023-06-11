@@ -83,7 +83,7 @@ let lastClicked = 1;
 
 
 const indexMethod = {
-    0: "Sequencial",
+    0: "Linear",
     1: "Hashing",
     2: "Arvore B",
     3: "ArvoreB+",

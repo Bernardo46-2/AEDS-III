@@ -1268,3 +1268,10 @@ INFO: 2023/06/10 20:38:06 B Tree Criada
 INFO: 2023/06/10 20:38:27 Database Carregada
 INFO: 2023/06/10 20:38:27 Hash Dinamica Criada
 INFO: 2023/06/10 20:38:27 B Tree Criada
+INFO: 2023/06/10 20:40:24 Database Carregada
+INFO: 2023/06/10 20:40:24 Hash Dinamica Criada
+INFO: 2023/06/10 20:40:24 B Tree Criada
+INFO: 2023/06/10 20:41:00 Database Ordenada com sucesso!
+INFO: 2023/06/10 21:02:19 Database Carregada
+INFO: 2023/06/10 21:02:19 Hash Dinamica Criada
+INFO: 2023/06/10 21:02:19 B Tree Criada
