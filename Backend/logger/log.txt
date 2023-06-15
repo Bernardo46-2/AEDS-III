@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 INFO: 2023/04/04 21:15:28 Database Carregada
 INFO: 2023/04/04 21:15:28 Hash Dinamica Criada
 STATUS: 2023/04/04 21:15:32 Servidor desligado
@@ -1283,3 +1284,5 @@ INFO: 2023/06/10 21:57:05 Database Carregada
 INFO: 2023/06/10 21:57:05 Hash Dinamica Criada
 INFO: 2023/06/10 21:57:05 B Tree Criada
 STATUS: 2023/06/10 21:58:29 Servidor desligado
+=======
+>>>>>>> refs/remotes/origin/main

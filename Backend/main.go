@@ -2,7 +2,8 @@
 // Data de criação: 15/03/2023
 //
 // Programa para gerenciar uma base de dados de Pokemons,
-// com suporte a operações crud e diferentes métodos de ordenação externa.
+// com suporte a operações crud, diferentes métodos de ordenação externa,
+// sistemas de indexação, pattern matching, compressao e criptografia.
 // Seu funcionamento é feito atraves de uma comunicação JSON com um frontend
 // O servidor HTTP é inicializado na porta 8080.
 
@@ -10,7 +11,7 @@ package main
 
 import (
 	"net/http"
-    
+
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
