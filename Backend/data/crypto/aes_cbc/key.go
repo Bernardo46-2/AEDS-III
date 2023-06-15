@@ -4,6 +4,9 @@ import (
     "errors"
 )
 
+// Key é um struct que contém informações úteis sobrea a chave de
+// criptografia aes, assim como a chave em si junto com sua versão
+// expandida
 type Key struct {
     Key []byte
     Expanded []byte
@@ -11,6 +14,9 @@ type Key struct {
     SizeBytes int
 }
 
+// NewKey inicializa uma chave com um array de bytes preenchido
+// aleatóriamente com o tamanho especificado em bits, podendo ser
+// 128, 192 ou 256 bits (16, 24 e 32 bytes, respectivamente)
 func NewKey(sizeBits int) (key Key, err error) {
     if sizeBits != 128 && sizeBits != 192 && sizeBits != 256 {
         err = errors.New("Invalid key size")
@@ -35,6 +41,9 @@ func NewKey(sizeBits int) (key Key, err error) {
     return
 }
 
+// NewKeyFrom inicializa uma chave a partir de um array de bytes
+// recebido por parâmetro. O tamanho do array será usado como tamanho
+// da chave, podendo ser 32, 24 ou 32 bytes (128, 192 e 256 bits, respectivamente)
 func NewKeyFrom(k []byte) (key Key, err error) {
     sizeBytes := len(k)
     sizeBits := sizeBytes * 8
@@ -56,6 +65,12 @@ func NewKeyFrom(k []byte) (key Key, err error) {
     return
 }
 
+// expand faz a expansão da chave do aes, gerando mais blocos,
+// chamados de round keys, para serem usados na criptografia.
+// O número de round keys depende do tamanho da chave provida,
+// sendo que a chave resultante sempre vai começar com os
+// mesmos bytes da chave original, apenas então sucedidos pelos
+// novos bytes gerados pela função
 func expand(key []byte) (keySchedule []byte) {
     keyLen := len(key)
     var nr, nk int
