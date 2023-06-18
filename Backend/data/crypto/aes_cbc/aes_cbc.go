@@ -1,7 +1,5 @@
 package aescbc
 
-import "os"
-
 // BLOCK_SIZE armazena o tamanho de cada bloco
 // de bytes usado no processo de aes
 const BLOCK_SIZE int = 16
@@ -272,16 +270,4 @@ func Decrypt(k Key, data []byte) (decryptedText []byte) {
     
     decryptedText = removePadding(decryptedText)
     return
-}
-
-func main() {
-    key, _ := NewKey(128)
-    iv, _ := randBytes(BLOCK_SIZE)
-    file, _ := os.ReadFile("pokedex.csv")
-    
-    encrypted := Encrypt(key, iv, file)
-    os.WriteFile("encrypted.txt", encrypted, 0644)
-    
-    decrypted := Decrypt(key, encrypted)
-    os.WriteFile("decrypted.txt", decrypted, 0644)
 }

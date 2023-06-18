@@ -52,7 +52,7 @@ func main() {
 	switch os.Args[1] {
 	case "0":
 		key := service.Encrypt(1)
-		fmt.Printf("key = %s", key)
+		fmt.Printf("key = %s\n", key)
 	case "1":
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("> ")
