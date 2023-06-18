@@ -82,6 +82,8 @@ func SuccessResponse(codigo int) Response {
 		msg = "CSV importado! <br>Ìndice Hash Criado! <br>Árvore B Criada! <br>Árvore B+ Criada! <br>Ìndice Invertido Criado!"
 	case 7:
 		msg = "Ordenacao realizada com sucesso!"
+	case 8:
+		msg = "Database encriptada!!! Pague agora o resgate com um pix ou apenas descriptografe com a chave fornecida"
 	default:
 		msg = "Mensagem de sucesso desconhecida!"
 	}

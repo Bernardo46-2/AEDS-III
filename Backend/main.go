@@ -10,14 +10,19 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/Bernardo46-2/AEDS-III/handlers"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/middlewares"
+	"github.com/Bernardo46-2/AEDS-III/service"
 )
 
-func servidor() {
+func Servidor() {
 	// Inicializa o servidor de log
 	logger.LigarServidor()
 
@@ -36,10 +41,24 @@ func servidor() {
 	// Ordenação externa
 	http.HandleFunc("/ordenacao/", middlewares.EnableCORS(handlers.Ordenacao))
 
+	// Criptografia
+	http.HandleFunc("/Encrypt/", middlewares.EnableCORS(handlers.Encrypt))
+
 	// Inicializa o servidor HTTP na porta 8080 e escreve no log eventuais erros
 	logger.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func main() {
-	servidor()
+	switch os.Args[1] {
+	case "0":
+		key := service.Encrypt(1)
+		fmt.Printf("key = %s", key)
+	case "1":
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Print("> ")
+		key, _ := reader.ReadString('\n')
+		key = strings.TrimSpace(key)
+		service.Decrypt(1, key)
+	}
+	// servidor()
 }

@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"os"
 	"path/filepath"
 	"reflect"
 	"strconv"
@@ -280,4 +281,51 @@ func ChangeExtension(filePath, newExtension string) string {
 	newFilePath := fmt.Sprintf("%s%s", fileName, newExtension)
 
 	return newFilePath
+}
+
+func ByteArrayToAscii(b [10]byte) string {
+	str := fmt.Sprint(b)
+	str = strings.Trim(str, "[]")
+	return str
+}
+
+func StringToByteArray(s string) ([10]byte, error) {
+	parts := strings.Split(s, " ")
+	if len(parts) != 10 {
+		return [10]byte{}, fmt.Errorf("string must be 10 bytes long")
+	}
+
+	var byteArray [10]byte
+	for i, part := range parts {
+		val, err := strconv.Atoi(part)
+		if err != nil {
+			return [10]byte{}, err
+		}
+		byteArray[i] = byte(val)
+	}
+
+	return byteArray, nil
+}
+
+const (
+	VERIFIER string = "data/files/database/autenticity.txt"
+	V_TEXT   string = "VERIFICADO!"
+)
+
+func Create_verifier() {
+
+	// Cria os diretórios se eles não existirem
+	os.MkdirAll("data/files/database", os.ModePerm)
+
+	// Cria o arquivo
+	file, _ := os.Create(VERIFIER)
+	defer file.Close()
+
+	// Escreve a mensagem no arquivo
+	file.WriteString(V_TEXT)
+
+}
+
+func Verify(content string) bool {
+	return content == V_TEXT
 }

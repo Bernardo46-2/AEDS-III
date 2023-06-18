@@ -234,6 +234,29 @@ func MergeSearch(w http.ResponseWriter, r *http.Request) {
 	writeJson(w, retornoIndexacao{idList, duration})
 }
 
+func Encrypt(w http.ResponseWriter, r *http.Request) {
+	// Recuperar metodo
+	metodo, _ := strconv.Atoi(r.URL.Query().Get("metodo"))
+
+	k := service.Encrypt(metodo)
+
+	// Resposta
+	writeJson(w, k)
+	logger.Println("INFO", "Database encryptada!")
+}
+
+func Decrypt(w http.ResponseWriter, r *http.Request) {
+	// Recuperar metodo
+	metodo, _ := strconv.Atoi(r.URL.Query().Get("metodo"))
+	key := r.URL.Query().Get("key")
+
+	service.Decrypt(metodo, key)
+
+	// Resposta
+	writeSuccess(w, 8)
+	logger.Println("INFO", "Database encryptada!")
+}
+
 // writeError recebe um erro de http responde e um id de erro interno,
 // faz o parsing do modelo e gera uma resposta em formato json com o erro fornecido
 func writeError(w http.ResponseWriter, codes ...int) {

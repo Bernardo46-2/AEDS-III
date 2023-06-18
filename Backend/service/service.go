@@ -5,6 +5,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"math"
 	"strconv"
@@ -12,6 +13,7 @@ import (
 	"time"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
+	"github.com/Bernardo46-2/AEDS-III/data/crypto/trivium"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/bplustree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
@@ -320,4 +322,42 @@ func MergeSearch(req SearchRequest) (idList []int64, duration int64, err error) 
 	}
 
 	return
+}
+
+func Encrypt(method int) (key string) {
+	utils.Create_verifier()
+	switch method {
+	case 0:
+		fallthrough
+	case 1:
+		t := trivium.New()
+		t.Encrypt(utils.VERIFIER, utils.VERIFIER)
+
+		t2 := trivium.New(t.Key)
+		t2.Encrypt(binManager.CSV_PATH, binManager.CSV_PATH)
+
+		key = utils.ByteArrayToAscii(t.Key)
+	}
+
+	return
+}
+
+func Decrypt(method int, key string) {
+	switch method {
+	case 0:
+		fallthrough
+	case 1:
+		newKey, _ := utils.StringToByteArray(key)
+		fmt.Printf("newKey = %+v\n", newKey)
+
+		t := trivium.New(newKey)
+		ok := utils.Verify(t.VirtualDecrypt(utils.VERIFIER))
+		if ok {
+			t2 := trivium.New(newKey)
+			t2.Decrypt(binManager.CSV_PATH, binManager.CSV_PATH)
+			utils.Create_verifier()
+		} else {
+			fmt.Printf("Senha invalida!")
+		}
+	}
 }
