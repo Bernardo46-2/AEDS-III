@@ -51,6 +51,9 @@ func addPadding(blocks [][]byte) ([][]byte) {
 // padding PKCS#7
 func removePadding(state []byte) []byte {
     paddingLen := int(state[len(state)-1])
+    if paddingLen > 16 {
+        return nil
+    }
     return state[:len(state) - paddingLen]
 }
 

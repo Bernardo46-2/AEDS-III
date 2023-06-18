@@ -289,6 +289,12 @@ func ByteArrayToAscii(b [10]byte) string {
 	return str
 }
 
+func SliceToAscii(b []byte) string {
+	str := fmt.Sprint(b)
+	str = strings.Trim(str, "[]")
+	return str
+}
+
 func StringToByteArray(s string) ([10]byte, error) {
 	parts := strings.Split(s, " ")
 	if len(parts) != 10 {
@@ -300,6 +306,21 @@ func StringToByteArray(s string) ([10]byte, error) {
 		val, err := strconv.Atoi(part)
 		if err != nil {
 			return [10]byte{}, err
+		}
+		byteArray[i] = byte(val)
+	}
+
+	return byteArray, nil
+}
+
+func StringToSlice(s string) ([]byte, error) {
+	parts := strings.Split(s, " ")
+
+	byteArray := make([]byte, len(parts))
+	for i, part := range parts {
+		val, err := strconv.Atoi(part)
+		if err != nil {
+			return []byte{}, err
 		}
 		byteArray[i] = byte(val)
 	}

@@ -8,11 +8,13 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
+	"github.com/Bernardo46-2/AEDS-III/data/crypto/aes_cbc"
 	"github.com/Bernardo46-2/AEDS-III/data/crypto/trivium"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/bplustree"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
@@ -326,6 +328,14 @@ func MergeSearch(req SearchRequest) (idList []int64, duration int64, err error) 
 
 func Encrypt(method int) (key string) {
 	utils.Create_verifier()
+
+    aes := func(k aescbc.Key, file string) {
+        iv, _ := aescbc.RandBytes(aescbc.BLOCK_SIZE)
+        data, _ := os.ReadFile(file)
+        data = aescbc.Encrypt(k, iv, data)
+        os.WriteFile(file, data, 0644)
+    }
+
 	switch method {
 	case 0:
 		fallthrough
@@ -337,6 +347,21 @@ func Encrypt(method int) (key string) {
 		t2.Encrypt(binManager.CSV_PATH, binManager.CSV_PATH)
 
 		key = utils.ByteArrayToAscii(t.Key)
+    case 2:
+        k, _ := aescbc.NewKey(128)
+        aes(k, utils.VERIFIER)
+        aes(k, binManager.CSV_PATH)
+		key = utils.SliceToAscii(k.Key)
+    case 3:
+        k, _ := aescbc.NewKey(192)
+        aes(k, utils.VERIFIER)
+        aes(k, binManager.CSV_PATH)
+		key = utils.SliceToAscii(k.Key)
+    case 4:
+        k, _ := aescbc.NewKey(256)
+        aes(k, utils.VERIFIER)
+        aes(k, binManager.CSV_PATH)
+		key = utils.SliceToAscii(k.Key)
 	}
 
 	return
@@ -348,7 +373,6 @@ func Decrypt(method int, key string) {
 		fallthrough
 	case 1:
 		newKey, _ := utils.StringToByteArray(key)
-		fmt.Printf("newKey = %+v\n", newKey)
 
 		t := trivium.New(newKey)
 		ok := utils.Verify(t.VirtualDecrypt(utils.VERIFIER))
@@ -357,7 +381,26 @@ func Decrypt(method int, key string) {
 			t2.Decrypt(binManager.CSV_PATH, binManager.CSV_PATH)
 			utils.Create_verifier()
 		} else {
-			fmt.Printf("Senha invalida!")
+			fmt.Printf("Senha invalida!\n")
 		}
+    case 2:
+        fallthrough
+    case 3:
+        fallthrough
+    case 4:
+        newKey, _ := utils.StringToSlice(key)
+        k, _ := aescbc.NewKeyFrom(newKey)
+        verifier, _ := os.ReadFile(utils.VERIFIER)
+        raw := utils.Verify(string(verifier))
+        ok := !raw && utils.Verify(string(aescbc.Decrypt(k, verifier)))
+
+        if ok {
+            utils.Create_verifier()
+            data, _ := os.ReadFile(binManager.CSV_PATH)
+            data = aescbc.Decrypt(k, data)
+            os.WriteFile(binManager.CSV_PATH, data, 0644)
+        } else {
+			fmt.Printf("Senha invalida!\n")
+        }
 	}
 }

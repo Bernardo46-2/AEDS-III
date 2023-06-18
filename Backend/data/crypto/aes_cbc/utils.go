@@ -7,7 +7,7 @@ import (
 
 // randBytes gera um array de bytes aleatório usando a 
 // biblioteca nativa do go para isso
-func randBytes(size int) (bytes []byte, err error) {
+func RandBytes(size int) (bytes []byte, err error) {
     bytes = make([]byte, size)
     _, err = rand.Read(bytes)
     return

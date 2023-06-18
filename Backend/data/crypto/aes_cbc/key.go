@@ -24,7 +24,7 @@ func NewKey(sizeBits int) (key Key, err error) {
     }
     
     sizeBytes := sizeBits / 8
-    k, err := randBytes(sizeBytes)
+    k, err := RandBytes(sizeBytes)
     if err != nil {
         return
     }
