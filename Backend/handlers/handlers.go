@@ -242,19 +242,29 @@ func Encrypt(w http.ResponseWriter, r *http.Request) {
 
 	// Resposta
 	writeJson(w, k)
-	logger.Println("INFO", "Database encryptada!")
+	logger.Println("INFO", "Database encriptada!")
 }
 
 func Decrypt(w http.ResponseWriter, r *http.Request) {
+	type RequestBody struct {
+		Key string `json:"key"`
+	}
+	var requestBody RequestBody
+	json.NewDecoder(r.Body).Decode(&requestBody)
+
 	// Recuperar metodo
 	metodo, _ := strconv.Atoi(r.URL.Query().Get("metodo"))
-	key := r.URL.Query().Get("key")
 
-	service.Decrypt(metodo, key)
+	ok := service.Decrypt(metodo, requestBody.Key)
 
 	// Resposta
-	writeSuccess(w, 8)
-	logger.Println("INFO", "Database encryptada!")
+	if ok {
+		writeSuccess(w, 10)
+		logger.Println("INFO", "Database decriptada!")
+	} else {
+		writeSuccess(w, 9)
+		logger.Println("INFO", "Chave de criptografia invalida!")
+	}
 }
 
 // writeError recebe um erro de http responde e um id de erro interno,

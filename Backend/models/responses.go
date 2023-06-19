@@ -54,6 +54,8 @@ func ErrorResponse(codigo int) Response {
 		msg = "Conflito na solicitação"
 	case http.StatusUnsupportedMediaType:
 		msg = "Tipo de mídia não suportado"
+	case 8:
+		msg = "Chave invalida!"
 	default:
 		msg = "Erro desconhecido"
 	}
@@ -84,6 +86,10 @@ func SuccessResponse(codigo int) Response {
 		msg = "Ordenacao realizada com sucesso!"
 	case 8:
 		msg = "Database encriptada!!! Pague agora o resgate com um pix ou apenas descriptografe com a chave fornecida"
+	case 9:
+		msg = "Chave invalida!"
+	case 10:
+		msg = "Descriptografia realizada"
 	default:
 		msg = "Mensagem de sucesso desconhecida!"
 	}

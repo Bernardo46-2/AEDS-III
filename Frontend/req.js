@@ -1,5 +1,6 @@
 /* ------------------------------------- UTILS ------------------------------------- */
 
+const modalSearchClose2 = document.getElementById('close-search-modal2');
 const modalContainer = document.getElementById('modal-container');
 const mensagem = document.getElementById("mensagem-modal");
 const classes = {
@@ -27,21 +28,40 @@ function capt(str) {
     return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
 }
 
-function modalAviso(mostrar = "Servidor Desligado") {
+function modalAviso(mostrar = "Servidor Desligado", tempo = 3000, type = "free") {
     mensagem.innerHTML = mostrar;
 
     modalContainer.classList.remove('out');
     modalContainer.classList.add('one');
 
-    setTimeout(function () {
-        modalContainer.classList.add('out');
-    }, 3000);
-
-    setTimeout(function () {
-        modalContainer.addEventListener('click', () => {
+    if (type === "free") {
+        modalSearchClose2.style.display = "none";
+        let clicked = false;
+        let xevent = () => {
             modalContainer.classList.add('out');
+            modalContainer.removeEventListener('click', xevent);
+            setTimeout(function() {
+                modalSearchClose2.style.display = "";
+            }, 1000);
+            clicked = true;
+        }
+
+        modalContainer.addEventListener('click', xevent);
+
+        setTimeout(function () {
+            if (!clicked){
+                modalContainer.classList.add('out');
+                modalContainer.removeEventListener('click', xevent);
+            }
+        }, tempo);
+    } else if (type === "fix") {
+        modalSearchClose2.style.display = "";
+        modalSearchClose2.addEventListener('click', z => {
+            modalContainer.classList.add('out');
+
+            modalSearchClose2.removeEventListener('click', z);
         });
-    }, 1200);
+    }
 }
 
 /* ----------------------------------- SIDEBAR ----------------------------------- */
@@ -50,6 +70,7 @@ const importarDados = document.getElementById('ImportarDados');
 const helpBtn = document.getElementById('Ajuda');
 
 importarDados.onclick = () => {
+    localStorage.setItem('encrypted', JSON.stringify(false));
     sessionStorage.setItem('patternMatchMethod', JSON.stringify(0));
     sessionStorage.setItem('actualPage', JSON.stringify(0));
     sessionStorage.setItem('searchMethod', JSON.stringify(1));
@@ -57,7 +78,7 @@ importarDados.onclick = () => {
     fetch('http://localhost:8080/loadDatabase')
         .then(response => response.json())
         .then(data => {
-            modalAviso(data.mensagem);
+            modalAviso(data.mensagem, 7000);
             retrieveCardsByPage0();
         })
         .catch(error => {
@@ -94,27 +115,36 @@ const indexMethod = {
 };
 
 showAll.onclick = () => {
-    fetch('http://localhost:8080/getIdList')
-        .then(response => response.json())
-        .then(data => {
-            paginarIds(data);
-            lastClicked = 1;
-            insertDots = true;
-            sessionStorage.setItem('actualPage', JSON.stringify(1));
-            recuperarCards(0)
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
+    let encrypted = localStorage.getItem('encrypted') === "true";
+
+    if (!encrypted) {
+        fetch('http://localhost:8080/getIdList')
+            .then(response => response.json())
+            .then(data => {
+                paginarIds(data);
+                lastClicked = 1;
+                insertDots = true;
+                sessionStorage.setItem('actualPage', JSON.stringify(1));
+                recuperarCards(0)
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    } else {
+        modalAviso(mostrar = "Sua database foi criptografada e sequestrada<br>Envie um pix pra gente pra recuperar!<br><br>... Ou apenas use a chave q nos fornecemos ...", tempo = 5000)
+    }
 }
 
 window.onload = function () {
-    showAll.click()
+    if (!localStorage.getItem('encrypted')) {
+        localStorage.setItem('encrypted', JSON.stringify(false));
+    }
     sessionStorage.setItem('patternMatchMethod', JSON.stringify(0));
     sessionStorage.setItem('actualPage', JSON.stringify(0));
     sessionStorage.setItem('searchMethod', JSON.stringify(1));
     sessionStorage.setItem('duracao', JSON.stringify(null));
+    showAll.click()
 };
 
 function paginarIds(ids) {
@@ -185,7 +215,7 @@ function recuperarCardsIds(ids) {
 }
 
 function showTime(metodo, tempo) {
-    let PMethod = indexMethod[(+JSON.parse(sessionStorage.getItem('patternMatchMethod'))+5).toString()];
+    let PMethod = indexMethod[(+JSON.parse(sessionStorage.getItem('patternMatchMethod')) + 5).toString()];
     let duracao = JSON.parse(sessionStorage.getItem('duracao'));
     if (duracao == null) {
         duracao = "--";
@@ -257,7 +287,7 @@ function dragElement(element, handle) {
     }
 }
 
-function adicionarCards(data) {
+function adicionarCards(data, gerarPag = true) {
     window.scrollTo(0, 0);
     const cardsHtml = document.getElementById('cards');
     cardsHtml.innerHTML = "";
@@ -275,8 +305,10 @@ function adicionarCards(data) {
 
         cardsHtml.innerHTML += pokemonCard;
     }
-    gerarPaginacao()
-    gerarModalPokemon();
+    if (gerarPag) {
+        gerarPaginacao()
+        gerarModalPokemon();
+    }
 }
 
 function gerarPaginacao() {
@@ -644,17 +676,17 @@ search.addEventListener('click', function (event) {
         const LancamentoI = document.getElementById('LancamentoI').value;
         let LancamentoF = document.getElementById('LancamentoF').value;
         const japName = document.getElementById('japName').value;
-        const lendario = ""+(+lendarioMarca);
-        const mitico = ""+(+miticoMarca);
+        const lendario = "" + (+lendarioMarca);
+        const mitico = "" + (+miticoMarca);
 
-        idF = (idF.length == 0)?idI:idF;
-        hpF = (hpF.length == 0)?hpI:hpF;
-        atkF = (atkF.length == 0)?atkI:atkF;
-        defF = (defF.length == 0)?defI:defF;
-        pesoF = (pesoF.length == 0)?pesoI:pesoF;
-        alturaF = (alturaF.length == 0)?alturaI:alturaF;
-        geracaoF = (geracaoF.length == 0)?geracaoI:geracaoF;
-        LancamentoF = (LancamentoF.length == 0)?LancamentoI:LancamentoF;
+        idF = (idF.length == 0) ? idI : idF;
+        hpF = (hpF.length == 0) ? hpI : hpF;
+        atkF = (atkF.length == 0) ? atkI : atkF;
+        defF = (defF.length == 0) ? defI : defF;
+        pesoF = (pesoF.length == 0) ? pesoI : pesoF;
+        alturaF = (alturaF.length == 0) ? alturaI : alturaF;
+        geracaoF = (geracaoF.length == 0) ? geracaoI : geracaoF;
+        LancamentoF = (LancamentoF.length == 0) ? LancamentoI : LancamentoF;
 
         let patternMatch = sessionStorage.getItem("patternMatchMethod");
         if (patternMatch == null) {
@@ -710,7 +742,7 @@ search.addEventListener('click', function (event) {
                 console.log(error)
             });
     });
-    
+
     modalSearchClose.addEventListener('click', () => {
         cardsFatherDiv.style.position = fatherDivPosition;
         modalContainer2.classList.add('out');
@@ -988,6 +1020,173 @@ casamentoChoice.forEach(element => {
         sessionStorage.setItem('patternMatchMethod', JSON.stringify(lastDigit));
     }
 });
+
+/* ------------------------------- ESCOLHA DE CRYPTO ------------------------------- */
+
+const crypto = document.querySelector('#Crypto');
+const cryptoDropdown = document.querySelector('#cryptoDropdown');
+const cryptoButtons = document.querySelectorAll('.crypto-buttons');
+const crypto0 = document.querySelector('#Crypto0');
+const crypto1 = document.querySelector('#Crypto1');
+const crypto2 = document.querySelector('#Crypto2');
+const crypto3 = document.querySelector('#Crypto3');
+const cryptoTransition = crypto.style.transition;
+const cryptoVar3 = crypto.style.paddingTop;
+let cryptoAberto = false;
+
+crypto.addEventListener('click', function (event) {
+    if (event.target === crypto && !cryptoAberto) {
+        crypto.style.transition = "all 0.4s ease-in-out";
+        cryptoDropdown.style.transition = "all 0.4s ease-in-out";
+        cryptoDropdown.style.height = "280px";
+        cryptoDropdown.style.marginBottom = "15px";
+        crypto.style.height = "280px";
+        crypto.style.paddingTop = "15px";
+        cryptoAberto = true;
+        window.setTimeout(() => {
+            cryptoButtons[0].style.pointerEvents = 'auto';
+            cryptoButtons[0].style.opacity = "1";
+        }, 75);
+        window.setTimeout(() => {
+            cryptoButtons[1].style.pointerEvents = 'auto';
+            cryptoButtons[1].style.opacity = "1";
+        }, 150);
+        window.setTimeout(() => {
+            cryptoButtons[2].style.pointerEvents = 'auto';
+            cryptoButtons[2].style.opacity = "1";
+        }, 225);
+        window.setTimeout(() => {
+            cryptoButtons[3].style.pointerEvents = 'auto';
+            cryptoButtons[3].style.opacity = "1";
+        }, 300);
+    } else if (event.target === crypto) {
+        setTimeout(() => {
+            cryptoDropdown.style.height = 60 + "px";
+            cryptoDropdown.style.marginBottom = "0px";
+            crypto.style.height = 45 + "px";
+
+            crypto.style.paddingTop = cryptoVar3;
+            cryptoButtons.forEach(element => {
+                element.style.pointerEvents = 'none';
+                element.style.opacity = "0";
+            });
+            cryptoAberto = false;
+            setTimeout(() => {
+                crypto.style.transition = cryptoTransition;
+            }, 500);
+        }, 200);
+        window.setTimeout(() => {
+            cryptoButtons[3].style.pointerEvents = 'auto';
+            cryptoButtons[3].style.opacity = "0";
+        }, 0);
+        window.setTimeout(() => {
+            cryptoButtons[2].style.pointerEvents = 'auto';
+            cryptoButtons[2].style.opacity = "0";
+        }, 75);
+        window.setTimeout(() => {
+            cryptoButtons[1].style.pointerEvents = 'auto';
+            cryptoButtons[1].style.opacity = "0";
+        }, 150);
+        window.setTimeout(() => {
+            cryptoButtons[0].style.pointerEvents = 'auto';
+            cryptoButtons[0].style.opacity = "0";
+        }, 225);
+    }
+})
+
+cryptoButtons.forEach(element => {
+    element.style.transition = "all 0.3s ease-in-out";
+    element.addEventListener('click', function (event) {
+        crypto.click();
+    });
+});
+
+crypto0.onclick = () => criptografar(1);
+crypto1.onclick = () => criptografar(2);
+crypto2.onclick = () => criptografar(3);
+crypto3.onclick = () => criptografar(4);
+
+function criptografar(option = 0) {
+    let e = localStorage.getItem('encrypted') === "true";
+    if (e) {
+        modalContainer2.classList.remove('out');
+        modalContainer2.classList.add('one');
+        modalContainer2.style.zIndex = "9999 !important";
+
+        let modalContent = `
+        <div class="row justify-content-center">
+            <p class="modal-search-input4">Chave:</p>
+        </div>
+    
+        <div class="row justify-content-center">
+            <input class="col-8 modal-search-input" type="text" name="chave" id="chave" placeholder="">
+        </div>
+        `;
+
+        mensagem2.innerHTML = modalContent;
+        let tmp = searchIndex.textContent
+        searchIndex.textContent = "descriptografar";
+
+        let xis = (event) => {
+            const chave = document.getElementById('chave').value;
+
+            fetch(`http://localhost:8080/decrypt/?metodo=${option}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    key: chave,
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.codigo == 10) {
+                        modalContainer2.classList.add('out');
+                        searchIndex.removeEventListener('click', xis);
+                        setTimeout(function() {
+                            searchIndex.textContent = tmp;
+                        }, 1000);
+                        localStorage.setItem('encrypted', JSON.stringify(false));
+                        showAll.click();
+                    } else {
+                        modalAviso(data.mensagem);
+                    }
+                })
+                .catch(error => {
+                    modalAviso(error);
+                    console.log(error);
+                    setTimeout(function() {
+                        searchIndex.textContent = tmp;
+                    }, 1000);
+                });
+
+        };
+
+        searchIndex.addEventListener('click', xis);
+
+        modalSearchClose.addEventListener('click', () => {
+            setTimeout(function() {
+                searchIndex.textContent = tmp;
+            }, 1000);
+            modalContainer2.classList.add('out');
+            searchIndex.removeEventListener('click', xis);
+        });
+    } else {
+        localStorage.setItem('encrypted', JSON.stringify(true))
+        fetch(`http://localhost:8080/encrypt/?metodo=${option}`)
+            .then(response => response.json())
+            .then(data => {
+                modalAviso(mostrar = "Chave:<br>" + data, tempo = 30000, type = "fix");
+                adicionarCards([], false);
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    }
+}
+
 /* ------------------------------------- MODAIS ------------------------------------- */
 
 const modalClose = document.querySelector('#close');
@@ -1404,9 +1603,11 @@ const collectFormData = async () => {
 function carregarDados(id) {
     fetch('http://localhost:8080/get/?id=' + id)
         .then(response => response.json())
-        .then(data => adicionarDadosModal(data))
+        .then(data => {
+            adicionarDadosModal(data)
+        })
         .catch(error => {
-            modalAviso(error);
+            modalAviso(mostrar = error);
             console.log(error);
         });
 }

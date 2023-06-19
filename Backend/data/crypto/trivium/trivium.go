@@ -245,6 +245,8 @@ func New(Key ...[KeyLength]byte) *Trivium {
 	return &t
 }
 
+// Encrypt encripta o arquivo utilizando as chaves e
+// vetor de inicialização pre calculados
 func (t *Trivium) Encrypt(dst string, src string) {
 	// Abrir source
 	inputFile := openFile(src)
@@ -269,6 +271,8 @@ func (t *Trivium) Encrypt(dst string, src string) {
 	writer.Write(result)
 }
 
+// Decrypt desencripta o arquivo utilizando a chave fornecida
+// O vetor inicial é retirado diretamente de dentro do arquivo criptografado
 func (t *Trivium) Decrypt(dst string, src string) {
 	// Abrir source
 	inputFile := openFile(src)
@@ -299,6 +303,8 @@ func (t *Trivium) Decrypt(dst string, src string) {
 	writer.Write(result)
 }
 
+// Virtual Decrypt faz a descriptografia do arquivo em memoria primaria
+// e retorna o valor salvo em string
 func (t *Trivium) VirtualDecrypt(src string) string {
 	// Abrir source
 	inputFile := openFile(src)

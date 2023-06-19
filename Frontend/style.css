@@ -23,7 +23,8 @@
     --jolteon: #fdd835;
     --vaporeon: #29abe2;
     --vaporeon2: #9ed8ff;
-    --flareon: #ff1f1f;
+    --flareon: #e74747;
+    --flareon2: #f57777;
     --dragonair: #7038f8;
     --dragonair2: #a782ff;
     --zapdos: #ffd54f;
@@ -45,7 +46,7 @@
     --geodude-transparent: #7b7d726c;
     --jolteon-transparent: #fdd8356c;
     --vaporeon-transparent: #29aae271;
-    --flareon-transparent: #ff1f1f6c;
+    --flareon-transparent: #e056566c;
     --dragonair-transparent: #7038f86c;
     --zapdos-transparent: #ffd54f6c;
     --meowth-transparent: #f1b61c6c;
@@ -53,6 +54,7 @@
     --quilava-transparent: #ee81306c;
     --eevee-escuro: #b3a561;
     --eevee-escuro2:#706739;
+    --flareon-escuro: #b62d2d;
     --pikachu-escuro: #ccad2e;
     --flareon-escuro: #b40c0c;
     --bulbasaur-escuro: #648f38;
@@ -91,8 +93,19 @@
     font-weight: bold;
 }
 
+#close-search-modal2 {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    color: #ffffff;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
 #close-search-modal:hover,
-#close-search-modal:focus {
+#close-search-modal:focus,
+#close-search-modal2:hover,
+#close-search-modal2:focus {
     color: var(--flareon);
     text-decoration: none;
     cursor: pointer;
@@ -230,14 +243,16 @@ input[type=number] {
 
 #ordenarDropdown,
 #indexDropdown,
-#casamentoDropdown {
+#casamentoDropdown,
+#cryptoDropdown {
     position: relative;
     height: 60px;
 }
 
 #Ordenar,
 #Index,
-#Casamento {
+#Casamento,
+#Crypto {
     position: absolute;
     align-items: baseline;
     justify-content: center;
@@ -252,14 +267,16 @@ symbol {
 
 .ordenar-button-principal,
 .index-button-principal,
-.casamento-button-principal {
+.casamento-button-principal,
+.crypto-button-principal {
     vertical-align: top;
     white-space: nowrap;
 }
 
 .ordenar-buttons,
 .index-buttons,
-.casamento-buttons {
+.casamento-buttons,
+.crypto-buttons {
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.4s ease-in-out;
@@ -1804,6 +1821,20 @@ body::-webkit-scrollbar {
 .btn-Flareon:focus {
     color: var(--background-medium-dark) !important;
     background-color: var(--flareon) !important;
+    box-shadow: 0 0 10px var(--flareon-transparent),
+        0 0 40px var(--flareon-transparent), 0 0 80px var(--flareon-transparent);
+    transition-duration: 0.8s;
+}
+
+.btn-Flareon2 {
+    color: var(--flareon) !important;
+    border: 1px solid var(--flareon-transparent) !important;
+}
+
+.btn-Flareon2:hover,
+.btn-Flareon2:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--flareon2) !important;
     box-shadow: 0 0 10px var(--flareon-transparent),
         0 0 40px var(--flareon-transparent), 0 0 80px var(--flareon-transparent);
     transition-duration: 0.8s;
