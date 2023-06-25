@@ -1265,7 +1265,7 @@ crypto2.onclick = () => criptografar(3);
 crypto3.onclick = () => criptografar(4);
 
 function criptografar(option = 0) {
-    if (JSON.parse(localStorage.getItem('zip')) === "false") {
+    if (JSON.parse(localStorage.getItem('zip')) === false) {
         let e = localStorage.getItem('encrypted') === "true";
         if (e) {
             modalContainer2.classList.remove('out');
