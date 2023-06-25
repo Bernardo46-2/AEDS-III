@@ -10,6 +10,18 @@ Trabalho desenvolvido ao longo da disciplina de AED's III do curso de Bacharelad
 O objetivo do projeto é criar um banco de dados em arquivo binário, utilizando técnicas de CRUD, ordenação, indexação, compactação, casamento de padroes e criptografia.
 Além disso, o projeto foi feito com o modelo de uma API para comunicação entre backend e frontend.
 
+## Funcionalidades
+O banco de dados suporta as seguintes funcionalidades:
+
+* Importação de csv
+* CRUD
+* Ordenação externa
+* Indexação
+* Pesquisa inclusive
+* Casamento de padroes
+* Compactação
+* Criptografia
+  
 ### Exemplos de telas do sistema:
 
 #### Tela Principal
@@ -25,21 +37,16 @@ Além disso, o projeto foi feito com o modelo de uma API para comunicação entr
 #### Tela de respostas do servidor
 ![Resposta do servidor](/Outros/Carregamento.png)
 
-## Funcionalidades
-O banco de dados suporta as seguintes funcionalidades:
-
-* Importação para população inicial
-* CRUD completo
-* Ordenação externa com diferentes métodos
-* Indexação em memoria secundaria com Hash, Arvore B e B+
-* Pesquisa com filtragem, ordenação por relevancia e combinação de pesquisas
-* Casamento de padroes para pesquisa personalizada
-* Compactação do banco de dados
-* Criptografia
-
 ## Tecnologias utilizadas
 O projeto foi desenvolvido em linguagem Go e utiliza apenas a biblioteca padrão para todas as operações.
 Frontend feito em javascript puro e sem framework.
+
+## Videos de apresentações
+* [TP1 - CRUD/Ordenacao](https://youtu.be/t9WriRSQGYM)
+* [TP2 - Indexacao](https://youtu.be/VZeUh_TTPIE)
+* [TP3 - Casamento de Padrões](https://youtu.be/FU3NHFADTt4)
+* [TP4 - Compactação](https://youtu.be/JAGKt8K1VgQ)
+* [TP5 - Criptografia](https://youtu.be/G9wO67tj6pA)
 
 ## Como utilizar
 Para utilizar o banco de dados, basta baixar ou clonar o repositório e compilar o código-fonte na pasta **backend** com o comando:
