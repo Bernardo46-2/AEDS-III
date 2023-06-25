@@ -13,11 +13,11 @@ Além disso, o projeto foi feito com o modelo de uma API para comunicação entr
 ## Funcionalidades
 O banco de dados suporta as seguintes funcionalidades:
 
-* Importação de csv
+* Importação do csv
 * CRUD
 * Ordenação externa
 * Indexação
-* Pesquisa inclusive
+* Pesquisa inclusiva
 * Casamento de padroes
 * Compactação
 * Criptografia
