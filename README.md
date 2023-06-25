@@ -18,8 +18,10 @@ Além disso, o projeto foi feito com o modelo de uma API para comunicação entr
 ![PokeCard](/Outros/Dados.png)
 #### Tela de pesquisa
 ![Resposta do servidor](/Outros/Pesquisa.png)
-#### Escolha de Indexação, pattern matching e tempo de pesquisa
-![Resposta do servidor](/Outros/Indexação.png)
+#### Menus de controles disponiveis
+![Resposta do servidor](/Outros/Indexacao.png)
+#### Tempo de execucao dos algoritmos
+![Resposta do servidor](/Outros/Tempo.png)
 #### Tela de respostas do servidor
 ![Resposta do servidor](/Outros/Carregamento.png)
 
