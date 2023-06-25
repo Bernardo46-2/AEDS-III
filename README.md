@@ -41,6 +41,21 @@ O banco de dados suporta as seguintes funcionalidades:
 O projeto foi desenvolvido em linguagem Go e utiliza apenas a biblioteca padrão para todas as operações.
 Frontend feito em javascript puro e sem framework.
 
+## Algoritmos implementados
+* Intercalação comum
+* Intercalação com bloco de tamanho variavel
+* Intercalação com substituição (Heap minimo)
+* Hash dinamico
+* Arvore B
+* Arvore B+
+* Indice Invertido
+* KMP
+* RabinKarp
+* Huffman
+* LZW
+* AES CBC 128, 196, 256
+* Trivium
+
 ## Videos de apresentações
 * [TP1 - CRUD/Ordenacao](https://youtu.be/t9WriRSQGYM)
 * [TP2 - Indexacao](https://youtu.be/VZeUh_TTPIE)
