@@ -1,3 +1,40 @@
+// Package btree fornece uma implementação genérica de uma árvore B para uso
+// em armazenamento de memória secundária, como discos rígidos e SSDs. A árvore
+// B é uma estrutura de dados de árvore de busca que mantém os dados ordenados
+// e permite inserções, remoções e buscas eficientes.
+//
+// Diferentemente de outras estruturas de dados de árvore, como árvores AVL e
+// árvore Vermelho-Preto, as árvores B são otimizadas para sistemas onde a leitura
+// e a escrita de blocos de dados são operações caras, como é o caso com a
+// memória secundária.
+//
+// O pacote btree suporta chaves e valores de qualquer tipo, desde que o tipo de
+// chave possa ser ordenado. A funcionalidade genérica é obtida através do uso
+// de interfaces em Go.
+//
+// As árvores B são comumente usadas em sistemas de banco de dados e sistemas de
+// arquivos devido à sua eficiência em lidar com grandes volumes de dados. Esta
+// implementação é projetada para ser usada como uma biblioteca em tais
+// aplicações.
+//
+// Exemplo de uso:
+//
+//	btree, _ := btree.ReadBTree(binManager.FILES_PATH)
+//	defer btree.Close()
+//	for _, id := range idList {
+//		pos := btree.Find(id)
+//		if pos != nil {
+//			myList = append(myList, c.ReadTarget(pos.Ptr))
+//		}
+//	}
+//
+// Este pacote não oferece suporte a persistência, embora essa funcionalidade
+// possa ser adicionada se necessário.
+//
+// Por se tratar de uma implementação genérica, o desempenho do pacote btree
+// pode variar dependendo do tipo de chave usado e do volume de dados. Em geral,
+// é esperado que ofereça desempenho similar ou superior a outras estruturas de
+// dados de árvore para grandes volumes de dados em memória secundária.
 package btree
 
 import (
@@ -12,10 +49,12 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-const PATH string = "btree/"
-const NODES string = "BTreeNodes.bin"
-const HEADER string = "BTree.bin"
-const NULL int64 = -1
+const (
+	PATH   string = "btree/"
+	NODES  string = "BTreeNodes.bin"
+	HEADER string = "BTree.bin"
+	NULL   int64  = -1
+)
 
 // TODO:
 // - change dir concatenation to use os.join

@@ -11,10 +11,6 @@ import (
 	"strconv"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
-	"github.com/Bernardo46-2/AEDS-III/data/indexes/bplustree"
-	"github.com/Bernardo46-2/AEDS-III/data/indexes/btree"
-	"github.com/Bernardo46-2/AEDS-III/data/indexes/hashing"
-	"github.com/Bernardo46-2/AEDS-III/data/indexes/invertedIndex"
 	"github.com/Bernardo46-2/AEDS-III/data/sorts"
 	"github.com/Bernardo46-2/AEDS-III/logger"
 	"github.com/Bernardo46-2/AEDS-III/models"
@@ -68,52 +64,6 @@ func writeJson(w http.ResponseWriter, v any) {
 	w.Write(jsonData)
 }
 
-func reconstruirIndices() {
-	// Hashing
-	controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
-	defer controler.Close()
-	hashing.StartHashFile(controler, 8, binManager.FILES_PATH, "hashIndex")
-
-	// Arvore B
-	btree.StartBTreeFile(binManager.FILES_PATH)
-
-	// Indice Invertido
-	controler.Reset()
-	invertedIndex.New(controler, "nome", binManager.FILES_PATH, 0)
-	controler.Reset()
-	invertedIndex.New(controler, "nomeJap", binManager.FILES_PATH, 0)
-	controler.Reset()
-	invertedIndex.New(controler, "especie", binManager.FILES_PATH, 0.8)
-	controler.Reset()
-	invertedIndex.New(controler, "tipo", binManager.FILES_PATH, 0)
-	controler.Reset()
-	invertedIndex.New(controler, "descricao", binManager.FILES_PATH, 0.8)
-
-	// B+ Tree
-	controler.Reset()
-	bplustree.StartBPlusTreeFilesSearch(binManager.FILES_PATH, "id", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "numero", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "geracao", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "atk", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "def", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "hp", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "altura", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "peso", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "lancamento", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "lendario", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "mitico", controler)
-}
-
 // GetPagesNumber retorna a quantidade de paginas disponiveis
 func GetPagesNumber(w http.ResponseWriter, r *http.Request) {
 	// Recuperar ID e ler arquivo
@@ -128,6 +78,8 @@ func GetPagesNumber(w http.ResponseWriter, r *http.Request) {
 	writeJson(w, numeroPaginas)
 }
 
+// GetIdList faz a chamada do respectivo metodo que recupera
+// todos os ids contidos na database
 func GetIdList(w http.ResponseWriter, r *http.Request) {
 	// Recuperar IDs
 	idList, err := service.GetIdList()
@@ -141,13 +93,19 @@ func GetIdList(w http.ResponseWriter, r *http.Request) {
 	writeJson(w, idList)
 }
 
+// GetList recupera a lista de pokemons de acordo com a lista de ids fornecidos
+// e também passa o metodo de pesquisa necessario.
+//
+// Por fim faz parse do objeto contendo a lista e o tempo de pesquisa para JSON
 func GetList(w http.ResponseWriter, r *http.Request) {
+	// struct de retorno para conversao em JSON
 	type retorno struct {
 		Pokemons []models.Pokemon `json:"pokemons"`
 		Time     int64            `json:"time"`
 	}
 
 	method, _ := strconv.Atoi(r.URL.Query().Get("method"))
+
 	// Recuperando lista de argumentos
 	var list []int64
 	if json.NewDecoder(r.Body).Decode(&list) != nil {
@@ -259,7 +217,7 @@ func LoadDatabase(w http.ResponseWriter, r *http.Request) {
 	binManager.ImportCSV().CsvToBin()
 
 	// Reconstruir Indices
-	reconstruirIndices()
+	service.ReconstruirIndices()
 
 	// Resposta
 	writeSuccess(w, 6)
@@ -293,14 +251,18 @@ func Ordenacao(w http.ResponseWriter, r *http.Request) {
 	sorts.SortingFunctions[metodo]()
 
 	// Reconstruir Indices
-	reconstruirIndices()
+	service.ReconstruirIndices()
 
 	// Resposta
 	writeSuccess(w, 7)
 	logger.Println("INFO", "Database Ordenada com sucesso!")
 }
 
+// MergeSearch faz a chamada do metodo de pesquisa com ordenacao por
+// incidencia e retorna a lista de ids ordenados e o respectivo tempo de
+// execucao dos algoritmos
 func MergeSearch(w http.ResponseWriter, r *http.Request) {
+	// struct para conversao dos dados em json
 	type retornoIndexacao struct {
 		Pokemons []int64 `json:"ids"`
 		Time     int64   `json:"time"`
@@ -328,6 +290,8 @@ func MergeSearch(w http.ResponseWriter, r *http.Request) {
 	writeJson(w, retornoIndexacao{idList, duration})
 }
 
+// Encrypt faz o desempacotamento da requisicao para a chamada
+// da criptografia
 func Encrypt(w http.ResponseWriter, r *http.Request) {
 	// Recuperar metodo
 	metodo, _ := strconv.Atoi(r.URL.Query().Get("metodo"))
@@ -339,6 +303,8 @@ func Encrypt(w http.ResponseWriter, r *http.Request) {
 	logger.Println("INFO", "Database encriptada!")
 }
 
+// Encrypt faz o desempacotamento da requisicao para a chamada
+// da descriptografia
 func Decrypt(w http.ResponseWriter, r *http.Request) {
 	type RequestBody struct {
 		Key string `json:"key"`
@@ -361,6 +327,8 @@ func Decrypt(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Zip faz o desempacotamento da requisicao para a chamada
+// da compressao
 func Zip(w http.ResponseWriter, r *http.Request) {
 	// Recuperar metodo
 	metodo, _ := strconv.Atoi(r.URL.Query().Get("metodo"))
@@ -372,6 +340,8 @@ func Zip(w http.ResponseWriter, r *http.Request) {
 	logger.Println("INFO", "Database comprimida!")
 }
 
+// Unzip faz o desempacotamento da requisicao para a chamada
+// da descompressao
 func Unzip(w http.ResponseWriter, r *http.Request) {
 	// Recuperar metodo
 	metodo, _ := strconv.Atoi(r.URL.Query().Get("metodo"))

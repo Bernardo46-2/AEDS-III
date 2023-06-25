@@ -1,3 +1,24 @@
+// Package bplustree implementa uma árvore B+ em memoria secundaria, uma estrutura
+// de dados em árvore que é usada para armazenar dados ordenados de maneira eficiente.
+// A árvore B+ é uma versão especializada da árvore B que permite inserções, exclusões
+// e pesquisas rápidas.
+//
+// As árvores B+ são comumente usadas em sistemas de banco de dados e sistemas de
+// arquivos devido à sua eficiência em lidar com grandes quantidades de dados e
+// sua habilidade de manter os dados ordenados, tornando a busca de intervalos e a
+// varredura sequencial mais rápidas.
+//
+// O pacote oferece funções para inserir, excluir e procurar dados na árvore,
+// verificar a integridade da árvore e visualizar a árvore em uma representação
+// gráfica.
+//
+// Este pacote não fornece suporte a transações ou persistência, embora esses
+// recursos possam ser adicionados se necessário.
+//
+// O desempenho do pacote bplustree pode variar dependendo do hardware e da carga
+// de trabalho, mas em geral, é esperado que ofereça desempenho similar ou
+// superior a outras estruturas de dados ordenadas, como árvores AVL e árvores
+// vermelho-preto, para grandes conjuntos de dados.
 package bplustree
 
 import (
@@ -12,9 +33,14 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-const PATH string = "bplustree/"
-const NODES string = "BPlusTreeNodes.bin"
-const HEADER string = "BPlusTree.bin"
+// Path dos arquivos necessarios
+const (
+	PATH   string = "bplustree/"
+	NODES  string = "BPlusTreeNodes.bin"
+	HEADER string = "BPlusTree.bin"
+)
+
+// NULL padrao
 const NULL int64 = -1
 
 // Bit-Flags used for removing an element from the B+ Tree
@@ -67,10 +93,12 @@ type BPlusTree struct {
 	emptyNodes []int64
 }
 
+// Interface para leitura da database
 type Reader interface {
 	ReadNextGeneric() (any, bool, int64, error)
 }
 
+// Interface para recuperacao do campo do objeto indexavel
 type IndexableObject interface {
 	GetFieldF64(fieldName string) (float64, int64)
 }

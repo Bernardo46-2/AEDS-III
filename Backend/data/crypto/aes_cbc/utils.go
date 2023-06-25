@@ -1,3 +1,5 @@
+// utils fornece algumas funcoes utilitarias importantes para a implementacao do AESCBC
+// como operacaode xor entre blocos, geracao de aleatorios, rotate, transposicao de matriz e etc
 package aescbc
 
 import (

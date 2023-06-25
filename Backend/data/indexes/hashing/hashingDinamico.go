@@ -16,7 +16,6 @@
 //
 // Consulte a documentação das funções e tipos individuais para obter exemplos de uso e
 // informações adicionais.
-
 package hashing
 
 import (
@@ -30,8 +29,11 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-const BUCKETS_FILE string = "Hash_Buckets.bin"
-const DIRECTORY_FILE string = "Hash_Directory.bin"
+// Path de arquivos necessarios
+const (
+	BUCKETS_FILE   string = "Hash_Buckets.bin"
+	DIRECTORY_FILE string = "Hash_Directory.bin"
+)
 
 // ====================================== Structs ====================================== //
 
@@ -72,10 +74,12 @@ type BucketRecord struct {
 	Address int64 // Endereço original do registro.
 }
 
+// Interface para leitura da database
 type Reader interface {
 	ReadNextGeneric() (any, bool, int64, error)
 }
 
+// Interface para recuperacao do campo do objeto indexavel
 type IndexableObject interface {
 	GetField(fieldName string) string
 }
@@ -354,6 +358,7 @@ func (hash *DinamicHash) addRecord(r BucketRecord) {
 	}
 }
 
+// Read realiza a leitura de um determinado ID na hash
 func (hash *DinamicHash) Read(targetID int64) (targetPos int64, err error) {
 	// Carrega o diretorio e o bucket para a memoria primaria
 	pos := targetID % int64(hash.getBucketCount())
@@ -606,6 +611,7 @@ func HashUpdate(id int64, newAddress int64, path string, identifier string) erro
 	return nil
 }
 
+// Load é um wrapper simples da funcao LoadDinamicHash
 func Load(path string, identifier string) (DinamicHash, error) {
 	return LoadDinamicHash(path, identifier)
 }

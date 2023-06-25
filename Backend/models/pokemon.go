@@ -15,6 +15,7 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
+// Tamanho maximo para o nome de um pokemon
 const MAX_NAME_LEN = 40
 
 // PokemonID faz a formatação do ID para serialização em JSON
@@ -292,6 +293,10 @@ func (p *Pokemon) CalculateSize() {
 		p.Size.Descricao + 4 + 1
 }
 
+// GetField é um wrapper para selecionar um campo na struct de pokemon e
+// retorna-lo como uma string
+//
+// Este metodo é criado para a implementacao de interfaces de ordenacao e pesquisa
 func (p Pokemon) GetField(fieldName string) string {
 	field := strings.ToLower(fieldName)
 	switch field {
@@ -330,6 +335,8 @@ func (p Pokemon) GetField(fieldName string) string {
 	}
 }
 
+// PokeStrings analisa de maneira generica e automatizada quais campos da
+// struct de pokemons é uma string e retorna seus nomes
 func PokeStrings() []string {
 	obj := Pokemon{}
 	var fieldNames []string
@@ -346,6 +353,9 @@ func PokeStrings() []string {
 	return fieldNames
 }
 
+// GetFieldF64 é um wrapper para a implementacao de interfaces que transforma
+// um campo numerico de um objeto pokemon em um float64 para ordenacoes e
+// pesquisas
 func (p Pokemon) GetFieldF64(fieldName string) (float64, int64) {
 	field := strings.ToLower(fieldName)
 	switch field {
@@ -374,6 +384,9 @@ func (p Pokemon) GetFieldF64(fieldName string) (float64, int64) {
 	}
 }
 
+// PokeNumber analisa de maneira generica e automatizada quais campos da struct de
+// pokemons é um campo de natureza nao textual (int, float, slice, bool, time)
+// e por fim retorna seus respectivos nomes
 func PokeNumbers() []string {
 	fields := []string{}
 

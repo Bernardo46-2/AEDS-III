@@ -1,3 +1,13 @@
+// Package huffman fornece uma implementação do algoritmo de compressão de Huffman.
+//
+// O pacote permite a construção de uma tabela de códigos Huffman a partir dos dados de entrada,
+// proporcionando uma representação compacta para armazenamento ou transmissão.
+// A reconstrução dos dados é realizada por meio da tabela de códigos Huffman.
+//
+// # Importante:
+//
+// A eficácia dessa implementação deve ser avaliada de acordo com as características
+// específicas dos dados a serem comprimidos.
 package huffman
 
 import (
@@ -190,6 +200,8 @@ func Zip(path string) error {
 	return status
 }
 
+// read realiza a leitura de um arquivo atraves de um path fornecido para
+// realizar a descompressao do arquivo e retorna os meta dados necessarios
 func read(path string) ([]byte, map[byte]ByteMap, uint, error) {
 	content, err := os.ReadFile(path) // abre o arquivo a ser deszipado
 	if err != nil {
@@ -211,6 +223,9 @@ func read(path string) ([]byte, map[byte]ByteMap, uint, error) {
 	return data.Zip, data.Map, data.Size, nil
 }
 
+// invertMap realiza a inversao de um mapa
+//
+// map[byte]ByteMap => map[ByteMap]byte
 func invertMap(codeMap map[byte]ByteMap) map[ByteMap]byte {
 	charMap := make(map[ByteMap]byte, 0)
 	for k, v := range codeMap {
@@ -219,6 +234,8 @@ func invertMap(codeMap map[byte]ByteMap) map[ByteMap]byte {
 	return charMap
 }
 
+// getUnzip realiza a parte pratica de ler o array de bytes e descomprimi-lo
+// para o arquivo original atraves do mapa de conversao fornecido
 func getUnzip(data []byte, charMap map[ByteMap]byte, limit uint) []byte {
 	bitSize := uint(utils.ByteSize(ByteMap{0, 0}.Path) * 8)
 	original := make([]byte, 0)
@@ -260,15 +277,19 @@ func getUnzip(data []byte, charMap map[ByteMap]byte, limit uint) []byte {
 	return original
 }
 
-func Unzip(path string, extension string) error {
+// Unzip fornece uma camada de abstracao para descompressao de um arquivo
+func Unzip(path string) error {
+	// leitura do arquivo
 	data, codeMap, size, err := read(path)
 	if err != nil {
 		return err
 	}
 
+	// descompressao de fato
 	charMap := invertMap(codeMap)
 	original := getUnzip(data, charMap, size)
 
+	// substituicao para o arquivo original
 	os.WriteFile(path, original, 0644) // Escreve os dados codificados em um arquivo
 	return nil
 }

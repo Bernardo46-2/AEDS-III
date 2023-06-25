@@ -1,3 +1,11 @@
+// intercalacaoBlocoVariavel implementa o método de intercalação por bloco de
+// tamanho variável para a ordenação de arquivos grandes.
+//
+// Este pacote manipula arquivos grandes que não podem ser carregados na memória principal,
+// utilizando uma técnica de intercalação que varia o tamanho dos blocos de dados manipulados
+// com base na quantidade de memória disponível. Os dados são lidos em blocos, ordenados em
+// memória e escritos de volta em arquivos temporários menores, que são então mesclados em
+// blocos de tamanho variável para produzir a versão ordenada do arquivo original.
 package sorts
 
 import (

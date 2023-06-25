@@ -1,3 +1,8 @@
+// key é o subpacote para geracao aleatoria de chaves para o AESCBC
+//
+// O pacote utiliza implementacoes seguras de numeros aleatorios para
+// a geracao das chaves e vetores iniciais assim como outros tratamentos
+// necessarios.
 package aescbc
 
 import (

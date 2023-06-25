@@ -1,3 +1,43 @@
+// Pacote trivium - Implementação do algoritmo de criptografia de fluxo Trivium
+//
+// Este pacote implementa a criptografia de fluxo Trivium, que é um dos algoritmos
+// selecionados pelo projeto eSTREAM do ECRYPT.
+//
+// A implementação do Trivium neste pacote usa uma chave de 80 bits e um vetor de
+// inicialização (IV) de 80 bits. O algoritmo produz uma sequência de saída de bits
+// que pode ser usada para criptografia de fluxo.
+//
+// # Exemplo de uso:
+//
+//	key := StringTo10Array("0123456789")
+//	iv := StringTo10Array("abcdefghij")
+//	t := trivium.New(key, iv)
+//	t.Encrypt("destino.txt", "origem.txt")
+//
+// # Atenção:
+//
+// Embora a implementação deste pacote seja baseada na especificação do algoritmo Trivium,
+// ela ainda não foi revisada por pares, e, portanto, não deve ser considerada segura para uso
+// em produção ou em ambientes sensíveis à segurança.
+//
+// Os usuários devem fazer uma revisão e teste completo do código antes de usá-lo em um ambiente
+// de produção. É também altamente recomendado que você consulte um profissional de segurança
+// antes de usar este código.
+//
+// # Avisos de segurança:
+//
+// 1 - O mesmo par chave-vetor de inicialização (key-IV) não deve ser usado mais de uma vez.
+//
+// 2 - O vetor de inicialização (IV) deve ser escolhido aleatoriamente.
+//
+// 3 - As chaves devem ser mantidas seguras e secretas.
+//
+// 4 - Este código não protege a chave ou o texto puro. Ele deve ser usado em conjunto com boas
+// práticas de segurança, como HTTPS para transmissão e armazenamento seguro para a chave.
+//
+// # Documentacao oficial:
+//
+// https://www.ecrypt.eu.org/stream/p3ciphers/trivium/trivium_p3.pdf
 package trivium
 
 import (

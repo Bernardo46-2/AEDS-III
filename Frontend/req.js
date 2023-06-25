@@ -70,7 +70,7 @@ const importarDados = document.getElementById('ImportarDados');
 const helpBtn = document.getElementById('Ajuda');
 
 importarDados.onclick = () => {
-    if (JSON.parse(localStorage.getItem('zip')) === "true" && JSON.parse(localStorage.getItem("ziptype")) === "lzw") {
+    if (JSON.parse(localStorage.getItem('zip')) && JSON.parse(localStorage.getItem("ziptype")) === "lzw") {
         modalAviso(mostrar = "csv compactado em lzw, descompacte primeiro!")
     } else {
         localStorage.setItem('encrypted', JSON.stringify(false));
@@ -530,7 +530,13 @@ function editarDadosModal(data, shouldCreate = false) {
 
 const Create = document.querySelector('#Create');
 Create.addEventListener('click', function () {
-    abrirModal(undefined, true, undefined);
+    if (!JSON.parse(localStorage.getItem('zip')) && !JSON.parse(localStorage.getItem('encrypted'))) {
+        abrirModal(undefined, true, undefined);
+    } else if (JSON.parse(localStorage.getItem('encrypted'))) {
+        modalAviso(mostrar = "Sua database foi criptografada e sequestrada<br>Envie um pix pra gente pra recuperar!<br><br>... Ou apenas use a chave q nos fornecemos ...", tempo = 5000)
+    } else {
+        modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'))
+    }
 });
 
 /* ------------------------------------ SEARCH ------------------------------------ */
@@ -543,13 +549,14 @@ const mensagem2 = document.getElementById("mensagem-modal2");
 const search = document.querySelector('#Search');
 
 search.addEventListener('click', function (event) {
-    fatherDivPosition = cardsFatherDiv.style.position;
-    cardsFatherDiv.style.position = "fixed";
-    modalContainer2.classList.remove('out');
-    modalContainer2.classList.add('one');
-    modalContainer2.style.zIndex = "9999 !important";
+    if (!JSON.parse(localStorage.getItem('zip')) && !JSON.parse(localStorage.getItem('encrypted'))) {
+        fatherDivPosition = cardsFatherDiv.style.position;
+        cardsFatherDiv.style.position = "fixed";
+        modalContainer2.classList.remove('out');
+        modalContainer2.classList.add('one');
+        modalContainer2.style.zIndex = "9999 !important";
 
-    let modalContent = `
+        let modalContent = `
     <div class="row justify-content-center">
         <p class="col-4 search-pre-text"> </p>
         <p class="col-2 modal-search-input4">Descrição</p>
@@ -632,134 +639,139 @@ search.addEventListener('click', function (event) {
     </div>
     `;
 
-    mensagem2.innerHTML = modalContent;
+        mensagem2.innerHTML = modalContent;
 
-    const lendario = document.querySelector('#lendario2');
-    const mitico = document.querySelector('#mitico2');
-    let lendarioMarca = false;
-    let miticoMarca = false;
+        const lendario = document.querySelector('#lendario2');
+        const mitico = document.querySelector('#mitico2');
+        let lendarioMarca = false;
+        let miticoMarca = false;
 
-    lendario.addEventListener('click', function () {
-        if (!lendarioMarca) {
-            lendario.classList.remove('lendario2-n');
-            lendario.classList.add('lendario2-y');
-            lendarioMarca = true;
-        } else {
-            lendario.classList.remove('lendario2-y');
-            lendario.classList.add('lendario2-n');
-            lendarioMarca = false;
-        }
-    });
+        lendario.addEventListener('click', function () {
+            if (!lendarioMarca) {
+                lendario.classList.remove('lendario2-n');
+                lendario.classList.add('lendario2-y');
+                lendarioMarca = true;
+            } else {
+                lendario.classList.remove('lendario2-y');
+                lendario.classList.add('lendario2-n');
+                lendarioMarca = false;
+            }
+        });
 
-    mitico.addEventListener('click', function () {
-        if (!miticoMarca) {
-            mitico.classList.remove('mitico2-n');
-            mitico.classList.add('mitico2-y');
-            miticoMarca = true;
-        } else {
-            mitico.classList.remove('mitico2-y');
-            mitico.classList.add('mitico2-n');
-            miticoMarca = false;
-        }
-    });
+        mitico.addEventListener('click', function () {
+            if (!miticoMarca) {
+                mitico.classList.remove('mitico2-n');
+                mitico.classList.add('mitico2-y');
+                miticoMarca = true;
+            } else {
+                mitico.classList.remove('mitico2-y');
+                mitico.classList.add('mitico2-n');
+                miticoMarca = false;
+            }
+        });
 
-    let a;
+        let a;
 
-    searchIndex.addEventListener('click', async function mergeSearch(event) {
-        a = mergeSearch;
-        const nome = document.getElementById('nome').value;
-        const especie = document.getElementById('especie').value;
-        const tipo = document.getElementById('tipo').value;
-        const descricao = document.getElementById('descricao').value;
-        const idI = document.getElementById('idI').value;
-        let idF = document.getElementById('idF').value;
-        const hpI = document.getElementById('hpI').value;
-        let hpF = document.getElementById('hpF').value;
-        const atkI = document.getElementById('atkI').value;
-        let atkF = document.getElementById('atkF').value;
-        const defI = document.getElementById('defI').value;
-        let defF = document.getElementById('defF').value;
-        const pesoI = document.getElementById('pesoI').value;
-        let pesoF = document.getElementById('pesoF').value;
-        const alturaI = document.getElementById('alturaI').value;
-        let alturaF = document.getElementById('alturaF').value;
-        const geracaoI = document.getElementById('geracaoI').value;
-        let geracaoF = document.getElementById('geracaoF').value;
-        const LancamentoI = document.getElementById('LancamentoI').value;
-        let LancamentoF = document.getElementById('LancamentoF').value;
-        const japName = document.getElementById('japName').value;
-        const lendario = "" + (+lendarioMarca);
-        const mitico = "" + (+miticoMarca);
+        searchIndex.addEventListener('click', async function mergeSearch(event) {
+            a = mergeSearch;
+            const nome = document.getElementById('nome').value;
+            const especie = document.getElementById('especie').value;
+            const tipo = document.getElementById('tipo').value;
+            const descricao = document.getElementById('descricao').value;
+            const idI = document.getElementById('idI').value;
+            let idF = document.getElementById('idF').value;
+            const hpI = document.getElementById('hpI').value;
+            let hpF = document.getElementById('hpF').value;
+            const atkI = document.getElementById('atkI').value;
+            let atkF = document.getElementById('atkF').value;
+            const defI = document.getElementById('defI').value;
+            let defF = document.getElementById('defF').value;
+            const pesoI = document.getElementById('pesoI').value;
+            let pesoF = document.getElementById('pesoF').value;
+            const alturaI = document.getElementById('alturaI').value;
+            let alturaF = document.getElementById('alturaF').value;
+            const geracaoI = document.getElementById('geracaoI').value;
+            let geracaoF = document.getElementById('geracaoF').value;
+            const LancamentoI = document.getElementById('LancamentoI').value;
+            let LancamentoF = document.getElementById('LancamentoF').value;
+            const japName = document.getElementById('japName').value;
+            const lendario = "" + (+lendarioMarca);
+            const mitico = "" + (+miticoMarca);
 
-        idF = (idF.length == 0) ? idI : idF;
-        hpF = (hpF.length == 0) ? hpI : hpF;
-        atkF = (atkF.length == 0) ? atkI : atkF;
-        defF = (defF.length == 0) ? defI : defF;
-        pesoF = (pesoF.length == 0) ? pesoI : pesoF;
-        alturaF = (alturaF.length == 0) ? alturaI : alturaF;
-        geracaoF = (geracaoF.length == 0) ? geracaoI : geracaoF;
-        LancamentoF = (LancamentoF.length == 0) ? LancamentoI : LancamentoF;
+            idF = (idF.length == 0) ? idI : idF;
+            hpF = (hpF.length == 0) ? hpI : hpF;
+            atkF = (atkF.length == 0) ? atkI : atkF;
+            defF = (defF.length == 0) ? defI : defF;
+            pesoF = (pesoF.length == 0) ? pesoI : pesoF;
+            alturaF = (alturaF.length == 0) ? alturaI : alturaF;
+            geracaoF = (geracaoF.length == 0) ? geracaoI : geracaoF;
+            LancamentoF = (LancamentoF.length == 0) ? LancamentoI : LancamentoF;
 
-        let patternMatch = sessionStorage.getItem("patternMatchMethod");
-        if (patternMatch == null) {
-            patternMatch = "0";
-        }
+            let patternMatch = sessionStorage.getItem("patternMatchMethod");
+            if (patternMatch == null) {
+                patternMatch = "0";
+            }
 
-        fetch('http://localhost:8080/mergeSearch/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                nome: nome,
-                especie: especie,
-                tipo: tipo,
-                descricao: descricao,
-                japName: japName,
-                idI: idI,
-                idF: idF,
-                hpI: hpI,
-                hpF: hpF,
-                atkI: atkI,
-                atkF: atkF,
-                defI: defI,
-                defF: defF,
-                pesoI: pesoI,
-                pesoF: pesoF,
-                alturaI: alturaI,
-                alturaF: alturaF,
-                geracaoI: geracaoI,
-                geracaoF: geracaoF,
-                LancamentoI: LancamentoI,
-                LancamentoF: LancamentoF,
-                Lendario: lendario,
-                Mitico: mitico,
-                patternMatch: patternMatch,
+            fetch('http://localhost:8080/mergeSearch/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nome: nome,
+                    especie: especie,
+                    tipo: tipo,
+                    descricao: descricao,
+                    japName: japName,
+                    idI: idI,
+                    idF: idF,
+                    hpI: hpI,
+                    hpF: hpF,
+                    atkI: atkI,
+                    atkF: atkF,
+                    defI: defI,
+                    defF: defF,
+                    pesoI: pesoI,
+                    pesoF: pesoF,
+                    alturaI: alturaI,
+                    alturaF: alturaF,
+                    geracaoI: geracaoI,
+                    geracaoF: geracaoF,
+                    LancamentoI: LancamentoI,
+                    LancamentoF: LancamentoF,
+                    Lendario: lendario,
+                    Mitico: mitico,
+                    patternMatch: patternMatch,
+                })
             })
-        })
-            .then(response => response.json())
-            .then(data => {
-                cardsFatherDiv.style.position = fatherDivPosition;
-                modalContainer2.classList.add('out');
-                paginarIds(data.ids);
-                sessionStorage.setItem('duracao', JSON.stringify(data.time));
-                lastClicked = 1;
-                insertDots = true;
-                sessionStorage.setItem('actualPage', JSON.stringify(1));
-                recuperarCards(0)
-                searchIndex.removeEventListener('click', mergeSearch);
-            })
-            .catch(error => {
-                modalAviso("Nenhum Pokemon Encontrado");
-                console.log(error)
-            });
-    });
+                .then(response => response.json())
+                .then(data => {
+                    cardsFatherDiv.style.position = fatherDivPosition;
+                    modalContainer2.classList.add('out');
+                    paginarIds(data.ids);
+                    sessionStorage.setItem('duracao', JSON.stringify(data.time));
+                    lastClicked = 1;
+                    insertDots = true;
+                    sessionStorage.setItem('actualPage', JSON.stringify(1));
+                    recuperarCards(0)
+                    searchIndex.removeEventListener('click', mergeSearch);
+                })
+                .catch(error => {
+                    modalAviso("Nenhum Pokemon Encontrado");
+                    console.log(error)
+                });
+        });
 
-    modalSearchClose.addEventListener('click', () => {
-        cardsFatherDiv.style.position = fatherDivPosition;
-        modalContainer2.classList.add('out');
-        searchIndex.removeEventListener('click', a);
-    });
+        modalSearchClose.addEventListener('click', () => {
+            cardsFatherDiv.style.position = fatherDivPosition;
+            modalContainer2.classList.add('out');
+            searchIndex.removeEventListener('click', a);
+        });
+    } else if (JSON.parse(localStorage.getItem('encrypted'))) {
+        modalAviso(mostrar = "Sua database foi criptografada e sequestrada<br>Envie um pix pra gente pra recuperar!<br><br>... Ou apenas use a chave q nos fornecemos ...", tempo = 5000)
+    } else {
+        modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'))
+    }
 });
 
 /* ------------------------------ METODOS DE ORDENAÇAO ------------------------------ */
@@ -835,7 +847,7 @@ ordenarButtons.forEach(element => {
 
 
 ordenar0.onclick = () => {
-    if (JSON.parse(localStorage.getItem('zip')) === "false") {
+    if (!JSON.parse(localStorage.getItem('zip')) && !JSON.parse(localStorage.getItem('encrypted'))) {
         fetch('http://localhost:8080/ordenacao/?metodo=0')
             .then(response => response.json())
             .then(data => {
@@ -846,12 +858,14 @@ ordenar0.onclick = () => {
                 modalAviso();
                 console.log(error)
             });
+    } else if (JSON.parse(localStorage.getItem('encrypted'))) {
+        modalAviso(mostrar = "Sua database foi criptografada e sequestrada<br>Envie um pix pra gente pra recuperar!<br><br>... Ou apenas use a chave q nos fornecemos ...", tempo = 5000)
     } else {
-        modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'));
+        modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'))
     }
 }
 ordenar1.onclick = () => {
-    if (JSON.parse(localStorage.getItem('zip')) === "false") {
+    if (!JSON.parse(localStorage.getItem('zip')) && !JSON.parse(localStorage.getItem('encrypted'))) {
         fetch('http://localhost:8080/ordenacao/?metodo=1')
             .then(response => response.json())
             .then(data => {
@@ -862,12 +876,14 @@ ordenar1.onclick = () => {
                 modalAviso();
                 console.log(error)
             });
+    } else if (JSON.parse(localStorage.getItem('encrypted'))) {
+        modalAviso(mostrar = "Sua database foi criptografada e sequestrada<br>Envie um pix pra gente pra recuperar!<br><br>... Ou apenas use a chave q nos fornecemos ...", tempo = 5000)
     } else {
-        modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'));
+        modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'))
     }
 }
 ordenar2.onclick = () => {
-    if (JSON.parse(localStorage.getItem('zip')) === "false") {
+    if (!JSON.parse(localStorage.getItem('zip')) && !JSON.parse(localStorage.getItem('encrypted'))) {
         fetch('http://localhost:8080/ordenacao/?metodo=2')
             .then(response => response.json())
             .then(data => {
@@ -878,8 +894,10 @@ ordenar2.onclick = () => {
                 modalAviso();
                 console.log(error)
             });
+    } else if (JSON.parse(localStorage.getItem('encrypted'))) {
+        modalAviso(mostrar = "Sua database foi criptografada e sequestrada<br>Envie um pix pra gente pra recuperar!<br><br>... Ou apenas use a chave q nos fornecemos ...", tempo = 5000)
     } else {
-        modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'));
+        modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'))
     }
 }
 
@@ -962,9 +980,15 @@ indexButtons.forEach(element => {
 
 indexChoice.forEach(element => {
     element.onclick = () => {
-        const choice = element.id;
-        const lastDigit = parseInt(choice.slice(-1));
-        sessionStorage.setItem('searchMethod', JSON.stringify(lastDigit));
+        if (!JSON.parse(localStorage.getItem('zip')) && !JSON.parse(localStorage.getItem('encrypted'))) {
+            const choice = element.id;
+            const lastDigit = parseInt(choice.slice(-1));
+            sessionStorage.setItem('searchMethod', JSON.stringify(lastDigit));
+        } else if (JSON.parse(localStorage.getItem('encrypted'))) {
+            modalAviso(mostrar = "Sua database foi criptografada e sequestrada<br>Envie um pix pra gente pra recuperar!<br><br>... Ou apenas use a chave q nos fornecemos ...", tempo = 5000)
+        } else {
+            modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'))
+        }
     }
 });
 
@@ -1031,74 +1055,82 @@ zipButtons.forEach(element => {
 });
 
 zip0.onclick = () => {
-    if (!JSON.parse(localStorage.getItem('zip'))) {
-        localStorage.setItem('zip', JSON.stringify(true));
-        localStorage.setItem('ziptype', JSON.stringify("huffman"));
+    if (!JSON.parse(localStorage.getItem('encrypted'))) {
+        if (!JSON.parse(localStorage.getItem('zip'))) {
+            localStorage.setItem('zip', JSON.stringify(true));
+            localStorage.setItem('ziptype', JSON.stringify("huffman"));
 
-        fetch('http://localhost:8080/zip/?metodo=1')
-            .then(response => response.json())
-            .then(data => {
-                modalAviso(data.mensagem);
-                const cardsHtml = document.getElementById('cards');
-                cardsHtml.innerHTML = '';
-            })
-            .catch(error => {
-                modalAviso();
-                console.log(error)
-            });
+            fetch('http://localhost:8080/zip/?metodo=1')
+                .then(response => response.json())
+                .then(data => {
+                    modalAviso(data.mensagem);
+                    const cardsHtml = document.getElementById('cards');
+                    cardsHtml.innerHTML = '';
+                })
+                .catch(error => {
+                    modalAviso();
+                    console.log(error)
+                });
 
-    } else if (JSON.parse(localStorage.getItem('ziptype')) === "huffman") {
-        localStorage.setItem('zip', JSON.stringify(false));
-        localStorage.setItem('ziptype', JSON.stringify("none"));
+        } else if (JSON.parse(localStorage.getItem('ziptype')) === "huffman") {
+            localStorage.setItem('zip', JSON.stringify(false));
+            localStorage.setItem('ziptype', JSON.stringify("none"));
 
-        fetch('http://localhost:8080/unzip/?metodo=1')
-            .then(response => response.json())
-            .then(data => {
-                modalAviso(data.mensagem);
-                showAll.onclick();
-            })
-            .catch(error => {
-                modalAviso();
-                console.log(error)
-            });
+            fetch('http://localhost:8080/unzip/?metodo=1')
+                .then(response => response.json())
+                .then(data => {
+                    modalAviso(data.mensagem);
+                    showAll.onclick();
+                })
+                .catch(error => {
+                    modalAviso();
+                    console.log(error)
+                });
+        } else {
+            modalAviso(mostrar = "Metodo correto = LZW");
+        }
     } else {
-        modalAviso(mostrar = "Metodo correto = LZW");
+        modalAviso(mostrar = "Sua database foi criptografada e sequestrada<br>Envie um pix pra gente pra recuperar!<br><br>... Ou apenas use a chave q nos fornecemos ...", tempo = 5000)
     }
 };
 
 zip1.onclick = () => {
-    if (!JSON.parse(localStorage.getItem('zip'))) {
-        localStorage.setItem('zip', JSON.stringify(true));
-        localStorage.setItem('ziptype', JSON.stringify("lzw"));
+    if (!JSON.parse(localStorage.getItem('encrypted'))) {
+        if (!JSON.parse(localStorage.getItem('zip'))) {
+            localStorage.setItem('zip', JSON.stringify(true));
+            localStorage.setItem('ziptype', JSON.stringify("lzw"));
 
-        fetch('http://localhost:8080/zip/?metodo=2')
-            .then(response => response.json())
-            .then(data => {
-                modalAviso(data.mensagem);
-                const cardsHtml = document.getElementById('cards');
-                cardsHtml.innerHTML = '';
-            })
-            .catch(error => {
-                modalAviso();
-                console.log(error)
-            });
+            fetch('http://localhost:8080/zip/?metodo=2')
+                .then(response => response.json())
+                .then(data => {
+                    modalAviso(data.mensagem);
+                    const cardsHtml = document.getElementById('cards');
+                    cardsHtml.innerHTML = '';
+                })
+                .catch(error => {
+                    modalAviso();
+                    console.log(error)
+                });
 
-    } else if (JSON.parse(localStorage.getItem('ziptype')) === "lzw") {
-        localStorage.setItem('zip', JSON.stringify(false));
-        localStorage.setItem('ziptype', JSON.stringify("none"));
+        } else if (JSON.parse(localStorage.getItem('ziptype')) === "lzw") {
+            localStorage.setItem('zip', JSON.stringify(false));
+            localStorage.setItem('ziptype', JSON.stringify("none"));
 
-        fetch('http://localhost:8080/unzip/?metodo=2')
-            .then(response => response.json())
-            .then(data => {
-                modalAviso(data.mensagem);
-                showAll.onclick();
-            })
-            .catch(error => {
-                modalAviso();
-                console.log(error)
-            });
+            fetch('http://localhost:8080/unzip/?metodo=2')
+                .then(response => response.json())
+                .then(data => {
+                    modalAviso(data.mensagem);
+                    showAll.onclick();
+                })
+                .catch(error => {
+                    modalAviso();
+                    console.log(error)
+                });
+        } else {
+            modalAviso(mostrar = "Metodo correto = Huffman");
+        }
     } else {
-        modalAviso(mostrar = "Metodo correto = Huffman");
+        modalAviso(mostrar = "Sua database foi criptografada e sequestrada<br>Envie um pix pra gente pra recuperar!<br><br>... Ou apenas use a chave q nos fornecemos ...", tempo = 5000)
     }
 };
 
@@ -1173,9 +1205,15 @@ casamentoButtons.forEach(element => {
 
 casamentoChoice.forEach(element => {
     element.onclick = () => {
-        const choice = element.id;
-        const lastDigit = parseInt(choice.slice(-1));
-        sessionStorage.setItem('patternMatchMethod', JSON.stringify(lastDigit));
+        if (!JSON.parse(localStorage.getItem('zip')) && !JSON.parse(localStorage.getItem('encrypted'))) {
+            const choice = element.id;
+            const lastDigit = parseInt(choice.slice(-1));
+            sessionStorage.setItem('patternMatchMethod', JSON.stringify(lastDigit));
+        } else if (JSON.parse(localStorage.getItem('encrypted'))) {
+            modalAviso(mostrar = "Sua database foi criptografada e sequestrada<br>Envie um pix pra gente pra recuperar!<br><br>... Ou apenas use a chave q nos fornecemos ...", tempo = 5000)
+        } else {
+            modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'))
+        }
     }
 });
 
@@ -1265,7 +1303,7 @@ crypto2.onclick = () => criptografar(3);
 crypto3.onclick = () => criptografar(4);
 
 function criptografar(option = 0) {
-    if (JSON.parse(localStorage.getItem('zip')) === false) {
+    if (!JSON.parse(localStorage.getItem('zip'))) {
         let e = localStorage.getItem('encrypted') === "true";
         if (e) {
             modalContainer2.classList.remove('out');

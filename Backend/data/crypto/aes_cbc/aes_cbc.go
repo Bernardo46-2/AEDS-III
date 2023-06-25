@@ -1,3 +1,39 @@
+// Pacote aes_cbc - Advanced Encryption Standard - Cipher Block Chaining
+//
+// Este pacote implementa a criptografia simétrica AES (Advanced Encryption Standard)
+// em modo CBC (Cipher Block Chaining), conforme definido pelo NIST em FIPS 197 e
+// FIPS 800-38A, respectivamente.
+//
+// Este pacote suporta três tamanhos de chave: AES-128 (16 bytes), AES-192 (24 bytes)
+// e AES-256 (32 bytes).
+//
+// # Exemplo de uso:
+//
+//	iv, _ := aescbc.RandBytes(aescbc.BLOCK_SIZE)
+//	data, _ := os.ReadFile(file)
+//	data = aescbc.Encrypt(k, iv, data)
+//	os.WriteFile(file, data, 0644)
+//
+// # Atenção:
+//
+// Apesar de passar nos testes, esta implementação não foi auditada por pares, portanto
+// não deve ser considerada segura para uso em produção em aplicativos reais.
+// Por favor, consulte um profissional de segurança antes de usar este código em um ambiente de produção.
+//
+// # Avisos de segurança:
+//
+// 1 - O mesmo par chave-vetor de inicialização (key-IV) não deve ser usado mais de uma vez.
+//
+// 2 - O vetor de inicialização (IV) deve ser escolhido aleatoriamente.
+//
+// 3 - As chaves devem ser mantidas seguras e secretas.
+//
+// 4 - Este código não protege a chave ou o texto puro. Ele deve ser usado em conjunto com boas
+// práticas de segurança, como HTTPS para transmissão e armazenamento seguro para a chave.
+//
+// # Documentacao oficial:
+//
+// https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38a.pdf
 package aescbc
 
 // BLOCK_SIZE armazena o tamanho de cada bloco

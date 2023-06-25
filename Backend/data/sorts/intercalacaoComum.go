@@ -1,3 +1,9 @@
+// intercalacaoComum implementa o método de intercalação comum para a ordenação de arquivos grandes.
+//
+// Este pacote manipula arquivos grandes que não podem ser carregados na memória principal,
+// e realiza a ordenação por meio de uma série de operações de leitura, gravação, comparação e mesclagem.
+// Os arquivos são lidos sequencialmente, ordenados em memória e escritos de volta em arquivos temporários menores,
+// que são então mesclados para produzir a versão ordenada do arquivo original.
 package sorts
 
 import (
@@ -13,6 +19,7 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
+// Path de arquivos temporarios
 const TMP_DIR_PATH string = "data/files/tmp/"
 
 // IntercalacaoBalanceadaComum executa a ordenação externa do banco de dados binario.

@@ -1,3 +1,17 @@
+// Package kmp implementa o algoritmo Knuth-Morris-Pratt (KMP)
+//
+// O algoritmo KMP é um algoritmo de busca de padrões que busca por ocorrências
+// de uma "palavra" W dentro de um texto principal T.
+// É um algoritmo eficiente com complexidade de tempo linear, O(n), sendo n o
+// tamanho do texto.
+//
+// Este pacote fornece uma função SearchPokemon feita especificamente para o
+// processamento do banco de dados de Pokemons do trabalho original
+//
+// Tambem é oferecido funcoes para chamada externa:
+//
+//	SearchNext (busca a ultima ocorrencia)
+//	SearchString (busca todas as ocorrencias)
 package kmp
 
 import (

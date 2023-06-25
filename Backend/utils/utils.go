@@ -176,6 +176,7 @@ func BytesToFloat64(registro []byte, ptr int) (float64, int) {
 	return float, ptr + size
 }
 
+// AbsInt64 retorna o valor absoluto de um número do tipo int64.
 func AbsInt64(x int64) int64 {
 	if x < 0 {
 		return -x
@@ -183,6 +184,8 @@ func AbsInt64(x int64) int64 {
 	return x
 }
 
+// InsertionSort ordena uma slice de int32 no próprio local,
+// utilizando o algoritmo de ordenação por inserção.
 func InsertionSort(arr []int32) {
 	for i := 1; i < len(arr); i++ {
 		key := arr[i]
@@ -195,6 +198,8 @@ func InsertionSort(arr []int32) {
 	}
 }
 
+// Decaptalize retorna uma string com o primeiro caractere
+// convertido para minúsculo.
 func Decaptalize(str string) string {
 	if len(str) < 1 {
 		return str
@@ -202,6 +207,9 @@ func Decaptalize(str string) string {
 	return strings.ToLower(str[0:1]) + str[1:]
 }
 
+// BoolToFloat converte um valor booleano para um número de ponto
+// flutuante (float64). Retorna 1.0 se o booleano for true e 0.0
+// se for false.
 func BoolToFloat(b bool) float64 {
 	if b {
 		return 1.0
@@ -209,6 +217,9 @@ func BoolToFloat(b bool) float64 {
 	return 0.0
 }
 
+// FormatDate converte uma string contendo uma data no formato "dd/mm/yyyy"
+// para uma string contendo o tempo Unix correspondente
+// (número de segundos desde 01/01/1970).
 func FormatDate(dateStr string) string {
 	date, _ := time.Parse("02/01/2006", dateStr)
 
@@ -216,6 +227,10 @@ func FormatDate(dateStr string) string {
 	return strconv.FormatInt(unixTime, 10)
 }
 
+// FormatByte converte um byte em uma string binária de um tamanho especificado.
+// Se a representação binária do byte for maior que o tamanho especificado, a função
+// irá truncar os bits mais significativos. Se for menor, a função irá adicionar
+// zeros à esquerda até atingir o tamanho desejado.
 func FormatByte(b byte, size int) string {
 	// Converte o byte em uma string binária
 	binaryStr := fmt.Sprintf("%08b", b)
@@ -233,6 +248,13 @@ func FormatByte(b byte, size int) string {
 	return binaryStr
 }
 
+// ByteSize retorna o tamanho em bytes do valor passado como parâmetro.
+// A função suporta os seguintes tipos:
+//
+// int8, uint8, int16, uint16, int32, uint32, float32, int64, uint64,
+// float64, complex64, complex128, string, slice, int, uint.
+//
+// Para qualquer outro tipo, a função imprime uma mensagem de erro e retorna 0.
 func ByteSize(v interface{}) int {
 	var size int
 	value := reflect.ValueOf(v)
@@ -262,14 +284,20 @@ func ByteSize(v interface{}) int {
 	return size
 }
 
+// RotateLeft executa uma rotação para a esquerda em um valor uint8.
+// O número de posições para rotacionar é dado por n.
 func RotateLeft(value uint8, n uint) uint8 {
 	return (value << n) | (value >> (8 - n))
 }
 
+// RotateRight executa uma rotação para a direita em um byte.
+// O número de posições para rotacionar é dado por n.
 func RotateRight(value byte, n uint) byte {
 	return (value >> n) | (value << (8 - n))
 }
 
+// ChangeExtension modifica a extensão de um arquivo fornecido em 'filePath'.
+// A nova extensão fornecida em 'newExtension' substituirá a extensão atual do arquivo.
 func ChangeExtension(filePath, newExtension string) string {
 	// Obter a extensão atual do arquivo
 	ext := filepath.Ext(filePath)
@@ -283,18 +311,25 @@ func ChangeExtension(filePath, newExtension string) string {
 	return newFilePath
 }
 
+// ByteArrayToAscii converte um array de bytes de tamanho 10 em uma string contendo
+// a representação ASCII de cada byte, separados por espaço.
 func ByteArrayToAscii(b [10]byte) string {
 	str := fmt.Sprint(b)
 	str = strings.Trim(str, "[]")
 	return str
 }
 
+// SliceToAscii converte um slice de bytes em uma string contendo a representação
+// ASCII de cada byte, separados por espaço.
 func SliceToAscii(b []byte) string {
 	str := fmt.Sprint(b)
 	str = strings.Trim(str, "[]")
 	return str
 }
 
+// StringToByteArray converte uma string contendo a representação ASCII de 10 bytes
+// em um array de bytes de tamanho 10. Se a string não contiver exatamente 10 bytes,
+// a função retornará um erro.
 func StringToByteArray(s string) ([10]byte, error) {
 	parts := strings.Split(s, " ")
 	if len(parts) != 10 {
@@ -313,6 +348,9 @@ func StringToByteArray(s string) ([10]byte, error) {
 	return byteArray, nil
 }
 
+// StringToSlice converte uma string contendo representações ASCII de bytes
+// (separados por espaços) em um slice de bytes. Se algum dos bytes na string não
+// puder ser convertido em um inteiro, a função retornará um erro.
 func StringToSlice(s string) ([]byte, error) {
 	parts := strings.Split(s, " ")
 
@@ -328,13 +366,15 @@ func StringToSlice(s string) ([]byte, error) {
 	return byteArray, nil
 }
 
+// Constantes para o caminho do verificador e o texto de verificação
 const (
 	VERIFIER string = "data/files/database/autenticity.txt"
 	V_TEXT   string = "VERIFICADO!"
 )
 
+// Create_verifier cria um arquivo em 'VERIFIER' contendo 'V_TEXT'.
+// Se os diretórios necessários para o arquivo não existirem, eles serão criados.
 func Create_verifier() {
-
 	// Cria os diretórios se eles não existirem
 	os.MkdirAll("data/files/database", os.ModePerm)
 
@@ -344,9 +384,9 @@ func Create_verifier() {
 
 	// Escreve a mensagem no arquivo
 	file.WriteString(V_TEXT)
-
 }
 
+// Verify verifica se a string 'content' fornecida é igual a 'V_TEXT'.
 func Verify(content string) bool {
 	return content == V_TEXT
 }

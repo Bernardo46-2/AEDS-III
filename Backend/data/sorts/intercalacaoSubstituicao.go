@@ -1,3 +1,11 @@
+// intercalacaoSubstituicao implementa o método de intercalação por substituição (heap)
+// para a ordenação de arquivos grandes.
+//
+// Este pacote manipula arquivos grandes que não podem ser carregados na memória principal,
+// utilizando uma estrutura de dados de heap para manter a ordenação dos registros durante
+// as operações de intercalação. Os registros são lidos na memória, organizados em um heap
+// mínimo para garantir a ordenação e escritos de volta em arquivos temporários menores,
+// que são então mesclados para produzir a versão ordenada do arquivo original.
 package sorts
 
 import (

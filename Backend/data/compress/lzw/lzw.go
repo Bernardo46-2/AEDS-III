@@ -1,3 +1,13 @@
+// Package lzw fornece uma implementação do algoritmo de compressão Lempel-Ziv-Welch (LZW).
+// O LZW é um algoritmo de codificação universal que oferece bons níveis de compressão
+// para muitos tipos de dados.
+//
+// # Nota:
+//
+// Esta implementação esta instavel e funciona exclusivamente para a compressão de documentos
+// de texto e pode não funcionar corretamente com outros tipos de dados. Portanto, deve ser
+// usada com cautela, recomenda-se testar a funcionalidade cuidadosamente antes de usar em
+// producao
 package lzw
 
 import (
@@ -11,6 +21,7 @@ import (
 
 // ================================================ utils ================================================ //
 
+// compareArray compara se 2 arrays sao identicos
 func compareArray(array1, array2 []byte) bool {
 	if b := len(array1) == len(array2); b {
 		for i := 0; i < len(array1); i++ {

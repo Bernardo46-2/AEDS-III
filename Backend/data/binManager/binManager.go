@@ -12,9 +12,213 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/models"
 )
 
-const FILES_PATH string = "data/files/"
-const CSV_PATH string = "data/files/database/pokedex.csv"
-const BIN_FILE string = "data/files/database/pokedex.bin"
+// Constante de endereco de arquivo bases
+const (
+	FILES_PATH string = "data/files/"
+	CSV_PATH   string = "data/files/database/pokedex.csv"
+	BIN_FILE   string = "data/files/database/pokedex.bin"
+)
+
+// ControleLeitura implementa um objeto para leitura automatizada
+// da base de dados binaria
+type ControleLeitura struct {
+	Arquivo        *os.File  // ponteiro para o arquivo de registros
+	TotalRegistros int32     // número total de registros no arquivo
+	RegistrosLidos int32     // número de registros já lidos
+	RegistroAtual  *Registro // ponteiro para o registro atual sendo lido
+}
+
+// Registo é um sub arquivo do controle de leitura usado para encapsulamento
+// do valor recuperado
+type Registro struct {
+	Lapide   int32          // Se o arquivo esta valido ou nao
+	Tamanho  int32          // Tamanho em bits do arquivo
+	Pokemon  models.Pokemon // Dado em si
+	Endereco int64          // Posicao do registro no arquivo
+}
+
+// Close encapsula o fechamento do arquivo
+func (c *ControleLeitura) Close() error {
+	return c.Arquivo.Close()
+}
+
+// InicializarControleLeitura recebe um path de arquivo e cria um objeto
+// controler para leitura dos registros de forma automatizada
+func InicializarControleLeitura(path string) (*ControleLeitura, error) {
+	arquivo, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+
+	// ler o número total de registros do arquivo
+	var totalRegistros int32
+	err = binary.Read(arquivo, binary.LittleEndian, &totalRegistros)
+	if err != nil {
+		return nil, err
+	}
+
+	// criar uma instância do ControleLeitura
+	controle := &ControleLeitura{
+		Arquivo:        arquivo,
+		RegistrosLidos: 0,
+		TotalRegistros: totalRegistros,
+		RegistroAtual:  nil,
+	}
+
+	return controle, nil
+}
+
+// Reset realiza a reinicializacao de leitura do arquivo
+func (c *ControleLeitura) Reset() {
+	c.Arquivo.Seek(4, io.SeekStart)
+	c.RegistrosLidos = 0
+	c.RegistroAtual = nil
+}
+
+// IsDead abstrai a acao de verificar se um arquivo esta valido
+func (r *Registro) IsDead() bool {
+	return r.Lapide == 1
+}
+
+// ReadTargetPokemon realiza a leitura de um pokemon especifico atraves
+// do seu endereco no arquivo de maneira automatica e abstraida
+func ReadTargetPokemon(targetPos int64) models.Pokemon {
+	c, _ := InicializarControleLeitura(BIN_FILE)
+	defer c.Close()
+
+	targetPokemon := models.Pokemon{Numero: -1}
+	limiteArquivo, _ := c.Arquivo.Seek(0, io.SeekEnd)
+	if targetPos == 0 || targetPos >= limiteArquivo {
+		return targetPokemon
+	}
+
+	c.Arquivo.Seek(targetPos, io.SeekStart)
+	var lapide int32
+	var tamanho int32
+	var conteudo models.Pokemon
+
+	binary.Read(c.Arquivo, binary.LittleEndian, &lapide)
+	binary.Read(c.Arquivo, binary.LittleEndian, &tamanho)
+	conteudoBytes := make([]byte, tamanho-4)
+	binary.Read(c.Arquivo, binary.LittleEndian, &conteudoBytes)
+
+	// Converte os bytes para uma struct models.Pokemon se nao houver lapide
+	if lapide != 1 {
+		conteudo.ParseBinToPoke(conteudoBytes)
+	} else {
+		conteudo.Numero = -1
+	}
+
+	return conteudo
+}
+
+// ReadTarget é uma funcao para implementacao de interfaces de leitura.
+// A partir de um endereco faz a leitura de um valor especifico na base binaria.
+func (c *ControleLeitura) ReadTarget(targetPos int64) models.Pokemon {
+	targetPokemon := models.Pokemon{Numero: -1}
+	limiteArquivo, _ := c.Arquivo.Seek(0, io.SeekEnd)
+	if targetPos == 0 || targetPos >= limiteArquivo {
+		return targetPokemon
+	}
+
+	c.Arquivo.Seek(targetPos, io.SeekStart)
+	var lapide int32
+	var tamanho int32
+	var conteudo models.Pokemon
+
+	binary.Read(c.Arquivo, binary.LittleEndian, &lapide)
+	binary.Read(c.Arquivo, binary.LittleEndian, &tamanho)
+	conteudoBytes := make([]byte, tamanho-4)
+	binary.Read(c.Arquivo, binary.LittleEndian, &conteudoBytes)
+
+	// Converte os bytes para uma struct models.Pokemon se nao houver lapide
+	if lapide != 1 {
+		conteudo.ParseBinToPoke(conteudoBytes)
+	} else {
+		conteudo.Numero = -1
+	}
+
+	return conteudo
+}
+
+// ReadNext faz o movimento no arquivo binario pulando a agulha de leitura
+// para o proximo valor e o armazenando no buffer "Registro"
+func (c *ControleLeitura) ReadNext() error {
+	// verificar se todos os registros já foram lidos
+	if c.RegistrosLidos >= c.TotalRegistros {
+		return io.EOF // fim do arquivo
+	}
+
+	// ler os dados do registro do arquivo
+	endereco, _ := c.Arquivo.Seek(0, io.SeekCurrent)
+	var lapide int32
+	var tamanho int32
+	var conteudo models.Pokemon
+
+	binary.Read(c.Arquivo, binary.LittleEndian, &lapide)
+	binary.Read(c.Arquivo, binary.LittleEndian, &tamanho)
+	conteudoBytes := make([]byte, tamanho-4)
+	binary.Read(c.Arquivo, binary.LittleEndian, &conteudoBytes)
+
+	// Converte os bytes para uma struct models.Pokemon se nao houver lapide
+	if lapide != 1 {
+		conteudo.ParseBinToPoke(conteudoBytes)
+	} else {
+		conteudo.Numero = -1
+	}
+
+	// atualizar o registro atual e o número de registros lidos
+	registro := &Registro{
+		Lapide:   lapide,
+		Tamanho:  tamanho,
+		Pokemon:  conteudo,
+		Endereco: endereco,
+	}
+	c.RegistroAtual = registro
+	c.RegistrosLidos++
+
+	return nil
+}
+
+// ReadNextGeneric é uma implementacao para interface que realiza a leitura
+// do proximo registro no documento e o armazenando em um buffer que garante
+// a existencia da funcao "GetField(fieldName string) string"
+func (c *ControleLeitura) ReadNextGeneric() (any, bool, int64, error) {
+	// verificar se todos os registros já foram lidos
+	if c.RegistrosLidos >= c.TotalRegistros {
+		return nil, false, -1, io.EOF // fim do arquivo
+	}
+
+	// ler os dados do registro do arquivo
+	endereco, _ := c.Arquivo.Seek(0, io.SeekCurrent)
+	var lapide int32
+	var tamanho int32
+	var conteudo models.Pokemon
+
+	binary.Read(c.Arquivo, binary.LittleEndian, &lapide)
+	binary.Read(c.Arquivo, binary.LittleEndian, &tamanho)
+	conteudoBytes := make([]byte, tamanho-4)
+	binary.Read(c.Arquivo, binary.LittleEndian, &conteudoBytes)
+
+	// Converte os bytes para uma struct models.Pokemon se nao houver lapide
+	if lapide != 1 {
+		conteudo.ParseBinToPoke(conteudoBytes)
+	} else {
+		conteudo.Numero = -1
+	}
+
+	// atualizar o registro atual e o número de registros lidos
+	registro := &Registro{
+		Lapide:   lapide,
+		Tamanho:  tamanho,
+		Pokemon:  conteudo,
+		Endereco: endereco,
+	}
+	c.RegistroAtual = registro
+	c.RegistrosLidos++
+
+	return registro.Pokemon, c.RegistroAtual.IsDead(), c.RegistroAtual.Endereco, nil
+}
 
 // ReadBinToPoke lê um arquivo binário com informações de Pokémons e retorna
 // um Pokémon com o número especificado. Caso o número não seja encontrado,
@@ -135,6 +339,7 @@ func NumRegistros() (numEntradas int, inicioRegistros int64, err error) {
 	return
 }
 
+// GetLastPokemon faz a leitura do ultimo ID de pokemon existente na database
 func GetLastPokemon() (lastID int32) {
 	atualPokemon := models.Pokemon{Numero: -1}
 	ultimoPokemon := models.Pokemon{Numero: -1}
@@ -254,187 +459,4 @@ func AppendPokemon(pokemon []byte) (address int64, err error) {
 	AlterarNumRegistros(1)
 
 	return
-}
-
-type ControleLeitura struct {
-	Arquivo        *os.File  // ponteiro para o arquivo de registros
-	TotalRegistros int32     // número total de registros no arquivo
-	RegistrosLidos int32     // número de registros já lidos
-	RegistroAtual  *Registro // ponteiro para o registro atual sendo lido
-}
-
-type Registro struct {
-	Lapide   int32
-	Tamanho  int32
-	Pokemon  models.Pokemon
-	Endereco int64
-}
-
-func (c *ControleLeitura) Close() error {
-	return c.Arquivo.Close()
-}
-
-func InicializarControleLeitura(nomeArquivo string) (*ControleLeitura, error) {
-	arquivo, err := os.Open(nomeArquivo)
-	if err != nil {
-		return nil, err
-	}
-
-	// ler o número total de registros do arquivo
-	var totalRegistros int32
-	err = binary.Read(arquivo, binary.LittleEndian, &totalRegistros)
-	if err != nil {
-		return nil, err
-	}
-
-	// criar uma instância do ControleLeitura
-	controle := &ControleLeitura{
-		Arquivo:        arquivo,
-		RegistrosLidos: 0,
-		TotalRegistros: totalRegistros,
-		RegistroAtual:  nil,
-	}
-
-	return controle, nil
-}
-
-func ReadTargetPokemon(targetPos int64) models.Pokemon {
-	c, _ := InicializarControleLeitura(BIN_FILE)
-	defer c.Close()
-
-	targetPokemon := models.Pokemon{Numero: -1}
-	limiteArquivo, _ := c.Arquivo.Seek(0, io.SeekEnd)
-	if targetPos == 0 || targetPos >= limiteArquivo {
-		return targetPokemon
-	}
-
-	c.Arquivo.Seek(targetPos, io.SeekStart)
-	var lapide int32
-	var tamanho int32
-	var conteudo models.Pokemon
-
-	binary.Read(c.Arquivo, binary.LittleEndian, &lapide)
-	binary.Read(c.Arquivo, binary.LittleEndian, &tamanho)
-	conteudoBytes := make([]byte, tamanho-4)
-	binary.Read(c.Arquivo, binary.LittleEndian, &conteudoBytes)
-
-	// Converte os bytes para uma struct models.Pokemon se nao houver lapide
-	if lapide != 1 {
-		conteudo.ParseBinToPoke(conteudoBytes)
-	} else {
-		conteudo.Numero = -1
-	}
-
-	return conteudo
-}
-
-func (c *ControleLeitura) ReadTarget(targetPos int64) models.Pokemon {
-	targetPokemon := models.Pokemon{Numero: -1}
-	limiteArquivo, _ := c.Arquivo.Seek(0, io.SeekEnd)
-	if targetPos == 0 || targetPos >= limiteArquivo {
-		return targetPokemon
-	}
-
-	c.Arquivo.Seek(targetPos, io.SeekStart)
-	var lapide int32
-	var tamanho int32
-	var conteudo models.Pokemon
-
-	binary.Read(c.Arquivo, binary.LittleEndian, &lapide)
-	binary.Read(c.Arquivo, binary.LittleEndian, &tamanho)
-	conteudoBytes := make([]byte, tamanho-4)
-	binary.Read(c.Arquivo, binary.LittleEndian, &conteudoBytes)
-
-	// Converte os bytes para uma struct models.Pokemon se nao houver lapide
-	if lapide != 1 {
-		conteudo.ParseBinToPoke(conteudoBytes)
-	} else {
-		conteudo.Numero = -1
-	}
-
-	return conteudo
-}
-
-func (c *ControleLeitura) ReadNext() error {
-	// verificar se todos os registros já foram lidos
-	if c.RegistrosLidos >= c.TotalRegistros {
-		return io.EOF // fim do arquivo
-	}
-
-	// ler os dados do registro do arquivo
-	endereco, _ := c.Arquivo.Seek(0, io.SeekCurrent)
-	var lapide int32
-	var tamanho int32
-	var conteudo models.Pokemon
-
-	binary.Read(c.Arquivo, binary.LittleEndian, &lapide)
-	binary.Read(c.Arquivo, binary.LittleEndian, &tamanho)
-	conteudoBytes := make([]byte, tamanho-4)
-	binary.Read(c.Arquivo, binary.LittleEndian, &conteudoBytes)
-
-	// Converte os bytes para uma struct models.Pokemon se nao houver lapide
-	if lapide != 1 {
-		conteudo.ParseBinToPoke(conteudoBytes)
-	} else {
-		conteudo.Numero = -1
-	}
-
-	// atualizar o registro atual e o número de registros lidos
-	registro := &Registro{
-		Lapide:   lapide,
-		Tamanho:  tamanho,
-		Pokemon:  conteudo,
-		Endereco: endereco,
-	}
-	c.RegistroAtual = registro
-	c.RegistrosLidos++
-
-	return nil
-}
-
-func (c *ControleLeitura) ReadNextGeneric() (any, bool, int64, error) {
-	// verificar se todos os registros já foram lidos
-	if c.RegistrosLidos >= c.TotalRegistros {
-		return nil, false, -1, io.EOF // fim do arquivo
-	}
-
-	// ler os dados do registro do arquivo
-	endereco, _ := c.Arquivo.Seek(0, io.SeekCurrent)
-	var lapide int32
-	var tamanho int32
-	var conteudo models.Pokemon
-
-	binary.Read(c.Arquivo, binary.LittleEndian, &lapide)
-	binary.Read(c.Arquivo, binary.LittleEndian, &tamanho)
-	conteudoBytes := make([]byte, tamanho-4)
-	binary.Read(c.Arquivo, binary.LittleEndian, &conteudoBytes)
-
-	// Converte os bytes para uma struct models.Pokemon se nao houver lapide
-	if lapide != 1 {
-		conteudo.ParseBinToPoke(conteudoBytes)
-	} else {
-		conteudo.Numero = -1
-	}
-
-	// atualizar o registro atual e o número de registros lidos
-	registro := &Registro{
-		Lapide:   lapide,
-		Tamanho:  tamanho,
-		Pokemon:  conteudo,
-		Endereco: endereco,
-	}
-	c.RegistroAtual = registro
-	c.RegistrosLidos++
-
-	return registro.Pokemon, c.RegistroAtual.IsDead(), c.RegistroAtual.Endereco, nil
-}
-
-func (c *ControleLeitura) Reset() {
-	c.Arquivo.Seek(4, io.SeekStart)
-	c.RegistrosLidos = 0
-	c.RegistroAtual = nil
-}
-
-func (r *Registro) IsDead() bool {
-	return r.Lapide == 1
 }

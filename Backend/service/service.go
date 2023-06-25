@@ -27,6 +27,7 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
+// SearchRequest faz a conversao adequada entre json e suas respectivas variaveis
 type SearchRequest struct {
 	Nome         string `json:"nome"`
 	JapName      string `json:"japName"`
@@ -66,6 +67,8 @@ func ReadPagesNumber() (numeroPaginas int, err error) {
 	return
 }
 
+// GetIdList faz uma leitura extensa da base de dados para retornar uma lista
+// de todos os Ids inseridos (e ordenados) para controle do frontend
 func GetIdList() (ids []int32, err error) {
 	c, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
 	defer c.Close()
@@ -88,6 +91,16 @@ func GetIdList() (ids []int32, err error) {
 	return
 }
 
+// GetList recebe uma lista de ids e um metodo de pesquisa a ser utilizado para
+// recuperar os dados, a funcao conta o tempo gasto para fazer a utilizacao dos
+// metodos, por fim retorna os valores requisitados
+//
+// Metodos suportados:
+//
+//	0 - Sequencial
+//	1 - Hash
+//	2 - Arvore B
+//	3 - Arvore B+
 func GetList(idList []int64, method int) (pokeList []models.Pokemon, duration int64, err error) {
 	c, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
 	defer c.Close()
@@ -260,7 +273,25 @@ func Delete(id int) (pokemon models.Pokemon, err error) {
 	return
 }
 
+// MergeSearch recebe um objeto json ja transformado em um struct e realiza a pesquisa
+// atraves do metodo de pattern matching selecionado.
+//
+// Todos os campos fornecidos serao pesquisados e retornados no formato de um
+// scored document, para entao serem ordenados, os ids serao extraidos dos documentos
+// para por fim serem retornados. A duracao do tempo de pesquisa também é realizado
+//
+// Para fins de melhoria indice invertido esta inserido junto de pattern matching
+// por realizarem coisas relativamente parecidas. Os metodos de pattern matching
+// sao feitos atraves de uma pesquisa extensa e direta sobre os campos de todos os
+// pokemons sequencialmente, diferente da lista invertida que funciona como hash
+//
+// Metodos suportados:
+//
+//	0 - Indice invertido
+//	1 - KMP
+//	2 - Rabin Karp
 func MergeSearch(req SearchRequest) (idList []int64, duration int64, err error) {
+	// Lambda para direcionamento de pesquisa atraves do campo
 	getFieldScDoc := func(field, text string) []invertedIndex.ScoredDocument {
 		switch req.PatternMatch {
 		case "1": // KMP
@@ -272,6 +303,7 @@ func MergeSearch(req SearchRequest) (idList []int64, duration int64, err error) 
 		}
 	}
 
+	// Lambda para a recuperacao do range de valores dentro da arvore B+
 	getIdsBPTree := func(start string, end string, field string) []invertedIndex.ScoredDocument {
 		tree, _ := bplustree.ReadBPlusTree(binManager.FILES_PATH, field)
 		defer tree.Close()
@@ -285,13 +317,12 @@ func MergeSearch(req SearchRequest) (idList []int64, duration int64, err error) 
 		return docs
 	}
 
-	hash, _ := hashing.Load(binManager.FILES_PATH, "hashIndex")
-	defer hash.Close()
-
+	// Parsing de valores nao formatados
 	req.LancamentoI = utils.FormatDate(req.LancamentoI)
 	req.LancamentoF = utils.FormatDate(req.LancamentoF)
 	req.JapName = utils.ToKatakana(req.JapName)
 
+	// Pesquisa de campos em formato de string com contagem de tempo de execucao
 	start := time.Now()
 	nomeScDoc := getFieldScDoc("nome", req.Nome)
 	especieScDoc := getFieldScDoc("especie", req.Especie)
@@ -300,6 +331,7 @@ func MergeSearch(req SearchRequest) (idList []int64, duration int64, err error) 
 	japNameScDoc := getFieldScDoc("nomeJap", req.JapName)
 	duration = time.Since(start).Milliseconds()
 
+	// Pesquisa em campos numericos
 	ID := getIdsBPTree(req.IDI, req.IDF, "numero")
 	Geracao := getIdsBPTree(req.GeracaoI, req.GeracaoF, "geracao")
 	Lancamento := getIdsBPTree(req.LancamentoI, req.LancamentoF, "lancamento")
@@ -309,6 +341,7 @@ func MergeSearch(req SearchRequest) (idList []int64, duration int64, err error) 
 	Altura := getIdsBPTree(req.AlturaI, req.AlturaF, "altura")
 	Peso := getIdsBPTree(req.PesoI, req.PesoF, "peso")
 
+	// Pesquisa em campos booleanos
 	var Lendario []invertedIndex.ScoredDocument
 	var Mitico []invertedIndex.ScoredDocument
 	if req.Lendario == "1" {
@@ -318,8 +351,10 @@ func MergeSearch(req SearchRequest) (idList []int64, duration int64, err error) 
 		Mitico = getIdsBPTree("1", "2", "mitico")
 	}
 
+	// Ordenacao dos scored documents de acordo com incidencia
 	scDoc := invertedIndex.Merge(nomeScDoc, especieScDoc, tipoScDoc, descricaoScDoc, japNameScDoc, ID, Geracao, Lancamento, Atk, Def, Hp, Altura, Peso, Lendario, Mitico)
 
+	// Conversao dos documentos em uma lista de ids
 	for _, tmp := range scDoc {
 		idList = append(idList, tmp.DocumentID)
 	}
@@ -327,9 +362,21 @@ func MergeSearch(req SearchRequest) (idList []int64, duration int64, err error) 
 	return
 }
 
+// Encrypt realiza o direcionamento para o devido metodo de criptografia fornecidos.
+// As chaves serao automaticamente criadas e retornadas.
+// Por fim um arquivo verificador sera gerado criptografado com a mesma chave fornecida.
+//
+// Metodos suportados:
+//
+//	1 - Trivium
+//	2 - AES 128 (cbc)
+//	3 - AES 196 (cbc)
+//	4 - AES 256 (cbc)
 func Encrypt(method int) (key string) {
+	// Criacao do arquivo verificados
 	utils.Create_verifier()
 
+	// Lambda de encapsulamento da funcao padrao da aes
 	aes := func(k aescbc.Key, file string) {
 		iv, _ := aescbc.RandBytes(aescbc.BLOCK_SIZE)
 		data, _ := os.ReadFile(file)
@@ -340,7 +387,7 @@ func Encrypt(method int) (key string) {
 	switch method {
 	case 0:
 		fallthrough
-	case 1:
+	case 1: // Trivium
 		t := trivium.New()
 		t.Encrypt(utils.VERIFIER, utils.VERIFIER)
 
@@ -348,17 +395,17 @@ func Encrypt(method int) (key string) {
 		t2.Encrypt(binManager.BIN_FILE, binManager.BIN_FILE)
 
 		key = utils.ByteArrayToAscii(t.Key)
-	case 2:
+	case 2: // AES 128 (cbc)
 		k, _ := aescbc.NewKey(128)
 		aes(k, utils.VERIFIER)
 		aes(k, binManager.BIN_FILE)
 		key = utils.SliceToAscii(k.Key)
-	case 3:
+	case 3: // AES 196 (cbc)
 		k, _ := aescbc.NewKey(192)
 		aes(k, utils.VERIFIER)
 		aes(k, binManager.BIN_FILE)
 		key = utils.SliceToAscii(k.Key)
-	case 4:
+	case 4: // AES 256 (cbc)
 		k, _ := aescbc.NewKey(256)
 		aes(k, utils.VERIFIER)
 		aes(k, binManager.BIN_FILE)
@@ -368,11 +415,23 @@ func Encrypt(method int) (key string) {
 	return
 }
 
+// Decrypt realiza a descriptografia de acordo com o metodo requisitado e utilizando
+// a chave fornecida.
+//
+// Primeiro se verifica se o arquivo verificador foi corretamente descriptografado
+// para so depois descriptografar o arquivo de fato
+//
+// Metodos suportados:
+//
+//	1 - Trivium
+//	2 - AES 128 (cbc)
+//	3 - AES 196 (cbc)
+//	4 - AES 256 (cbc)
 func Decrypt(method int, key string) (success bool) {
 	switch method {
 	case 0:
 		fallthrough
-	case 1:
+	case 1: // Trivium
 		newKey, _ := utils.StringToByteArray(key)
 
 		t := trivium.New(newKey)
@@ -382,11 +441,11 @@ func Decrypt(method int, key string) (success bool) {
 			t2.Decrypt(binManager.BIN_FILE, binManager.BIN_FILE)
 			utils.Create_verifier()
 		}
-	case 2:
+	case 2: // AES 128 (cbc)
 		fallthrough
-	case 3:
+	case 3: // AES 196 (cbc)
 		fallthrough
-	case 4:
+	case 4: // AES 256 (cbc)
 		newKey, _ := utils.StringToSlice(key)
 		k, err := aescbc.NewKeyFrom(newKey)
 		if err != nil {
@@ -407,6 +466,7 @@ func Decrypt(method int, key string) (success bool) {
 	return
 }
 
+// Zip redireciona para o devido metodo de compressao
 func Zip(method int) {
 	switch method {
 	case 1:
@@ -418,13 +478,71 @@ func Zip(method int) {
 	}
 }
 
+// Unzip redireciona para o devido metodo de descompressao
 func Unzip(method int) {
 	switch method {
 	case 1:
-		huffman.Unzip(binManager.BIN_FILE, "bin")
+		huffman.Unzip(binManager.BIN_FILE)
 	case 2:
 		lzw.Unzip(binManager.CSV_PATH)
 	default:
 		lzw.Unzip(binManager.BIN_FILE)
 	}
+}
+
+// reconstruirIndices faz a reconstrucao de todos as indexacoes possiveis no
+// banco de dados.
+//
+// Indexacoes geradas:
+//
+//	Hash (id)
+//	Arvore B (id)
+//	Arvore B+ (numericos)
+//	Indice Invertido (textuais)
+func ReconstruirIndices() {
+	// controler de leitura do arquivo binario
+	controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+	defer controler.Close()
+
+	// Hashing
+	hashing.StartHashFile(controler, 8, binManager.FILES_PATH, "hashIndex")
+
+	// Arvore B
+	btree.StartBTreeFile(binManager.FILES_PATH)
+
+	// Indice Invertido
+	controler.Reset()
+	invertedIndex.New(controler, "nome", binManager.FILES_PATH, 0)
+	controler.Reset()
+	invertedIndex.New(controler, "nomeJap", binManager.FILES_PATH, 0)
+	controler.Reset()
+	invertedIndex.New(controler, "especie", binManager.FILES_PATH, 0.8)
+	controler.Reset()
+	invertedIndex.New(controler, "tipo", binManager.FILES_PATH, 0)
+	controler.Reset()
+	invertedIndex.New(controler, "descricao", binManager.FILES_PATH, 0.8)
+
+	// B+ Tree
+	controler.Reset()
+	bplustree.StartBPlusTreeFilesSearch(binManager.FILES_PATH, "id", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "numero", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "geracao", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "atk", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "def", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "hp", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "altura", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "peso", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "lancamento", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "lendario", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "mitico", controler)
 }
