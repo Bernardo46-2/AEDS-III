@@ -90,6 +90,10 @@ func SuccessResponse(codigo int) Response {
 		msg = "Chave invalida!"
 	case 10:
 		msg = "Descriptografia realizada"
+	case 11:
+		msg = "Database comprimida com sucesso!"
+	case 12:
+		msg = "Database descomprimida com sucesso!"
 	default:
 		msg = "Mensagem de sucesso desconhecida!"
 	}

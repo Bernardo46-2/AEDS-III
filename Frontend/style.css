@@ -11,7 +11,8 @@
     --bulbasaur: #71b649;
     --squirtle: #3399ff;
     --eevee: #c5b358;
-    --umbreon: #191a1b;
+    --umbreon: #5a5663;
+    --umbreon2:#7a7385;
     --gengar: #c760d4;
     --gengar2: #f0baf7;
     --jigglypuff: #f9bbc1;
@@ -36,7 +37,7 @@
     --bulbasaur-transparent: #7ac74c6c;
     --squirtle-transparent: #3399ff6c;
     --eevee-transparent: #c5b3586c;
-    --umbreon-transparent: #15191ee0;
+    --umbreon-transparent: #444249e0;
     --gengar-transparent: #c660d460;
     --jigglypuff-transparent: #f9bbc16c;
     --psyduck-transparent: #f4c4306c;
@@ -243,6 +244,7 @@ input[type=number] {
 
 #ordenarDropdown,
 #indexDropdown,
+#zipDropdown,
 #casamentoDropdown,
 #cryptoDropdown {
     position: relative;
@@ -251,6 +253,7 @@ input[type=number] {
 
 #Ordenar,
 #Index,
+#Zip,
 #Casamento,
 #Crypto {
     position: absolute;
@@ -267,6 +270,7 @@ symbol {
 
 .ordenar-button-principal,
 .index-button-principal,
+.zip-button-principal,
 .casamento-button-principal,
 .crypto-button-principal {
     vertical-align: top;
@@ -275,6 +279,7 @@ symbol {
 
 .ordenar-buttons,
 .index-buttons,
+.zip-buttons,
 .casamento-buttons,
 .crypto-buttons {
     pointer-events: none;
@@ -1796,6 +1801,20 @@ body::-webkit-scrollbar {
     box-shadow: 0 0 10px var(--gengar-transparent),
         0 0 40px var(--gengar-transparent), 0 0 80px var(--gengar-transparent);
     transition-duration: 0.4s;
+}
+
+.btn-Umbreon2 {
+    color: var(--umbreon) !important;
+    border: 1px solid var(--umbreon-transparent) !important;
+}
+
+.btn-Umbreon2:hover,
+.btn-Umbreon2:focus {
+    color: var(--background-medium-dark) !important;
+    background-color: var(--umbreon2) !important;
+    box-shadow: 0 0 10px var(--umbreon-transparent),
+        0 0 40px var(--umbreon-transparent), 0 0 80px var(--umbreon-transparent);
+    transition-duration: 0.8s;
 }
 
 .btn-Dragonair2 {

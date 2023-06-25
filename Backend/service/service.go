@@ -13,6 +13,8 @@ import (
 	"time"
 
 	"github.com/Bernardo46-2/AEDS-III/data/binManager"
+	"github.com/Bernardo46-2/AEDS-III/data/compress/huffman"
+	"github.com/Bernardo46-2/AEDS-III/data/compress/lzw"
 	aescbc "github.com/Bernardo46-2/AEDS-III/data/crypto/aes_cbc"
 	"github.com/Bernardo46-2/AEDS-III/data/crypto/trivium"
 	"github.com/Bernardo46-2/AEDS-III/data/indexes/bplustree"
@@ -403,4 +405,26 @@ func Decrypt(method int, key string) (success bool) {
 	}
 
 	return
+}
+
+func Zip(method int) {
+	switch method {
+	case 1:
+		huffman.Zip(binManager.BIN_FILE)
+	case 2:
+		lzw.Zip(binManager.CSV_PATH)
+	default:
+		lzw.Zip(binManager.BIN_FILE)
+	}
+}
+
+func Unzip(method int) {
+	switch method {
+	case 1:
+		huffman.Unzip(binManager.BIN_FILE, "bin")
+	case 2:
+		lzw.Unzip(binManager.CSV_PATH)
+	default:
+		lzw.Unzip(binManager.BIN_FILE)
+	}
 }

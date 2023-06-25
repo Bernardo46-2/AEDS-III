@@ -12,14 +12,14 @@ import (
 // ================================================ utils ================================================ //
 
 func compareArray(array1, array2 []byte) bool {
-    if b := len(array1) == len(array2); b {
-        for i := 0; i < len(array1); i++ {
-            if array1[i] != array2[i] {
-                return false
-            }
-        }
-    }
-    return true
+	if b := len(array1) == len(array2); b {
+		for i := 0; i < len(array1); i++ {
+			if array1[i] != array2[i] {
+				return false
+			}
+		}
+	}
+	return true
 }
 
 // ================================================ consts ================================================ //
@@ -38,12 +38,12 @@ type Dict struct {
 	unzipDict map[uint16]string
 	sizeZip   uint16
 	sizeUnzip uint16
-    last      []byte
+	last      []byte
 }
 
 // initDict inicializa um dicionario de compactação com seus
 // valores padrões
-func initDict() Dict {
+func InitDict() Dict {
 	return Dict{
 		dict:      make(map[string]uint16, DICT_MAX_SIZE),
 		unzipDict: make(map[uint16]string, DICT_MAX_SIZE),
@@ -67,7 +67,7 @@ func (d *Dict) pushZip(s string) {
 	if !d.isFullZip() {
 		d.sizeZip++
 		d.dict[s] = d.sizeZip
-    }
+	}
 }
 
 // pushUnzip insere um elemento no dicionario
@@ -75,7 +75,7 @@ func (d *Dict) pushUnzip(s []byte) {
 	if !d.isFullUnzip() {
 		d.sizeUnzip++
 		d.unzipDict[d.sizeUnzip-1] = string(s)
-        d.last = s
+		d.last = s
 	}
 }
 
@@ -102,8 +102,8 @@ func (d *Dict) getUnzip(n uint16) []byte {
 	if n < math.MaxUint8 {
 		return []byte{byte(n)}
 	}
-    if value, contains := d.unzipDict[n-math.MaxUint8-1]; contains {
-        return []byte(value)
+	if value, contains := d.unzipDict[n-math.MaxUint8-1]; contains {
+		return []byte(value)
 	}
 	return nil
 }
@@ -189,11 +189,27 @@ func decompress12bitArray(array []uint16) (result []uint16) {
 	return
 }
 
+// bytesToUint16s converte um array de bytes para um array de
+// uint16
+func bytesToUint16s(bytes []byte) (result []uint16) {
+	length := len(bytes) / 2
+	result = make([]uint16, length)
+	j := 0
+
+	for i := 0; i < length; i++ {
+		result[i] = uint16(bytes[j]) | uint16(bytes[j+1])<<8
+		j += 2
+	}
+
+	return
+}
+
 // ================================================ LZW ================================================ //
 
 // writeFile escreve todos os bytes de um array de uint16 em
 // um arquivo
-func writeFile(f *os.File, content []uint16) (err error) {
+func writeFile(content []uint16, path string) (err error) {
+	f, _ := os.Create(path)
 	for _, b := range content {
 		err = binary.Write(f, binary.LittleEndian, b)
 		if err != nil {
@@ -203,31 +219,35 @@ func writeFile(f *os.File, content []uint16) (err error) {
 	return
 }
 
-// unzip recebe um dicionario e um conteudo em bytes e percorre
-// todo o conteudo pesquisando cada valor encontrado e inserindo
+// unzip recebe um endereco de arquivo e percorre todo o
+// conteudo pesquisando cada valor encontrado e inserindo
 // novos valores no caminho
-func unzip(dict Dict, content []uint16) (unzipped []byte) {
-	unzipped = make([]byte, 0, len(content)*2)
+func Unzip(path string) {
+	b, _ := os.ReadFile(path)
+	content := bytesToUint16s(b)
 
-    var w []byte
+	dict := InitDict()
+	unzipped := make([]byte, 0, len(content)*2)
+
+	var w []byte
 	for i := 0; i < len(content); i++ {
-        var entry []byte
-        if x := dict.getUnzip(content[i]); x != nil {
+		var entry []byte
+		if x := dict.getUnzip(content[i]); x != nil {
 			entry = x[:len(x):len(x)]
-        } else if compareArray(dict.getUnzip(content[i]), dict.last) && len(w) > 0 {
-            entry = append(w, w[0])
+		} else if compareArray(dict.getUnzip(content[i]), dict.last) && len(w) > 0 {
+			entry = append(w, w[0])
 		}
-		
-        unzipped = append(unzipped, entry...)
+
+		unzipped = append(unzipped, entry...)
 
 		if len(w) > 0 {
 			w = append(w, entry[0])
-            dict.pushUnzip(w)
+			dict.pushUnzip(w)
 		}
 		w = entry
-    }
+	}
 
-	return
+	os.WriteFile(path, unzipped, 0644)
 }
 
 // parseValueZip busca o maior valor possivel no dicionario enviado
@@ -251,36 +271,24 @@ func parseValueZip(dict *Dict, content []byte) (value uint16, offset int) {
 	return
 }
 
-// zip recebe um dicionario e um conteudo em bytes e percorre
-// todo o conteudo pesquisando cada valor encontrado e inserindo
+// zip recebe um endereco de arquivo e percorre todo o
+// conteudo pesquisando cada valor encontrado e inserindo
 // novos valores no caminho
 //
 // TODO: O metodo pode ser melhorado em até 25% através
 // de comprimir os inteiros de 16 para 12 bits, já que nenhum
 // deles vai passar 4095
-func zip(dict Dict, content []byte) (zipped []uint16) {
-	zipped = make([]uint16, 0, int(math.Ceil(float64(len(content))/2)))
+func Zip(path string) {
+	b, _ := os.ReadFile(path)
 
-	for i := 0; i < len(content); {
-		value, offset := parseValueZip(&dict, content[i:])
+	dict := InitDict()
+	zipped := make([]uint16, 0, int(math.Ceil(float64(len(b))/2)))
+
+	for i := 0; i < len(b); {
+		value, offset := parseValueZip(&dict, b[i:])
 		zipped = append(zipped, value)
 		i += offset
 	}
 
-	return
-}
-
-// bytesToUint16s converte um array de bytes para um array de
-// uint16
-func bytesToUint16s(bytes []byte) (result []uint16) {
-	length := len(bytes) / 2
-	result = make([]uint16, length)
-	j := 0
-
-	for i := 0; i < length; i++ {
-		result[i] = uint16(bytes[j]) | uint16(bytes[j+1])<<8
-		j += 2
-	}
-
-	return
+	writeFile(zipped, path)
 }

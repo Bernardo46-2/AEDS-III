@@ -23,6 +23,9 @@ type heapNode struct {
 // é realizado em blocos de tamanho fixo 7, armazenados em um heap. Quando não for possível adicionar mais valores ao heap,
 // um novo arquivo temporário é criado e os valores armazenados no heap são escritos nele, já ordenados. Ao final da
 // leitura do arquivo, é realizado um merge entre os arquivos temporários para obter um único arquivo ordenado.
+//
+// INSTAVEL: algoritmo nao esta funcionando corretamente
+// TODO: corrigir e descobrir onde esta o erro
 func IntercalacaoPorSubstituicao() {
 	// Abrir arquivo de entrada
 	file, err := os.OpenFile(BIN_FILE, os.O_RDWR, 0644)

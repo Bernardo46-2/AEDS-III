@@ -12,36 +12,42 @@ package main
 import (
 	"net/http"
 
-	"github.com/Bernardo46-2/AEDS-III/handlers"
-	"github.com/Bernardo46-2/AEDS-III/logger"
-	"github.com/Bernardo46-2/AEDS-III/middlewares"
+	h "github.com/Bernardo46-2/AEDS-III/handlers"
+	l "github.com/Bernardo46-2/AEDS-III/logger"
+	m "github.com/Bernardo46-2/AEDS-III/middlewares"
 )
 
 func Servidor() {
 	// Inicializa o servidor de log
-	logger.LigarServidor()
+	l.LigarServidor()
 
-	// Crud
-	http.HandleFunc("/getPagesNumber/", middlewares.EnableCORS(handlers.GetPagesNumber))
-	http.HandleFunc("/getIdList", middlewares.EnableCORS(handlers.GetIdList))
-	http.HandleFunc("/getList/", middlewares.EnableCORS(handlers.GetList))
-	http.HandleFunc("/get/", middlewares.EnableCORS(handlers.GetPokemon))
-	http.HandleFunc("/post/", middlewares.EnableCORS(handlers.PostPokemon))
-	http.HandleFunc("/put/", middlewares.EnableCORS(handlers.PutPokemon))
-	http.HandleFunc("/delete/", middlewares.EnableCORS(handlers.DeletePokemon))
-	http.HandleFunc("/loadDatabase", middlewares.EnableCORS(handlers.LoadDatabase))
-	http.HandleFunc("/toKatakana/", middlewares.EnableCORS(handlers.ToKatakana))
-	http.HandleFunc("/mergeSearch/", middlewares.EnableCORS(handlers.MergeSearch))
+	// Ordenação externa - TP1
+	http.HandleFunc("/ordenacao/", m.EnableCORS(h.Ordenacao))
 
-	// Ordenação externa
-	http.HandleFunc("/ordenacao/", middlewares.EnableCORS(handlers.Ordenacao))
+	// Indexação - TP2
+	http.HandleFunc("/getPagesNumber/", m.EnableCORS(h.GetPagesNumber))
+	http.HandleFunc("/getIdList", m.EnableCORS(h.GetIdList))
+	http.HandleFunc("/getList/", m.EnableCORS(h.GetList))
+	http.HandleFunc("/get/", m.EnableCORS(h.GetPokemon))
+	http.HandleFunc("/post/", m.EnableCORS(h.PostPokemon))
+	http.HandleFunc("/put/", m.EnableCORS(h.PutPokemon))
+	http.HandleFunc("/delete/", m.EnableCORS(h.DeletePokemon))
+	http.HandleFunc("/loadDatabase", m.EnableCORS(h.LoadDatabase))
+	http.HandleFunc("/toKatakana/", m.EnableCORS(h.ToKatakana))
 
-	// Criptografia
-	http.HandleFunc("/encrypt/", middlewares.EnableCORS(handlers.Encrypt))
-	http.HandleFunc("/decrypt/", middlewares.EnableCORS(handlers.Decrypt))
+	// Compressao - TP3
+	http.HandleFunc("/zip/", m.EnableCORS(h.Zip))
+	http.HandleFunc("/unzip/", m.EnableCORS(h.Unzip))
+
+	// Indexacao - TP4
+	http.HandleFunc("/mergeSearch/", m.EnableCORS(h.MergeSearch))
+
+	// Criptografia - TP5
+	http.HandleFunc("/encrypt/", m.EnableCORS(h.Encrypt))
+	http.HandleFunc("/decrypt/", m.EnableCORS(h.Decrypt))
 
 	// Inicializa o servidor HTTP na porta 8080 e escreve no log eventuais erros
-	logger.Fatal(http.ListenAndServe(":8080", nil))
+	l.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func main() {

@@ -40,7 +40,7 @@ function modalAviso(mostrar = "Servidor Desligado", tempo = 3000, type = "free")
         let xevent = () => {
             modalContainer.classList.add('out');
             modalContainer.removeEventListener('click', xevent);
-            setTimeout(function() {
+            setTimeout(function () {
                 modalSearchClose2.style.display = "";
             }, 1000);
             clicked = true;
@@ -49,7 +49,7 @@ function modalAviso(mostrar = "Servidor Desligado", tempo = 3000, type = "free")
         modalContainer.addEventListener('click', xevent);
 
         setTimeout(function () {
-            if (!clicked){
+            if (!clicked) {
                 modalContainer.classList.add('out');
                 modalContainer.removeEventListener('click', xevent);
             }
@@ -70,21 +70,27 @@ const importarDados = document.getElementById('ImportarDados');
 const helpBtn = document.getElementById('Ajuda');
 
 importarDados.onclick = () => {
-    localStorage.setItem('encrypted', JSON.stringify(false));
-    sessionStorage.setItem('patternMatchMethod', JSON.stringify(0));
-    sessionStorage.setItem('actualPage', JSON.stringify(0));
-    sessionStorage.setItem('searchMethod', JSON.stringify(1));
-    sessionStorage.setItem('duracao', JSON.stringify(null));
-    fetch('http://localhost:8080/loadDatabase')
-        .then(response => response.json())
-        .then(data => {
-            modalAviso(data.mensagem, 7000);
-            retrieveCardsByPage0();
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
+    if (JSON.parse(localStorage.getItem('zip')) === "true" && JSON.parse(localStorage.getItem("ziptype")) === "lzw") {
+        modalAviso(mostrar = "csv compactado em lzw, descompacte primeiro!")
+    } else {
+        localStorage.setItem('encrypted', JSON.stringify(false));
+        localStorage.setItem('zip', JSON.stringify(false));
+        localStorage.setItem('ziptype', JSON.stringify("none"));
+        sessionStorage.setItem('patternMatchMethod', JSON.stringify(0));
+        sessionStorage.setItem('actualPage', JSON.stringify(0));
+        sessionStorage.setItem('searchMethod', JSON.stringify(1));
+        sessionStorage.setItem('duracao', JSON.stringify(null));
+        fetch('http://localhost:8080/loadDatabase')
+            .then(response => response.json())
+            .then(data => {
+                modalAviso(data.mensagem, 7000);
+                retrieveCardsByPage0();
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    }
 }
 
 helpBtn.onclick = () => {
@@ -116,8 +122,9 @@ const indexMethod = {
 
 showAll.onclick = () => {
     let encrypted = localStorage.getItem('encrypted') === "true";
+    let zip = localStorage.getItem('zip') === "true";
 
-    if (!encrypted) {
+    if (!encrypted && !zip) {
         fetch('http://localhost:8080/getIdList')
             .then(response => response.json())
             .then(data => {
@@ -131,14 +138,19 @@ showAll.onclick = () => {
                 modalAviso();
                 console.log(error)
             });
-    } else {
+    } else if (encrypted) {
         modalAviso(mostrar = "Sua database foi criptografada e sequestrada<br>Envie um pix pra gente pra recuperar!<br><br>... Ou apenas use a chave q nos fornecemos ...", tempo = 5000)
+    } else {
+        modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'))
     }
 }
 
 window.onload = function () {
     if (!localStorage.getItem('encrypted')) {
         localStorage.setItem('encrypted', JSON.stringify(false));
+    }
+    if (!localStorage.getItem('zip')) {
+        localStorage.setItem('zip', JSON.stringify(false));
     }
     sessionStorage.setItem('patternMatchMethod', JSON.stringify(0));
     sessionStorage.setItem('actualPage', JSON.stringify(0));
@@ -823,40 +835,52 @@ ordenarButtons.forEach(element => {
 
 
 ordenar0.onclick = () => {
-    fetch('http://localhost:8080/ordenacao/?metodo=0')
-        .then(response => response.json())
-        .then(data => {
-            modalAviso(data.mensagem);
-            showAll.onclick();
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
+    if (JSON.parse(localStorage.getItem('zip')) === "false") {
+        fetch('http://localhost:8080/ordenacao/?metodo=0')
+            .then(response => response.json())
+            .then(data => {
+                modalAviso(data.mensagem);
+                showAll.onclick();
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    } else {
+        modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'));
+    }
 }
 ordenar1.onclick = () => {
-    fetch('http://localhost:8080/ordenacao/?metodo=1')
-        .then(response => response.json())
-        .then(data => {
-            modalAviso(data.mensagem);
-            showAll.onclick();
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
+    if (JSON.parse(localStorage.getItem('zip')) === "false") {
+        fetch('http://localhost:8080/ordenacao/?metodo=1')
+            .then(response => response.json())
+            .then(data => {
+                modalAviso(data.mensagem);
+                showAll.onclick();
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    } else {
+        modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'));
+    }
 }
 ordenar2.onclick = () => {
-    fetch('http://localhost:8080/ordenacao/?metodo=2')
-        .then(response => response.json())
-        .then(data => {
-            modalAviso(data.mensagem);
-            showAll.onclick();
-        })
-        .catch(error => {
-            modalAviso();
-            console.log(error)
-        });
+    if (JSON.parse(localStorage.getItem('zip')) === "false") {
+        fetch('http://localhost:8080/ordenacao/?metodo=2')
+            .then(response => response.json())
+            .then(data => {
+                modalAviso(data.mensagem);
+                showAll.onclick();
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    } else {
+        modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'));
+    }
 }
 
 /* ------------------------------ ESCOLHA DE INDEXACAO ------------------------------ */
@@ -943,6 +967,140 @@ indexChoice.forEach(element => {
         sessionStorage.setItem('searchMethod', JSON.stringify(lastDigit));
     }
 });
+
+/* ------------------------------ ESCOLHA DE COMPRESSAO ------------------------------ */
+
+const zip = document.querySelector('#Zip');
+const zipDropdown = document.querySelector('#zipDropdown');
+const zipButtons = document.querySelectorAll('.zip-buttons');
+const zip0 = document.querySelector('#Zip0');
+const zip1 = document.querySelector('#Zip1');
+const zipTransition = zip.style.transition;
+const zipVar3 = zip.style.paddingTop;
+let zipAberto = false;
+
+zip.addEventListener('click', function (event) {
+    if (event.target === zip && !zipAberto) {
+        zip.style.transition = "all 0.4s ease-in-out";
+        zipDropdown.style.transition = "all 0.4s ease-in-out";
+        zipDropdown.style.height = "170px";
+        zipDropdown.style.marginBottom = "15px";
+        zip.style.height = "170px";
+        zip.style.paddingTop = "15px";
+        zipAberto = true;
+        window.setTimeout(() => {
+            zipButtons[0].style.pointerEvents = 'auto';
+            zipButtons[0].style.opacity = "1";
+        }, 150);
+        window.setTimeout(() => {
+            zipButtons[1].style.pointerEvents = 'auto';
+            zipButtons[1].style.opacity = "1";
+        }, 300);
+    } else if (event.target === zip) {
+        setTimeout(() => {
+            zipDropdown.style.height = 60 + "px";
+            zipDropdown.style.marginBottom = "0px";
+            zip.style.height = 45 + "px";
+
+            zip.style.paddingTop = zipVar3;
+            zipButtons.forEach(element => {
+                element.style.pointerEvents = 'none';
+                element.style.opacity = "0";
+            });
+            zipAberto = false;
+            setTimeout(() => {
+                zip.style.transition = zipTransition;
+            }, 500);
+        }, 200);
+        window.setTimeout(() => {
+            zipButtons[1].style.pointerEvents = 'auto';
+            zipButtons[1].style.opacity = "0";
+        }, 0);
+        window.setTimeout(() => {
+            zipButtons[0].style.pointerEvents = 'auto';
+            zipButtons[0].style.opacity = "0";
+        }, 150);
+    }
+})
+
+zipButtons.forEach(element => {
+    element.style.transition = "all 0.3s ease-in-out";
+    element.addEventListener('click', function (event) {
+        zip.click();
+    });
+});
+
+zip0.onclick = () => {
+    if (!JSON.parse(localStorage.getItem('zip'))) {
+        localStorage.setItem('zip', JSON.stringify(true));
+        localStorage.setItem('ziptype', JSON.stringify("huffman"));
+
+        fetch('http://localhost:8080/zip/?metodo=1')
+            .then(response => response.json())
+            .then(data => {
+                modalAviso(data.mensagem);
+                const cardsHtml = document.getElementById('cards');
+                cardsHtml.innerHTML = '';
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+
+    } else if (JSON.parse(localStorage.getItem('ziptype')) === "huffman") {
+        localStorage.setItem('zip', JSON.stringify(false));
+        localStorage.setItem('ziptype', JSON.stringify("none"));
+
+        fetch('http://localhost:8080/unzip/?metodo=1')
+            .then(response => response.json())
+            .then(data => {
+                modalAviso(data.mensagem);
+                showAll.onclick();
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    } else {
+        modalAviso(mostrar = "Metodo correto = LZW");
+    }
+};
+
+zip1.onclick = () => {
+    if (!JSON.parse(localStorage.getItem('zip'))) {
+        localStorage.setItem('zip', JSON.stringify(true));
+        localStorage.setItem('ziptype', JSON.stringify("lzw"));
+
+        fetch('http://localhost:8080/zip/?metodo=2')
+            .then(response => response.json())
+            .then(data => {
+                modalAviso(data.mensagem);
+                const cardsHtml = document.getElementById('cards');
+                cardsHtml.innerHTML = '';
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+
+    } else if (JSON.parse(localStorage.getItem('ziptype')) === "lzw") {
+        localStorage.setItem('zip', JSON.stringify(false));
+        localStorage.setItem('ziptype', JSON.stringify("none"));
+
+        fetch('http://localhost:8080/unzip/?metodo=2')
+            .then(response => response.json())
+            .then(data => {
+                modalAviso(data.mensagem);
+                showAll.onclick();
+            })
+            .catch(error => {
+                modalAviso();
+                console.log(error)
+            });
+    } else {
+        modalAviso(mostrar = "Metodo correto = Huffman");
+    }
+};
 
 /* ------------------------- ESCOLHA DE CASAMENTO DE PADRAO ------------------------- */
 
@@ -1107,13 +1265,14 @@ crypto2.onclick = () => criptografar(3);
 crypto3.onclick = () => criptografar(4);
 
 function criptografar(option = 0) {
-    let e = localStorage.getItem('encrypted') === "true";
-    if (e) {
-        modalContainer2.classList.remove('out');
-        modalContainer2.classList.add('one');
-        modalContainer2.style.zIndex = "9999 !important";
+    if (JSON.parse(localStorage.getItem('zip')) === "false") {
+        let e = localStorage.getItem('encrypted') === "true";
+        if (e) {
+            modalContainer2.classList.remove('out');
+            modalContainer2.classList.add('one');
+            modalContainer2.style.zIndex = "9999 !important";
 
-        let modalContent = `
+            let modalContent = `
         <div class="row justify-content-center">
             <p class="modal-search-input4">Chave:</p>
         </div>
@@ -1123,67 +1282,70 @@ function criptografar(option = 0) {
         </div>
         `;
 
-        mensagem2.innerHTML = modalContent;
-        let tmp = searchIndex.textContent
-        searchIndex.textContent = "descriptografar";
+            mensagem2.innerHTML = modalContent;
+            let tmp = searchIndex.textContent
+            searchIndex.textContent = "descriptografar";
 
-        let xis = (event) => {
-            const chave = document.getElementById('chave').value;
+            let xis = (event) => {
+                const chave = document.getElementById('chave').value;
 
-            fetch(`http://localhost:8080/decrypt/?metodo=${option}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    key: chave,
+                fetch(`http://localhost:8080/decrypt/?metodo=${option}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        key: chave,
+                    })
                 })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.codigo == 10) {
-                        modalContainer2.classList.add('out');
-                        searchIndex.removeEventListener('click', xis);
-                        setTimeout(function() {
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.codigo == 10) {
+                            modalContainer2.classList.add('out');
+                            searchIndex.removeEventListener('click', xis);
+                            setTimeout(function () {
+                                searchIndex.textContent = tmp;
+                            }, 1000);
+                            localStorage.setItem('encrypted', JSON.stringify(false));
+                            showAll.click();
+                        } else {
+                            modalAviso(data.mensagem);
+                        }
+                    })
+                    .catch(error => {
+                        modalAviso(error);
+                        console.log(error);
+                        setTimeout(function () {
                             searchIndex.textContent = tmp;
                         }, 1000);
-                        localStorage.setItem('encrypted', JSON.stringify(false));
-                        showAll.click();
-                    } else {
-                        modalAviso(data.mensagem);
-                    }
+                    });
+
+            };
+
+            searchIndex.addEventListener('click', xis);
+
+            modalSearchClose.addEventListener('click', () => {
+                setTimeout(function () {
+                    searchIndex.textContent = tmp;
+                }, 1000);
+                modalContainer2.classList.add('out');
+                searchIndex.removeEventListener('click', xis);
+            });
+        } else {
+            localStorage.setItem('encrypted', JSON.stringify(true))
+            fetch(`http://localhost:8080/encrypt/?metodo=${option}`)
+                .then(response => response.json())
+                .then(data => {
+                    modalAviso(mostrar = "Chave:<br>" + data, tempo = 30000, type = "fix");
+                    adicionarCards([], false);
                 })
                 .catch(error => {
-                    modalAviso(error);
-                    console.log(error);
-                    setTimeout(function() {
-                        searchIndex.textContent = tmp;
-                    }, 1000);
+                    modalAviso();
+                    console.log(error)
                 });
-
-        };
-
-        searchIndex.addEventListener('click', xis);
-
-        modalSearchClose.addEventListener('click', () => {
-            setTimeout(function() {
-                searchIndex.textContent = tmp;
-            }, 1000);
-            modalContainer2.classList.add('out');
-            searchIndex.removeEventListener('click', xis);
-        });
+        }
     } else {
-        localStorage.setItem('encrypted', JSON.stringify(true))
-        fetch(`http://localhost:8080/encrypt/?metodo=${option}`)
-            .then(response => response.json())
-            .then(data => {
-                modalAviso(mostrar = "Chave:<br>" + data, tempo = 30000, type = "fix");
-                adicionarCards([], false);
-            })
-            .catch(error => {
-                modalAviso();
-                console.log(error)
-            });
+        modalAviso(mostrar = "Database comprimida com " + localStorage.getItem('ziptype'));
     }
 }
 

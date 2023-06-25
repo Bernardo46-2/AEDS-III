@@ -22,14 +22,96 @@ import (
 	"github.com/Bernardo46-2/AEDS-III/utils"
 )
 
-type retorno struct {
-	Pokemons []models.Pokemon `json:"pokemons"`
-	Time     int64            `json:"time"`
+// writeError recebe um erro de http responde e um id de erro interno,
+// faz o parsing do modelo e gera uma resposta em formato json com o erro fornecido
+func writeError(w http.ResponseWriter, codes ...int) {
+	// Preparacao da resposta http
+	w.Header().Set("Content-Type", "application/json")
+	code := codes[0]
+	w.WriteHeader(code)
+	if len(codes) > 1 {
+		code = codes[1]
+	}
+
+	// Gera uma resposta json personalizada
+	err := models.ErrorResponse(code)
+	json.NewEncoder(w).Encode(err)
+	logger.Println("ERROR", fmt.Sprintf("code: %d, message: %s", err.Code, err.Message))
 }
 
-type retornoIndexacao struct {
-	Pokemons []int64 `json:"ids"`
-	Time     int64   `json:"time"`
+// writeSuccess gera uma resposta http de sucesso (200) e
+// faz o parsing do modelo de sucesso para uma resposta json com a mensagem
+// da ação realizada
+func writeSuccess(w http.ResponseWriter, code int) {
+	// Preparação da resposta http
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	// Gera uma resposta json personalizada
+	json.NewEncoder(w).Encode(models.SuccessResponse(code))
+}
+
+// writeJson recebe qualquer tipo de dado ou struct e serializa o dado
+// em formato json, gerando junto uma resposta de sucesso ou erro
+func writeJson(w http.ResponseWriter, v any) {
+	// Serialização
+	jsonData, err := json.Marshal(v)
+
+	// Resposta
+	if err != nil {
+		writeError(w, http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonData)
+}
+
+func reconstruirIndices() {
+	// Hashing
+	controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
+	defer controler.Close()
+	hashing.StartHashFile(controler, 8, binManager.FILES_PATH, "hashIndex")
+
+	// Arvore B
+	btree.StartBTreeFile(binManager.FILES_PATH)
+
+	// Indice Invertido
+	controler.Reset()
+	invertedIndex.New(controler, "nome", binManager.FILES_PATH, 0)
+	controler.Reset()
+	invertedIndex.New(controler, "nomeJap", binManager.FILES_PATH, 0)
+	controler.Reset()
+	invertedIndex.New(controler, "especie", binManager.FILES_PATH, 0.8)
+	controler.Reset()
+	invertedIndex.New(controler, "tipo", binManager.FILES_PATH, 0)
+	controler.Reset()
+	invertedIndex.New(controler, "descricao", binManager.FILES_PATH, 0.8)
+
+	// B+ Tree
+	controler.Reset()
+	bplustree.StartBPlusTreeFilesSearch(binManager.FILES_PATH, "id", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "numero", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "geracao", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "atk", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "def", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "hp", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "altura", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "peso", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "lancamento", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "lendario", controler)
+	controler.Reset()
+	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "mitico", controler)
 }
 
 // GetPagesNumber retorna a quantidade de paginas disponiveis
@@ -60,6 +142,11 @@ func GetIdList(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetList(w http.ResponseWriter, r *http.Request) {
+	type retorno struct {
+		Pokemons []models.Pokemon `json:"pokemons"`
+		Time     int64            `json:"time"`
+	}
+
 	method, _ := strconv.Atoi(r.URL.Query().Get("method"))
 	// Recuperando lista de argumentos
 	var list []int64
@@ -76,12 +163,10 @@ func GetList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	retorno := retorno{
+	writeJson(w, retorno{
 		Pokemons: pokeList,
 		Time:     time,
-	}
-
-	writeJson(w, retorno)
+	})
 }
 
 // GetPokemon recupera o pokemon pelo ID fornecido
@@ -197,6 +282,10 @@ func ToKatakana(w http.ResponseWriter, r *http.Request) {
 	writeJson(w, convertedString)
 }
 
+// Ordenacao faz a chamada do devido metodo de ordenacao indexado
+// atraves de uma hash de funcoes
+//
+// TODO: Ordenacao por substituicao nao esta funcionando corretamente
 func Ordenacao(w http.ResponseWriter, r *http.Request) {
 	// Recuperar metodo
 	metodo, _ := strconv.Atoi(r.URL.Query().Get("metodo"))
@@ -212,6 +301,11 @@ func Ordenacao(w http.ResponseWriter, r *http.Request) {
 }
 
 func MergeSearch(w http.ResponseWriter, r *http.Request) {
+	type retornoIndexacao struct {
+		Pokemons []int64 `json:"ids"`
+		Time     int64   `json:"time"`
+	}
+
 	var req service.SearchRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
@@ -267,94 +361,24 @@ func Decrypt(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// writeError recebe um erro de http responde e um id de erro interno,
-// faz o parsing do modelo e gera uma resposta em formato json com o erro fornecido
-func writeError(w http.ResponseWriter, codes ...int) {
-	// Preparacao da resposta http
-	w.Header().Set("Content-Type", "application/json")
-	code := codes[0]
-	w.WriteHeader(code)
-	if len(codes) > 1 {
-		code = codes[1]
-	}
+func Zip(w http.ResponseWriter, r *http.Request) {
+	// Recuperar metodo
+	metodo, _ := strconv.Atoi(r.URL.Query().Get("metodo"))
 
-	// Gera uma resposta json personalizada
-	err := models.ErrorResponse(code)
-	json.NewEncoder(w).Encode(err)
-	logger.Println("ERROR", fmt.Sprintf("code: %d, message: %s", err.Code, err.Message))
-}
-
-// writeSuccess gera uma resposta http de sucesso (200) e
-// faz o parsing do modelo de sucesso para uma resposta json com a mensagem
-// da ação realizada
-func writeSuccess(w http.ResponseWriter, code int) {
-	// Preparação da resposta http
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	// Gera uma resposta json personalizada
-	json.NewEncoder(w).Encode(models.SuccessResponse(code))
-}
-
-// writeJson recebe qualquer tipo de dado ou struct e serializa o dado
-// em formato json, gerando junto uma resposta de sucesso ou erro
-func writeJson(w http.ResponseWriter, v any) {
-	// Serialização
-	jsonData, err := json.Marshal(v)
+	service.Zip(metodo)
 
 	// Resposta
-	if err != nil {
-		writeError(w, http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(jsonData)
+	writeSuccess(w, 11)
+	logger.Println("INFO", "Database comprimida!")
 }
 
-func reconstruirIndices() {
-	// Hashing
-	controler, _ := binManager.InicializarControleLeitura(binManager.BIN_FILE)
-	defer controler.Close()
-	hashing.StartHashFile(controler, 8, binManager.FILES_PATH, "hashIndex")
+func Unzip(w http.ResponseWriter, r *http.Request) {
+	// Recuperar metodo
+	metodo, _ := strconv.Atoi(r.URL.Query().Get("metodo"))
 
-	// Arvore B
-	btree.StartBTreeFile(binManager.FILES_PATH)
+	service.Unzip(metodo)
 
-	// Indice Invertido
-	controler.Reset()
-	invertedIndex.New(controler, "nome", binManager.FILES_PATH, 0)
-	controler.Reset()
-	invertedIndex.New(controler, "nomeJap", binManager.FILES_PATH, 0)
-	controler.Reset()
-	invertedIndex.New(controler, "especie", binManager.FILES_PATH, 0.8)
-	controler.Reset()
-	invertedIndex.New(controler, "tipo", binManager.FILES_PATH, 0)
-	controler.Reset()
-	invertedIndex.New(controler, "descricao", binManager.FILES_PATH, 0.8)
-
-	// B+ Tree
-	controler.Reset()
-	bplustree.StartBPlusTreeFilesSearch(binManager.FILES_PATH, "id", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "numero", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "geracao", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "atk", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "def", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "hp", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "altura", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "peso", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "lancamento", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "lendario", controler)
-	controler.Reset()
-	bplustree.StartBPlusTreeFile(binManager.FILES_PATH, "mitico", controler)
+	// Resposta
+	writeSuccess(w, 12)
+	logger.Println("INFO", "Database comprimida!")
 }
