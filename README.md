@@ -4,7 +4,7 @@ Trabalho desenvolvido ao longo da disciplina de AED's III do curso de Bacharelad
 
 ## Integrantes
 * Bernardo Marques Fernandes
-* Marcos Antonio Lommez Cândido Ribeiro
+* Marcos Antônio Lommez Cândido Ribeiro
 
 ## Descrição do Projeto
 O objetivo do projeto é criar um banco de dados em arquivo binário, utilizando técnicas de CRUD, ordenação, indexação, compactação, casamento de padroes e criptografia.
