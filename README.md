@@ -22,7 +22,7 @@ O banco de dados suporta as seguintes funcionalidades:
 * Compactação
 * Criptografia
   
-### Exemplos de telas do sistema:
+## Exemplos de telas do sistema:
 
 #### Tela Principal
 ![Tela principal](/Outros/Tela_Inicial.png)
